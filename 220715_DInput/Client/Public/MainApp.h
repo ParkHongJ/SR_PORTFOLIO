@@ -34,6 +34,8 @@ private:
 	_float			m_fTimeAcc = 0.f;
 	_tchar			m_szFPS[MAX_PATH] = TEXT("");
 	_uint			m_iNumDraw = 0;
+
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 #endif // _DEBUG
 
 private:

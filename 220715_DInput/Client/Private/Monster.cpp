@@ -23,7 +23,7 @@ HRESULT CMonster::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(rand() % 10, 0.5f, 3.0f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3((float)(rand() % 10), 0.5f, 3.0f));
 
 	return S_OK;
 }
