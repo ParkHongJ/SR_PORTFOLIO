@@ -100,7 +100,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Safe_Release(pGameInstance);
 
 	Safe_Release(pMainApp);
-
+	ImGui_ImplDX9_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	
 
     return (int) msg.wParam;
@@ -197,10 +199,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_ABOUT:
                 DialogBox(g_hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
-            case IDM_EXIT:
-				ImGui_ImplDX9_Shutdown();
-				ImGui_ImplWin32_Shutdown();
-				ImGui::DestroyContext();
+			case IDM_EXIT:
+				
                 DestroyWindow(hWnd);
                 break;
             default:

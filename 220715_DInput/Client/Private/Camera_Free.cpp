@@ -36,39 +36,42 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (pGameInstance->Get_DIKState(DIK_W) & 0x80)
+
+	if ((pGameInstance->Get_DIKState(DIK_W) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKState(DIK_S) & 0x80)
+	if ((pGameInstance->Get_DIKState(DIK_S) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Go_Backward(fTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKState(DIK_A) & 0x80)
+	if ((pGameInstance->Get_DIKState(DIK_A) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Go_Left(fTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKState(DIK_D) & 0x80)
+	if ((pGameInstance->Get_DIKState(DIK_D) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Go_Right(fTimeDelta);
 	}
 
 	_long	MouseMove = 0;
 
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	if (pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), MouseMove * fTimeDelta * 0.05f);		
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+		{
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), MouseMove * fTimeDelta * 0.05f);
+		}
+
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+		{
+			m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), MouseMove * fTimeDelta * 0.05f);
+		}
 	}
 
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
-	{
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), MouseMove * fTimeDelta * 0.05f);
-	}
-
-	
 
 	Safe_Release(pGameInstance);
 
