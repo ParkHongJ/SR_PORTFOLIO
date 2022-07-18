@@ -1,5 +1,5 @@
 #include "..\Public\Component.h"
-
+#include "..\Public\GameObject.h"
 
 CComponent::CComponent(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -25,5 +25,11 @@ HRESULT CComponent::Initialize(void * pArg)
 
 void CComponent::Free()
 {
+	m_pOwner = nullptr;
 	Safe_Release(m_pGraphic_Device);
+}
+
+void CComponent::SetOwner(CGameObject * _pOwner)
+{
+	m_pOwner = _pOwner;
 }

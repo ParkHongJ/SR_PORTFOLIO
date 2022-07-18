@@ -70,6 +70,9 @@
     <Filter Include="05.Timer\Manager">
       <UniqueIdentifier>{8ea00dd3-b334-4a35-b7db-eeca5ed73ea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Components\Collider">
+      <UniqueIdentifier>{91aa002e-ccc0-4891-83c3-7446da6ac0c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -150,6 +153,9 @@
     <ClInclude Include="..\public\Input_Device.h">
       <Filter>01.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Collider.h">
+      <Filter>04.Components\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -211,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Input_Device.cpp">
       <Filter>01.Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider.cpp">
+      <Filter>04.Components\Collider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

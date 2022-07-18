@@ -2,7 +2,6 @@
 #include "..\Public\Player.h"
 
 #include "GameInstance.h"
-
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -75,14 +74,25 @@ HRESULT CPlayer::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+
+	//---------------------디버그일때 그리기-------------------------
+	m_pColliderCom->Render();
+	//--------------------------------------------------------------
+
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	ImGui::Begin("Inspector");
 	ImGui::SliderFloat("floatx", &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 	ImGui::SliderFloat("floaty", &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 	ImGui::SliderFloat("floatz", &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
+	
+	_float fColRadius = m_pColliderCom->GetRadius();
+	ImGui::SliderFloat("Radius", &fColRadius, -100.0f, 100.0f);
+	m_pColliderCom->SetRadius(fColRadius);
+
 	ImGui::End();
+
+
 	return S_OK;
 }
 
@@ -94,9 +104,7 @@ HRESULT CPlayer::Set_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -104,8 +112,8 @@ HRESULT CPlayer::Set_RenderState()
 HRESULT CPlayer::Reset_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -113,15 +121,15 @@ HRESULT CPlayer::Reset_RenderState()
 HRESULT CPlayer::SetUp_Components()
 {
 	/* For.Com_Renderer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -131,7 +139,9 @@ HRESULT CPlayer::SetUp_Components()
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
+		return E_FAIL;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
 
@@ -168,7 +178,7 @@ CGameObject * CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);

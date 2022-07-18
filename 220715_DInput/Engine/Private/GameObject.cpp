@@ -37,7 +37,7 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent** ppOut, void* pArg)
+HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent** ppOut, CGameObject* _pOwner, void* pArg)
 {
 	if (nullptr != Find_Component(pComponentTag))
 		return E_FAIL;
@@ -48,7 +48,10 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	CComponent*			pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
-
+	//나중에 조심하기 레퍼런스 카운트관련
+	//컴포넌트 -> 게임오브젝트 참조하되 레퍼런스카운트 안올려놨음
+	pComponent->SetOwner(_pOwner);
+	
 	m_Components.emplace(pComponentTag, pComponent);
 
 	*ppOut = pComponent;

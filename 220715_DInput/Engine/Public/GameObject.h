@@ -25,8 +25,8 @@ protected: /* 객체에게 추가된 컴포넌트들을 키로 분류하여 보관한다. */
 	map<const _tchar*, class CComponent*>			m_Components;
 	typedef map<const _tchar*, class CComponent*>	COMPONENTS;
 
-protected:
-	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, class CComponent** ppOut, void* pArg = nullptr);
+public:
+	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, class CComponent** ppOut, CGameObject* _pOwner, void* pArg = nullptr);
 
 private:
 	class CComponent* Find_Component(const _tchar* pComponentTag);

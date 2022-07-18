@@ -184,8 +184,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CTransform::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-
-
+	/* For.Prototype_Component_Collider */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
+		CCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	
 
 
 	
