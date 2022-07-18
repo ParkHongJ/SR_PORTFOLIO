@@ -43,6 +43,9 @@
     <Filter Include="99.Default\Imgui">
       <UniqueIdentifier>{370fbfe5-47e0-491a-8848-6fd5182ce70c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Cube">
+      <UniqueIdentifier>{1c346aa0-3181-41b9-a098-bbed818e7612}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -115,6 +118,9 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>99.Default\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MyBox.h">
+      <Filter>02.GameObject\Cube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -173,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>99.Default\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MyBox.cpp">
+      <Filter>02.GameObject\Cube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
