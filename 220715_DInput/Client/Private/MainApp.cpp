@@ -110,18 +110,18 @@ HRESULT CMainApp::Render()
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 	m_pGameInstance->Render_End();
 
-#ifdef _DEBUG
-	++m_iNumDraw;
-
-	if (m_fTimeAcc >= 1.f)
-	{
-		wsprintf(m_szFPS, TEXT("fps : %d"), m_iNumDraw);
-		m_iNumDraw = 0;
-		m_fTimeAcc = 0.f;
-	}
-
-	SetWindowText(g_hWnd, m_szFPS);
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	++m_iNumDraw;
+//
+//	if (m_fTimeAcc >= 1.f)
+//	{
+//		wsprintf(m_szFPS, TEXT("fps : %d"), m_iNumDraw);
+//		m_iNumDraw = 0;
+//		m_fTimeAcc = 0.f;
+//	}
+//
+//	SetWindowText(g_hWnd, m_szFPS);
+//#endif // _DEBUG
 
 	
 

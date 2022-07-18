@@ -4,7 +4,7 @@
 
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
-
+#include "Hong.h"
 #include "Loader.h"
 
 
@@ -17,6 +17,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
 
 	m_eNextLevel = eNextLevel;
 
@@ -47,6 +48,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_HONG:
+				pNewLevel = CHong::Create(m_pGraphic_Device);
 				break;
 			}
 
