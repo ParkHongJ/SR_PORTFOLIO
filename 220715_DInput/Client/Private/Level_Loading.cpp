@@ -6,6 +6,7 @@
 #include "Level_GamePlay.h"
 #include "Hong.h"
 #include "Level_GyuH.h"
+#include "Level_SENI.h"
 #include "Loader.h"
 
 
@@ -55,6 +56,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_GYUH:
 				pNewLevel = CLevel_GyuH::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_SENI:
+				pNewLevel = CLevel_SENI::Create(m_pGraphic_Device);
 				break;
 			}
 

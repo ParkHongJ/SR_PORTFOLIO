@@ -57,6 +57,9 @@
     </Filter>
     <Filter Include="99.Default\ClientDefault">
       <UniqueIdentifier>{236c319b-889a-424f-8cc3-fe4251c132b5}</UniqueIdentifier>
+    </Filter>  
+    <Filter Include="01.Level\SENI">
+      <UniqueIdentifier>{c666ed29-c033-4255-83c5-403620e83b14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +144,9 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>99.Default\ClientDefault</Filter>
+    </ClInclude>  
+    <ClInclude Include="..\Public\Level_SENI.h">
+      <Filter>01.Level\SENI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="parson.c">
       <Filter>99.Default</Filter>
+    </ClCompile>  
+    <ClCompile Include="..\Private\Level_SENI.cpp">
+      <Filter>01.Level\SENI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

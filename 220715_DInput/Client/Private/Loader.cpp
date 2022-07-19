@@ -39,6 +39,10 @@ _uint APIENTRY LoadingMain(void* pArg)
 		
 	default:
 		MSG_BOX(L"레벨이 없습니다");
+		break;
+	case LEVEL_SENI:
+		pLoader->Loading_ForSENILevel();
+		break;
 	}
 
 	LeaveCriticalSection(&pLoader->Get_CS());
@@ -155,6 +159,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 }
 
 HRESULT Client::CLoader::Loading_ForHongLevel()
+{
+	return S_OK;
+}
+HRESULT CLoader::Loading_ForSENILevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
