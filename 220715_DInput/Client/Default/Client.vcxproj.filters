@@ -43,6 +43,9 @@
     <Filter Include="99.Default\Imgui">
       <UniqueIdentifier>{370fbfe5-47e0-491a-8848-6fd5182ce70c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\SJH">
+      <UniqueIdentifier>{fce2fc60-246a-486d-bbd7-0243fd2c126b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -115,6 +118,9 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>99.Default\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_SJH.h">
+      <Filter>01.Level\SJH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -173,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>99.Default\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SJH.cpp">
+      <Filter>01.Level\SJH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

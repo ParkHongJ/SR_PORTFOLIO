@@ -10,7 +10,6 @@ CCamera_Free::CCamera_Free(LPDIRECT3DDEVICE9 pGraphic_Device)
 CCamera_Free::CCamera_Free(const CCamera_Free & rhs, CTransform::TRANSFORMDESC * pArg)
 	: CCamera(rhs, pArg)
 {
-
 }
 
 HRESULT CCamera_Free::Initialize_Prototype()
@@ -25,8 +24,6 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	
 
 	return S_OK;
 }
@@ -76,9 +73,6 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	Safe_Release(pGameInstance);
 
 	__super::Tick(fTimeDelta);
-
-
-
 }
 
 void CCamera_Free::LateTick(_float fTimeDelta)

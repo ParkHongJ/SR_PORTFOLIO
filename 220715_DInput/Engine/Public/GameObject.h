@@ -25,11 +25,17 @@ protected: /* 객체에게 추가된 컴포넌트들을 키로 분류하여 보관한다. */
 	map<const _tchar*, class CComponent*>			m_Components;
 	typedef map<const _tchar*, class CComponent*>	COMPONENTS;
 
+	/* for.Team */
+	static _uint Monster;
+
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, class CComponent** ppOut, void* pArg = nullptr);
 
 private:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
+
+	/* for.Team */
+	HRESULT Add_MemCount(_uint iLevelIndex, const _tchar* pComponentTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

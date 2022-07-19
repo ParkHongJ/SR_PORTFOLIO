@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "Component.h"
 
+static _uint Monster = 0;
+
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -55,7 +57,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 
 	Safe_AddRef(pComponent);
 
-	Safe_Release(pGameInstance);	
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

@@ -54,8 +54,6 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	
-
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -75,14 +73,19 @@ HRESULT CPlayer::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 	ImGui::Begin("Inspector");
+
 	ImGui::SliderFloat("floatx", &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 	ImGui::SliderFloat("floaty", &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 	ImGui::SliderFloat("floatz", &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
+
 	ImGui::End();
+
 	return S_OK;
 }
 

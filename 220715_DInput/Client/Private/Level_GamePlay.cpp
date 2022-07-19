@@ -40,8 +40,34 @@ HRESULT CLevel_GamePlay::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
+
+
+	ImGui::Begin("GamePlay");
+
+	const char* Obj[] = { "Player", "Monster", "Map" };
+	static int Obj_current_idx = 0; // Here we store our selection data as an index.
+	const char* combo_preview_value = Obj[Obj_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+	if (ImGui::BeginCombo("GamePlay_Object", combo_preview_value))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(Obj); n++)
+		{
+			const bool is_selected = (Obj_current_idx == n);
+
+			if (ImGui::Selectable(Obj[n], is_selected))
+				Obj_current_idx = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::End();
+
 
 	return S_OK;
 }
