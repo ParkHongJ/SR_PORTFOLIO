@@ -19,6 +19,13 @@ _float3 CTransform::Get_Scaled() const
 		D3DXVec3Length(&Get_State(CTransform::STATE_LOOK)));
 }
 
+void CTransform::Set_Scale(_float3& vScale)
+{
+	_float3 vPosition(Get_State(STATE_POSITION));
+	D3DXMatrixScaling(&m_WorldMatrix, vScale.x, vScale.y, vScale.z);
+	Set_State(STATE_POSITION, vPosition);
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	return S_OK;

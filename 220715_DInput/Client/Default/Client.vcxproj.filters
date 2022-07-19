@@ -49,6 +49,15 @@
     <Filter Include="01.Level\Tool">
       <UniqueIdentifier>{10e80305-7556-4362-b362-8636acccd229}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Cube">
+      <UniqueIdentifier>{1c346aa0-3181-41b9-a098-bbed818e7612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\GyuH">
+      <UniqueIdentifier>{519691af-8021-481a-905b-3582455d9cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\ClientDefault">
+      <UniqueIdentifier>{236c319b-889a-424f-8cc3-fe4251c132b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -56,18 +65,6 @@
   <ItemGroup>
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00.MainApp</Filter>
-    </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>99.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Level_Logo.h">
@@ -127,16 +124,28 @@
     <ClInclude Include="..\public\MapTool.h">
       <Filter>01.Level\Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MyBox.h">
+      <Filter>02.GameObject\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GyuH.h">
+      <Filter>01.Level\GyuH</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>99.Default</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>99.Default</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Logo.cpp">
       <Filter>01.Level\Logo</Filter>
@@ -192,18 +201,33 @@
     <ClCompile Include="..\private\MapTool.cpp">
       <Filter>01.Level\Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MyBox.cpp">
+      <Filter>02.GameObject\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GyuH.cpp">
+      <Filter>01.Level\GyuH</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Default\ClientDefault</Filter>
+    </ClCompile>
+    <ClCompile Include="parson.c">
+      <Filter>99.Default</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
-      <Filter>99.Default</Filter>
+      <Filter>99.Default\ClientDefault</Filter>
     </Image>
     <Image Include="small.ico">
-      <Filter>99.Default</Filter>
+      <Filter>99.Default\ClientDefault</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>99.Default</Filter>
+      <Filter>99.Default\ClientDefault</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

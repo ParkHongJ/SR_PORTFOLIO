@@ -36,6 +36,7 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForGamePlayLevel();
 	HRESULT Loading_ForHongLevel();
+	HRESULT Loading_ForGyuHLevel();
 private:
 	LPDIRECT3DDEVICE9	m_pGraphic_Device = nullptr;
 

@@ -38,6 +38,7 @@ public:
 	void Set_State(STATETYPE eState, const _float3& State) {
 		memcpy(&m_WorldMatrix.m[eState][0], &State, sizeof(_float3));		
 	}
+	void Set_Scale(_float3& vScale);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
