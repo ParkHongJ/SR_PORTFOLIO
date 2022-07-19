@@ -60,6 +60,9 @@
     </Filter>  
     <Filter Include="01.Level\SENI">
       <UniqueIdentifier>{c666ed29-c033-4255-83c5-403620e83b14}</UniqueIdentifier>
+    </Filter>  
+    <Filter Include="01.Level\SJH">
+      <UniqueIdentifier>{fce2fc60-246a-486d-bbd7-0243fd2c126b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +151,9 @@
     <ClInclude Include="..\Public\Level_SENI.h">
       <Filter>01.Level\SENI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_SJH.h">
+      <Filter>01.Level\SJH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -224,6 +230,9 @@
     </ClCompile>  
     <ClCompile Include="..\Private\Level_SENI.cpp">
       <Filter>01.Level\SENI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SJH.cpp">
+      <Filter>01.Level\SJH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

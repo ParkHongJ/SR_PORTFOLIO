@@ -60,6 +60,26 @@ HRESULT CMonster::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
+	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	_uint Sour = 1; // 객체에 넘버링 할 수 있음.
+
+	char Sour1[256] = { "Monster1" };
+
+	ImGui::Begin("Inspector");
+
+	ImGui::Text("Monster%d", Sour);
+
+	ImGui::SliderFloat(Sour1, &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+	ImGui::SliderFloat(Sour1, &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+	ImGui::SliderFloat(Sour1, &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
+
+	ImGui::Spacing();
+
+	ImGui::End();
+
 	return S_OK;
 }
 

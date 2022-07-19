@@ -31,6 +31,9 @@ public:
 private:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
 
+	/* for.Team */
+	HRESULT Add_MemCount(_uint iLevelIndex, const _tchar* pComponentTag);
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

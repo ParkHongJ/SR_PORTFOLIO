@@ -38,6 +38,7 @@ public:
 	HRESULT Loading_ForHongLevel();
 	HRESULT Loading_ForGyuHLevel();
 	HRESULT Loading_ForSENILevel();
+	HRESULT Loading_ForSJHLevel();
 
 private:
 	LPDIRECT3DDEVICE9	m_pGraphic_Device = nullptr;

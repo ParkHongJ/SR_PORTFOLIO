@@ -7,6 +7,7 @@
 #include "Hong.h"
 #include "Level_GyuH.h"
 #include "Level_SENI.h"
+#include "Level_SJH.h"
 #include "Loader.h"
 
 
@@ -59,6 +60,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_SENI:
 				pNewLevel = CLevel_SENI::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_SJH:
+				pNewLevel = CLevel_SJH::Create(m_pGraphic_Device);
 				break;
 			}
 
