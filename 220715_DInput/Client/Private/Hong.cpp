@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
-
+#include "Level_Loading.h"
 
 CHong::CHong(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -33,6 +33,16 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	if (GetKeyState(VK_SPACE) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CHong::Render()
@@ -89,7 +99,7 @@ HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

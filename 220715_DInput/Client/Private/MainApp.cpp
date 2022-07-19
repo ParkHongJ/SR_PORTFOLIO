@@ -41,6 +41,7 @@ HRESULT CMainApp::Initialize()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -86,18 +87,7 @@ HRESULT CMainApp::Render()
 	static int counter = 0;
 
 	//----------------------------------------------------------------------------------------------------------------------------
-	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-	
-	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
-
+	ImGui::Begin("FPS");                          // Create a window called "Hello, world!" and append into it.
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 	//----------------------------------------------------------------------------------------------------------------------------
@@ -105,6 +95,53 @@ HRESULT CMainApp::Render()
 	//----------------------------------------------------------------------------------------------------------------------------
 	ImGui::ShowDemoWindow();
 	//----------------------------------------------------------------------------------------------------------------------------
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Scene"))
+		{
+			if (ImGui::MenuItem("Hong", u8"맡은파트이름"))
+			{
+				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			if (ImGui::MenuItem("Sae", u8"맡은파트이름")) 
+			{
+				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_LOGO))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			ImGui::Separator();
+			if (ImGui::MenuItem("Hyuk", u8"맡은파트이름")) 
+			{
+
+			}
+			if (ImGui::MenuItem("Kyuu", u8"맡은파트이름"))
+			{
+
+			}
+			if (ImGui::MenuItem("Tool", u8"툴모음집")) 
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
 
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());

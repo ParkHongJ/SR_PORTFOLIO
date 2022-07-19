@@ -25,7 +25,7 @@ HRESULT CComponent::Initialize(void * pArg)
 
 void CComponent::Free()
 {
-	m_pOwner = nullptr;
+	Safe_Release(m_pOwner);
 	Safe_Release(m_pGraphic_Device);
 }
 
