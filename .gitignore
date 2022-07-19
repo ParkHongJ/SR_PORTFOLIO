@@ -12,7 +12,8 @@
 *.orig
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-
+*.ini
+*.lib
 # Mono auto generated files
 mono_crash.*
 
