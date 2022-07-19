@@ -1,17 +1,14 @@
 #include "stdafx.h"
-#include "..\Public\Level_GamePlay.h"
+#include "..\Public\Level_GyuH.h"
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
-
-
-
-CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
+CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
 }
 
-HRESULT CLevel_GamePlay::Initialize()
+HRESULT CLevel_GyuH::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -25,30 +22,34 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Cube(TEXT("Layer_Cube"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 	return S_OK;
+	
 }
 
-void CLevel_GamePlay::Tick(_float fTimeDelta)
+void CLevel_GyuH::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
 }
 
-HRESULT CLevel_GamePlay::Render()
+HRESULT CLevel_GyuH::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
 
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
+	SetWindowText(g_hWnd, TEXT("규현레벨임"));
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
+HRESULT CLevel_GyuH::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -65,7 +66,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free")
+		, LEVEL_GYUH, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -73,12 +75,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
+HRESULT CLevel_GyuH::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), 
+		LEVEL_GYUH, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -86,12 +89,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_GyuH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), 
+		LEVEL_GYUH, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -99,43 +103,54 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
+HRESULT CLevel_GyuH::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	for (_uint i = 0; i < 3; ++i)
 	{
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster"), LEVEL_GAMEPLAY, pLayerTag)))
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster"), 
+			LEVEL_GYUH, pLayerTag)))
 			return E_FAIL;
 
 	}
 
-	
+
 	Safe_Release(pGameInstance);
 
 
 	return S_OK;
 }
 
-
-CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+HRESULT CLevel_GyuH::Ready_Layer_Cube(const _tchar * pLayerTag)
 {
-	CLevel_GamePlay*		pInstance = new CLevel_GamePlay(pGraphic_Device);
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), 
+		LEVEL_GYUH, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+CLevel_GyuH * CLevel_GyuH::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+{
+	CLevel_GyuH*		pInstance = new CLevel_GyuH(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CLevel_GamePlay"));
+		MSG_BOX(TEXT("Failed To Created : CLevel_GyuH"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CLevel_GamePlay::Free()
+void CLevel_GyuH::Free()
 {
 	__super::Free();
-
 }
-
-

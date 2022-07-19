@@ -158,7 +158,7 @@ CGameObject * CPlayer::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CPlayer"));
+		MSG_BOX(TEXT("Failed To Clone : CPlayer"));
 		Safe_Release(pInstance);
 	}
 

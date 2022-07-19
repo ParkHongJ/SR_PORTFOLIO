@@ -16,6 +16,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include "parson.h"
+
 #include "Imgui/imgui.h"
 #include "Imgui/imgui_impl_dx9.h"
 #include "Imgui/imgui_impl_win32.h"

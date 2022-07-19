@@ -29,6 +29,7 @@ HRESULT CMyBox::Initialize(void * pArg)
 void CMyBox::Tick(_float fTimeDelta)
 {
 	int a = 10;
+
 }
 
 void CMyBox::LateTick(_float fTimeDelta)
