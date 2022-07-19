@@ -32,7 +32,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 				
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
 			return;
 			
 		Safe_Release(pGameInstance);
@@ -84,10 +84,6 @@ CLevel_Logo * CLevel_Logo::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_Logo::Free()
 {
 	__super::Free();
-
-
-
-
 }
 
 
