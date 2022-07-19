@@ -43,6 +43,9 @@
     <Filter Include="99.Default\Imgui">
       <UniqueIdentifier>{370fbfe5-47e0-491a-8848-6fd5182ce70c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\SENI">
+      <UniqueIdentifier>{c666ed29-c033-4255-83c5-403620e83b14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -115,6 +118,9 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>99.Default\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_SENI.h">
+      <Filter>01.Level\SENI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -173,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>99.Default\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SENI.cpp">
+      <Filter>01.Level\SENI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
