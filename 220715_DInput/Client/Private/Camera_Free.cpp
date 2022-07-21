@@ -90,7 +90,7 @@ CCamera_Free * CCamera_Free::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CCamera_Free"));
+		MSG_BOX(TEXT("Failed To Created : CCamera"));
 		Safe_Release(pInstance);
 	}
 
@@ -105,7 +105,7 @@ CGameObject * CCamera_Free::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CTerrain"));
+		MSG_BOX(TEXT("Failed To Created : CCamera"));
 		Safe_Release(pInstance);
 	}
 

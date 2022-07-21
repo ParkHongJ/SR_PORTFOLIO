@@ -33,7 +33,7 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (GetKeyState(VK_SPACE) & 0x8000)
+	/*if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
@@ -42,7 +42,7 @@ void CHong::Tick(_float fTimeDelta)
 			return;
 
 		Safe_Release(pGameInstance);
-	}
+	}*/
 }
 
 HRESULT CHong::Render()
@@ -73,7 +73,7 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_HONG, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -86,7 +86,7 @@ HRESULT CHong::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_HONG, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -114,7 +114,7 @@ HRESULT CHong::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 3; ++i)
 	{
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster"), LEVEL_GAMEPLAY, pLayerTag)))
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster"), LEVEL_HONG, pLayerTag)))
 			return E_FAIL;
 
 	}
@@ -132,7 +132,7 @@ CHong * CHong::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CLevel_GamePlay"));
+		MSG_BOX(TEXT("Failed To Created : CLevel_Hong"));
 		Safe_Release(pInstance);
 	}
 

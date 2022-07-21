@@ -34,11 +34,11 @@ public:
 public:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_ForLogoLevel();
-	//HRESULT Loading_ForGamePlayLevel();
-	//HRESULT Loading_ForHongLevel();
-	//HRESULT Loading_ForGyuHLevel();
-	//HRESULT Loading_ForSENILevel();
-	//HRESULT Loading_ForSJHLevel();
+	HRESULT Loading_ForGamePlayLevel();
+	HRESULT Loading_ForHongLevel();
+	HRESULT Loading_ForGyuHLevel();
+	HRESULT Loading_ForSENILevel();
+	HRESULT Loading_ForSJHLevel();
 
 private:
 	LPDIRECT3DDEVICE9	m_pGraphic_Device = nullptr;
