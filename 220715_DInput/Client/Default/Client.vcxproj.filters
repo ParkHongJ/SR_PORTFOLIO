@@ -73,6 +73,9 @@
     <Filter Include="02.GameObject\Toodee">
       <UniqueIdentifier>{00b0ee6b-9e35-4359-bc70-5aa8715efc85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Wall">
+      <UniqueIdentifier>{2cf00ebf-6cc7-4fd0-9e5a-755786aabd50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,9 +171,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster_Pig.h">
       <Filter>02.GameObject\Monster\Pig</Filter>
-    </ClInclude>  
+    </ClInclude>
     <ClInclude Include="..\Public\Toodee.h">
       <Filter>02.GameObject\Toodee</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Block.h">
+      <Filter>02.GameObject\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -257,9 +263,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster_Pig.cpp">
       <Filter>02.GameObject\Monster\Pig</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\Toodee.cpp">
       <Filter>02.GameObject\Toodee</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Block.cpp">
+      <Filter>02.GameObject\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

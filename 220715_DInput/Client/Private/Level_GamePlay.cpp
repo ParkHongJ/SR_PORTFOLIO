@@ -44,7 +44,6 @@ HRESULT CLevel_GamePlay::Render()
 
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
 
-
 	ImGui::Begin("GamePlay");
 
 	const char* Obj[] = { "Player", "Monster", "Map" };
