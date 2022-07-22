@@ -30,7 +30,7 @@ HRESULT CMonster::Initialize(void * pArg)
 
 void CMonster::Tick(_float fTimeDelta)
 {
-	m_vTargetPos = _float3(1.f, 50.f, 0.f);
+	m_vTargetPos = _float3(0.f, 0.f, 0.f);
 
 	// m_pTransformCom->Chase(m_vTargetPos, fTimeDelta);
 	m_pTransformCom->LookAtForLandObject(m_vTargetPos);
@@ -62,23 +62,33 @@ HRESULT CMonster::Render()
 
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	_uint Sour = 1; // 객체에 넘버링 할 수 있음.
+	char Sour[256] = { "Monster" };
+	char szBuf[MAX_PATH] = {};
 
-	char Sour1[256] = { "Monster1" };
+	_uint Dest = 1; // 객체에 넘버링 할 수 있음.
 
-	ImGui::Begin("Inspector");
+	ImGui::Begin(Sour);
 
-	ImGui::Text("Monster%d", Sour);
+	ImGui::Text("Monster%d", Dest);
 
-	ImGui::SliderFloat(Sour1, &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat(Sour1, &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat(Sour1, &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "_x");
+	ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
+
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "_y");
+	ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
+
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "_z");
+	ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
 
 	ImGui::Spacing();
 
 	ImGui::End();
+
 
 	return S_OK;
 }

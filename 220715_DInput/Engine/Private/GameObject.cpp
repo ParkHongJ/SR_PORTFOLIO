@@ -2,8 +2,6 @@
 #include "GameInstance.h"
 #include "Component.h"
 
-static _uint Monster = 0;
-
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -44,17 +42,17 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	if (nullptr != Find_Component(pComponentTag))
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
-	CComponent*			pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	CComponent*	pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
+
 	//나중에 조심하기 레퍼런스 카운트관련
 	//컴포넌트 -> 게임오브젝트 참조하되 레퍼런스카운트 안올려놨음 -- 07.19 레.카 올려놨음
-	pComponent->SetOwner(_pOwner);
-	
-	_pOwner->AddRef();
+	//if (FAILED(pComponent->SetOwner(_pOwner)))
+		//return E_FAIL;
 
 	m_Components.emplace(pComponentTag, pComponent);
 

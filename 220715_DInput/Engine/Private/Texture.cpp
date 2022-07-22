@@ -18,7 +18,7 @@ HRESULT CTexture::Bind_Texture(_uint iTextureIndex)
 	if (iTextureIndex >= m_Textures.size())
 		return E_FAIL;
 
-	return m_pGraphic_Device->SetTexture(0, m_Textures[iTextureIndex]);		
+	return m_pGraphic_Device->SetTexture(0, m_Textures[iTextureIndex]);
 }
 
 HRESULT CTexture::Initialize_Prototype(TYPE eType, const _tchar * pTextureFilePath, _uint iNumTextures)

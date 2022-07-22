@@ -25,13 +25,13 @@ HRESULT CCollider::Initialize(void* pArg)
 
 HRESULT CCollider::Render()
 {
-	D3DMATERIAL9 mtrl;
+	/*D3DMATERIAL9 mtrl;
 	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));
 
 	D3DXCreateSphere(m_pGraphic_Device, m_fRadius, 30, 10, &m_pSphere, NULL);
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pSphere->DrawSubset(0);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
 	return S_OK;
 }
 

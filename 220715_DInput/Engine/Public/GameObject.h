@@ -19,7 +19,7 @@ public:
 	virtual HRESULT Render();
 
 protected:
-	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
+	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
 
 protected: /* 객체에게 추가된 컴포넌트들을 키로 분류하여 보관한다. */
 	map<const _tchar*, class CComponent*>			m_Components;
@@ -30,9 +30,6 @@ public:
 
 private:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
-
-	/* for.Team */
-	HRESULT Add_MemCount(_uint iLevelIndex, const _tchar* pComponentTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

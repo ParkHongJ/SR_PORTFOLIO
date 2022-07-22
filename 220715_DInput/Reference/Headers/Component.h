@@ -25,7 +25,7 @@ public:
 	virtual void Free() override;
 	
 public:
-	void SetOwner(class CGameObject* _pOwner);
+	HRESULT SetOwner(class CGameObject* _pOwner);
 protected:
 	class CGameObject* m_pOwner = nullptr;
 };

@@ -54,6 +54,11 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		m_pTransformCom->Go_Right(fTimeDelta);
 	}
 
+	if ((pGameInstance->Get_DIKState(DIK_RETURN) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
+	{
+		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), (fTimeDelta * 0.5f));
+	}
+
 	_long	MouseMove = 0;
 
 	if (pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
@@ -68,7 +73,6 @@ void CCamera_Free::Tick(_float fTimeDelta)
 			m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), MouseMove * fTimeDelta * 0.05f);
 		}
 	}
-
 
 	Safe_Release(pGameInstance);
 

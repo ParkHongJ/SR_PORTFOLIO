@@ -79,19 +79,30 @@ HRESULT CPlayer::Render()
 
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	ImGui::Begin("Inspector");
+	char Sour[256] = { "Player_" };
+	char szBuf[MAX_PATH] = {};
 
-	ImGui::SliderFloat("floatx", &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat("floaty", &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat("floatz", &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+	ImGui::Begin(Sour);
+
+	ImGui::Text("Player");
+
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "x");
+	ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
+
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "y");
+	ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
+
+	strcpy(szBuf, Sour);
+	strcat(szBuf, "z");
+	ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
-	
-	_float fColRadius = m_pColliderCom->GetRadius();
-	ImGui::SliderFloat("Radius", &fColRadius, -100.0f, 100.0f);
-	m_pColliderCom->SetRadius(fColRadius);
+
+	ImGui::Spacing();
 
 	ImGui::End();
-
 
 	return S_OK;
 }

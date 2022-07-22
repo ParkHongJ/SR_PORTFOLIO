@@ -7,6 +7,7 @@
 #include "Terrain.h"
 #include "Monster.h"
 #include "Player.h"
+#include "Toodee.h"
 #include "MyBox.h"
 
 
@@ -143,7 +144,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Player.png")))))
 		return E_FAIL;
 
-
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
 	/* 모델를 로드한다. */
 
@@ -167,6 +167,7 @@ HRESULT Client::CLoader::Loading_ForHongLevel()
 {
 	return S_OK;
 }
+
 HRESULT CLoader::Loading_ForSENILevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -202,6 +203,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 		return E_FAIL;
 
 	/* 텍스쳐를 로드한다. */
+
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/Grass_%d.tga"), 2))))
@@ -265,6 +267,7 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 		return E_FAIL;
 
 	/* 텍스쳐를 로드한다. */
+
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/Grass_%d.tga"), 2))))
@@ -301,7 +304,7 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 
 HRESULT CLoader::Loading_ForSJHLevel()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Prototype..."));
@@ -312,7 +315,15 @@ HRESULT CLoader::Loading_ForSJHLevel()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Player*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pGraphic_Device))))
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pGraphic_Device))))
+		//return E_FAIL;
+
+	/* For.Prototype_GameObject_Toodee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"), CToodee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Monster */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"), CMonster::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
@@ -328,6 +339,10 @@ HRESULT CLoader::Loading_ForSJHLevel()
 
 	/* For.Prototype_Component_Texture_Player */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/Player.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SJH, TEXT("Prototype_Component_Texture_Toodee"), CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 68))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));

@@ -72,7 +72,6 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
 				goto except;
 
-
 			except:
 			Safe_Release(pGameInstance);
 		}

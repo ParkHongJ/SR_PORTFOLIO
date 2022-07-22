@@ -79,6 +79,9 @@
     <Filter Include="04.Components\SENI">
       <UniqueIdentifier>{4374750a-162c-41a3-a7fe-9315d6cc758c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Components\VIBuffer\ToodeeRect">
+      <UniqueIdentifier>{048a9d5e-7593-4a06-b4a7-f855826b8098}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>04.Components\SENI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Toodee_Rect.h">
+      <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -238,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
       <Filter>04.Components\SENI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Toodee_Rect.cpp">
+      <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

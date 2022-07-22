@@ -47,6 +47,7 @@ HRESULT CMyBox::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
+
 	// 리스트박스
 	ImGui::Begin("Cube");
 	const char* items[] = { "Position", "Scale" };
