@@ -6,8 +6,8 @@
 #include "Transform.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Topdee.h"
 #include "VIBuffer_Terrain.h"
-
 BEGIN(Engine)
 
 class CComponent_Manager final : public CBase

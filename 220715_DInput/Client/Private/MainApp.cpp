@@ -14,6 +14,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+#pragma region 제이쓴
 	JSON_Value *rootValue;
 	JSON_Object *rootObject;
 	rootValue = json_value_init_object();
@@ -49,7 +50,7 @@ HRESULT CMainApp::Initialize()
 
 	json_value_free(rootValue);    // JSON_Value에 할당된 동적 메모리 해제
 
-
+#pragma endregion 제이쓴
 	GRAPHICDESC			GraphicDesc;
 	ZeroMemory(&GraphicDesc, sizeof(GRAPHICDESC));
 
@@ -71,7 +72,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
-	if (FAILED(Open_Level(LEVEL_LOGO)))
+	if (FAILED(Open_Level(LEVEL_GYUH)))
 		return E_FAIL;
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -254,6 +255,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	/* For.Prototype_Component_VIBuffer_Cube*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Topdee*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Topdee"), CVIBuffer_Topdee::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Transform */

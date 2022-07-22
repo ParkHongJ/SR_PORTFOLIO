@@ -177,6 +177,21 @@ void CTransform::Chase(_float3 vTargetPos, _float fTimeDelta)
 	Go_Straight(fTimeDelta);
 }
 
+void CTransform::TransOnlyLook(_float fRadian)
+{
+	_float3		vScale = Get_Scaled();
+
+
+	_float3		vLook = _float3(0.f, 0.f, 1.f) * vScale.z;
+
+	_float4x4	RotationMatrix;
+	_float3		vAxis{0.f,1.f,0.f};
+	D3DXMatrixRotationAxis(&RotationMatrix, &vAxis, fRadian);
+	D3DXVec3TransformNormal(&vLook, &vLook, &RotationMatrix);
+
+	Set_State(CTransform::STATE_LOOK, vLook);
+}
+
 CTransform * CTransform::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CTransform*			pInstance = new CTransform(pGraphic_Device);
