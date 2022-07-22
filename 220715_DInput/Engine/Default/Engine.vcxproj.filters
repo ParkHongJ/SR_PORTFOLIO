@@ -79,6 +79,12 @@
     <Filter Include="04.Components\SENI">
       <UniqueIdentifier>{4374750a-162c-41a3-a7fe-9315d6cc758c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Components\Arrow">
+      <UniqueIdentifier>{801764a6-d02f-4e78-b97f-4ca1e679939a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Components\VIBuffer\VIBuffer_Topdee">
+      <UniqueIdentifier>{580e5506-5e22-49af-89b8-20b9b46d56a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -168,6 +174,9 @@
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>04.Components\SENI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Topdee.h">
+      <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -238,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
       <Filter>04.Components\SENI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Topdee.cpp">
+      <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

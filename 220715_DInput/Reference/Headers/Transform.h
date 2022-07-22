@@ -60,6 +60,7 @@ public:
 	void Chase(_float3 vTargetPos, _float fTimeDelta);
 
 public:
+	void TransOnlyLook(_float fRadian);
 
 
 
