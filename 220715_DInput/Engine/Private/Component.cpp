@@ -30,8 +30,8 @@ void CComponent::Free()
 
 HRESULT CComponent::SetOwner(CGameObject * _pOwner)
 {
-	if (nullptr == _pOwner)
-		return E_FAIL;
+	/*if (nullptr == _pOwner)
+		return E_FAIL;*/
 
 	m_pOwner = _pOwner;
 
