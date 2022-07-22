@@ -67,6 +67,9 @@
     <Filter Include="02.GameObject\Topdee">
       <UniqueIdentifier>{d17678d4-6d50-4122-b8f1-a1d0173816d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Monster\Pig">
+      <UniqueIdentifier>{03a1b434-f7fa-4224-9554-91573c727671}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -160,6 +163,9 @@
     <ClInclude Include="..\Public\Topdee.h">
       <Filter>02.GameObject\Topdee</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Monster_Pig.h">
+      <Filter>02.GameObject\Monster\Pig</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -242,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Topdee.cpp">
       <Filter>02.GameObject\Topdee</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Pig.cpp">
+      <Filter>02.GameObject\Monster\Pig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

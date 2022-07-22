@@ -72,7 +72,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
-	if (FAILED(Open_Level(LEVEL_GYUH)))
+	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
