@@ -41,7 +41,11 @@ private:
 	HRESULT Reset_RenderState();
 private:
 	HRESULT SetUp_Components();
+	bool LoadTextureFromFile(const char* filename, PDIRECT3DTEXTURE9* out_texture, int* out_width, int* out_height);
 
+	int my_image_width = 0;
+	int my_image_height = 0;
+	PDIRECT3DTEXTURE9 my_texture = NULL;
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

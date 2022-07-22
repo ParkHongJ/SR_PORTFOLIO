@@ -52,7 +52,6 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	//나중에 조심하기 레퍼런스 카운트관련
 	//컴포넌트 -> 게임오브젝트 참조하되 레퍼런스카운트 안올려놨음 -- 07.19 레.카 올려놨음
 	pComponent->SetOwner(_pOwner);
-
 	m_Components.emplace(pComponentTag, pComponent);
 
 	*ppOut = pComponent;

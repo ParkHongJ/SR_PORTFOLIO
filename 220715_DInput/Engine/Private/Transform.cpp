@@ -51,6 +51,14 @@ HRESULT CTransform::Bind_WorldMatrix()
 	return S_OK;
 }
 
+
+void CTransform::Translate(_float3 vDir)
+{
+	_float3		vPosition = Get_State(STATE_POSITION);
+	vPosition += vDir;
+	Set_State(CTransform::STATE_POSITION, vPosition);
+}
+
 void CTransform::Go_Straight(_float fTimeDelta)
 {
 	_float3		vPosition = Get_State(STATE_POSITION);

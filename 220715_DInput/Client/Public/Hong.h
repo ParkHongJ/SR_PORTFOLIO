@@ -24,5 +24,11 @@ private:
 public:
 	static CHong* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
+
+public:
+	void GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories);
+private:
+
+	vector<_tchar*> m_list;
 };
 END

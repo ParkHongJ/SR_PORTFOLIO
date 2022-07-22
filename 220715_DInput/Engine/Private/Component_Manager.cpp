@@ -61,7 +61,5 @@ void CComponent_Manager::Free()
 
 		m_pPrototypes[i].clear();		
 	}
-
 	Safe_Delete_Array(m_pPrototypes);
-	
 }

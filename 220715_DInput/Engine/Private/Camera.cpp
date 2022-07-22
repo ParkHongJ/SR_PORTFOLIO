@@ -25,8 +25,15 @@ HRESULT CCamera::Initialize(void * pArg)
 {
 	memcpy(&m_CameraDesc, pArg, sizeof(CAMERADESC));
 
+	//_float3 vPos = { 16.0f,5.0f,9.0f };
+	//_float3 vLook = { 16.0f,0.f,9.0f };
+
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	//m_pTransformCom->LookAt(vLook);
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CameraDesc.vEye);
 	m_pTransformCom->LookAt(m_CameraDesc.vAt);
+
 
 	return S_OK;
 }
@@ -37,6 +44,7 @@ void CCamera::Tick(_float fTimeDelta)
 
 	ViewMatrix = m_pTransformCom->Get_WorldMatrixInverse();	
 	D3DXMatrixPerspectiveFovLH(&ProjMatrix, m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar);
+	//D3DXMatrixOrthoLH(&ProjMatrix, m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar);
 
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &ProjMatrix);

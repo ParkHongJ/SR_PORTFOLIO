@@ -112,6 +112,7 @@ CGameObject * CBackGround::Clone(void* pArg)
 
 void CBackGround::Free()
 {
+	int i = 10;
 	__super::Free();
 
 	Safe_Release(m_pTextureCom);
