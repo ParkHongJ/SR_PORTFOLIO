@@ -24,6 +24,9 @@ HRESULT CLevel_SENI::Initialize()
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -110,6 +113,21 @@ HRESULT CLevel_SENI::Ready_Layer_Monster(const _tchar * pLayerTag)
 	}
 
 	
+	Safe_Release(pGameInstance);
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_SENI::Ready_Layer_Monster_Pig(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster_Pig"), LEVEL_SENI, pLayerTag)))
+		return E_FAIL;
+
+
 	Safe_Release(pGameInstance);
 
 

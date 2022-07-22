@@ -57,12 +57,15 @@
     </Filter>
     <Filter Include="99.Default\ClientDefault">
       <UniqueIdentifier>{236c319b-889a-424f-8cc3-fe4251c132b5}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="01.Level\SENI">
       <UniqueIdentifier>{c666ed29-c033-4255-83c5-403620e83b14}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="01.Level\SJH">
       <UniqueIdentifier>{fce2fc60-246a-486d-bbd7-0243fd2c126b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Pig">
+      <UniqueIdentifier>{03a1b434-f7fa-4224-9554-91573c727671}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,12 +150,15 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>99.Default\ClientDefault</Filter>
-    </ClInclude>  
+    </ClInclude>
     <ClInclude Include="..\Public\Level_SENI.h">
       <Filter>01.Level\SENI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_SJH.h">
       <Filter>01.Level\SJH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_Pig.h">
+      <Filter>02.GameObject\Monster\Pig</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -227,12 +233,15 @@
     </ClCompile>
     <ClCompile Include="parson.c">
       <Filter>99.Default</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\Level_SENI.cpp">
       <Filter>01.Level\SENI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_SJH.cpp">
       <Filter>01.Level\SJH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Pig.cpp">
+      <Filter>02.GameObject\Monster\Pig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
