@@ -23,7 +23,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.0f, 0.5f, 0.f));
-
+	bool ret = LoadTextureFromFile("../Bin/Resources/Textures/player/AKIHA_AKI00_000.png", &my_texture, &my_image_width, &my_image_height);
+	IM_ASSERT(ret);
 	return S_OK;
 }
 
@@ -31,22 +32,29 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
+
+		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
+		//m_pTransformCom->Go_Right(fTimeDelta);
 	}
 
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
+		//m_pTransformCom->Go_Backward(fTimeDelta);
+
+		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
 	}
 
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+
+		m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
 	}
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
 	}
 	
 }
@@ -92,7 +100,13 @@ HRESULT CPlayer::Render()
 
 	ImGui::End();
 
+	
 
+	ImGui::Begin("DirectX9 Texture Test");
+	ImGui::Text("pointer = %p", my_texture);
+	ImGui::Text("size = %d x %d", my_image_width, my_image_height);
+	ImGui::Image((void*)my_texture, ImVec2(50, 50));
+	ImGui::End();
 	return S_OK;
 }
 
@@ -101,9 +115,9 @@ HRESULT CPlayer::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
+	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
@@ -111,9 +125,9 @@ HRESULT CPlayer::Set_RenderState()
 
 HRESULT CPlayer::Reset_RenderState()
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
+	//m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -161,7 +175,7 @@ HRESULT CPlayer::SetUp_Components()
 		return E_FAIL;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
-
+	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	return S_OK;
 }
 
@@ -194,10 +208,29 @@ CGameObject * CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+	Safe_Release(my_texture);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+}
+
+bool CPlayer::LoadTextureFromFile(const char* filename, PDIRECT3DTEXTURE9* out_texture, int* out_width, int* out_height)
+{
+
+	// Load texture from disk
+	PDIRECT3DTEXTURE9 texture;
+	HRESULT hr = D3DXCreateTextureFromFileA(m_pGraphic_Device, filename, &texture);
+	if (hr != S_OK)
+		return false;
+
+	// Retrieve description of the texture surface so we can access its size
+	D3DSURFACE_DESC my_image_desc;
+	texture->GetLevelDesc(0, &my_image_desc);
+	*out_texture = texture;
+	*out_width = (int)my_image_desc.Width;
+	*out_height = (int)my_image_desc.Height;
+	return true;
 }
 

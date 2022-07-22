@@ -24,7 +24,8 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
+	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
 	return S_OK;
 }
 
@@ -69,6 +70,25 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 
+	if (pGameInstance->Get_DIMKeyState(DIMK_WHEEL))
+	{
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+		{
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			vPos += _float3(1.0f, 0.0f, 0.0f) * MouseMove * fTimeDelta * 0.5f;
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+		{
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			vPos -= _float3(0.0f, 1.0f, 0.0f) * MouseMove * fTimeDelta * 0.5f;
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+	}
 
 	Safe_Release(pGameInstance);
 
@@ -77,6 +97,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 
 void CCamera_Free::LateTick(_float fTimeDelta)
 {
+
 }
 
 HRESULT CCamera_Free::Render()

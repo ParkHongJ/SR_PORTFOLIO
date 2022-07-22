@@ -18,14 +18,17 @@ HRESULT CHong::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+	/*if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
+
+	
+
 
 	return S_OK;
 }
@@ -33,26 +36,71 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	/*if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
-			return;
-
-		Safe_Release(pGameInstance);
-	}*/
 }
 
 HRESULT CHong::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-	int i = 10;
 
 	SetWindowText(g_hWnd, TEXT("홍준레벨임"));
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
+	_float4x4		CamWorldMatrix;
+	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
+	_float3 vRight = *(_float3*)&CamWorldMatrix.m[0][0];
+	_float3 vUp = *(_float3*)&CamWorldMatrix.m[1][0];
+	_float3 vLook = *(_float3*)&CamWorldMatrix.m[2][0];
+	_float3 vPos = *(_float3*)&CamWorldMatrix.m[3][0];
+	ImGui::Begin("CameraController");
+
+	ImGui::DragFloat3("vRight", vRight, 0.01f, -100.0f, 100.0f);
+	ImGui::DragFloat3("vUp", vUp, 0.01f, -100.0f, 100.0f);
+	ImGui::DragFloat3("vLook", vLook, 0.01f, -100.0f, 100.0f);
+	ImGui::DragFloat3("vPos", vPos, 0.01f, -100.0f, 100.0f);
+	///memcpy(&m_WorldMatrix.m[eState][0], &State, sizeof(_float3));
+	ImGui::End();
+	ImGui::Begin("SelectFolder");
+
+
+	ImGui::Text("Blah");
+	const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
+	static int item_current = 1;
+	ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 4);
+
+	if (ImGui::Button("Open"))
+	{
+		TCHAR cpath[MAX_PATH] = L"";
+
+		LPITEMIDLIST pDirList;
+		BROWSEINFO browseInfo;
+		browseInfo.hwndOwner = NULL;
+		browseInfo.pidlRoot = NULL;
+		browseInfo.lpszTitle = L"이미지들을 불러올 폴더를 선택해 주세요";
+		browseInfo.pszDisplayName = cpath;
+		browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
+		browseInfo.lpfn = NULL;
+		browseInfo.lParam = 0;
+
+		pDirList = SHBrowseForFolder(&browseInfo);
+		if (pDirList != NULL)
+		{
+			BOOL bWorking = true;
+			SHGetPathFromIDList(pDirList, cpath);
+			TCHAR *return_path = cpath;
+
+
+			/*FindFirstFile(cpath, &test);
+			while (bWorking)
+			{
+				bWorking = FindNextFile();
+			}*/
+		}
+		
+	}
+
+	ImGui::End();
 	return S_OK;
 }
 
@@ -68,14 +116,15 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.fFovy = D3DXToRadian(60.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
-	CameraDesc.fFar = 300.0f;
+	CameraDesc.fFar = 100.f;
 
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-
+	
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_HONG, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -144,4 +193,35 @@ void CHong::Free()
 	__super::Free();
 }
 
+void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories)
+{
+	//_tchar* sTmp = sPath;// +string("\\*.*");
+	//wcscat(sTmp, L"\\*.*");
+	//WIN32_FIND_DATA fd;	
+	//HANDLE hFind = FindFirstFile(sTmp, &fd);	
+	//if (INVALID_HANDLE_VALUE != hFind)	
+	//{		
+	//	do		
+	//	{			
+	//		if ( fd.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)			
+	//		{				
+	//			if (bAllDirectories)				
+	//			{					
+	//				if (fd.cFileName[0] != '.')					
+	//				{							
+	//					sTmp = sPath + string("\\") + string(fd.cFileName);	
+	//					GetFiles(vList, sTmp, bAllDirectories);					
+	//				}				
+	//			}			
+	//		}			
+	//		else			
+	//		{				
+	//			sTmp = sPath + string("\\") + string(fd.cFileName);				
+	//			vList.push_back(sTmp);			
+	//		}				
+	//	} 
+	//	while(FindNextFile(hFind, &fd));		
+	//	FindClose(hFind);			
+	//}	
+}
 

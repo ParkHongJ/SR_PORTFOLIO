@@ -58,7 +58,7 @@ public:
 	void LookAt(_float3 vTargetPos);
 	void LookAtForLandObject(_float3 vTargetPos);
 	void Chase(_float3 vTargetPos, _float fTimeDelta);
-
+	void Translate(_float3 vDir);
 public:
 
 

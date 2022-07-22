@@ -60,7 +60,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	BackDesc.iSizeX = g_iWinSizeX;
 	BackDesc.iSizeY = g_iWinSizeY;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_BackGround"), LEVEL_GAMEPLAY, pLayerTag, &BackDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_BackGround"), LEVEL_LOGO, pLayerTag, &BackDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

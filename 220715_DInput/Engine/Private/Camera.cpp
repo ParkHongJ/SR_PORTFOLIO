@@ -25,8 +25,15 @@ HRESULT CCamera::Initialize(void * pArg)
 {
 	memcpy(&m_CameraDesc, pArg, sizeof(CAMERADESC));
 
+	//_float3 vPos = { 16.0f,5.0f,9.0f };
+	//_float3 vLook = { 16.0f,0.f,9.0f };
+
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	//m_pTransformCom->LookAt(vLook);
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CameraDesc.vEye);
 	m_pTransformCom->LookAt(m_CameraDesc.vAt);
+
 
 	return S_OK;
 }
