@@ -40,6 +40,10 @@ public:
 	}
 	void Set_Scale(_float3& vScale);
 
+	void Set_TransformDesc_Speed(_float fSpeed) {
+		m_TransformDesc.fSpeedPerSec = fSpeed;
+	}/*For.Test*/
+
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -62,8 +66,10 @@ public:
 public:
 	void TransOnlyLook(_float fRadian);
 
-
-
+public:/*For.Test*/
+	void Go_Straight_For_Toodee(_float fTimeDelta);
+	bool Jump_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta);
+	void Jump_End_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta);
 
 private:
 	_float4x4			m_WorldMatrix;

@@ -185,11 +185,48 @@ void CTransform::TransOnlyLook(_float fRadian)
 	_float3		vLook = _float3(0.f, 0.f, 1.f) * vScale.z;
 
 	_float4x4	RotationMatrix;
-	_float3		vAxis{0.f,1.f,0.f};
+	_float3		vAxis{ 0.f,1.f,0.f };
 	D3DXMatrixRotationAxis(&RotationMatrix, &vAxis, fRadian);
 	D3DXVec3TransformNormal(&vLook, &vLook, &RotationMatrix);
 
 	Set_State(CTransform::STATE_LOOK, vLook);
+}
+
+void CTransform::Go_Straight_For_Toodee(_float fTimeDelta)
+{
+	_float3 vPosition = Get_State(STATE_POSITION);
+	_float3 vLook = Get_State(STATE_RIGHT);
+
+	vPosition += *D3DXVec3Normalize(&vLook, &vLook) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
+
+	Set_State(CTransform::STATE_POSITION, vPosition);
+}
+
+bool CTransform::Jump_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta)
+{
+	_float3 vPosition = Get_State(STATE_POSITION);
+	_float3 vLook = Get_State(STATE_LOOK);
+
+	if(vTargetPosZ > Get_State(STATE_POSITION).z)
+		vPosition += *D3DXVec3Normalize(&vLook, &vLook) * JumpSpeed * fTimeDelta;
+
+	Set_State(CTransform::STATE_POSITION, vPosition);
+
+	if (vTargetPosZ < Get_State(STATE_POSITION).z)
+		return true;
+
+	return false;
+}
+
+void CTransform::Jump_End_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta)
+{
+	_float3 vPosition = Get_State(STATE_POSITION);
+	_float3 vLook = Get_State(STATE_LOOK);
+
+	if (vTargetPosZ < Get_State(STATE_POSITION).z)
+		vPosition -= *D3DXVec3Normalize(&vLook, &vLook) * JumpSpeed * fTimeDelta;
+
+	Set_State(CTransform::STATE_POSITION, vPosition);
 }
 
 CTransform * CTransform::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

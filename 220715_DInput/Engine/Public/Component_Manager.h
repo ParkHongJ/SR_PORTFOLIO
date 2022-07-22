@@ -7,6 +7,7 @@
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Topdee.h"
+#include "VIBuffer_Toodee_Rect.h"
 #include "VIBuffer_Terrain.h"
 BEGIN(Engine)
 

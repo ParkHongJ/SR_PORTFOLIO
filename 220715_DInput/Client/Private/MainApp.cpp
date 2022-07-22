@@ -161,15 +161,21 @@ HRESULT CMainApp::Render()
 
 				Safe_Release(pGameInstance);
 			}
-			ImGui::Separator();
-			if (ImGui::MenuItem("Hyuk", u8"맡은파트이름")) 
+			if (ImGui::MenuItem("Hyeuk", u8"맡은파트이름")) 
 			{
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
 
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
 			}
 			if (ImGui::MenuItem("Kyuu", u8"맡은파트이름"))
 			{
 
 			}
+			ImGui::Separator();
 			if (ImGui::MenuItem("Tool", u8"툴모음집")) 
 			{
 
@@ -253,6 +259,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CVIBuffer_Rect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Toodee_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Toodee_Rect"), CVIBuffer_Toodee_Rect::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_VIBuffer_Cube*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -270,10 +280,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
 		CCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
-	
-
-
-	
 
 	Safe_AddRef(m_pRenderer);
 

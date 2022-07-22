@@ -28,7 +28,12 @@ void CComponent::Free()
 	Safe_Release(m_pGraphic_Device);
 }
 
-void CComponent::SetOwner(CGameObject * _pOwner)
+HRESULT CComponent::SetOwner(CGameObject * _pOwner)
 {
+	if (nullptr == _pOwner)
+		return E_FAIL;
+
 	m_pOwner = _pOwner;
+
+	return S_OK;
 }

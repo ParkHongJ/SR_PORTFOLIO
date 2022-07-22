@@ -84,6 +84,9 @@
     </Filter>
     <Filter Include="04.Components\VIBuffer\VIBuffer_Topdee">
       <UniqueIdentifier>{580e5506-5e22-49af-89b8-20b9b46d56a0}</UniqueIdentifier>
+    </Filter>  
+    <Filter Include="04.Components\VIBuffer\ToodeeRect">
+      <UniqueIdentifier>{048a9d5e-7593-4a06-b4a7-f855826b8098}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +179,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Topdee.h">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
+    </ClInclude>  
+    <ClInclude Include="..\Public\VIBuffer_Toodee_Rect.h">
+      <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Topdee.cpp">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
+    </ClCompile>  
+    <ClCompile Include="..\Private\VIBuffer_Toodee_Rect.cpp">
+      <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
