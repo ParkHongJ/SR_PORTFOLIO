@@ -165,7 +165,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	return S_OK;
 }
 
-HRESULT Client::CLoader::Loading_ForHongLevel()
+HRESULT CLoader::Loading_ForHongLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);

@@ -68,7 +68,8 @@ HRESULT CBlock::Render()
 
 	if (FAILED(m_pTextureCom->Bind_Texture(2)))
 		return E_FAIL;
-
+	if (FAILED(m_pTextureCom->Bind_Texture(1)))
+		return E_FAIL;
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 

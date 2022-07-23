@@ -21,8 +21,8 @@ HRESULT CHong::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
+		return E_FAIL;*/
 
 
 	return S_OK;
@@ -49,11 +49,11 @@ void CHong::Tick(_float fTimeDelta)
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
 		m_vPosition.x += 1.f;
-	}
+	}*/
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		Ready_Layer_Block(L"Layer_Cube");
-	}*/
+	}
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -90,14 +90,7 @@ HRESULT CHong::Render()
 	ImGui::DragFloat3("vPos", vPos, 0.01f, -100.0f, 100.0f);
 	ImGui::End();
 
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("vPos", m_vPosition, 1.f, -100.0f, 100.0f);
-	if (ImGui::Button("+X"))
-	{
-		m_vPosition.x += 1.f;
-	}
-
-	ImGui::End();
+	CreateMap();
 
 	ImGui::Begin("SelectFolder");
 
@@ -139,6 +132,7 @@ HRESULT CHong::Render()
 	}
 
 	ImGui::End();
+
 	return S_OK;
 }
 
@@ -211,12 +205,12 @@ HRESULT CHong::Ready_Layer_Monster(const _tchar * pLayerTag)
 }
 
 
-HRESULT CHong::Ready_Layer_Block(const _tchar* pLayerTag)
+HRESULT CHong::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, m_vPosition)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -277,35 +271,77 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 void CHong::SaveGameObject()
 {
 
-	HANDLE		hFile = CreateFile(°æ·Î, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-
+	HANDLE		hFile = CreateFile(L"../Bin/Data/Map.dat", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
-
-
-
-	//vector<TILE*>& vecTile = pTerrain->Get_VecTile();
-
 	DWORD	dwByte = 0;
-
-	/*typedef struct tagTile
+	for (auto& iter : m_list)
 	{
-		D3DXVECTOR3	vPos;
-		D3DXVECTOR3 vSize;
+		WriteFile(hFile, iter, sizeof(_float3), &dwByte, nullptr);
+	}
+	CloseHandle(hFile);
+}
 
-		BYTE		byOption;
-		BYTE		byDrawID;
+void CHong::LoadGameObject()
+{
+	HANDLE		hFile = CreateFile(L"../Bin/Data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-		int			iIndex;
-		int			iParentIndex;
+	if (hFile == INVALID_HANDLE_VALUE)
+		return;
 
-	}TILE;*/
+	DWORD dwByte = 0;
 
-	for (auto& iter : vecTile)
+	while (true)
 	{
-		//WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
+		_float3 vBlockPos = { };
+		ReadFile(hFile, vBlockPos, sizeof(_float3), &dwByte, nullptr);
+
+		if (0 == dwByte)
+		{
+			break;
+		}
+		m_list.push_back(vBlockPos);
 	}
 
 	CloseHandle(hFile);
+
+	for (auto& iter : m_list)
+	{
+		m_vPosition = iter;
+		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
+	}
+}
+
+void CHong::CreateMap()
+{
+	ImGui::Begin("Test");
+	ImGui::DragFloat3("vPos", m_vPosition, 1.f, -100.0f, 100.0f);
+
+	if (ImGui::Button("+X")) m_vPosition.x += 1.f; ImGui::SameLine();
+	if (ImGui::Button("-X")) m_vPosition.x -= 1.f; ImGui::SameLine();
+	if (ImGui::Button("+Z")) m_vPosition.z += 1.f; ImGui::SameLine();
+	if (ImGui::Button("-Z")) m_vPosition.z -= 1.f; 
+
+	if (ImGui::Button("Create"))
+	{
+		/*for (auto& iter : m_list)
+		{
+			if (iter != m_vPosition)
+			{
+				if (!m_list.empty())
+				{
+
+				}
+			}
+		}*/
+		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
+			return;
+		m_list.push_back(m_vPosition);
+	}
+	
+	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
+	if (ImGui::Button("Load")) LoadGameObject(); 
+
+	ImGui::End();
 }
 
