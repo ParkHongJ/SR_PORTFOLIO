@@ -32,6 +32,8 @@ private:
 
 private:
 	HRESULT SetUp_Components();
+	HRESULT Set_RenderState();
+	HRESULT Reset_RenderState();
 
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -310,7 +310,7 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
 	/* 모델를 로드한다. */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 100, 100))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Gyu Loading Complete."));
