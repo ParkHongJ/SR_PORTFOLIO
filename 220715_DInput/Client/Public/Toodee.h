@@ -40,11 +40,12 @@ private:
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndex = 0;
+
 	_float m_MoveSpeed = 0.f;
-	_bool m_Jump = false;
-	_float m_Jump_Hight = 0.f;
-	_float m_Jump_Speed = 0.f;
-	_float m_Jump_Position = 0.f;
+
+	_bool m_bJump = false;
+	_float m_fJumpPower = 2.f;
+	_float m_fJumpTime = 0.f;
 
 private:
 	HRESULT Set_RenderState();

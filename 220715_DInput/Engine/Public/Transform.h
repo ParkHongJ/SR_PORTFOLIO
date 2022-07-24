@@ -67,9 +67,7 @@ public:
 	void TransOnlyLook(_float fRadian);
 
 public:/*For.Test*/
-	void Go_Straight_For_Toodee(_float fTimeDelta);
-	bool Jump_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta);
-	void Jump_End_Toodee(_float vTargetPosZ, _float JumpSpeed, _float fTimeDelta);
+	void Go_Straight_2D(_float fTimeDelta);
 
 private:
 	_float4x4			m_WorldMatrix;

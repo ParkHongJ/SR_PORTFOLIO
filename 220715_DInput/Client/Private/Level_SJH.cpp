@@ -37,6 +37,8 @@ HRESULT CLevel_SJH::Render()
 		return E_FAIL;
 
 	SetWindowText(g_hWnd, TEXT("In SJH Level"));
+
+	return S_OK;
 }
 
 HRESULT CLevel_SJH::Ready_Layer_Camera(const _tchar * pLayerTag)

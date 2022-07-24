@@ -29,16 +29,6 @@ HRESULT CToodee::Initialize(void * pArg)
 
 void CToodee::Tick(_float fTimeDelta)
 {
-	if (GetKeyState(VK_UP) & 0x8000)
-	{
-		
-	}
-
-	if (GetKeyState(VK_DOWN) & 0x8000)
-	{
-		
-	}
-
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
 		m_eToodeeDir = TOODEE_LEFT;
@@ -59,21 +49,12 @@ void CToodee::Tick(_float fTimeDelta)
 	{
 		m_eCurruntDir = m_eToodeeDir;
 		m_eToodeeDir = TOODEE_IDLE;
-		m_Jump_Hight = m_Jump_Position;
-		m_Jump = false;
 	}
 
 	if (GetKeyState('Z') & 0x8000)
 	{// 작업 해야함
 		m_eToodeeDir = TOODEE_JUMP;
-		if (m_eCurruntDir != m_eToodeeDir) {
-			m_eCurruntDir = m_eToodeeDir;
-			if (m_Jump_Hight != m_Jump_Position) {
-				m_Jump_Hight = m_pTransformCom->Get_State(CTransform::STATE_POSITION).z + 1.f;
-				m_Jump_Position = m_Jump_Hight;
-				m_Jump = true;
-			}
-		}
+		m_bJump = true;
 	}
 }
 
@@ -119,28 +100,20 @@ void CToodee::LateTick(_float fTimeDelta)
 
 	/*For.Test*/
 	m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
-	m_pTransformCom->Go_Straight_For_Toodee(fTimeDelta);
-	if (false == m_Jump)
+	m_pTransformCom->Go_Straight_2D(fTimeDelta);
+	if (m_bJump)
 	{
-		if (0 < m_Jump_Speed)
-			m_Jump_Speed -= 0.2f;
-		else
-			m_Jump_Speed = 0.f;
+		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		fPos.z += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
+		m_fJumpTime += fTimeDelta;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 
-		m_pTransformCom->Jump_End_Toodee(m_Jump_Position, m_Jump_Speed, fTimeDelta);
-	}
-	else
-	{
-		if (5 > m_Jump_Speed)
-			m_Jump_Speed = 5.f;
-		/*For.Test*/
-		if (11 < m_iTexIndex)
-			m_iTexIndex = 5;
-		++m_iTexIndex;
-
-		m_Jump = false;
-
-		m_pTransformCom->Jump_Toodee(m_Jump_Position, m_Jump_Speed, fTimeDelta);
+		/*if (bLineCol && (fY < m_tInfo.fY))
+		{
+			m_bJump = false;
+			m_fJumpTime = 0.f;
+			m_tInfo.fY = fY;
+		}*/
 	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
