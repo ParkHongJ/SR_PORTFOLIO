@@ -49,9 +49,6 @@
     <Filter Include="01.Level\Tool">
       <UniqueIdentifier>{10e80305-7556-4362-b362-8636acccd229}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Cube">
-      <UniqueIdentifier>{1c346aa0-3181-41b9-a098-bbed818e7612}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\GyuH">
       <UniqueIdentifier>{519691af-8021-481a-905b-3582455d9cca}</UniqueIdentifier>
     </Filter>
@@ -141,9 +138,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapTool.h">
       <Filter>01.Level\Tool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MyBox.h">
-      <Filter>02.GameObject\Cube</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GyuH.h">
       <Filter>01.Level\GyuH</Filter>
@@ -236,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MapTool.cpp">
       <Filter>01.Level\Tool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MyBox.cpp">
-      <Filter>02.GameObject\Cube</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GyuH.cpp">
       <Filter>01.Level\GyuH</Filter>

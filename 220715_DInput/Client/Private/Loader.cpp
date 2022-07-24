@@ -206,7 +206,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	--Component--
 	------------*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 31, 17))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))

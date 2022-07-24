@@ -73,7 +73,7 @@ HRESULT CHong::Render()
 		return E_FAIL;
 
 	SetWindowText(g_hWnd, TEXT("È«ÁØ·¹º§ÀÓ"));
-	_float4x4 ViewMatrix;
+	/*_float4x4 ViewMatrix;
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
 	_float4x4		CamWorldMatrix;
@@ -88,7 +88,7 @@ HRESULT CHong::Render()
 	ImGui::DragFloat3("vUp", vUp, 0.01f, -100.0f, 100.0f);
 	ImGui::DragFloat3("vLook", vLook, 0.01f, -100.0f, 100.0f);
 	ImGui::DragFloat3("vPos", vPos, 0.01f, -100.0f, 100.0f);
-	ImGui::End();
+	ImGui::End();*/
 
 	CreateMap();
 
@@ -231,11 +231,6 @@ CHong * CHong::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 	return pInstance;
 }
 
-void CHong::Free()
-{
-	__super::Free();
-}
-
 void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories)
 {
 	//_tchar* sTmp = sPath;// +string("\\*.*");
@@ -270,7 +265,6 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-
 	HANDLE		hFile = CreateFile(L"../Bin/Data/Map.dat", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -334,14 +328,17 @@ void CHong::CreateMap()
 				}
 			}
 		}*/
-		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
+		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"), m_vPosition)))
 			return;
 		m_list.push_back(m_vPosition);
 	}
-	
 	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
 	if (ImGui::Button("Load")) LoadGameObject(); 
 
 	ImGui::End();
 }
 
+void CHong::Free()
+{
+	__super::Free();
+}
