@@ -46,8 +46,10 @@ private:
 	_bool m_bJump = false;
 	_float m_fJumpPower = 18.f;
 	_float m_fJumpTime = 0.f;
-
 	_float m_Temp_For_Jump = 0.8f;
+
+	_bool m_Run = true;
+	_bool m_Dead = false;
 
 private:
 	HRESULT Set_RenderState();
