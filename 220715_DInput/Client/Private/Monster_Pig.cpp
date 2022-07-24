@@ -23,7 +23,7 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 0.0f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 10.f));
 
 	return S_OK;
 }
