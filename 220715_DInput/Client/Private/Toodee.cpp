@@ -52,8 +52,12 @@ void CToodee::Tick(_float fTimeDelta)
 	}
 
 	if (GetKeyState('Z') & 0x8000)
-	{// 작업 해야함
+	{
+		if(!m_bJump)
+			m_Temp_For_Jump = m_pTransformCom->Get_State(CTransform::STATE_POSITION).z;
+
 		m_eToodeeDir = TOODEE_JUMP;
+		m_fPressing_Jump += 0.02;
 		m_bJump = true;
 	}
 }
@@ -104,16 +108,18 @@ void CToodee::LateTick(_float fTimeDelta)
 	if (m_bJump)
 	{
 		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		fPos.z += m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
+		fPos.z += (m_fJumpPower + m_fPressing_Jump) * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
 		m_fJumpTime += fTimeDelta;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 
-		/*if (bLineCol && (fY < m_tInfo.fY))
+		if (true == m_bJump && m_Temp_For_Jump > fPos.z)
 		{
+			fPos.z = m_Temp_For_Jump;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 			m_bJump = false;
 			m_fJumpTime = 0.f;
-			m_tInfo.fY = fY;
-		}*/
+			m_fPressing_Jump = 0.f;
+		}
 	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

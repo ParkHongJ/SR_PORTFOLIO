@@ -44,8 +44,11 @@ private:
 	_float m_MoveSpeed = 0.f;
 
 	_bool m_bJump = false;
-	_float m_fJumpPower = 2.f;
+	_float m_fPressing_Jump = 0.f;
+	_float m_fJumpPower = 1.8f;
 	_float m_fJumpTime = 0.f;
+
+	_float m_Temp_For_Jump = 0.f;
 
 private:
 	HRESULT Set_RenderState();
