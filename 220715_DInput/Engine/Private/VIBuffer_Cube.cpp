@@ -14,7 +14,7 @@ HRESULT CVIBuffer_Cube::Initialize_Prototype()
 {
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 8;
-	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1 /*| D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE3(1)*/;
+	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1  /*| D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE3(1)*/;
 	m_ePrimitiveType = D3DPT_TRIANGLELIST;
 	m_iNumPrimitive = 12;
 
@@ -23,34 +23,19 @@ HRESULT CVIBuffer_Cube::Initialize_Prototype()
 
 	VTXTEX*		pVertices = nullptr;
 
-	//void*		pData = new int;
-	//void*		pData1 = new VTXTEX;
 
 	m_pVB->Lock(0, /*m_iStride * m_iNumVertices*/0, (void**)&pVertices, 0);
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-	pVertices[0].vTexture = _float2(0.f, 0.f);
-
 	pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-	pVertices[1].vTexture = _float2(1.f, 0.f);
-
 	pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-	pVertices[2].vTexture = _float2(1.f, 1.f);
-
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5);
-	pVertices[3].vTexture = _float2(0.f, 1.f);
+	pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
 
 	pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-	pVertices[4].vTexture = _float2(0.f, 0.f);
-
 	pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-	pVertices[5].vTexture = _float2(1.f, 0.f);
-
 	pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-	pVertices[6].vTexture = _float2(1.f, 1.f);
+	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
 
-	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5);
-	pVertices[7].vTexture = _float2(0.f, 1.f);
 
 	m_pVB->Unlock();
 
