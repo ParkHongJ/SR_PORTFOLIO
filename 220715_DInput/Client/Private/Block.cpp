@@ -66,10 +66,15 @@ HRESULT CBlock::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(2)))
+	/*if (FAILED(m_pTextureCom->Bind_Texture(2)))
 		return E_FAIL;
+
 	if (FAILED(m_pTextureCom->Bind_Texture(1)))
+		return E_FAIL;*/
+
+	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
+
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
@@ -115,13 +120,13 @@ HRESULT CBlock::SetUp_Components()
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
-	
 
 	/* For.Com_Transform */
-	CTransform::TRANSFORMDESC		TransformDesc;
+	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
 
 	TransformDesc.fSpeedPerSec = 5.f;

@@ -17,8 +17,10 @@ HRESULT CInput_Device::Initialize(HINSTANCE hInstance, HWND hWnd)
 
 	if (FAILED(m_pKeyboard->SetDataFormat(&c_dfDIKeyboard)))
 		return E_FAIL;
+
 	if (FAILED(m_pKeyboard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE /*| DISCL_NOWINKEY*/)))
 		return E_FAIL;
+
 	if (FAILED(m_pKeyboard->Acquire()))
 		return E_FAIL;
 
@@ -28,8 +30,10 @@ HRESULT CInput_Device::Initialize(HINSTANCE hInstance, HWND hWnd)
 
 	if (FAILED(m_pMouse->SetDataFormat(&c_dfDIMouse)))
 		return E_FAIL;
+
 	if (FAILED(m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE /*| DISCL_NOWINKEY*/)))
 		return E_FAIL;
+
 	if (FAILED(m_pMouse->Acquire()))
 		return E_FAIL;
 
