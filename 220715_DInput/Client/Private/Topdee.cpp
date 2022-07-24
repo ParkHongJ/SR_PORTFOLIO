@@ -21,10 +21,10 @@ HRESULT CTopdee::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.5f, 0.f, 0.5f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.5f, 0.5f, 3.5f));
 	_float3 vScale = m_pTransformCom->Get_Scaled();
-	vScale.x *= 0.8f;
-	vScale.y *= 0.8f;
+	vScale.x *= 1.0f;
+	vScale.y *= 1.0f;
 	m_pTransformCom->Set_Scale(vScale);
 	return S_OK;
 }
@@ -163,8 +163,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 HRESULT CTopdee::Render()
 {
-	if (!m_bTurn)
-		m_iFrame = 13;
+	//if (!m_bTurn)
+		//m_iFrame = 13;
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 
