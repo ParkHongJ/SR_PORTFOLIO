@@ -30,6 +30,12 @@ namespace Engine
 		
 	}VTXTEX;
 
+	typedef struct tagVertexCubeTexture
+	{
+		D3DXVECTOR3		vPosition;
+		D3DXVECTOR3		vTexture;
+	}VTXCUBETEX;
+
 	typedef struct tagVertexColor
 	{
 		D3DXVECTOR3		vPosition;

@@ -17,10 +17,13 @@ HRESULT CLevel_SJH::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+	if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
+	return E_FAIL;
+
+	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -89,6 +92,18 @@ HRESULT CLevel_SJH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f, 0.5f, 0.5f))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
