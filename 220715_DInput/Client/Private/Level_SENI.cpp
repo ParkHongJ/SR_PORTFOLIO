@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "Level_Loading.h"
 
 
 CLevel_SENI::CLevel_SENI(LPDIRECT3DDEVICE9 pGraphic_Device)
