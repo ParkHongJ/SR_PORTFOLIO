@@ -23,8 +23,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.0f, 0.5f, 0.f));
-	bool ret = LoadTextureFromFile("../Bin/Resources/Textures/player/AKIHA_AKI00_000.png", &my_texture, &my_image_width, &my_image_height);
-	IM_ASSERT(ret);
+	/*bool ret = LoadTextureFromFile("../Bin/Resources/Textures/player/AKIHA_AKI00_000.png", &my_texture, &my_image_width, &my_image_height);
+	IM_ASSERT(ret);*/
 	return S_OK;
 }
 

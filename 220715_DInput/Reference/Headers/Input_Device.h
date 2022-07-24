@@ -25,9 +25,6 @@ public:
 	}
 
 
-
-
-
 public:
 	HRESULT Initialize(HINSTANCE hInstance, HWND hWnd);
 	void Update();
