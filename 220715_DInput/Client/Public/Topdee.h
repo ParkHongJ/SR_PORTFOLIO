@@ -48,17 +48,15 @@ private:
 	TOPDEE_DIRECTION m_eCurDir{ DIR_END };
 
 private:
-	void	Jumping();
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
-	_uint	m_iCurJumpPower;
-	_uint	m_iOriginJumpPower{5};
-	_bool	m_bJump{ false };
 	_bool	m_bDown{ false };
+	_bool	m_bPress{ false };
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 private:
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
+	void Go_Lerp(_float fTimeDelta);
 private:
 	HRESULT SetUp_Components();
 

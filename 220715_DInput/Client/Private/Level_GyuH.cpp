@@ -89,7 +89,7 @@ HRESULT CLevel_GyuH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), 
-		LEVEL_GYUH, pLayerTag)))
+		LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

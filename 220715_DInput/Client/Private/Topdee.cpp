@@ -21,7 +21,11 @@ HRESULT CTopdee::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.5f, 0.f, 0.5f));
+	_float3 vScale = m_pTransformCom->Get_Scaled();
+	vScale.x *= 0.8f;
+	vScale.y *= 0.8f;
+	m_pTransformCom->Set_Scale(vScale);
 	return S_OK;
 }
 
@@ -33,38 +37,47 @@ void CTopdee::Tick(_float fTimeDelta)
 	{
 		Move_Frame(DIR_UP);
 		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_bPress = true;
 	}
 	else if (pGameInstance->Get_DIKState(DIK_DOWN) & 0x80)
 	{
 		Move_Frame(DIR_DOWN);
 		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_bPress = true;
 	}
 	else if (pGameInstance->Get_DIKState(DIK_LEFT) & 0x80)
 	{
 		Move_Frame(DIR_LEFT);
 		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_bPress = true;
 	}
 	else if (pGameInstance->Get_DIKState(DIK_RIGHT) & 0x80)
 	{
 		Move_Frame(DIR_RIGHT);
 		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_bPress = true;
 	}
-
-	if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
-	{//มกวม
-		m_eCurState = STATE_JUMP;
-	}
-	Jumping();
+	else
+		m_bPress = false;
+	
+	if (!m_bPress)	//no keyInput Go Lerp
+		Go_Lerp(fTimeDelta);
+	
 	Safe_Release(pGameInstance);
 }
-
-void CTopdee::Jumping()
+void CTopdee::Go_Lerp(_float fTimeDelta)
 {
-	if (m_eCurState != STATE_JUMP)
-		return;
-	
-	
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vFinalPosition;
+
+	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
+	vFinalPosition.y = _int(vCurPosition.y);
+	vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
+
+	vCurPosition = vCurPosition + (vFinalPosition - vCurPosition)* (fTimeDelta * 5);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 }
+
 
 void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 {
@@ -115,22 +128,6 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 			m_bMoveFrame = false;
 		}
 	}
-	else if (m_eCurState == STATE_JUMP)
-	{
-		m_eCurDir = _eInputDirection;
-		if (!m_bJump) {
-			m_iFrame = 8;
-			m_bJump = true;
-		}
-		if (m_eCurDir == DIR_LEFT)
-		{
-			m_pTransformCom->Rotation(_float3(0.f, 1.f, 0.f), D3DXToRadian(180.f));
-		}
-		++m_iFrame;
-		if (m_iFrame == 13)
-			m_iFrame = 8;
-	}
-
 }
 
 
@@ -163,9 +160,9 @@ HRESULT CTopdee::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	/*m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);*/
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	

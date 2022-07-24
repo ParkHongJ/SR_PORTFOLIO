@@ -47,7 +47,13 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
 
+	if (FAILED(Set_RenderState()))
+		return E_FAIL;
+
 	m_pVIBufferCom->Render();
+
+	if (FAILED(Reset_RenderState()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -55,30 +61,48 @@ HRESULT CTerrain::Render()
 HRESULT CTerrain::SetUp_Components()
 {
 	///* For.Com_Renderer */
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
-	//	return E_FAIL;
-
-	///* For.Com_VIBuffer */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
-	//	return E_FAIL;
-
-	///* For.Com_Texture */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
-	//	return E_FAIL;
-
-	//--------------
-	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
+	//--------------
+	/* For.Com_Renderer */
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
+	//	return E_FAIL;
+
+	///* For.Com_VIBuffer */
+	//if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	//	return E_FAIL;
+
+	///* For.Com_Texture */
+	//if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CTerrain::Set_RenderState()
+{
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+	return S_OK;
+}
+
+
+
+
+HRESULT CTerrain::Reset_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
 }
 
