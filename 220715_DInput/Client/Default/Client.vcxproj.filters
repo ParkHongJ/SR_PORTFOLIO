@@ -73,6 +73,9 @@
     <Filter Include="02.GameObject\Wall">
       <UniqueIdentifier>{2cf00ebf-6cc7-4fd0-9e5a-755786aabd50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="KeyMgr">
+      <UniqueIdentifier>{ce080dd4-fea6-46f9-8a42-9cd3d356fb22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -172,6 +175,9 @@
     <ClInclude Include="..\public\Block.h">
       <Filter>02.GameObject\Wall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\KeyMgr.h">
+      <Filter>KeyMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -260,6 +266,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Block.cpp">
       <Filter>02.GameObject\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KeyMgr.cpp">
+      <Filter>KeyMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

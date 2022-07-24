@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Camera_Free.h"
 #include "GameInstance.h"
-
+#include "KeyMgr.h"
 CCamera_Free::CCamera_Free(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CCamera(pGraphic_Device)
 {
@@ -96,7 +96,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 	
-	if (pGameInstance->Get_DIKState(DIK_X) & 0x80)
+	if (CKeyMgr::Get_Instance()->Key_Down('X'))
 	{
 		m_bMove = !m_bMove;
 	}
@@ -158,14 +158,15 @@ CGameObject * CCamera_Free::Clone(void* pArg)
 
 	return pInstance;
 }
-
-void CCamera_Free::Free()
-{
-	__super::Free();
-}
-
 _float3 CCamera_Free::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
 {
 	//a + (b - a) * t.
 	return vPos + (vTargetPos - vPos) * fTimeDelta;
 }
+
+void CCamera_Free::Free()
+{
+	__super::Free();
+	CKeyMgr::Get_Instance()->Destroy_Instance();
+}
+

@@ -206,7 +206,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	--Component--
 	------------*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
@@ -351,7 +351,7 @@ HRESULT CLoader::Loading_ForSJHLevel()
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 	/* Loading Model */
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pGraphic_Device, 50, 50))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Success!"));

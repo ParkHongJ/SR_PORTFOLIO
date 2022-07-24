@@ -17,7 +17,9 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-
+	virtual void OnTriggerEnter(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
+	virtual void OnTriggerStay(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
+	virtual void OnTriggerExit(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
 

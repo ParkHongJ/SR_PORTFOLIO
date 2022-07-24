@@ -82,7 +82,7 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 
 	//---------------------디버그일때 그리기-------------------------
-	m_pColliderCom->Render();
+	//m_pColliderCom->Render();
 	//--------------------------------------------------------------
 
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);

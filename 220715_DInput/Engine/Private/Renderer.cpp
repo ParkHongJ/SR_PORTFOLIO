@@ -42,7 +42,6 @@ HRESULT CRenderer::Draw()
 		}
 		m_RenderObjects[i].clear();
 	}
-
 	return S_OK;
 }
 

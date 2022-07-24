@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Hong.h"
-
+#include "KeyMgr.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
 #include "Level_Loading.h"
@@ -31,40 +31,28 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	/*if (GetKeyState(VK_UP) & 0x8000)
-	{
-		m_vPosition.z += 1.f;
-	}
-
-	if (GetKeyState(VK_DOWN) & 0x8000)
-	{
-		m_vPosition.z -= 1.f;
-	}
-
-	if (GetKeyState(VK_LEFT) & 0x8000)
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
 	{
 		m_vPosition.x -= 1.f;
 	}
-
-	if (GetKeyState(VK_RIGHT) & 0x8000)
-	{
-		m_vPosition.x += 1.f;
-	}*/
-	if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-		Ready_Layer_Block(L"Layer_Cube");
-	}
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	
-
-	if ((pGameInstance->Get_DIKState(DIK_RIGHT) & 0x00))
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_RIGHT))
 	{
 		m_vPosition.x += 1.f;
 	}
-	Safe_Release(pGameInstance);
-
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP))
+	{
+		m_vPosition.z += 1.f;
+	}
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
+	{
+		m_vPosition.z -= 1.f;
+	}
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
+	{
+		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"), m_vPosition)))
+			return;
+		m_list.push_back(m_vPosition);
+	}
 }
 
 HRESULT CHong::Render()
@@ -73,22 +61,6 @@ HRESULT CHong::Render()
 		return E_FAIL;
 
 	SetWindowText(g_hWnd, TEXT("È«ÁØ·¹º§ÀÓ"));
-	/*_float4x4 ViewMatrix;
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	_float4x4		CamWorldMatrix;
-	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
-	_float3 vRight = *(_float3*)&CamWorldMatrix.m[0][0];
-	_float3 vUp = *(_float3*)&CamWorldMatrix.m[1][0];
-	_float3 vLook = *(_float3*)&CamWorldMatrix.m[2][0];
-	_float3 vPos = *(_float3*)&CamWorldMatrix.m[3][0];
-	ImGui::Begin("CameraController");
-
-	ImGui::DragFloat3("vRight", vRight, 0.01f, -100.0f, 100.0f);
-	ImGui::DragFloat3("vUp", vUp, 0.01f, -100.0f, 100.0f);
-	ImGui::DragFloat3("vLook", vLook, 0.01f, -100.0f, 100.0f);
-	ImGui::DragFloat3("vPos", vPos, 0.01f, -100.0f, 100.0f);
-	ImGui::End();*/
 
 	CreateMap();
 
@@ -145,7 +117,7 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fFovy = D3DXToRadian(60.0f);
+	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
 	CameraDesc.fFar = 300.f;

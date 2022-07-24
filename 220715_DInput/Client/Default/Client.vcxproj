@@ -158,6 +158,7 @@
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Hong.h" />
+    <ClInclude Include="..\Public\KeyMgr.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_GyuH.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="..\private\Block.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Hong.cpp" />
+    <ClCompile Include="..\Private\KeyMgr.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_GyuH.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

@@ -1,4 +1,5 @@
 #include "..\Public\Collider.h"
+#include "GameObject.h"
 
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
@@ -23,19 +24,45 @@ HRESULT CCollider::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CCollider::Render()
+HRESULT CCollider::OnCollision()
 {
-	/*D3DMATERIAL9 mtrl;
-	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));
+	for (auto& Sour : m_CollisionObjects)
+	{
+		for (auto& Dest : m_CollisionObjects)
+		{
+			if ((nullptr != Dest) && (nullptr != Sour) && (Dest != Sour))
+			{
+				//Enter, Stay, Exit
+			}
 
-	D3DXCreateSphere(m_pGraphic_Device, m_fRadius, 30, 10, &m_pSphere, NULL);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pSphere->DrawSubset(0);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
+			Safe_Release(Dest);
+		}
+		
+
+		Safe_Release(Sour);
+	}
+	m_CollisionObjects.clear();
 	return S_OK;
 }
 
-CCollider * CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+HRESULT CCollider::Add_CollisionGroup(class CGameObject* pGameObject)
+{
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_CollisionObjects.push_back(pGameObject);
+
+	Safe_AddRef(pGameObject);
+
+	return S_OK;
+}
+
+HRESULT CCollider::Render()
+{
+	return S_OK;
+}
+
+CCollider* CCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CCollider*			pInstance = new CCollider(pGraphic_Device);
 
@@ -64,10 +91,7 @@ CComponent* CCollider::Clone(void* pArg)
 void CCollider::Free()
 {
 	__super::Free();
-	if (m_pSphere != nullptr)
-	{
-		m_pSphere->Release();
-		m_pSphere = nullptr;
-	}
 }
+
+
 

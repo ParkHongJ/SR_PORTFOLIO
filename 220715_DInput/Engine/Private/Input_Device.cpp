@@ -47,6 +47,5 @@ void CInput_Device::Free()
 {
 	Safe_Release(m_pKeyboard);
 	Safe_Release(m_pMouse);
-
 	Safe_Release(m_pInputSDK);
 }

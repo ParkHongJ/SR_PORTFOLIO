@@ -1,5 +1,4 @@
 #include "..\Public\Camera.h"
-
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -45,7 +44,7 @@ void CCamera::Tick(_float fTimeDelta)
 	ViewMatrix = m_pTransformCom->Get_WorldMatrixInverse();	
 	D3DXMatrixPerspectiveFovLH(&ProjMatrix, m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar);
 
-	/*if (GetKeyState('X') & 0x8000)
+	/*if (CKeyMgr::Get_Instance()->Key_Down('X'))
 	{
 		test = !test;
 	}
