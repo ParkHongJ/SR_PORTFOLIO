@@ -42,6 +42,7 @@ private:
 	CCollider*				m_pColliderCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+
 private:
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };
@@ -51,12 +52,16 @@ private:
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
 	_bool	m_bDown{ false };
 	_bool	m_bPress{ false };
+	_bool	m_bTurn{ false };
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
+
 private:
+	void Topdee_Turn_Check();
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
 	void Go_Lerp(_float fTimeDelta);
+
 private:
 	HRESULT SetUp_Components();
 

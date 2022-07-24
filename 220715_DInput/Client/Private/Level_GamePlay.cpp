@@ -144,6 +144,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 }
 
 
+
 CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
 	CLevel_GamePlay*		pInstance = new CLevel_GamePlay(pGraphic_Device);

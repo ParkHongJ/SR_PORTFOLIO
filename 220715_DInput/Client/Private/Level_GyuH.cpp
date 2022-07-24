@@ -13,6 +13,8 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	LoadGameObject();
+
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -22,6 +24,7 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
+
 	return S_OK;
 	
 }
@@ -30,6 +33,48 @@ void CLevel_GyuH::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+}
+HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+
+}
+
+void CLevel_GyuH::LoadGameObject()
+{
+	HANDLE		hFile = CreateFile(L"../Bin/data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (hFile == INVALID_HANDLE_VALUE)
+		return;
+
+	DWORD dwByte = 0;
+
+	while (true)
+	{
+		_float3 vBlockPos = {};
+		ReadFile(hFile, vBlockPos, sizeof(_float3), &dwByte, nullptr);
+
+		if (0 == dwByte)
+		{
+			break;
+		}
+		m_list.push_back(vBlockPos);
+	}
+
+	CloseHandle(hFile);
+
+	for (auto& iter : m_list)
+	{
+		m_vPosition = iter;
+		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
+	}
 }
 
 HRESULT CLevel_GyuH::Render()

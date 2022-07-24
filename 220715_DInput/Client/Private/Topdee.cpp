@@ -33,6 +33,9 @@ void CTopdee::Tick(_float fTimeDelta)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+
+	Topdee_Turn_Check();
+
 	if (pGameInstance->Get_DIKState(DIK_UP) & 0x80)
 	{
 		Move_Frame(DIR_UP);
@@ -57,6 +60,11 @@ void CTopdee::Tick(_float fTimeDelta)
 		m_pTransformCom->Go_Straight(fTimeDelta);
 		m_bPress = true;
 	}
+	else if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
+	{
+
+		m_bPress = true;
+	}
 	else
 		m_bPress = false;
 	
@@ -65,6 +73,7 @@ void CTopdee::Tick(_float fTimeDelta)
 	
 	Safe_Release(pGameInstance);
 }
+
 void CTopdee::Go_Lerp(_float fTimeDelta)
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -78,6 +87,22 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 }
 
+
+void CTopdee::Topdee_Turn_Check()
+{
+	_float4x4		ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+
+	_float4x4		CamWorldMatrix;
+	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
+
+	if ((*(_float3*)&CamWorldMatrix.m[3][0]).z == 0)
+		m_bTurn = true;
+	else
+		m_bTurn = false;
+	
+}
 
 void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 {
@@ -138,6 +163,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 HRESULT CTopdee::Render()
 {
+	if (!m_bTurn)
+		m_iFrame = 13;
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 

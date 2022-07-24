@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Block.h"
 
-
-
 #include "GameInstance.h"
 CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
