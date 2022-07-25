@@ -28,7 +28,7 @@ HRESULT CTerrain::Initialize(void * pArg)
 
 void CTerrain::Tick(_float fTimeDelta)
 {
-	int a = 10;
+
 }
 
 void CTerrain::LateTick(_float fTimeDelta)
@@ -69,7 +69,7 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::SetUp_Components()
 {
-	///* For.Com_Renderer */
+	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 

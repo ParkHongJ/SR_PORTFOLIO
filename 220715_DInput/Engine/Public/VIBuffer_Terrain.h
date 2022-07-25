@@ -25,6 +25,7 @@ private:
 
 public:
 	static CVIBuffer_Terrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device, _uint iNumVerticesX, _uint iNumVerticesZ);
+	static CVIBuffer_Terrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device, const _tchar* pHeightMap);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };

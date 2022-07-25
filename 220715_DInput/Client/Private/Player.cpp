@@ -3,12 +3,12 @@
 
 #include "GameInstance.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CLandObject(pGraphic_Device)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	: CGameObject(rhs)
+	: CLandObject(rhs)
 {
 }
 
@@ -19,6 +19,17 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void * pArg)
 {
+	__super::LANDDESC		LandDesc;
+	ZeroMemory(&LandDesc, sizeof(__super::LANDDESC));
+
+	LandDesc.iTerrainLevelIndex = LEVEL_HONG;
+	LandDesc.pLayerTag = TEXT("Layer_BackGround");
+	LandDesc.iTerrainObjectIndex = 0;
+	LandDesc.pTerrainBufferComTag = TEXT("Com_VIBuffer");
+
+	if (FAILED(CLandObject::Initialize(&LandDesc)))
+		return E_FAIL;
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -28,43 +39,64 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
+	//if (GetKeyState(VK_UP) & 0x8000)
+	//{
+	//	//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
+	//	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+	//}
+	//if (GetKeyState('W') & 0x8000)
+	//{
+	//	m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
+	//}
+	//if (GetKeyState('S') & 0x8000)
+	//{
+	//	m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
+	//}
+	//if (GetKeyState(VK_DOWN) & 0x8000)
+	//{
+	//	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+
+	//	//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
+	//}
+
+	//if (GetKeyState(VK_LEFT) & 0x8000)
+	//{
+
+	//	m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+	//	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+	//}
+
+	//if (GetKeyState(VK_RIGHT) & 0x8000)
+	//{
+	//	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+	//	m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+	//}
+
+	//-------
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
-	if (GetKeyState('W') & 0x8000)
-	{
-		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
-	}
-	if (GetKeyState('S') & 0x8000)
-	{
-		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
-	}
+
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-
-		//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
+		m_pTransformCom->Go_Backward(fTimeDelta);
 	}
 
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
-
-		m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
-		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
 	}
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
 	}
-	
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	__super::SetUp_OnTerrain(m_pTransformCom, 1.f);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -161,7 +193,6 @@ HRESULT CPlayer::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
-	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	return S_OK;
 }
 

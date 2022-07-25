@@ -216,6 +216,18 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device,
 
 	return pInstance;
 }
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(LPDIRECT3DDEVICE9 pGraphic_Device, const _tchar * pHeightMap)
+{
+	CVIBuffer_Terrain*			pInstance = new CVIBuffer_Terrain(pGraphic_Device);
+
+	if (FAILED(pInstance->Initialize_Prototype(pHeightMap)))
+	{
+		MSG_BOX(TEXT("Failed To Created : CVIBuffer_Terrain"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
 
 CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 {
