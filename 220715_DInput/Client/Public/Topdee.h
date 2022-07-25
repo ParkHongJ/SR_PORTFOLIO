@@ -9,12 +9,9 @@ class CRenderer;
 class CCollider;
 class CTransform;
 class CVIBuffer_Rect;
+class CComponent;
+class CLayer;
 END
-//topdee 텍스쳐 셋팅 
-//left
-// 0, 1 Topdee idle
-// 2, 3 Topdee Left
-// 4, 5 Topdee Up
 
 BEGIN(Client)
 
@@ -53,6 +50,7 @@ private:
 	_bool	m_bDown{ false };
 	_bool	m_bPress{ false };
 	_bool	m_bTurn{ false };
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
@@ -61,10 +59,12 @@ private:
 	void Topdee_Turn_Check();
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
 	void Go_Lerp(_float fTimeDelta);
-
+	void Not_My_Turn_Texture();
 private:
 	HRESULT SetUp_Components();
-
+	void	KKK_FindBox(_float fTimeDelta);
+	list<class CGameObject*>* KKK_m_pBoxList;
+	_float3 m_vTargetDir{0.f,0.f,0.f};
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

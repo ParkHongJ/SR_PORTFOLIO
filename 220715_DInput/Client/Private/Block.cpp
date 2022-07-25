@@ -88,6 +88,16 @@ HRESULT CBlock::Render()
 	
 	return S_OK;
 }
+ 
+void CBlock::KKK_Go_Lerp(_float3 vFinalPos, _float fTimeDelta)
+{
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vDist = (vCurPosition - vFinalPos);
+	_float fLength = D3DXVec3Length(&vDist);
+	vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+}
+
 
 HRESULT CBlock::Set_RenderState()
 {

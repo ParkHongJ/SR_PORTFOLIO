@@ -21,53 +21,62 @@ HRESULT CTopdee::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.5f, 0.5f, 3.5f));
-	_float3 vScale = m_pTransformCom->Get_Scaled();
-	vScale.x *= 1.0f;
-	vScale.y *= 1.0f;
-	m_pTransformCom->Set_Scale(vScale);
+	
 	return S_OK;
 }
 
 void CTopdee::Tick(_float fTimeDelta)
 {
+	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	Topdee_Turn_Check();
+	if (m_bTurn) {
+		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	if (pGameInstance->Get_DIKState(DIK_UP) & 0x80)
-	{
-		Move_Frame(DIR_UP);
-		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_bPress = true;
+		if (pGameInstance->Get_DIKState(DIK_UP) & 0x80)
+		{
+			Move_Frame(DIR_UP);
+			m_vTargetDir = { 0.f, 0.f, 1.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (pGameInstance->Get_DIKState(DIK_DOWN) & 0x80)
+		{
+			Move_Frame(DIR_DOWN);
+			m_vTargetDir = { 0.f, 0.f, -1.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (pGameInstance->Get_DIKState(DIK_LEFT) & 0x80)
+		{
+			Move_Frame(DIR_LEFT);
+			m_vTargetDir = { -1.f, 0.f, 0.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (pGameInstance->Get_DIKState(DIK_RIGHT) & 0x80)
+		{
+			Move_Frame(DIR_RIGHT);
+			m_vTargetDir = { 1.f, 0.f, 0.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
+		{//박스들기.
+			KKK_FindBox(fTimeDelta);
+			m_bPress = true;
+		}
+		else
+			m_bPress = false;
 	}
-	else if (pGameInstance->Get_DIKState(DIK_DOWN) & 0x80)
-	{
-		Move_Frame(DIR_DOWN);
-		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_bPress = true;
-	}
-	else if (pGameInstance->Get_DIKState(DIK_LEFT) & 0x80)
-	{
-		Move_Frame(DIR_LEFT);
-		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_bPress = true;
-	}
-	else if (pGameInstance->Get_DIKState(DIK_RIGHT) & 0x80)
-	{
-		Move_Frame(DIR_RIGHT);
-		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_bPress = true;
-	}
-	else if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
-	{
-
-		m_bPress = true;
-	}
-	else
-		m_bPress = false;
-	
+	else if (!m_bTurn)
+		Not_My_Turn_Texture();
 	if (!m_bPress)	//no keyInput Go Lerp
 		Go_Lerp(fTimeDelta);
 	
@@ -80,13 +89,29 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	_float3 vFinalPosition;
 
 	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
-	vFinalPosition.y = _int(vCurPosition.y);
+	vFinalPosition.y = _int(vCurPosition.y) + 0.5f;
 	vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
-	vCurPosition = vCurPosition + (vFinalPosition - vCurPosition)* (fTimeDelta * 5);
+	vCurPosition = vCurPosition + (vFinalPosition - vCurPosition) * (fTimeDelta * 5);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 }
 
+void CTopdee::Not_My_Turn_Texture()
+{
+	if (m_eCurDir == DIR_DOWN) {
+		m_iFrame = 14;
+	}
+	else if (m_eCurDir == DIR_UP) {
+		m_iFrame = 16;
+	}
+	else if (m_eCurDir == DIR_LEFT) {
+		m_iFrame = 15;
+	}
+	else if (m_eCurDir == DIR_RIGHT)
+	{
+		m_iFrame = 13;
+	}
+}
 
 void CTopdee::Topdee_Turn_Check()
 {
@@ -96,8 +121,8 @@ void CTopdee::Topdee_Turn_Check()
 
 	_float4x4		CamWorldMatrix;
 	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
-
-	if ((*(_float3*)&CamWorldMatrix.m[3][0]).z == 0)
+	_float fCameraZ = (*(_float3*)&CamWorldMatrix.m[3][0]).z;
+	if ((fCameraZ >= 0.f)&&(fCameraZ <= 1.f))
 		m_bTurn = true;
 	else
 		m_bTurn = false;
@@ -130,24 +155,22 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 			m_eCurDir = _eInputDirection;
 			if (m_eCurDir == DIR_DOWN) {
 				m_iFirstFrame = 0;
-				/*m_pTransformCom->Rotation(_float3(0.f, 1.f, 0.f), D3DXToRadian(180.f));*/
-				m_pTransformCom->TransOnlyLook(D3DXToRadian(180.f));
+			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(180.f));*/
 				m_bDown = true;
 			}
 			else if (m_eCurDir == DIR_UP) {
 				m_iFirstFrame = 4;
-				m_pTransformCom->TransOnlyLook(D3DXToRadian(0.f));
-				/*m_pTransformCom->Rotation(_float3(0.f, 1.f, 0.f), D3DXToRadian(0.f));*/
+			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(0.f));*/
 				m_bDown = false;
 			}
 			else if (m_eCurDir == DIR_LEFT) {
 				m_iFirstFrame = 2;
-				m_pTransformCom->TransOnlyLook(D3DXToRadian(270.f));
+		/*		m_pTransformCom->TransOnlyLook(D3DXToRadian(270.f));*/
 			}
 			else if (m_eCurDir == DIR_RIGHT)
 			{
 				m_iFirstFrame = 6;
-				m_pTransformCom->TransOnlyLook(D3DXToRadian(90.f));
+			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(90.f));*/
 			}
 			m_iFrame = m_iFirstFrame;
 			m_bMoveFrame = false;
@@ -158,13 +181,30 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 
 void CTopdee::LateTick(_float fTimeDelta)
 {
+	_float4x4		ViewMatrix;
+
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+
+	/* 카메라의 월드행렬이다. */
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+
+
+	
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
 }
 
 HRESULT CTopdee::Render()
 {
 	//if (!m_bTurn)
 		//m_iFrame = 13;
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos;
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 
@@ -234,6 +274,21 @@ HRESULT CTopdee::SetUp_Components()
 
 
 	return S_OK;
+}
+
+void CTopdee::KKK_FindBox(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CLayer* pLayer = pGameInstance->KKK_GetBox();
+	KKK_m_pBoxList = pLayer->KKK_Get_List();
+	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vTopdeePos.y += 1.f;
+	auto& iter = (*KKK_m_pBoxList).begin();
+	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)
+	{
+		(*iter)->KKK_Go_Lerp(vTopdeePos,fTimeDelta);
+		++iter;
+	}
 }
 
 CTopdee * CTopdee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

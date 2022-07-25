@@ -26,7 +26,8 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
+public:
+	void KKK_Go_Lerp(_float3 vFinalPos, _float fTimeDelta);
 
 private:
 	CTexture*				m_pTextureCom = nullptr;

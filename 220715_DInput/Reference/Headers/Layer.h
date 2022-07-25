@@ -3,8 +3,8 @@
 #include "Base.h"
 
 BEGIN(Engine)
-
-class CLayer final : public CBase
+//KKK ¿ø·¡ enginedll ¾Æ´Ô.
+class  ENGINE_DLL CLayer final : public CBase
 {
 public:
 	CLayer();
@@ -16,7 +16,7 @@ public:
 	HRESULT Initialize();
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
-
+	list<class CGameObject*>* KKK_Get_List();
 private:
 	list<class CGameObject*>				m_GameObjects;
 	typedef list<class CGameObject*>		GAMEOBJECTS;

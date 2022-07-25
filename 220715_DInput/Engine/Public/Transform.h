@@ -29,7 +29,7 @@ public:
 	}
 
 	_float3 Get_Scaled() const;
-
+	_float Get_Speed() { return m_TransformDesc.fSpeedPerSec; }
 	_float4x4 Get_WorldMatrixInverse() {
 		_float4x4		WorldMatrixInv;
 		return	*D3DXMatrixInverse(&WorldMatrixInv, nullptr, &m_WorldMatrix);

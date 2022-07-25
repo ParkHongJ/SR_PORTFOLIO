@@ -51,7 +51,6 @@ HRESULT CTransform::Bind_WorldMatrix()
 	return S_OK;
 }
 
-
 void CTransform::Translate(_float3 vDir)
 {
 	_float3		vPosition = Get_State(STATE_POSITION);
@@ -188,7 +187,6 @@ void CTransform::Chase(_float3 vTargetPos, _float fTimeDelta)
 void CTransform::TransOnlyLook(_float fRadian)
 {
 	_float3		vScale = Get_Scaled();
-
 
 	_float3		vLook = _float3(0.f, 0.f, 1.f) * vScale.z;
 

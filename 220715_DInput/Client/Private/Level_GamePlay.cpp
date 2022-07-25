@@ -28,7 +28,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
@@ -51,7 +51,7 @@ HRESULT CLevel_GamePlay::Render()
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
 
 	ImGui::Begin("GamePlay");
-
+	
 	const char* Obj[] = { "Player", "Monster", "Map" };
 	static int Obj_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = Obj[Obj_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)

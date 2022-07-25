@@ -39,6 +39,11 @@ void CLayer::LateTick(_float fTimeDelta)
 	}
 }
 
+list<class CGameObject*>* CLayer::KKK_Get_List()
+{
+	return &m_GameObjects;
+}
+
 CLayer * CLayer::Create()
 {
 	CLayer*			pInstance = new CLayer();

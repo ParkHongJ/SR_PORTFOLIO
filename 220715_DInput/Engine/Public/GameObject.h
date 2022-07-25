@@ -20,9 +20,13 @@ public:
 	virtual void OnTriggerEnter(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
 	virtual void OnTriggerStay(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
 	virtual void OnTriggerExit(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
+
+public:
+	virtual void KKK_Go_Lerp(_float3 vFinalPos, _float fTimeDelta) { int a = 0; };
+	
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
-
+	
 protected: /* 객체에게 추가된 컴포넌트들을 키로 분류하여 보관한다. */
 	map<const _tchar*, class CComponent*>			m_Components;
 	typedef map<const _tchar*, class CComponent*>	COMPONENTS;
