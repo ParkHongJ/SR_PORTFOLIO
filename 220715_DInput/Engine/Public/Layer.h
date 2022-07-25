@@ -9,6 +9,8 @@ class CLayer final : public CBase
 public:
 	CLayer();
 	virtual ~CLayer() = default;
+public:
+	class CComponent* Get_Component(const _tchar* pComponentTag, _uint iLayerIndex);
 
 public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);

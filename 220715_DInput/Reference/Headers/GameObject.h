@@ -17,9 +17,10 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-	virtual void OnTriggerEnter(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
-	virtual void OnTriggerStay(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
-	virtual void OnTriggerExit(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
+
+	virtual void OnTriggerEnter(CGameObject* other) {};
+	virtual void OnTriggerStay(CGameObject* other) {};
+	virtual void OnTriggerExit(CGameObject* other) {};
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
 
@@ -29,9 +30,21 @@ protected: /* 객체에게 추가된 컴포넌트들을 키로 분류하여 보관한다. */
 
 public:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, class CComponent** ppOut, CGameObject* _pOwner, void* pArg = nullptr);
-
+	class CComponent* Get_Component(const _tchar* pComponentTag);
 private:
 	class CComponent* Find_Component(const _tchar* pComponentTag);
+	
+public:
+	bool IsActive() { return m_bActive; }
+	bool IsTrigger() { return m_bIsTrigger; }
+
+	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
+	bool CompaerTag(const _tchar* _tag) { if (m_Tag == _tag) return TRUE; else return FALSE; }
+
+protected:
+	bool m_bActive;
+	bool m_bIsTrigger;
+	const _tchar* m_Tag;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

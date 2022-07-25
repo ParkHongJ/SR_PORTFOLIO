@@ -35,6 +35,10 @@ public:
 		return	*D3DXMatrixInverse(&WorldMatrixInv, nullptr, &m_WorldMatrix);
 	}
 
+	_float4x4 Get_WorldMatrix() {
+		return m_WorldMatrix;
+	}
+
 	void Set_State(STATETYPE eState, const _float3& State) {
 		memcpy(&m_WorldMatrix.m[eState][0], &State, sizeof(_float3));		
 	}

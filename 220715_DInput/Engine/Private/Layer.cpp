@@ -60,4 +60,13 @@ void CLayer::Free()
 	m_GameObjects.clear();
 }
 
+class CComponent* Engine::CLayer::Get_Component(const _tchar* pComponentTag, _uint iLayerIndex)
+{
+	auto	iter = m_GameObjects.begin();
+
+	for (_uint i = 0; i < iLayerIndex; ++i)
+		++iter;
+
+	return (*iter)->Get_Component(pComponentTag);
+}
 

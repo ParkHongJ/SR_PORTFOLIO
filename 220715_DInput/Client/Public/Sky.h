@@ -7,17 +7,23 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_Terrain;
+class CVIBuffer_Cube;
 END
 
 BEGIN(Client)
 
-class CTerrain final : public CGameObject
+class CSky final : public CGameObject
 {
+public:
+	typedef struct tagBackGroundDesc
+	{
+		_uint		iSizeX;
+		_uint		iSizeY;
+	}BACKDESC;
 private:
-	CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CTerrain(const CTerrain& rhs);
-	virtual ~CTerrain() = default;
+	CSky(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CSky(const CSky& rhs);
+	virtual ~CSky() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -28,17 +34,21 @@ public:
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
+	CTransform*				m_pTransformCom = nullptr;
+	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
 
 private:
-	HRESULT SetUp_Components();
+	_float3			m_vTargetPos = _float3(0.f, 0.f, 0.f);
+
+private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
+private:
+	HRESULT SetUp_Components();
 
 public:
-	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CSky* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };

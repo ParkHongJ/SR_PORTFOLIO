@@ -84,9 +84,15 @@
     </Filter>
     <Filter Include="04.Components\VIBuffer\VIBuffer_Topdee">
       <UniqueIdentifier>{580e5506-5e22-49af-89b8-20b9b46d56a0}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="04.Components\VIBuffer\ToodeeRect">
       <UniqueIdentifier>{048a9d5e-7593-4a06-b4a7-f855826b8098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\LandObject">
+      <UniqueIdentifier>{2388002f-2771-4ee8-8392-b039cf4130f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Picking">
+      <UniqueIdentifier>{e3fa045f-0cd3-4d0c-b3c7-48dd823d0fe8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +185,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Topdee.h">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
-    </ClInclude>  
+    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Toodee_Rect.h">
       <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BoxCollider.h">
+      <Filter>04.Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LandObject.h">
+      <Filter>03.GameObjects\LandObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Picking.h">
+      <Filter>06.Picking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +271,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Topdee.cpp">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Toodee_Rect.cpp">
       <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BoxCollider.cpp">
+      <Filter>04.Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LandObject.cpp">
+      <Filter>03.GameObjects\LandObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Picking.cpp">
+      <Filter>06.Picking</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

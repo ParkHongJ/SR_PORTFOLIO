@@ -167,10 +167,10 @@
     <ClInclude Include="..\Public\Level_SJH.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\public\MapTool.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Monster_Pig.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Topdee.h" />
     <ClInclude Include="..\Public\Toodee.h" />
@@ -201,10 +201,10 @@
     <ClCompile Include="..\Private\Level_SJH.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\private\MapTool.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Monster_Pig.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Topdee.cpp" />
     <ClCompile Include="..\Private\Toodee.cpp" />

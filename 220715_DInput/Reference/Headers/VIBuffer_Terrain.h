@@ -13,7 +13,12 @@ private:
 
 public:
 	virtual HRESULT Initialize_Prototype(_uint iNumVerticesX, _uint iNumVerticesZ);
+	virtual HRESULT Initialize_Prototype(const _tchar* pHeightMap);
 	virtual HRESULT Initialize(void* pArg) override;
+
+public:
+	virtual _bool Picking(class CTransform* pTransform, _float3* pOut);
+	virtual _float Compute_Height(_float3 vTargetPos);
 
 private:
 	_uint			m_iNumVerticesX, m_iNumVerticesZ;

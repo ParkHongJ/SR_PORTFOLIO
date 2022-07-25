@@ -208,7 +208,6 @@ HRESULT CToodee::Render()
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
 
 	ImGui::Spacing();
-
 	ImGui::End();
 
 	return S_OK;

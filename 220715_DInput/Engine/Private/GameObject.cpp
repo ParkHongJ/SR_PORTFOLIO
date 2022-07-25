@@ -3,13 +3,19 @@
 #include "Component.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: m_pGraphic_Device(pGraphic_Device)
+	: m_pGraphic_Device(pGraphic_Device),
+	m_bActive(true),
+	m_bIsTrigger(true),
+	m_Tag(L"None")
 {
 	Safe_AddRef(m_pGraphic_Device);
 }
 
 CGameObject::CGameObject(const CGameObject & rhs)
-	: m_pGraphic_Device(rhs.m_pGraphic_Device)
+	: m_pGraphic_Device(rhs.m_pGraphic_Device),
+	m_bActive(rhs.m_bActive),
+	m_bIsTrigger(rhs.m_bIsTrigger),
+	m_Tag(rhs.m_Tag)
 {
 	Safe_AddRef(m_pGraphic_Device);
 }
@@ -62,6 +68,11 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+class CComponent* CGameObject::Get_Component(const _tchar* pComponentTag)
+{
+	return Find_Component(pComponentTag);
 }
 
 CComponent * CGameObject::Find_Component(const _tchar * pComponentTag)

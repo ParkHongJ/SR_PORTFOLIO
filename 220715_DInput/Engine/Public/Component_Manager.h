@@ -4,6 +4,7 @@
 #include "Collider.h"
 #include "Renderer.h"
 #include "Transform.h"
+#include "BoxCollider.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Topdee.h"
