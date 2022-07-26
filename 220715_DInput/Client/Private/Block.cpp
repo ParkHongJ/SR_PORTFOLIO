@@ -91,6 +91,17 @@ void CBlock::KKK_Is_Raise(_float3 vTargetPos)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,vTargetPos);
 }
 
+_bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta)
+{
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+	if (vCurPosition.y <= 0.1f)
+		return true;
+	return false;
+}
+
+
 HRESULT CBlock::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)

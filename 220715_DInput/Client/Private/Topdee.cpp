@@ -70,8 +70,8 @@ void CTopdee::Tick(_float fTimeDelta)
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down('Z'))
 		{//박스들기.
-			KKK_FindBox(fTimeDelta);
 			KKK_DropBox(fTimeDelta);
+			KKK_FindBox(fTimeDelta);
 			m_bPress = true;
 		}
 		else
@@ -119,6 +119,12 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 {
 	if (m_pRaiseObject == nullptr)
 		return;
+	if (m_fRaising_Box_DelayTimer == 15000.f) {
+		//falling
+		KKK_DropBox(fTimeDelta);
+		return;
+	}
+	m_fRaising_Box_DelayTimer += fTimeDelta;
 	_float3 vfinalPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vfinalPos.y += 1.f;
 	m_pRaiseObject->KKK_Is_Raise(vfinalPos);
@@ -186,7 +192,6 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 		}
 	}
 }
-
 
 void CTopdee::LateTick(_float fTimeDelta)
 {
@@ -288,6 +293,8 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CLayer* pLayer = pGameInstance->KKK_GetBox();
+	if (pLayer == nullptr)
+		return;
 	KKK_m_pBoxList = pLayer->KKK_Get_List();
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
@@ -302,24 +309,39 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	}
 	if (!bMove)
 		m_pRaiseObject = nullptr;
-	else
+	else {
+		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
+	}
+	
 }
 
 void CTopdee::KKK_DropBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject == nullptr)
 		return;
-	_float3 vBoxDropPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	if (m_eCurDir == DIR_UP)
-		vBoxDropPos.z += 1.f;
-	else if(m_eCurDir == DIR_LEFT)
-		vBoxDropPos.x -= 1.f;
-	else if (m_eCurDir == DIR_RIGHT)
-		vBoxDropPos.x += 1.f;
-	else if (m_eCurDir == DIR_DOWN)
-		vBoxDropPos.z -= 1.f;
+	if (_int(m_fRaising_Box_DelayTimer) < 1)
+		return;
 	
+	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
+		m_fRaising_Box_DelayTimer = 15000.f;
+		m_vBoxDropPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		m_vBoxDropPos.y = 0.f;
+		if (m_eCurDir == DIR_UP)
+			m_vBoxDropPos.z += 1.f;
+		else if (m_eCurDir == DIR_LEFT)
+			m_vBoxDropPos.x -= 1.f;
+		else if (m_eCurDir == DIR_RIGHT)
+			m_vBoxDropPos.x += 1.f;
+		else if (m_eCurDir == DIR_DOWN)
+			m_vBoxDropPos.z -= 1.f;
+	}
+	
+	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta)) {
+		m_pRaiseObject = nullptr;
+		m_fRaising_Box_DelayTimer = 0.f;
+		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
+	}
 }
 
 CTopdee * CTopdee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

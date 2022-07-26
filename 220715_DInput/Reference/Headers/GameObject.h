@@ -24,6 +24,8 @@ public:
 public:
 	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta) { return true; };
 	virtual void KKK_Is_Raise(_float3 vTargetPos) {};
+	virtual _bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta) { return true; };
+
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
 	

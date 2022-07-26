@@ -39,7 +39,7 @@ HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar * pLayerTag, void * pArg)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

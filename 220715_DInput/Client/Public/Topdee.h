@@ -66,10 +66,15 @@ private:
 private:
 	void	KKK_FindBox(_float fTimeDelta);
 	void	KKK_IsRaise(_float fTimeDelta,_char KKK_NotOverride);
+	void	KKK_DropBox(_float fTimeDelta);
+	
 	list<class CGameObject*>* KKK_m_pBoxList;
+	
 	CGameObject* m_pRaiseObject = nullptr;
 	_float3 m_vTargetDir{0.f,0.f,0.f};
-	void KKK_DropBox(_float fTimeDelta);
+	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
+	_float m_fRaising_Box_DelayTimer{ 0.f };
+
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
