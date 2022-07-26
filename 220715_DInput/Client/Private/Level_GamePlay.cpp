@@ -5,7 +5,6 @@
 #include "Camera_Free.h"
 
 
-
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -15,16 +14,11 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
-	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
-
-	//if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
-	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
@@ -35,6 +29,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
 
+	LoadGameObject();
 	return S_OK;
 }
 
@@ -89,7 +84,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fFovy = D3DXToRadian(60.0f);
+	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
 	CameraDesc.fFar = 300.0f;
@@ -149,9 +144,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f, 0.5f, 0.5f))))
-		return E_FAIL;*/
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, pArg)))
 		return E_FAIL;
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -234,5 +227,3 @@ void CLevel_GamePlay::Free()
 	__super::Free();
 
 }
-
-

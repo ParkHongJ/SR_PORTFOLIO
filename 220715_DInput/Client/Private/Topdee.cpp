@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Topdee.h"
-
+#include "KeyMgr.h"
 #include "GameInstance.h"
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -68,7 +68,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 		}
-		else if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
+		else if (CKeyMgr::Get_Instance()->Key_Down('Z'))
 		{//박스들기.
 			KKK_FindBox(fTimeDelta);
 			KKK_DropBox(fTimeDelta);
@@ -126,6 +126,7 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 
 void CTopdee::Topdee_Turn_Check()
 {
+	
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);

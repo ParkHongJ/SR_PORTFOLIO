@@ -65,7 +65,7 @@ HRESULT CObject_Manager::Add_GameObjectToLayer(const _tchar* pPrototypeTag, _uin
 
 CLayer * CObject_Manager::KKK_GetBoxLayer()
 {
-	CLayer*		pLayer = Find_Layer(4, L"Layer_Cube");
+	CLayer*		pLayer = Find_Layer(6, L"Layer_Cube");
 	if (pLayer == nullptr)
 		return nullptr;
 	else
@@ -148,4 +148,15 @@ void CObject_Manager::Free()
 
 	m_Prototypes.clear();
 	
+}
+
+class CComponent* CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iLayerIndex)
+{
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (nullptr == pLayer)
+		return nullptr;
+
+	return pLayer->Get_Component(pComponentTag, iLayerIndex);
+
 }

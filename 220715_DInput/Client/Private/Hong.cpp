@@ -23,8 +23,10 @@ HRESULT CHong::Initialize()
 
 	/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
 		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Player(TEXT("Prototype_GameObject_Player"))))
+		return E_FAIL;
 
-
+	LoadGameObject();
 	return S_OK;
 }
 
@@ -63,7 +65,7 @@ HRESULT CHong::Render()
 	SetWindowText(g_hWnd, TEXT("È«ÁØ·¹º§ÀÓ"));
 
 	CreateMap();
-
+	ImGui::ShowDemoWindow();
 	ImGui::Begin("SelectFolder");
 
 
@@ -139,7 +141,7 @@ HRESULT CHong::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_HONG, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -154,7 +156,8 @@ HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag)))
 		return E_FAIL;
-
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
 	Safe_Release(pGameInstance);
 
 	return S_OK;

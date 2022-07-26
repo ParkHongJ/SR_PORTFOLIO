@@ -1,24 +1,29 @@
 #pragma once
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
-class CCollider;
 class CTransform;
 class CVIBuffer_Cube;
 END
 
 BEGIN(Client)
 
-class CBlock final : public CGameObject
+class CSky final : public CGameObject
 {
-
+public:
+	typedef struct tagBackGroundDesc
+	{
+		_uint		iSizeX;
+		_uint		iSizeY;
+	}BACKDESC;
 private:
-	CBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
-	CBlock(const CBlock& rhs);
-	virtual ~CBlock() = default;
+	CSky(LPDIRECT3DDEVICE9 pGraphic_Device);
+	CSky(const CSky& rhs);
+	virtual ~CSky() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -27,16 +32,14 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta);
-	void KKK_Is_Raise(_float3 vTargetPos);
-
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
-	CCollider*				m_pCollCom = nullptr;
+
+private:
+	_float3			m_vTargetPos = _float3(0.f, 0.f, 0.f);
 
 private:
 	HRESULT Set_RenderState();
@@ -45,10 +48,9 @@ private:
 	HRESULT SetUp_Components();
 
 public:
-	static CBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CSky* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };
-
 
 END

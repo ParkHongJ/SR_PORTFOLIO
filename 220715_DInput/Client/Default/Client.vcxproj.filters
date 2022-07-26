@@ -46,9 +46,6 @@
     <Filter Include="01.Level\Hong">
       <UniqueIdentifier>{d199248f-3c3f-4182-ba6a-cf6d72538732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Level\Tool">
-      <UniqueIdentifier>{10e80305-7556-4362-b362-8636acccd229}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\GyuH">
       <UniqueIdentifier>{519691af-8021-481a-905b-3582455d9cca}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="ClientManager\RayCast">
       <UniqueIdentifier>{56a3d5c6-a1ed-4712-8dda-f4bb08dc1476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Sky">
+      <UniqueIdentifier>{6aeb102e-a9be-45f9-9ddc-59905a0dfb06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +145,6 @@
     <ClInclude Include="..\public\Hong.h">
       <Filter>01.Level\Hong</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapTool.h">
-      <Filter>01.Level\Tool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_GyuH.h">
       <Filter>01.Level\GyuH</Filter>
     </ClInclude>
@@ -186,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ray_Cast.h">
       <Filter>ClientManager\RayCast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sky.h">
+      <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,9 +243,6 @@
     <ClCompile Include="..\private\Hong.cpp">
       <Filter>01.Level\Hong</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapTool.cpp">
-      <Filter>01.Level\Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_GyuH.cpp">
       <Filter>01.Level\GyuH</Filter>
     </ClCompile>
@@ -281,6 +278,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ray_Cast.cpp">
       <Filter>ClientManager\RayCast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sky.cpp">
+      <Filter>02.GameObject\Sky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@ class CObject_Manager final : public CBase
 private:
 	CObject_Manager();
 	virtual ~CObject_Manager() = default;
+public:
+	class CComponent* Get_Component(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pComponentTag, _uint iLayerIndex);
 
 public:
 	HRESULT Reserve_Container(_uint iNumLevels);

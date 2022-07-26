@@ -1,19 +1,20 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
 
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CCollider;
 class CTransform;
+class CBoxCollider;
 class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
 
-class CPlayer final : public CGameObject
+class CPlayer final : public CLandObject
 {
 private:
 	CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -32,10 +33,10 @@ public:
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
-	CCollider*				m_pColliderCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-
+	CBoxCollider*			m_pBoxCom = nullptr;
+	CCollider*				m_pColliderCom = nullptr;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

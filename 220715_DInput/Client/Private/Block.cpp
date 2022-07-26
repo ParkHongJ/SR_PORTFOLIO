@@ -37,6 +37,7 @@ void CBlock::Tick(_float fTimeDelta)
 void CBlock::LateTick(_float fTimeDelta)
 {
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, this);
 }
 
 HRESULT CBlock::Render()
@@ -123,7 +124,9 @@ HRESULT CBlock::SetUp_Components()
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
-
+	/* For.Com_Coll */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Coll"), (CComponent**)&m_pCollCom, this)))
+		return E_FAIL;
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
@@ -165,6 +168,7 @@ CGameObject * CBlock::Clone(void* pArg)
 void CBlock::Free()
 {
 	__super::Free();
+	Safe_Release(m_pCollCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);

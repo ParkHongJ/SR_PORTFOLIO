@@ -28,12 +28,21 @@ HRESULT CTerrain::Initialize(void * pArg)
 
 void CTerrain::Tick(_float fTimeDelta)
 {
-	int a = 10;
+
 }
 
 void CTerrain::LateTick(_float fTimeDelta)
 {	
 
+	_float3			vPickPos;
+
+	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
+	{
+		if (m_pVIBufferCom->Picking(m_pTransformCom, &vPickPos))
+		{
+			int a = 10;
+		}
+	}*/
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -60,7 +69,7 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::SetUp_Components()
 {
-	///* For.Com_Renderer */
+	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
@@ -72,18 +81,15 @@ HRESULT CTerrain::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
-	//--------------
-	/* For.Com_Renderer */
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
-	//	return E_FAIL;
+	/* For.Com_Transform */
+	CTransform::TRANSFORMDESC		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
 
-	///* For.Com_VIBuffer */
-	//if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
-	//	return E_FAIL;
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	///* For.Com_Texture */
-	//if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -136,6 +142,7 @@ void CTerrain::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);

@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
-
+#include "KeyMgr.h"
 using namespace Client;
 
 CMainApp::CMainApp()
@@ -14,43 +14,6 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
-#pragma region 제이쓴
-	JSON_Value *rootValue;
-	JSON_Object *rootObject;
-	rootValue = json_value_init_object();
-	rootObject = json_value_get_object(rootValue);
-
-	json_object_set_string(rootObject, "Title", "Inception");
-
-	// 객체에 키를 추가하고 숫자 저장
-	json_object_set_number(rootObject, "Year", 2010);
-	json_object_set_number(rootObject, "Runtime", 148);
-
-	// 객체에 키를 추가하고 문자열 저장
-	json_object_set_string(rootObject, "Genre", "Sci-Fi");
-	json_object_set_string(rootObject, "Director", "Christopher Nolan");
-
-	json_object_set_value(rootObject, "Actors", json_value_init_array());
-	// 객체에서 배열 포인터를 가져옴
-	JSON_Array *actors = json_object_get_array(rootObject, "Actors");
-	// 배열에 문자열 요소 추가
-	json_array_append_string(actors, "Leonardo DiCaprio");
-	json_array_append_string(actors, "Joseph Gordon-Levitt");
-	json_array_append_string(actors, "Ellen Page");
-	json_array_append_string(actors, "Tom Hardy");
-	json_array_append_string(actors, "Ken Watanabe");
-
-	// 객체에 키를 추가하고 숫자 저장
-	json_object_set_number(rootObject, "imdbRating", 8.8);
-	// 객체에 키를 추가하고 불 값 저장
-	json_object_set_boolean(rootObject, "KoreaRelease", true);
-
-	// JSON_Value를 사람이 읽기 쉬운 문자열(pretty)로 만든 뒤 파일에 저장
-	json_serialize_to_file_pretty(rootValue, "example.json");
-
-	json_value_free(rootValue);    // JSON_Value에 할당된 동적 메모리 해제
-
-#pragma endregion 제이쓴
 	GRAPHICDESC			GraphicDesc;
 	ZeroMemory(&GraphicDesc, sizeof(GRAPHICDESC));
 
@@ -74,19 +37,14 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
-	// Setup Dear ImGui context
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
 
-	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX9_Init(m_pGraphic_Device);
 	return S_OK;
@@ -100,8 +58,9 @@ void CMainApp::Tick(_float fTimeDelta)
 #ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
-
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK);
+	m_pCollider->End();
 }
 
 HRESULT CMainApp::Render()
@@ -120,91 +79,15 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Render_Level();
 
-	static float f = 0.0f;
-	static int counter = 0;
-
-	//----------------------------------------------------------------------------------------------------------------------------
 	ImGui::Begin("FPS");                          // Create a window called "Hello, world!" and append into it.
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
-	//----------------------------------------------------------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------------------------------------------------------
-	ImGui::ShowDemoWindow();
-	//----------------------------------------------------------------------------------------------------------------------------
-
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Scene"))
-		{
-			if (ImGui::MenuItem("Hong", u8"맡은파트이름"))
-			{
-				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-				Safe_AddRef(pGameInstance);
-
-				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
-					MSG_BOX(L"오픈실패");
-
-				Safe_Release(pGameInstance);
-			}
-			if (ImGui::MenuItem("Sae", u8"맡은파트이름")) 
-			{
-				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-				Safe_AddRef(pGameInstance);
-
-				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_LOGO))))
-					MSG_BOX(L"오픈실패");
-
-				Safe_Release(pGameInstance);
-			}
-			if (ImGui::MenuItem("Hyeuk", u8"맡은파트이름")) 
-			{
-				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-				Safe_AddRef(pGameInstance);
-
-				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
-					MSG_BOX(L"오픈실패");
-
-				Safe_Release(pGameInstance);
-			}
-			if (ImGui::MenuItem("Kyuu", u8"맡은파트이름"))
-			{
-
-			}
-			ImGui::Separator();
-			if (ImGui::MenuItem("Tool", u8"툴모음집")) 
-			{
-
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
-	}
-
 
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
 	m_pGameInstance->Render_End();
-
-//#ifdef _DEBUG
-//	++m_iNumDraw;
-//
-//	if (m_fTimeAcc >= 1.f)
-//	{
-//		wsprintf(m_szFPS, TEXT("fps : %d"), m_iNumDraw);
-//		m_iNumDraw = 0;
-//		m_fTimeAcc = 0.f;
-//	}
-//
-//	SetWindowText(g_hWnd, m_szFPS);
-//#endif // _DEBUG
-
 	
-
 	return S_OK;
 }
 
@@ -278,9 +161,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	/* For.Prototype_Component_Collider */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
-		CCollider::Create(m_pGraphic_Device))))
+		m_pCollider = CCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	Safe_AddRef(m_pCollider);
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
@@ -308,9 +191,11 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	Safe_Release(m_pGraphic_Device);
+	Safe_Release(m_pCollider);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pGameInstance);
 
+	CKeyMgr::Get_Instance()->Destroy_Instance();
 	CGameInstance::Release_Engine();
 
 }

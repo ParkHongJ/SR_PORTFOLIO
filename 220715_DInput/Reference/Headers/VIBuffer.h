@@ -19,6 +19,9 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Render();
+public:
+	virtual _bool Picking(class CTransform* pTransform, _float3* pOut) { return true; }
+	virtual _float Compute_Height(_float3 vTargetPos) { return 0; }
 
 
 
@@ -35,7 +38,7 @@ protected:
 	LPDIRECT3DINDEXBUFFER9	m_pIB = nullptr;
 	_uint					m_iIndexSizeofPrimitive = 0;
 	D3DFORMAT				m_eIndexFormat;
-
+	_float3*				m_pVerticesPos = nullptr;
 
 
 protected:

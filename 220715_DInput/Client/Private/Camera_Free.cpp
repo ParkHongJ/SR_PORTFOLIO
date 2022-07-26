@@ -167,6 +167,5 @@ _float3 CCamera_Free::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
 void CCamera_Free::Free()
 {
 	__super::Free();
-	CKeyMgr::Get_Instance()->Destroy_Instance();
 }
 

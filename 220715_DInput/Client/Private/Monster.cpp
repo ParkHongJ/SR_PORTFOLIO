@@ -60,34 +60,34 @@ HRESULT CMonster::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	char Sour[256] = { "Monster" };
-	char szBuf[MAX_PATH] = {};
+	//char Sour[256] = { "Monster" };
+	//char szBuf[MAX_PATH] = {};
 
-	_uint Dest = 1; // 객체에 넘버링 할 수 있음.
+	//_uint Dest = 1; // 객체에 넘버링 할 수 있음.
 
-	ImGui::Begin(Sour);
+	//ImGui::Begin(Sour);
 
-	ImGui::Text("Monster%d", Dest);
+	//ImGui::Text("Monster%d", Dest);
 
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_x");
-	ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
+	//strcpy(szBuf, Sour);
+	//strcat(szBuf, "_x");
+	//ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
 
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_y");
-	ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
+	//strcpy(szBuf, Sour);
+	//strcat(szBuf, "_y");
+	//ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
 
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_z");
-	ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
+	//strcpy(szBuf, Sour);
+	//strcat(szBuf, "_z");
+	//ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
 
-	ImGui::Spacing();
+	//ImGui::Spacing();
 
-	ImGui::End();
+	//ImGui::End();
 
 
 	return S_OK;

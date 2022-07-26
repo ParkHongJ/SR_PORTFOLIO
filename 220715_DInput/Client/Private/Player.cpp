@@ -3,12 +3,12 @@
 
 #include "GameInstance.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CLandObject(pGraphic_Device)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	: CGameObject(rhs)
+	: CLandObject(rhs)
 {
 }
 
@@ -19,12 +19,21 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void * pArg)
 {
+	__super::LANDDESC		LandDesc;
+	ZeroMemory(&LandDesc, sizeof(__super::LANDDESC));
+
+	LandDesc.iTerrainLevelIndex = LEVEL_HONG;
+	LandDesc.pLayerTag = TEXT("Layer_BackGround");
+	LandDesc.iTerrainObjectIndex = 0;
+	LandDesc.pTerrainBufferComTag = TEXT("Com_VIBuffer");
+
+	if (FAILED(CLandObject::Initialize(&LandDesc)))
+		return E_FAIL;
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.0f, 0.5f, 0.f));
-	/*bool ret = LoadTextureFromFile("../Bin/Resources/Textures/player/AKIHA_AKI00_000.png", &my_texture, &my_image_width, &my_image_height);
-	IM_ASSERT(ret);*/
 	return S_OK;
 }
 
@@ -32,16 +41,22 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-
-		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
-		//m_pTransformCom->Go_Right(fTimeDelta);
+		//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
 	}
-
+	if (GetKeyState('W') & 0x8000)
+	{
+		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
+	}
+	if (GetKeyState('S') & 0x8000)
+	{
+		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
+	}
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
-		//m_pTransformCom->Go_Backward(fTimeDelta);
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
 
-		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
+		//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
 	}
 
 	if (GetKeyState(VK_LEFT) & 0x8000)
@@ -56,12 +71,34 @@ void CPlayer::Tick(_float fTimeDelta)
 		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
 		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
 	}
-	
+
+	//-------
+	/*if (GetKeyState(VK_UP) & 0x8000)
+	{
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	}
+
+	if (GetKeyState(VK_DOWN) & 0x8000)
+	{
+		m_pTransformCom->Go_Backward(fTimeDelta);
+	}
+
+	if (GetKeyState(VK_LEFT) & 0x8000)
+	{
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+	}
+
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+	{
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+	}*/
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	//__super::SetUp_OnTerrain(m_pTransformCom, 1.f);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
 }
 
 HRESULT CPlayer::Render()
@@ -87,29 +124,22 @@ HRESULT CPlayer::Render()
 
 	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	char Sour[256] = { "Player_" };
-	char szBuf[MAX_PATH] = {};
+	ImGui::Begin("Collider");
+	_float3 tempMin = m_pBoxCom->GetMin();
+	_float3 tempMax = m_pBoxCom->GetMax();
 
-	ImGui::Begin(Sour);
+	_float4x4 matWorld;
+	D3DXMatrixIdentity(&matWorld);
 
-	ImGui::Text("Player");
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vScale = m_pTransformCom->Get_Scaled();
+	memcpy(&matWorld.m[3][0], &vPos, sizeof(_float3));
 
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "x");
-	ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
+	D3DXVec3TransformCoord(&tempMin, &tempMin, &matWorld);
+	D3DXVec3TransformCoord(&tempMax, &tempMax, &matWorld);
 
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "y");
-	ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
-
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "z");
-	ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
-
-	ImGui::Spacing();
-
+	ImGui::SliderFloat3("tempmin", tempMin, -100.f, 100.f);
+	ImGui::SliderFloat3("tempMax", tempMax, -100.f, 100.f);
 	ImGui::End();
 
 	ImGui::Begin("DirectX9 Texture Test");
@@ -117,6 +147,9 @@ HRESULT CPlayer::Render()
 	ImGui::Text("size = %d x %d", my_image_width, my_image_height);
 	ImGui::Image((void*)my_texture, ImVec2(50, 50));
 	ImGui::End();
+
+
+	m_pBoxCom->Render(matWorld);
 	return S_OK;
 }
 
@@ -125,19 +158,15 @@ HRESULT CPlayer::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
+	
 	return S_OK;
 }
 
 HRESULT CPlayer::Reset_RenderState()
 {
-	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	//m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -152,26 +181,14 @@ HRESULT CPlayer::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
-	///* For.Com_Texture */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
-	//	return E_FAIL;
-
-	///* For.Com_Transform */
-	//CTransform::TRANSFORMDESC		TransformDesc;
-	//ZeroMemory(&TransformDesc, sizeof(TransformDesc));
-
-	//TransformDesc.fSpeedPerSec = 5.f;
-	//TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
-	//	return E_FAIL;
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
-	//	return E_FAIL;
-
-
-
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_HONG, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_Box"), (CComponent**)&m_pBoxCom, this)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Col"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -183,9 +200,6 @@ HRESULT CPlayer::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
-		return E_FAIL;
-	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	return S_OK;
 }
 
@@ -220,6 +234,7 @@ void CPlayer::Free()
 	__super::Free();
 	Safe_Release(my_texture);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pBoxCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);

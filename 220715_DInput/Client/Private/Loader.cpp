@@ -12,6 +12,7 @@
 #include "MyBox.h"
 #include "Monster_Pig.h"
 #include "Block.h"
+#include "Sky.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -47,7 +48,7 @@ _uint APIENTRY LoadingMain(void* pArg)
 		break;
 		
 	default:
-		MSG_BOX(L"레벨이 없습니다");
+		MSG_BOX(L"ˇ??§?? ??˝?´?´?");
 		break;
 	}
 
@@ -72,19 +73,19 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 HRESULT CLoader::Loading_ForLogoLevel()
 {
-	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩중입니다. "));
+	lstrcpy(m_szLoadingText, TEXT("°´???????? ˇ????ß??´?´?. "));
 
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/* 개ㅑㄱ체원형 로드한다. */	
+	/* °ł¤?¤??????? ˇ?????´?. */	
 
 	/* For.Prototype_GameObject_BackGround */ 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pGraphic_Device))))
 		return E_FAIL;	
 
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
-	/* 텍스쳐를 로드한다. */
+	lstrcpy(m_szLoadingText, TEXT("??˝???¸? ˇ????ß??´?´?. "));
+	/* ??˝???¸? ˇ?????´?. */
 
 	/* For.Prototype_Component_Texture_Default */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Default"),
@@ -92,11 +93,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 
-	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));	
-	/* 모델를 로드한다. */
+	lstrcpy(m_szLoadingText, TEXT("¸đ?¨?? ˇ????ß??´?´?. "));	
+	/* ¸đ?¨¸? ˇ?????´?. */
 
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니ㅏㄷ.  "));
+	lstrcpy(m_szLoadingText, TEXT("ˇ????? ??ˇ?????˝?´?¤?¤§.  "));
 
 	Safe_Release(pGameInstance);
 
@@ -161,18 +162,18 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_ElectricBlock */ // Test
+	/* For.Prototype_Component_Texture_ElectricBlock */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/ElectricBlock/electricBlockSpr_%d.png"), 3))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 	/* Loading Model */
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), 
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
 		return E_FAIL;
-
+	
+	
 	lstrcpy(m_szLoadingText, TEXT("Success!"));
 
 	Safe_Release(pGameInstance);
@@ -187,9 +188,14 @@ HRESULT CLoader::Loading_ForHongLevel()
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩중입니다. "));
+	lstrcpy(m_szLoadingText, TEXT("°´???????? ˇ????ß??´?´?. "));
 
-	/* 개ㅑㄱ체원형 로드한다. */
+	/*-----------
+	--Prototype--
+	------------*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
+		CPlayer::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
@@ -203,13 +209,14 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cube"),
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
-	/* 텍스쳐를 로드한다. */
-
+	/* For.Prototype_GameObject_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
+		CSky::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	/*-----------
 	---Texture---
 	------------*/
+
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/Grass_%d.tga"), 2))))
@@ -219,19 +226,32 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/ElectricBlock/electricBlockSpr_%d.png"), 3))))
 		return E_FAIL;
-	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
+		return E_FAIL;
+
 	/*-----------
 	--Component--
 	------------*/
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))//, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니ㅏㄷ.  "));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BoxCollider"), CBoxCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Cube */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
+		CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	Safe_Release(pGameInstance);
 
 	m_isFinished = true;
@@ -244,9 +264,9 @@ HRESULT CLoader::Loading_ForSENILevel()
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩중입니다. "));
+	lstrcpy(m_szLoadingText, TEXT("°´???????? ˇ????ß??´?´?. "));
 
-	/* 개ㅑㄱ체원형 로드한다. */
+	/* °ł¤?¤??????? ˇ?????´?. */
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
@@ -262,8 +282,8 @@ HRESULT CLoader::Loading_ForSENILevel()
 		CCamera_Free::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
-	/* 텍스쳐를 로드한다. */
+	lstrcpy(m_szLoadingText, TEXT("??˝???¸? ˇ????ß??´?´?. "));
+	/* ??˝???¸? ˇ?????´?. */
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
@@ -275,13 +295,13 @@ HRESULT CLoader::Loading_ForSENILevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
-	/* 모델를 로드한다. */
+	lstrcpy(m_szLoadingText, TEXT("¸đ?¨?? ˇ????ß??´?´?. "));
+	/* ¸đ?¨¸? ˇ?????´?. */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 100, 100))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니ㅏㄷ.  "));
+	lstrcpy(m_szLoadingText, TEXT("ˇ????? ??ˇ?????˝?´?¤?¤§.  "));
 
 	Safe_Release(pGameInstance);
 
@@ -314,7 +334,7 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 		return E_FAIL;
 
 	
-	/* 텍스쳐를 로드한다. */
+	/* ??˝???¸? ˇ?????´?. */
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
@@ -331,8 +351,8 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
 		return E_FAIL;
 	
-	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
-	/* 모델를 로드한다. */
+	lstrcpy(m_szLoadingText, TEXT("¸đ?¨?? ˇ????ß??´?´?. "));
+	/* ¸đ?¨¸? ˇ?????´?. */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
 		return E_FAIL;
