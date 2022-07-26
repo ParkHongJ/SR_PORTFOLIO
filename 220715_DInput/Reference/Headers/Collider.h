@@ -31,11 +31,9 @@ public:
 
 public:
 	HRESULT Render();
-	//나중에 박스,원, 캡슐 등으로 바뀔수있어서 따로뺌
 protected:
 	_float3 m_vPos;
 
-	//나중에 박스,원, 캡슐 등으로 바뀔수있어서 따로뺌
 	
 };
 

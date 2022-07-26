@@ -14,7 +14,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	HRESULT Render();//For Debug
+	HRESULT Render(_float4x4 matWorld);//For Debug
 
 	_float3 GetMin() { return m_fMin; }
 	_float3 GetMax() { return m_fMax; }
@@ -23,12 +23,6 @@ public:
 	static CBoxCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
-
-	/*void Set_State(STATETYPE eState, const _float3& State) {
-		memcpy(&m_WorldMatrix.m[eState][0], &State, sizeof(_float3));		
-	}*/
-	void Set_Scale(_float3& vScale);
-
 
 /*------------
 --AABB¿ë º¯¼ö--

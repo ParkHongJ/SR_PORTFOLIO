@@ -1,6 +1,7 @@
 #include "..\Public\Collider.h"
 #include "GameObject.h"
 
+
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -41,13 +42,15 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 	//콜라이더는 다르게해야함
 	//pDest->OnCollisionEnter(pSour)
 	//pSour->OnCollisionEnter(pDest)
+	int a = 10;
+
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
+		int a = 10;
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
 			if (Check_Rect(pSour, pDest))
 			{
-
 			}
 		}
 	}
@@ -69,7 +72,7 @@ HRESULT Engine::CCollider::End()
 
 bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 {
-	pSour->Get_Component(L"Com_Collider");
+	//pSour->Get_Component(L"Com_Collider");
 	return TRUE;
 }
 

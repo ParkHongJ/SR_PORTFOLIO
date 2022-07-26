@@ -102,10 +102,12 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CBoxCollider::Render()
+HRESULT CBoxCollider::Render(_float4x4 matWorld)
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
+
+	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
 
 	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
 

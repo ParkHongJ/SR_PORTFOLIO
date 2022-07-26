@@ -39,41 +39,41 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	//if (GetKeyState(VK_UP) & 0x8000)
-	//{
-	//	//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
-	//	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
-	//}
-	//if (GetKeyState('W') & 0x8000)
-	//{
-	//	m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
-	//}
-	//if (GetKeyState('S') & 0x8000)
-	//{
-	//	m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
-	//}
-	//if (GetKeyState(VK_DOWN) & 0x8000)
-	//{
-	//	m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+	if (GetKeyState(VK_UP) & 0x8000)
+	{
+		//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+	}
+	if (GetKeyState('W') & 0x8000)
+	{
+		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
+	}
+	if (GetKeyState('S') & 0x8000)
+	{
+		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
+	}
+	if (GetKeyState(VK_DOWN) & 0x8000)
+	{
+		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
 
-	//	//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
-	//}
+		//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
+	}
 
-	//if (GetKeyState(VK_LEFT) & 0x8000)
-	//{
+	if (GetKeyState(VK_LEFT) & 0x8000)
+	{
 
-	//	m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
-	//	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
-	//}
+		m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+	}
 
-	//if (GetKeyState(VK_RIGHT) & 0x8000)
-	//{
-	//	//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-	//	m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
-	//}
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+	{
+		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
+		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
+	}
 
 	//-------
-	if (GetKeyState(VK_UP) & 0x8000)
+	/*if (GetKeyState(VK_UP) & 0x8000)
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
@@ -91,13 +91,14 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
 		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-	}
+	}*/
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	__super::SetUp_OnTerrain(m_pTransformCom, 1.f);
+	//__super::SetUp_OnTerrain(m_pTransformCom, 1.f);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
 }
 
 HRESULT CPlayer::Render()
@@ -113,7 +114,6 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-	m_pBoxCom->Render();
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
@@ -134,12 +134,12 @@ HRESULT CPlayer::Render()
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vScale = m_pTransformCom->Get_Scaled();
 	memcpy(&matWorld.m[3][0], &vPos, sizeof(_float3));
+
 	D3DXVec3TransformCoord(&tempMin, &tempMin, &matWorld);
 	D3DXVec3TransformCoord(&tempMax, &tempMax, &matWorld);
 
 	ImGui::SliderFloat3("tempmin", tempMin, -100.f, 100.f);
 	ImGui::SliderFloat3("tempMax", tempMax, -100.f, 100.f);
-
 	ImGui::End();
 
 	ImGui::Begin("DirectX9 Texture Test");
@@ -147,6 +147,9 @@ HRESULT CPlayer::Render()
 	ImGui::Text("size = %d x %d", my_image_width, my_image_height);
 	ImGui::Image((void*)my_texture, ImVec2(50, 50));
 	ImGui::End();
+
+
+	m_pBoxCom->Render(matWorld);
 	return S_OK;
 }
 
@@ -181,7 +184,11 @@ HRESULT CPlayer::SetUp_Components()
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
+
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_Box"), (CComponent**)&m_pBoxCom, this)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Col"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -226,6 +233,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 	Safe_Release(my_texture);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pBoxCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);

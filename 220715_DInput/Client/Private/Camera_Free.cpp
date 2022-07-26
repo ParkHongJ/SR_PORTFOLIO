@@ -96,27 +96,27 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 	
-	//if (CKeyMgr::Get_Instance()->Key_Down('X'))
-	//{
-	//	m_bMove = !m_bMove;
-	//}
-	//if (m_bMove)
-	//{
-	//	m_pTransformCom->Set_State(
-	//		CTransform::STATE_POSITION,
-	//		Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-	//			_float3(14.5f, 16.7f, 0.f),
-	//			fTimeDelta * m_fSpeed));
-	//}
-	//else
-	//{
-	//	m_pTransformCom->Set_State(
-	//		CTransform::STATE_POSITION,
-	//		Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-	//			_float3(14.5f, 16.7f, 7.9f),
-	//			fTimeDelta * m_fSpeed));
-	//}
-	//m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
+	if (CKeyMgr::Get_Instance()->Key_Down('X'))
+	{
+		m_bMove = !m_bMove;
+	}
+	if (m_bMove)
+	{
+		m_pTransformCom->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
+				_float3(14.5f, 16.7f, 0.f),
+				fTimeDelta * m_fSpeed));
+	}
+	else
+	{
+		m_pTransformCom->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
+				_float3(14.5f, 16.7f, 7.9f),
+				fTimeDelta * m_fSpeed));
+	}
+	m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
 	Safe_Release(pGameInstance);
 	__super::Tick(fTimeDelta);
 }
