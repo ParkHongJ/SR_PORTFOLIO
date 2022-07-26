@@ -32,9 +32,53 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 				
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH/*LEVEL_GAMEPLAY*/))))
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GAMEPLAY))))
 			return;
 			
+		Safe_Release(pGameInstance);
+	}
+
+	if (GetKeyState(VK_F1) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GYUH))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
+
+	if (GetKeyState(VK_F2) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
+
+	if (GetKeyState(VK_F3) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
+
+	if (GetKeyState(VK_F4) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SENI))))
+			return;
+
 		Safe_Release(pGameInstance);
 	}
 }

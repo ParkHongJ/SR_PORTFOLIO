@@ -158,7 +158,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/pigSpr_7.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_ElectricBlock */ // Test
@@ -272,7 +272,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Player/pigSpr_7.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
