@@ -26,16 +26,16 @@ HRESULT CVIBuffer_Toodee_Rect::Initialize_Prototype()
 
 	m_pVB->Lock(0, /*m_iStride * m_iNumVertices*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.001f, 0.75f);
+	pVertices[0].vPosition = _float3(-0.5f, 0.f, 1.5f);
 	pVertices[0].vTexture = _float2(0.f, 0.f);
 
-	pVertices[1].vPosition = _float3(0.5f, 0.001f, 0.75f);
+	pVertices[1].vPosition = _float3(0.5f, 0.f, 1.5f);
 	pVertices[1].vTexture = _float2(1.f, 0.f);
 
-	pVertices[2].vPosition = _float3(0.5f, 0.001f, -0.75f);
+	pVertices[2].vPosition = _float3(0.5f, 0.f, 0.f);
 	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = _float3(-0.5f, 0.001f, -0.75f);
+	pVertices[3].vPosition = _float3(-0.5f, 0.f, 0.f);
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 
 	m_pVB->Unlock();
