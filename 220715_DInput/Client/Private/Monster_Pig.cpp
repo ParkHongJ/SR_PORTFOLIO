@@ -30,17 +30,29 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 
 void CMonster_Pig::Tick(_float fTimeDelta)
 {
-	m_vTargetPos = _float3(1.f, 50.f, 0.f);
+	//m_vTargetPos = _float3(1.f, 50.f, 0.f);
 
-	// m_pTransformCom->Chase(m_vTargetPos, fTimeDelta);
+	//m_pTransformCom->Chase(m_vTargetPos, fTimeDelta);
 	//m_pTransformCom->LookAtForLandObject(m_vTargetPos);
 	
+	//Player가 Toodee일 때, 블럭 위에서 돌아다님
+	//m_pTransformCom->Go_Right(0.4f * fTimeDelta);
+	//Player가 Topdee일 때, PlayerPos를 Chase함
 }
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
-	
+	_float4x4		ViewMatrix;
 
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+
+	/* 카메라의 월드행렬이다. */
+	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+
+	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
+	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+	
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -49,7 +61,7 @@ HRESULT CMonster_Pig::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 	
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
+	if (FAILED(m_pTextureCom->Bind_Texture(7)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))
@@ -89,7 +101,7 @@ HRESULT CMonster_Pig::Set_RenderState()
 		return E_FAIL;
 
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 120);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
