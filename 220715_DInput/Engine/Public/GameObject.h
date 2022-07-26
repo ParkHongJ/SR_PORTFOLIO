@@ -22,8 +22,8 @@ public:
 	virtual void OnTriggerExit(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
 
 public:
-	virtual void KKK_Go_Lerp(_float3 vFinalPos, _float fTimeDelta) { int a = 0; };
-	
+	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta) { return true; };
+	virtual void KKK_Is_Raise(_float3 vTargetPos) {};
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
 	

@@ -27,7 +27,8 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void KKK_Go_Lerp(_float3 vFinalPos, _float fTimeDelta);
+	bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta);
+	void KKK_Is_Raise(_float3 vTargetPos);
 
 private:
 	CTexture*				m_pTextureCom = nullptr;

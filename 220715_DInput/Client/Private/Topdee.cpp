@@ -32,6 +32,7 @@ void CTopdee::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	Topdee_Turn_Check();
+	KKK_IsRaise(fTimeDelta, 1);
 	if (m_bTurn) {
 		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
@@ -70,6 +71,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		else if (pGameInstance->Get_DIKState(DIK_Z) & 0x80)
 		{//박스들기.
 			KKK_FindBox(fTimeDelta);
+			KKK_DropBox(fTimeDelta);
 			m_bPress = true;
 		}
 		else
@@ -113,6 +115,15 @@ void CTopdee::Not_My_Turn_Texture()
 	}
 }
 
+void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
+{
+	if (m_pRaiseObject == nullptr)
+		return;
+	_float3 vfinalPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vfinalPos.y += 1.f;
+	m_pRaiseObject->KKK_Is_Raise(vfinalPos);
+}
+
 void CTopdee::Topdee_Turn_Check()
 {
 	_float4x4		ViewMatrix;
@@ -122,7 +133,7 @@ void CTopdee::Topdee_Turn_Check()
 	_float4x4		CamWorldMatrix;
 	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
 	_float fCameraZ = (*(_float3*)&CamWorldMatrix.m[3][0]).z;
-	if ((fCameraZ >= 0.f)&&(fCameraZ <= 1.f))
+	if ((fCameraZ >= -1.f)&&(fCameraZ <= 1.f))
 		m_bTurn = true;
 	else
 		m_bTurn = false;
@@ -155,22 +166,19 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 			m_eCurDir = _eInputDirection;
 			if (m_eCurDir == DIR_DOWN) {
 				m_iFirstFrame = 0;
-			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(180.f));*/
-				m_bDown = true;
 			}
+
 			else if (m_eCurDir == DIR_UP) {
 				m_iFirstFrame = 4;
-			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(0.f));*/
-				m_bDown = false;
 			}
+
 			else if (m_eCurDir == DIR_LEFT) {
 				m_iFirstFrame = 2;
-		/*		m_pTransformCom->TransOnlyLook(D3DXToRadian(270.f));*/
 			}
+
 			else if (m_eCurDir == DIR_RIGHT)
 			{
 				m_iFirstFrame = 6;
-			/*	m_pTransformCom->TransOnlyLook(D3DXToRadian(90.f));*/
 			}
 			m_iFrame = m_iFirstFrame;
 			m_bMoveFrame = false;
@@ -192,9 +200,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-
-
-	
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 }
@@ -278,17 +283,42 @@ HRESULT CTopdee::SetUp_Components()
 
 void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
+	if (m_pRaiseObject != nullptr)
+		return;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	CLayer* pLayer = pGameInstance->KKK_GetBox();
 	KKK_m_pBoxList = pLayer->KKK_Get_List();
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
 	auto& iter = (*KKK_m_pBoxList).begin();
+	bool bMove{false};
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)
 	{
-		(*iter)->KKK_Go_Lerp(vTopdeePos,fTimeDelta);
+		bMove = (*iter)->KKK_Go_Lerp_Raise(vTopdeePos, fTimeDelta);
+		if (bMove)
+			break;
 		++iter;
 	}
+	if (!bMove)
+		m_pRaiseObject = nullptr;
+	else
+		m_pRaiseObject = (*iter);
+}
+
+void CTopdee::KKK_DropBox(_float fTimeDelta)
+{
+	if (m_pRaiseObject == nullptr)
+		return;
+	_float3 vBoxDropPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	if (m_eCurDir == DIR_UP)
+		vBoxDropPos.z += 1.f;
+	else if(m_eCurDir == DIR_LEFT)
+		vBoxDropPos.x -= 1.f;
+	else if (m_eCurDir == DIR_RIGHT)
+		vBoxDropPos.x += 1.f;
+	else if (m_eCurDir == DIR_DOWN)
+		vBoxDropPos.z -= 1.f;
+	
 }
 
 CTopdee * CTopdee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

@@ -47,7 +47,6 @@ private:
 
 private:
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
-	_bool	m_bDown{ false };
 	_bool	m_bPress{ false };
 	_bool	m_bTurn{ false };
 
@@ -58,13 +57,19 @@ private:
 private:
 	void Topdee_Turn_Check();
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
-	void Go_Lerp(_float fTimeDelta);
 	void Not_My_Turn_Texture();
+	void Go_Lerp(_float fTimeDelta);
+
 private:
 	HRESULT SetUp_Components();
+
+private:
 	void	KKK_FindBox(_float fTimeDelta);
+	void	KKK_IsRaise(_float fTimeDelta,_char KKK_NotOverride);
 	list<class CGameObject*>* KKK_m_pBoxList;
+	CGameObject* m_pRaiseObject = nullptr;
 	_float3 m_vTargetDir{0.f,0.f,0.f};
+	void KKK_DropBox(_float fTimeDelta);
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
