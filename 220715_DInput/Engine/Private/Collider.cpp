@@ -51,7 +51,8 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 		{
 			if (Check_Rect(pSour, pDest))
 			{
-				int a = 10;
+				pSour->OnTriggerStay(pDest);
+				pDest->OnTriggerStay(pSour);
 			}
 		}
 	}
@@ -103,17 +104,16 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 
 	D3DXMatrixIdentity(&SourWorld);
 	D3DXMatrixIdentity(&DestWorld);
-	_float3 testSour = SourTrans->Get_State(CTransform::STATE_POSITION);
-	_float3 testDest = DestTrans->Get_State(CTransform::STATE_POSITION);
-	memcpy(&SourWorld.m[3][0], &testSour, sizeof(_float3));
-	memcpy(&DestWorld.m[3][0], &testDest, sizeof(_float3));
-	/*SourWorld = SourTrans->Get_WorldMatrix();
-	DestWorld = DestTrans->Get_WorldMatrix();*/
+	_float3 vSourPos = SourTrans->Get_State(CTransform::STATE_POSITION);
+	_float3 vDestPos = DestTrans->Get_State(CTransform::STATE_POSITION);
+	memcpy(&SourWorld.m[3][0], &vSourPos, sizeof(_float3));
+	memcpy(&DestWorld.m[3][0], &vDestPos, sizeof(_float3));
 
 	D3DXVec3TransformCoord(&vSourMin, &vSourMin, &SourWorld);
 	D3DXVec3TransformCoord(&vSourMax, &vSourMax, &SourWorld);
 	D3DXVec3TransformCoord(&vDestMin, &vDestMin, &DestWorld);
 	D3DXVec3TransformCoord(&vDestMax, &vDestMax, &DestWorld);
+
 	//x축에 대하여
 	if (vSourMax.x < vDestMin.x ||
 		vSourMin.x > vDestMax.x)
@@ -155,6 +155,7 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 
 	Safe_Release(SourTrans);
 	Safe_Release(DestTrans);
+
 	return TRUE;
 }
 
