@@ -73,8 +73,14 @@
     <Filter Include="02.GameObject\Wall">
       <UniqueIdentifier>{2cf00ebf-6cc7-4fd0-9e5a-755786aabd50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KeyMgr">
+    <Filter Include="ClientManager">
+      <UniqueIdentifier>{0d4ef7c2-32a4-446c-919d-8b6f0211055a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientManager\KeyMgr">
       <UniqueIdentifier>{ce080dd4-fea6-46f9-8a42-9cd3d356fb22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientManager\RayCast">
+      <UniqueIdentifier>{56a3d5c6-a1ed-4712-8dda-f4bb08dc1476}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +182,10 @@
       <Filter>02.GameObject\Wall</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\KeyMgr.h">
-      <Filter>KeyMgr</Filter>
+      <Filter>ClientManager\KeyMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ray_Cast.h">
+      <Filter>ClientManager\RayCast</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,7 +277,10 @@
       <Filter>02.GameObject\Wall</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\KeyMgr.cpp">
-      <Filter>KeyMgr</Filter>
+      <Filter>ClientManager\KeyMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ray_Cast.cpp">
+      <Filter>ClientManager\RayCast</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

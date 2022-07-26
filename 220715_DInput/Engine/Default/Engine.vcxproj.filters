@@ -73,9 +73,6 @@
     <Filter Include="04.Components\Collider">
       <UniqueIdentifier>{91aa002e-ccc0-4891-83c3-7446da6ac0c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Components\VIBuffer\Cube">
-      <UniqueIdentifier>{6bdae2d9-df13-41d9-b718-b44f6fe8b239}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Components\SENI">
       <UniqueIdentifier>{4374750a-162c-41a3-a7fe-9315d6cc758c}</UniqueIdentifier>
     </Filter>
@@ -84,9 +81,15 @@
     </Filter>
     <Filter Include="04.Components\VIBuffer\VIBuffer_Topdee">
       <UniqueIdentifier>{580e5506-5e22-49af-89b8-20b9b46d56a0}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="04.Components\VIBuffer\ToodeeRect">
       <UniqueIdentifier>{048a9d5e-7593-4a06-b4a7-f855826b8098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Components\VIBuffer\Terrain_Cube">
+      <UniqueIdentifier>{b8066088-369e-4a3e-96a9-d39bad9d2be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Components\VIBuffer\Cube">
+      <UniqueIdentifier>{6bdae2d9-df13-41d9-b718-b44f6fe8b239}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,16 +175,19 @@
       <Filter>04.Components\Collider</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
-      <Filter>04.Components\VIBuffer\Cube</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>04.Components\SENI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Topdee.h">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
-    </ClInclude>  
+    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Toodee_Rect.h">
       <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>04.Components\VIBuffer\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain_Cube.h">
+      <Filter>04.Components\VIBuffer\Terrain_Cube</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +262,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Topdee.cpp">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Toodee_Rect.cpp">
       <Filter>04.Components\VIBuffer\ToodeeRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain_Cube.cpp">
+      <Filter>04.Components\VIBuffer\Terrain_Cube</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
