@@ -122,25 +122,6 @@ HRESULT CPlayer::Render()
 	//m_pColliderCom->Render();
 	//--------------------------------------------------------------
 
-	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	ImGui::Begin("Collider");
-	_float3 tempMin = m_pBoxCom->GetMin();
-	_float3 tempMax = m_pBoxCom->GetMax();
-
-	_float4x4 matWorld;
-	D3DXMatrixIdentity(&matWorld);
-
-	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float3 vScale = m_pTransformCom->Get_Scaled();
-	memcpy(&matWorld.m[3][0], &vPos, sizeof(_float3));
-
-	D3DXVec3TransformCoord(&tempMin, &tempMin, &matWorld);
-	D3DXVec3TransformCoord(&tempMax, &tempMax, &matWorld);
-
-	ImGui::SliderFloat3("tempmin", tempMin, -100.f, 100.f);
-	ImGui::SliderFloat3("tempMax", tempMax, -100.f, 100.f);
-	ImGui::End();
 
 	ImGui::Begin("DirectX9 Texture Test");
 	ImGui::Text("pointer = %p", my_texture);
@@ -149,7 +130,7 @@ HRESULT CPlayer::Render()
 	ImGui::End();
 
 
-	m_pBoxCom->Render(matWorld);
+//	m_pBoxCom->Render(matWorld);
 	return S_OK;
 }
 
@@ -185,10 +166,10 @@ HRESULT CPlayer::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_Box"), (CComponent**)&m_pBoxCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Col"), (CComponent**)&m_pColliderCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

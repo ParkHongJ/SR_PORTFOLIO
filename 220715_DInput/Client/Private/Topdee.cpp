@@ -202,6 +202,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
 
 }
 
@@ -278,7 +279,8 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
-
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -351,6 +353,7 @@ CGameObject * CTopdee::Clone(void* pArg)
 void CTopdee::Free()
 {
 	__super::Free();
+	Safe_Release(m_pBoxCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);

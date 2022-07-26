@@ -16,8 +16,8 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Render(_float4x4 matWorld);//For Debug
 
-	_float3 GetMin() { return m_fMin; }
-	_float3 GetMax() { return m_fMax; }
+	_float3 GetMin();
+	_float3 GetMax();
 
 public:
 	static CBoxCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -30,7 +30,6 @@ public:
 private:
 	_float3 m_fMin;
 	_float3 m_fMax;
-
 /*------------------
 --그리기용 멤버변수--
 ------------------*/

@@ -165,6 +165,7 @@ void CToodee::LateTick(_float fTimeDelta)
 	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
 }
 
 HRESULT CToodee::Render()
@@ -263,9 +264,10 @@ HRESULT CToodee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
 
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
-		//return E_FAIL;
-
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
+		return E_FAIL;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -298,6 +300,7 @@ CGameObject * CToodee::Clone(void* pArg)
 void CToodee::Free()
 {
 	__super::Free();
+	Safe_Release(m_pBoxCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);

@@ -6,6 +6,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CCollider;
+class CBoxCollider;
 class CTransform;
 class CVIBuffer_Cube;
 END
@@ -37,6 +38,7 @@ private:
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
 	CCollider*				m_pCollCom = nullptr;
+	CBoxCollider*			m_pBoxCollider = nullptr;
 
 private:
 	HRESULT Set_RenderState();

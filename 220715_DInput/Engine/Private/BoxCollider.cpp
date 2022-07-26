@@ -1,4 +1,5 @@
 #include "..\Public\BoxCollider.h"
+#include "Transform.h"
 
 
 
@@ -118,6 +119,29 @@ HRESULT CBoxCollider::Render(_float4x4 matWorld)
 	m_pGraphic_Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12);
 
 	return S_OK;
+}
+
+_float3 CBoxCollider::GetMin()
+{
+	/*_float3 tempMin = m_pBoxCom->GetMin();
+	_float3 tempMax = m_pBoxCom->GetMax();
+
+	_float4x4 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+
+	CTransform* tr = (CTransform*)m_pOwner->Get_Component(L"Box_Coll");
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vScale = m_pTransformCom->Get_Scaled();
+	memcpy(&matWorld.m[3][0], &vPos, sizeof(_float3));
+
+	D3DXVec3TransformCoord(&tempMin, &tempMin, &matWorld);
+	D3DXVec3TransformCoord(&tempMax, &tempMax, &matWorld);*/
+	return m_fMin;
+}
+
+_float3 CBoxCollider::GetMax()
+{
+	return m_fMax;
 }
 
 CBoxCollider * CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

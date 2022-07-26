@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CCollider;
+class CBoxCollider;
 class CTransform;
 class CVIBuffer_Toodee_Rect;
 END
@@ -33,6 +34,7 @@ private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CCollider* m_pColliderCom = nullptr;
+	CBoxCollider* m_pBoxCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 

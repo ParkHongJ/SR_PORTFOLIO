@@ -60,6 +60,7 @@ void CMainApp::Tick(_float fTimeDelta)
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BLOCK);
 	m_pCollider->End();
 }
 
@@ -163,6 +164,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
 		m_pCollider = CCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), 
+		CBoxCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	Safe_AddRef(m_pCollider);
 	Safe_AddRef(m_pRenderer);
 
