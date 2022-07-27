@@ -188,32 +188,6 @@ HRESULT CToodee::Render()
 	//m_pColliderCom->Render();
 	//--------------------------------------------------------------
 
-	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	char Sour[256] = { "Toodee" };
-	char szBuf[MAX_PATH] = {};
-
-	ImGui::Begin(Sour);
-
-	ImGui::Text("Toodee");
-
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_x");
-	ImGui::SliderFloat(szBuf, &temp.x, -100.0f, 100.0f);
-
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_y");
-	ImGui::SliderFloat(szBuf, &temp.y, -100.0f, 100.0f);
-
-	strcpy(szBuf, Sour);
-	strcat(szBuf, "_z");
-	ImGui::SliderFloat(szBuf, &temp.z, -100.0f, 100.0f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
-
-	ImGui::Spacing();
-	ImGui::End();
-
 	return S_OK;
 }
 
