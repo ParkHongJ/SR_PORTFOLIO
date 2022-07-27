@@ -28,7 +28,7 @@ public:
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup);
 	HRESULT End();
 	bool Check_Rect(class CGameObject* pSour, class CGameObject* pDest);
-	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest);
+	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest, float *pX, float* pZ);
 private:
 	list<class CGameObject*>				m_CollisionObjects[COLLISION_END];
 	typedef list<class CGameObject*>		COLLISIONOBJECTS;
