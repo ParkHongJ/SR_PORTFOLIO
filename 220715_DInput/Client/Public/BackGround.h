@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
+class CTransform;
 class CVIBuffer_Rect;
 END
 
@@ -32,13 +33,21 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	BACKDESC				m_BackDesc;
+	void fSizeAddMgr(_float fTimeDelta);
+	_float m_fAddAdd{ -5.f };
+	_float m_fSizeAddTimer{ 0.f };
+	_uint m_iPreTime{ 0 };
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
+	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 
+private:
+	_float4x4				m_ProjMatrix;
+	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float					m_fSizeAdd{ 0.f };
 private:
 	HRESULT SetUp_Components();
 

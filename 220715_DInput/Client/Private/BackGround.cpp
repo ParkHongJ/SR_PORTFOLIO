@@ -20,49 +20,90 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void * pArg)
 {
-	if (nullptr != pArg)
-	{
-		// memcpy(&m_BackDesc, pArg, sizeof(BACKDESC));
-		m_BackDesc = *(BACKDESC*)pArg;
-	}
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-
+	m_fX = g_iWinSizeX / 2;
+	m_fY = g_iWinSizeY / 2;
 
 	return S_OK;
 }
 
 void CBackGround::Tick(_float fTimeDelta)
 {
-	int a = 10;
+	fSizeAddMgr(fTimeDelta);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0, 1);
+
+	m_fSizeX = _float(g_iWinSizeX + 1.f + m_fSizeAdd);
+	m_fSizeY = _float(g_iWinSizeY + 1.f + m_fSizeAdd);
+	if (m_fSizeX < g_iWinSizeX || m_fSizeY < g_iWinSizeY)
+	{
+		m_fSizeX = g_iWinSizeX;
+		m_fSizeY = g_iWinSizeY;
+	}
+	
+	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f));
 }
 
 void CBackGround::LateTick(_float fTimeDelta)
 {
-	
+	POINT		ptMouse;
+	GetCursorPos(&ptMouse);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	RECT		rcUI;
+	SetRect(&rcUI, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+
+	/*if (PtInRect(&rcUI, ptMouse))
+	{
+		MSG_BOX(TEXT("Ãæµ¹"));
+	}
+*/
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 }
-
 HRESULT CBackGround::Render()
 {
-	_float4x4	Matrix;
+	_float4x4		Matrix;
 	D3DXMatrixIdentity(&Matrix);
-
-	// m_pGraphic_Device->SetTexture(0, m_pTextureCom->Get_Texture);
 
 	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
 
-	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &Matrix);
+	//m_pGraphic_Device->SetTransform(D3DTS_WORLD, &Matrix);
+	m_pTransformCom->Bind_WorldMatrix();
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &Matrix);
-	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &Matrix);
+	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
 
 	m_pVIBufferCom->Render();
 
 	return S_OK;
+}
+
+void CBackGround::fSizeAddMgr(_float fTimeDelta)
+{
+	m_fSizeAddTimer += fTimeDelta;
+	_int iTimer = (_int)m_fSizeAddTimer;    
+	if (m_iPreTime != iTimer) {
+		m_iPreTime = iTimer;
+		m_fAddAdd *= -1.f;
+		m_fSizeAdd += m_fAddAdd;
+	}
+	/*if (fTimeDelta > 0.5f) {
+		m_fAddAdd *= -1.f;
+	}
+	else
+		m_fAddAdd *= -1.f;*/
+	/*if (fTimeDelta > 0.5f) {
+		m_fAddAdd += -1.f;
+	}
+	else
+		m_fAddAdd = 5.f;
+	m_fSizeAdd += m_fAddAdd;*/
+	
+	
 }
 
 HRESULT CBackGround::SetUp_Components()
@@ -79,6 +120,15 @@ HRESULT CBackGround::SetUp_Components()
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Default"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+		return E_FAIL;
+
+	CTransform::TRANSFORMDESC TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -116,6 +166,7 @@ void CBackGround::Free()
 	__super::Free();
 
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 }
