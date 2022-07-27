@@ -257,6 +257,7 @@ bool CCollider::Check_RectEx(class CGameObject* pSour, class CGameObject* pDest,
 	_float		fWidth = abs(vSourPos.x - vDestPos.x);
 	_float		fDepth = abs(vSourPos.z - vDestPos.z);
 
+	/* 이거 수정해라 */
 	_float		fCX = 1.f;//(pDest->Get_Info().fCX + pSour->Get_Info().fCX) * 0.5f; // 1
 	_float		fCZ = 1.f;//(pDest->Get_Info().fCY + pSour->Get_Info().fCY) * 0.5f; // 1
 
