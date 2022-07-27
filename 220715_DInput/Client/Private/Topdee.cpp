@@ -21,7 +21,7 @@ HRESULT CTopdee::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	
+	SetTag(L"Topdee");
 	return S_OK;
 }
 
@@ -91,7 +91,10 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	_float3 vFinalPosition;
 
 	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
-	vFinalPosition.y = _int(vCurPosition.y) + 0.5f;
+	if(m_bTurn)
+		vFinalPosition.y = m_MyTurnY;
+	else
+		vFinalPosition.y = m_NotMyTurnY;
 	vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
 	vCurPosition = vCurPosition + (vFinalPosition - vCurPosition) * (fTimeDelta * 5);
@@ -132,7 +135,6 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 
 void CTopdee::Topdee_Turn_Check()
 {
-	
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -140,10 +142,12 @@ void CTopdee::Topdee_Turn_Check()
 	_float4x4		CamWorldMatrix;
 	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
 	_float fCameraZ = (*(_float3*)&CamWorldMatrix.m[3][0]).z;
-	if ((fCameraZ >= -1.f)&&(fCameraZ <= 1.f))
+	if ((fCameraZ >= -1.f) && (fCameraZ <= 1.f)) {
 		m_bTurn = true;
-	else
+	}
+	else {
 		m_bTurn = false;
+	}
 	
 }
 
@@ -217,6 +221,12 @@ HRESULT CTopdee::Render()
 		//m_iFrame = 13;
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos;
+	Set_ColliderState();
+#pragma region Debug_Collider
+	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	m_pBoxCom->Render(Matrix);
+	Reset_ColliderState();
+#pragma endregion Debug
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 
@@ -227,11 +237,27 @@ HRESULT CTopdee::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-
+	
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CTopdee::OnTriggerExit(CGameObject * other)
+{
+}
+
+void CTopdee::OnTriggerEnter(CGameObject * other)
+{
+	if (other->CompareTag(L"Box")) // Monster랑 충돌했다면
+	{
+			
+	}	
+}
+
+void CTopdee::OnTriggerStay(CGameObject * other)
+{
 }
 
 HRESULT CTopdee::Set_RenderState()
@@ -246,6 +272,18 @@ HRESULT CTopdee::Set_RenderState()
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	
 	
+	return S_OK;
+}
+
+HRESULT CTopdee::Set_ColliderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	return S_OK;
+}
+
+HRESULT CTopdee::Reset_ColliderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
 }
 
@@ -383,6 +421,7 @@ CGameObject * CTopdee::Clone(void* pArg)
 
 void CTopdee::Free()
 {
+	m_pRaiseObject = nullptr;
 	__super::Free();
 	Safe_Release(m_pBoxCom);
 	Safe_Release(m_pColliderCom);
