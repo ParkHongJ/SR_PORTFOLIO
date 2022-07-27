@@ -293,15 +293,21 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject != nullptr)
 		return;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
 	CLayer* pLayer = pGameInstance->KKK_GetBox();
 	if (pLayer == nullptr)
 		return;
 	KKK_m_pBoxList = pLayer->KKK_Get_List();
+
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
-	auto& iter = (*KKK_m_pBoxList).begin();
+
+	auto& iter = (*KKK_m_pBoxList).begin(); // <- 박스가 없을때 터짐
 	bool bMove{false};
+
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)
 	{
 		bMove = (*iter)->KKK_Go_Lerp_Raise(vTopdeePos, fTimeDelta);
@@ -309,13 +315,19 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 			break;
 		++iter;
 	}
+
 	if (!bMove)
 		m_pRaiseObject = nullptr;
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
+<<<<<<< HEAD
 	}
 	
+=======
+
+	Safe_Release(pGameInstance);
+>>>>>>> feature/SJH
 }
 
 void CTopdee::KKK_DropBox(_float fTimeDelta)
