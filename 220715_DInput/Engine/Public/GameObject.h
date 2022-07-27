@@ -17,9 +17,9 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-	virtual void OnTriggerEnter(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
-	virtual void OnTriggerStay(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
-	virtual void OnTriggerExit(list<CGameObject*>& _Dest, list<CGameObject*>& _Stay) {};
+	virtual void OnTriggerEnter(CGameObject* other) {};
+	virtual void OnTriggerStay(CGameObject* other) {};
+	virtual void OnTriggerExit(CGameObject*  other) {};
 
 public:
 	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta) { return true; };
@@ -44,7 +44,11 @@ public:
 	bool IsTrigger() { return m_bIsTrigger; }
 
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
-	bool CompaerTag(const _tchar* _tag) { if (m_Tag == _tag) return TRUE; else return FALSE; }
+	bool CompaerTag(const _tchar* _tag) { 
+		if (m_Tag == _tag) 
+			return TRUE; 
+		else return FALSE; 
+	}
 
 protected:
 	bool m_bActive;

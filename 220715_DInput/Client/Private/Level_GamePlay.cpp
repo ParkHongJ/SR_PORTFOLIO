@@ -28,8 +28,9 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
-
-	LoadGameObject();
+	_float3 temp = { 5.f,0.f,0.f };
+	Ready_Layer_Block(L"Layer_Cube", temp);
+	//LoadGameObject();
 	return S_OK;
 }
 

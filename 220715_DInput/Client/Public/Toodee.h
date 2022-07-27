@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CCollider;
+class CBoxCollider;
 class CTransform;
 class CVIBuffer_Toodee_Rect;
 END
@@ -28,11 +29,14 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
+	virtual void OnTriggerExit(CGameObject* other);
+	virtual void OnTriggerEnter(CGameObject* other);
+	virtual void OnTriggerStay(CGameObject*	other);
 private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CCollider* m_pColliderCom = nullptr;
+	CBoxCollider* m_pBoxCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 

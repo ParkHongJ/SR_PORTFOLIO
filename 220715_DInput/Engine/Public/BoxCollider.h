@@ -4,6 +4,8 @@ BEGIN(Engine)
 class ENGINE_DLL CBoxCollider : public CComponent
 {
 public:
+	static _uint g_iNextID;
+public:
 	enum STATETYPE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
 
 public:
@@ -16,9 +18,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Render(_float4x4 matWorld);//For Debug
 
-	_float3 GetMin() { return m_fMin; }
-	_float3 GetMax() { return m_fMax; }
-
+	_float3 GetMin();
+	_float3 GetMax();
+	_uint GetID() { return m_iID; }
 public:
 	static CBoxCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg);
@@ -30,7 +32,6 @@ public:
 private:
 	_float3 m_fMin;
 	_float3 m_fMax;
-
 /*------------------
 --그리기용 멤버변수--
 ------------------*/
@@ -44,7 +45,7 @@ private:
 	LPDIRECT3DINDEXBUFFER9	m_pIB = nullptr;
 	_uint					m_iIndexSizeofPrimitive = 0;
 	D3DFORMAT				m_eIndexFormat;
-
+	_uint					m_iID;
 	
 };
 

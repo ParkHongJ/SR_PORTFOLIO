@@ -45,13 +45,7 @@ HRESULT CBlock::Render()
 
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
-
-	/*if (FAILED(m_pTextureCom->Bind_Texture(2)))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_Texture(1)))
-		return E_FAIL;*/
-
+	
 	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
 
@@ -136,7 +130,10 @@ HRESULT CBlock::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 	/* For.Com_Coll */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Coll"), (CComponent**)&m_pCollCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pCollCom, this)))
+		return E_FAIL;
+	/* For.Com_Collider*/
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this)))
 		return E_FAIL;
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
@@ -179,6 +176,7 @@ CGameObject * CBlock::Clone(void* pArg)
 void CBlock::Free()
 {
 	__super::Free();
+	Safe_Release(m_pBoxCollider);
 	Safe_Release(m_pCollCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);

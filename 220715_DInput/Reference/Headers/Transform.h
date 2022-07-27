@@ -48,6 +48,7 @@ public:
 		m_TransformDesc.fSpeedPerSec = fSpeed;
 	}/*For.Test*/
 
+	void Set_Scaled(_float3 vScale);
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

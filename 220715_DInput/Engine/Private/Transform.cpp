@@ -239,3 +239,14 @@ void CTransform::Free()
 	__super::Free();
 
 }
+
+void CTransform::Set_Scaled(_float3 vScale)
+{
+	_float3		vRight = Get_State(CTransform::STATE_RIGHT);
+	_float3		vUp = Get_State(CTransform::STATE_UP);
+	_float3		vLook = Get_State(CTransform::STATE_LOOK);
+
+	Set_State(CTransform::STATE_RIGHT, *D3DXVec3Normalize(&vRight, &vRight) * vScale.x);
+	Set_State(CTransform::STATE_UP, *D3DXVec3Normalize(&vUp, &vUp) * vScale.y);
+	Set_State(CTransform::STATE_LOOK, *D3DXVec3Normalize(&vLook, &vLook) * vScale.z);
+}

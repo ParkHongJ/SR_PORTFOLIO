@@ -1,6 +1,14 @@
 #pragma once
 #include "Component.h"
 BEGIN(Engine)
+union COLLIDER_ID
+{
+	struct {
+		_uint Left_ID;
+		_uint Right_ID;
+	};
+	LONGLONG ID;
+};
 class ENGINE_DLL CCollider : public CComponent
 {
 public:
@@ -20,10 +28,11 @@ public:
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup);
 	HRESULT End();
 	bool Check_Rect(class CGameObject* pSour, class CGameObject* pDest);
+	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest);
 private:
 	list<class CGameObject*>				m_CollisionObjects[COLLISION_END];
 	typedef list<class CGameObject*>		COLLISIONOBJECTS;
-
+	map<LONGLONG, bool> m_ColInfo;
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg) override;
