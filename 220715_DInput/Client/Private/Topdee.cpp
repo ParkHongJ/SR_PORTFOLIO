@@ -360,7 +360,8 @@ CTopdee * CTopdee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CTopdee"));
+		
+		(TEXT("Failed To Created : CTopdee"));
 		Safe_Release(pInstance);
 	}
 
