@@ -321,13 +321,9 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
-<<<<<<< HEAD
 	}
-	
-=======
 
 	Safe_Release(pGameInstance);
->>>>>>> feature/SJH
 }
 
 void CTopdee::KKK_DropBox(_float fTimeDelta)
