@@ -21,7 +21,9 @@ HRESULT CBlock::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	//======================
+	SetTag(L"Box");
+	//======================
 	if (pArg != nullptr)
 	{
 		_float3* vTemp = (_float3*)pArg;

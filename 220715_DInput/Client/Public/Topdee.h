@@ -34,6 +34,9 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	virtual void OnTriggerExit(CGameObject* other);
+	virtual void OnTriggerEnter(CGameObject* other);
+	virtual void OnTriggerStay(CGameObject*	other);
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -41,7 +44,7 @@ private:
 	CBoxCollider*			m_pBoxCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-
+	
 private:
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };
@@ -54,6 +57,8 @@ private:
 
 private:
 	HRESULT Set_RenderState();
+	HRESULT Set_ColliderState();
+	HRESULT Reset_ColliderState();
 	HRESULT Reset_RenderState();
 
 private:
@@ -76,6 +81,9 @@ private:
 	_float3 m_vTargetDir{0.f,0.f,0.f};
 	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
 	_float m_fRaising_Box_DelayTimer{ 0.f };
+
+	_float m_MyTurnY{ 0.5f };
+	_float m_NotMyTurnY{ 0.05f };
 
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

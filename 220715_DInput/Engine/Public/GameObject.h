@@ -44,7 +44,7 @@ public:
 	bool IsTrigger() { return m_bIsTrigger; }
 
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
-	bool CompaerTag(const _tchar* _tag) { 
+	bool CompareTag(const _tchar* _tag) { 
 		if (m_Tag == _tag) 
 			return TRUE; 
 		else return FALSE; 
