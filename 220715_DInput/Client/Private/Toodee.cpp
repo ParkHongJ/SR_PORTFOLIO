@@ -170,6 +170,9 @@ void CToodee::LateTick(_float fTimeDelta)
 
 HRESULT CToodee::Render()
 {
+	if (!m_bActive)
+		return S_OK;
+
 		if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 			return E_FAIL;
 
@@ -306,4 +309,19 @@ void CToodee::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+}
+
+void CToodee::OnTriggerExit(CGameObject* other)
+{
+	int a = 10;
+}
+
+void CToodee::OnTriggerEnter(CGameObject* other)
+{
+	int a = 10;
+}
+
+void CToodee::OnTriggerStay(CGameObject* other)
+{
+	int a = 10;
 }

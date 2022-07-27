@@ -29,7 +29,9 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
+	virtual void OnTriggerExit(CGameObject* other);
+	virtual void OnTriggerEnter(CGameObject* other);
+	virtual void OnTriggerStay(CGameObject*	other);
 private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

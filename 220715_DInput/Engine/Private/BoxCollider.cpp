@@ -2,7 +2,7 @@
 #include "Transform.h"
 
 
-
+_uint CBoxCollider::g_iNextID = 0;
 
 CBoxCollider::CBoxCollider(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
@@ -20,6 +20,7 @@ CBoxCollider::CBoxCollider(const CBoxCollider& rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_fMin(rhs.m_fMin)
 	, m_fMax(rhs.m_fMax)
+	, m_iID(g_iNextID++)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
