@@ -67,16 +67,19 @@ HRESULT CBlock::Render()
 	return S_OK;
 }
  
-bool CBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta)
+bool CBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vDist = (vCurPosition - vFinalPos);
 	_float fLength = D3DXVec3Length(&vDist);
 	if (_int(fLength) <= 1)
 	{
-		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
-		return true;
+		if (((_int)vPreLoaderPos.x == (_int)vCurPosition.x) && ((_int)vPreLoaderPos.z == (_int)vCurPosition.z)) {
+			vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+			return true;
+		}
+		return false;
 	}
 	else
 		return false;
@@ -87,11 +90,13 @@ void CBlock::KKK_Is_Raise(_float3 vTargetPos)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,vTargetPos);
 }
 
-_bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta)
+_bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall)
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+	if (!bHoleCall) {
+		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+	}
 	if (vCurPosition.y <= 0.1f)
 		return true;
 	return false;
@@ -124,8 +129,11 @@ HRESULT CBlock::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
+	///* For.Com_VIBuffer */
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	//	return E_FAIL;
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

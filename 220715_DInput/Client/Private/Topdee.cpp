@@ -22,6 +22,13 @@ HRESULT CTopdee::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	SetTag(L"Topdee");
+	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
+
+	vPreLoaderPos.y += 1.f;
+	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
+	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
+
+
 	return S_OK;
 }
 
@@ -33,9 +40,9 @@ void CTopdee::Tick(_float fTimeDelta)
 
 	Topdee_Turn_Check();
 	KKK_IsRaise(fTimeDelta, 1);
+	Topdee_PreLoader_Pos_Mgr();
 	if (m_bTurn) {
 		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
 		if (pGameInstance->Get_DIKState(DIK_UP) & 0x80)
 		{
 			Move_Frame(DIR_UP);
@@ -76,6 +83,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		}
 		else
 			m_bPress = false;
+		
 	}
 	else if (!m_bTurn)
 		Not_My_Turn_Texture();
@@ -101,21 +109,34 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 }
 
+void CTopdee::Topdee_PreLoader_Pos_Mgr()
+{
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_int iPreLoaderPosX{_int(vCurPosition.x)}, iPreLoaderPosY{ _int(vCurPosition.y) }, iPreLoaderPosZ{ _int(vCurPosition.z) };
+	if (m_eCurDir == DIR_DOWN) 
+		--iPreLoaderPosZ;
+	else if (m_eCurDir == DIR_UP) 
+		++iPreLoaderPosZ;
+	else if (m_eCurDir == DIR_LEFT) 
+		--iPreLoaderPosX;
+	else if (m_eCurDir == DIR_RIGHT)
+		++iPreLoaderPosX;
+	
+	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
+	/*_float(iPreLoaderPosY) = m_OriPreLoaderY;*/
+	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(_float(iPreLoaderPosX)+ 0.5f, _float(iPreLoaderPosY), _float(iPreLoaderPosZ) + 0.5f));
+}
+
 void CTopdee::Not_My_Turn_Texture()
 {
-	if (m_eCurDir == DIR_DOWN) {
+	if (m_eCurDir == DIR_DOWN) 
 		m_iFrame = 14;
-	}
-	else if (m_eCurDir == DIR_UP) {
+	else if (m_eCurDir == DIR_UP) 
 		m_iFrame = 16;
-	}
-	else if (m_eCurDir == DIR_LEFT) {
+	else if (m_eCurDir == DIR_LEFT) 
 		m_iFrame = 15;
-	}
 	else if (m_eCurDir == DIR_RIGHT)
-	{
 		m_iFrame = 13;
-	}
 }
 
 void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
@@ -203,7 +224,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	/* 카메라의 월드행렬이다. */
+	/* 카메라의 월드행렬이다. 빌보드.. */
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
@@ -211,18 +232,18 @@ void CTopdee::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	//========================================================================
+	m_pRenderer_PreLoader_Com->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	//========================================================================
 	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
+
 
 }
 
 HRESULT CTopdee::Render()
-{
-	//if (!m_bTurn)
-		//m_iFrame = 13;
-	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPos;
-	Set_ColliderState();
+{	
 #pragma region Debug_Collider
+	Set_ColliderState();
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pBoxCom->Render(Matrix);
 	Reset_ColliderState();
@@ -237,9 +258,24 @@ HRESULT CTopdee::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-	
+
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+//========================================
+	if (m_bTurn) {
+		if (FAILED(m_pTransform_PreLoader_Com->Bind_WorldMatrix()))
+			return E_FAIL;
+
+		if (FAILED(m_pTexture_PreLoader_Com->Bind_Texture(0)))
+			return E_FAIL;
+
+		if (FAILED(Set_RenderState()))
+			return E_FAIL;
+		m_pBuffer_PreLoader_Com->Render();
+		if (FAILED(Reset_RenderState()))
+			return E_FAIL;
+	}
+//========================================	
 
 	return S_OK;
 }
@@ -250,14 +286,18 @@ void CTopdee::OnTriggerExit(CGameObject * other)
 
 void CTopdee::OnTriggerEnter(CGameObject * other)
 {
-	if (other->CompareTag(L"Box")) // Monster랑 충돌했다면
-	{
-			
-	}	
+	if (other->CompareTag(L"Box"))
+	{//타이머돌려야함.
+		
+	}
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other)
 {
+	if (other->CompareTag(L"Box"))
+	{//밀려나야함
+		
+	}
 }
 
 HRESULT CTopdee::Set_RenderState()
@@ -271,7 +311,16 @@ HRESULT CTopdee::Set_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	
-	
+	//이거 탑디랑 같이돌리는중
+	return S_OK;
+}
+
+HRESULT CTopdee::Reset_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
+
 	return S_OK;
 }
 
@@ -287,14 +336,6 @@ HRESULT CTopdee::Reset_ColliderState()
 	return S_OK;
 }
 
-HRESULT CTopdee::Reset_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
-
-	return S_OK;
-}
 
 HRESULT CTopdee::SetUp_Components()
 {
@@ -306,16 +347,30 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
-	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
-	/* For.Com_Transform */
+	//=================================================================
+	/* For.PreLoader */
 	CTransform::TRANSFORMDESC		TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
 
 	TransformDesc.fSpeedPerSec = 5.f;
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
+	/* For.Com_Renderer_PreLoader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer_PreLoader"), (CComponent**)&m_pRenderer_PreLoader_Com, this)))
+		return E_FAIL;
+	/* For.Com_VIBuffer_PreLoader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_PreLoader"), (CComponent**)&m_pBuffer_PreLoader_Com, this)))
+		return E_FAIL;
+	/* For.Com_Transform_PreLoader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_PreLoader"), (CComponent**)&m_pTransform_PreLoader_Com, this, &TransformDesc)))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Topdee_PreLoader */
+	if (FAILED(__super::Add_Component(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
+		return E_FAIL;
+	//=================================================================
+	
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
@@ -345,10 +400,10 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 
 	auto& iter = (*KKK_m_pBoxList).begin(); // <- 박스가 없을때 터짐
 	bool bMove{false};
-
+	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)
 	{
-		bMove = (*iter)->KKK_Go_Lerp_Raise(vTopdeePos, fTimeDelta);
+		bMove = (*iter)->KKK_Go_Lerp_Raise(vTopdeePos, fTimeDelta, vPreLoaderPos);
 		if (bMove)
 			break;
 		++iter;
@@ -385,7 +440,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			m_vBoxDropPos.z -= 1.f;
 	}
 	
-	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta)) {
+	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
@@ -429,5 +484,11 @@ void CTopdee::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+
+	Safe_Release(m_pBuffer_PreLoader_Com);
+	Safe_Release(m_pTransform_PreLoader_Com);
+	Safe_Release(m_pRenderer_PreLoader_Com);
+	Safe_Release(m_pTexture_PreLoader_Com);
+
 }
 

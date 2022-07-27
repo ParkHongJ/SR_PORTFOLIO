@@ -23,7 +23,10 @@ HRESULT CLevel_GyuH::Initialize()
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
-
+	m_vPosition = { 15.5f,0.3f,1.5f };
+	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), m_vPosition)))
+		return E_FAIL;
+	
 
 	return S_OK;
 	
@@ -45,6 +48,18 @@ HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar * pLayerTag, void * pArg)
 	Safe_Release(pGameInstance);
 	return S_OK;
 
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_Hole(const _tchar * pLayerTag,void* pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_GYUH, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
 }
 
 void CLevel_GyuH::LoadGameObject()

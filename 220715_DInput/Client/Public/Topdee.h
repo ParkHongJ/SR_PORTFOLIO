@@ -4,14 +4,14 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CLayer;
 class CTexture;
 class CRenderer;
 class CCollider;
-class CBoxCollider;
 class CTransform;
-class CVIBuffer_Rect;
 class CComponent;
-class CLayer;
+class CBoxCollider;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
@@ -34,9 +34,11 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
 	virtual void OnTriggerExit(CGameObject* other);
 	virtual void OnTriggerEnter(CGameObject* other);
 	virtual void OnTriggerStay(CGameObject*	other);
+
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -44,7 +46,12 @@ private:
 	CBoxCollider*			m_pBoxCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-	
+
+	CVIBuffer_Rect*			m_pBuffer_PreLoader_Com = nullptr;
+	CTransform*				m_pTransform_PreLoader_Com = nullptr;
+	CRenderer*				m_pRenderer_PreLoader_Com = nullptr;
+	CTexture*				m_pTexture_PreLoader_Com = nullptr;
+
 private:
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };
@@ -54,26 +61,28 @@ private:
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
 	_bool	m_bPress{ false };
 	_bool	m_bTurn{ false };
-
+	
 private:
+	HRESULT SetUp_Components();
 	HRESULT Set_RenderState();
+	HRESULT Reset_RenderState();
 	HRESULT Set_ColliderState();
 	HRESULT Reset_ColliderState();
-	HRESULT Reset_RenderState();
+
+private:
+	void	KKK_FindBox(_float fTimeDelta);
+	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);
+	void	KKK_DropBox(_float fTimeDelta);
 
 private:
 	void Topdee_Turn_Check();
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
 	void Not_My_Turn_Texture();
 	void Go_Lerp(_float fTimeDelta);
+	void Topdee_PreLoader_Pos_Mgr();
 
 private:
-	HRESULT SetUp_Components();
-
-private:
-	void	KKK_FindBox(_float fTimeDelta);
-	void	KKK_IsRaise(_float fTimeDelta,_char KKK_NotOverride);
-	void	KKK_DropBox(_float fTimeDelta);
+	
 	
 	list<class CGameObject*>* KKK_m_pBoxList;
 	
@@ -81,9 +90,11 @@ private:
 	_float3 m_vTargetDir{0.f,0.f,0.f};
 	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
 	_float m_fRaising_Box_DelayTimer{ 0.f };
+	_float m_fCollision_Box_DelayTimer{ 0.f };
 
 	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.05f };
+	_float m_OriPreLoaderY{ 0.5f };
 
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
