@@ -28,9 +28,22 @@ CBoxCollider::CBoxCollider(const CBoxCollider& rhs)
 
 HRESULT CBoxCollider::Initialize_Prototype()
 {
+	return S_OK;
+}
+
+HRESULT CBoxCollider::Initialize(void * pArg)
+{
+	if (nullptr != pArg)
+		memcpy(&m_BoxDesc, pArg, sizeof(BOXDESC));
+	else
+	{
+		m_BoxDesc.vPos = { 0.f, 0.f, 0.f };
+		m_BoxDesc.vSize = { 1.f, 1.f, 1.f };
+		m_BoxDesc.bIsTrigger = false;
+	}
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 8;
-	m_dwFVF = D3DFVF_XYZ/*<- 큐브맵 세팅*/  /*| D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE3(1)*/;
+	m_dwFVF = D3DFVF_XYZ;
 
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -38,20 +51,61 @@ HRESULT CBoxCollider::Initialize_Prototype()
 	if (FAILED(m_pGraphic_Device->CreateVertexBuffer(m_iStride * 12, 0, m_dwFVF, D3DPOOL_MANAGED, &m_pVB, nullptr)))
 		return E_FAIL;
 
-	//VTXTEX*		pVertices = nullptr;
-
 	VTXTEX*	pVertices = nullptr;
 
 	m_pVB->Lock(0, /*m_iStride * m_iNumVertices*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-	m_fMin = pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
-	pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-	m_fMax = pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-	pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
+	//pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
+	
+	_float3 vSize = m_BoxDesc.vSize * 0.5f;
+	/* 나중에 고쳐라*/
+	pVertices[0].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x, 
+									 m_BoxDesc.vPos.y + vSize.y,
+									 m_BoxDesc.vPos.z - vSize.z);
+
+
+	//pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
+
+	pVertices[1].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
+		m_BoxDesc.vPos.y + vSize.y,
+		m_BoxDesc.vPos.z - vSize.z);
+
+	//pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
+
+	pVertices[2].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
+		m_BoxDesc.vPos.y - vSize.y,
+		m_BoxDesc.vPos.z - vSize.z);
+
+	//m_fMin = pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
+
+	m_fMin = pVertices[3].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x,
+		m_BoxDesc.vPos.y - vSize.y,
+		m_BoxDesc.vPos.z - vSize.z);
+
+	//pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
+
+	pVertices[4].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x,
+		m_BoxDesc.vPos.y + vSize.y,
+		m_BoxDesc.vPos.z + vSize.z);
+
+
+	//m_fMax = pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
+
+	m_fMax = pVertices[5].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
+		m_BoxDesc.vPos.y + vSize.y,
+		m_BoxDesc.vPos.z + vSize.z);
+
+	//pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
+
+	pVertices[6].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
+		m_BoxDesc.vPos.y - vSize.y,
+		m_BoxDesc.vPos.z + vSize.z);
+
+	//pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
+
+	pVertices[7].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x,
+		m_BoxDesc.vPos.y - vSize.y,
+		m_BoxDesc.vPos.z + vSize.z);
 
 	m_pVB->Unlock();
 
@@ -99,11 +153,6 @@ HRESULT CBoxCollider::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CBoxCollider::Initialize(void * pArg)
-{
-	return S_OK;
-}
-
 HRESULT CBoxCollider::Render(_float4x4 matWorld)
 {
 	if (nullptr == m_pGraphic_Device)
@@ -124,19 +173,6 @@ HRESULT CBoxCollider::Render(_float4x4 matWorld)
 
 _float3 CBoxCollider::GetMin()
 {
-	/*_float3 tempMin = m_pBoxCom->GetMin();
-	_float3 tempMax = m_pBoxCom->GetMax();
-
-	_float4x4 matWorld;
-	D3DXMatrixIdentity(&matWorld);
-
-	CTransform* tr = (CTransform*)m_pOwner->Get_Component(L"Box_Coll");
-	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float3 vScale = m_pTransformCom->Get_Scaled();
-	memcpy(&matWorld.m[3][0], &vPos, sizeof(_float3));
-
-	D3DXVec3TransformCoord(&tempMin, &tempMin, &matWorld);
-	D3DXVec3TransformCoord(&tempMax, &tempMax, &matWorld);*/
 	return m_fMin;
 }
 

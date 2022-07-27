@@ -58,30 +58,51 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 				m_ColInfo.insert(make_pair(ID.ID, false));
 				iter = m_ColInfo.find(ID.ID);
 			}
+
 			float	fX = 0.f, fZ = 0.f;
-			//if (Check_Rect(pSour, pDest, &fX, &fZ))
-			if (Check_Rect(pSour, pDest))
+
+			if (Check_RectEx(pSour, pDest, &fX, &fZ))
 			{
+				CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
+				CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
+
+				Safe_AddRef(DestTrans);
+				Safe_AddRef(SourTrans);
+
+				if (((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetBoxDesc().bIsTrigger)
+				{
+					// 상하 충돌
+					if (fX > fZ)
+					{
+						// 상 충돌
+						if (DestTrans->Get_State(CTransform::STATE_POSITION).z > SourTrans->Get_State(CTransform::STATE_POSITION).z)
+						{
+							SourTrans->Translate(_float3(0.f, 0.f, -fZ));
+						}
+						else // 하 충돌
+						{
+							SourTrans->Translate(_float3(0.f, 0.f, fZ));
+						}
+					}
+					else
+					{
+						// 좌 충돌
+						if (DestTrans->Get_State(CTransform::STATE_POSITION).x > SourTrans->Get_State(CTransform::STATE_POSITION).x)
+						{
+							SourTrans->Translate(_float3(-fX, 0.f, 0.f));
+						}
+						else // 우 충돌
+						{
+							SourTrans->Translate(_float3(fX, 0.f, 0.f));
+						}
+					}
+				}
 				//현재 충돌 중이다
 				if (iter->second)
 				{
 					//이전에도 충돌 중이다
 					pSour->OnTriggerStay(pDest);
 					pDest->OnTriggerStay(pSour);
-
-					// 상하 충돌
-					//if (fX > fZ)
-					//{
-					//	// 상 충돌
-					//	if (((CTransform*)pDest->Get_Component(L"Com_Transform"))->Get_State(CTransform::STATE_POSITION).z > ((CTransform*)pSour->Get_Component(L"Com_Transform"))->Get_State(CTransform::STATE_POSITION).z)
-					//	{
-					//		((CTransform*)pSour->Get_Component(L"Com_Transform"))->Translate(_float3(0.f, 0.f, -fZ));
-					//	}
-					//	else // 하 충돌
-					//	{
-					//		((CTransform*)pSour->Get_Component(L"Com_Transform"))->Translate(_float3(0.f, 0.f, fZ));
-					//	}
-					//}
 				}
 				else
 				{
@@ -90,6 +111,9 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 					pDest->OnTriggerEnter(pSour);
 					iter->second = true;
 				}
+
+				Safe_Release(DestTrans);
+				Safe_Release(SourTrans);
 			}
 			else
 			{
@@ -155,9 +179,13 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 
 	_float3 vSourPos = SourTrans->Get_State(CTransform::STATE_POSITION);
 	_float3 vDestPos = DestTrans->Get_State(CTransform::STATE_POSITION);
+	_float3 vSourScale = SourTrans->Get_Scaled();
+	_float3 vDestScale = DestTrans->Get_Scaled();
 
 	memcpy(&SourWorld.m[3][0], &vSourPos, sizeof(_float3));
 	memcpy(&DestWorld.m[3][0], &vDestPos, sizeof(_float3));
+	D3DXMatrixScaling(&SourWorld, vSourScale.x, vSourScale.y, vSourScale.z);
+	D3DXMatrixScaling(&DestWorld, vDestScale.x, vDestScale.y, vDestScale.z);
 
 	D3DXVec3TransformCoord(&vSourMin, &vSourMin, &SourWorld);
 	D3DXVec3TransformCoord(&vSourMax, &vSourMax, &SourWorld);
@@ -244,6 +272,11 @@ bool CCollider::Check_RectEx(class CGameObject* pSour, class CGameObject* pDest,
 
 	_float3 vSourPos = SourTrans->Get_State(CTransform::STATE_POSITION);
 	_float3 vDestPos = DestTrans->Get_State(CTransform::STATE_POSITION);
+	_float3 vSourScale = SourTrans->Get_Scaled();
+	_float3 vDestScale = DestTrans->Get_Scaled();
+	
+	D3DXMatrixScaling(&SourWorld, vSourScale.x, vSourScale.y, vSourScale.z);
+	D3DXMatrixScaling(&DestWorld, vDestScale.x, vDestScale.y, vDestScale.z);
 
 	memcpy(&SourWorld.m[3][0], &vSourPos, sizeof(_float3));
 	memcpy(&DestWorld.m[3][0], &vDestPos, sizeof(_float3));
@@ -253,21 +286,41 @@ bool CCollider::Check_RectEx(class CGameObject* pSour, class CGameObject* pDest,
 	D3DXVec3TransformCoord(&vDestMin, &vDestMin, &DestWorld);
 	D3DXVec3TransformCoord(&vDestMax, &vDestMax, &DestWorld);
 
+	_float3		temp1 = SourCol->GetBoxDesc().vPos;
+	_float3		temp2 = DestCol->GetBoxDesc().vPos;
+	D3DXVec3TransformCoord(&temp1, &temp1, &SourWorld);
+	D3DXVec3TransformCoord(&temp2, &temp2, &DestWorld);
 
-	_float		fWidth = abs(vSourPos.x - vDestPos.x);
-	_float		fDepth = abs(vSourPos.z - vDestPos.z);
+	_float		fWidth = abs(temp1.x - temp2.x);
+	_float		fDepth = abs(temp1.z - temp2.z);
+
+	//_float		fWidth = abs(vSourPos.x - vDestPos.x);
+	//_float		fDepth = abs(vSourPos.z - vDestPos.z);
 
 	/* 이거 수정해라 */
-	_float		fCX = 1.f;//(pDest->Get_Info().fCX + pSour->Get_Info().fCX) * 0.5f; // 1
-	_float		fCZ = 1.f;//(pDest->Get_Info().fCY + pSour->Get_Info().fCY) * 0.5f; // 1
+	_float fCX = (abs(vDestMax.x - vDestMin.x) + abs(vSourMax.x - vSourMin.x)) * 0.5f;
+	_float fCZ = (abs(vDestMax.z - vDestMin.z) + abs(vSourMax.z - vSourMin.z)) * 0.5f;
 
 	if ((fCX > fWidth) && (fCZ > fDepth))
 	{
 		*pX = fCX - fWidth;
 		*pZ = fCZ - fDepth;
-		return true;
+
+		Safe_Release(SourCol);
+		Safe_Release(DestCol);
+
+		Safe_Release(SourTrans);
+		Safe_Release(DestTrans);
+		return TRUE;
 	}
-	return false;
+
+	Safe_Release(SourCol);
+	Safe_Release(DestCol);
+
+	Safe_Release(SourTrans);
+	Safe_Release(DestTrans);
+
+	return FALSE;
 }
 
 HRESULT CCollider::Render()

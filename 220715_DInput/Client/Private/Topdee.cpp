@@ -220,10 +220,12 @@ HRESULT CTopdee::Render()
 	//if (!m_bTurn)
 		//m_iFrame = 13;
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPos;
+	
 	Set_ColliderState();
 #pragma region Debug_Collider
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 Matrix;// = m_pTransformCom->Get_WorldMatrix();
+	D3DXMatrixIdentity(&Matrix);
+	memcpy(&Matrix.m[3][0], &vPos, sizeof(_float3));
 	m_pBoxCom->Render(Matrix);
 	Reset_ColliderState();
 #pragma endregion Debug
@@ -322,7 +324,13 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
+	CBoxCollider::BOXDESC BoxColliderDesc;
+	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
+
+	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
+	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;
 }

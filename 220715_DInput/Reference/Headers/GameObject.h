@@ -41,7 +41,6 @@ private:
 	
 public:
 	bool IsActive() { return m_bActive; }
-	bool IsTrigger() { return m_bIsTrigger; }
 
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
 	bool CompareTag(const _tchar* _tag) { 
@@ -52,7 +51,6 @@ public:
 
 protected:
 	bool m_bActive;
-	bool m_bIsTrigger;
 	const _tchar* m_Tag;
 
 public:

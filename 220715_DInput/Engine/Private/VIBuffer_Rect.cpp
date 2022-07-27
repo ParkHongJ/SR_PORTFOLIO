@@ -65,6 +65,9 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 HRESULT CVIBuffer_Rect::Initialize(void * pArg)
 {
+	//if (nullptr != pArg)
+	//else 
+
 	return S_OK;
 }
 

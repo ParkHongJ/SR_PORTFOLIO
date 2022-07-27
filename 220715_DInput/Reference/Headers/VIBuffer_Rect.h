@@ -6,6 +6,11 @@ BEGIN(Engine)
 
 class ENGINE_DLL CVIBuffer_Rect final : public CVIBuffer
 {
+public:
+	typedef struct RectDesc
+	{
+
+	}RECTDESC;
 private:
 	CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CVIBuffer_Rect(const CVIBuffer_Rect& rhs);

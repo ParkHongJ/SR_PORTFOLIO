@@ -7,7 +7,12 @@ public:
 	static _uint g_iNextID;
 public:
 	enum STATETYPE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
-
+	typedef struct BoxColliderDesc
+	{
+		_float3 vPos;
+		_float3 vSize;
+		bool	bIsTrigger;
+	}BOXDESC;
 public:
 	CBoxCollider(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBoxCollider(const CBoxCollider& rhs);
@@ -26,12 +31,16 @@ public:
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 
+public:
+	const BOXDESC GetBoxDesc() { return m_BoxDesc; }
 /*------------
 --AABB용 변수--
 -------------*/
 private:
 	_float3 m_fMin;
 	_float3 m_fMax;
+
+	BOXDESC m_BoxDesc;
 /*------------------
 --그리기용 멤버변수--
 ------------------*/

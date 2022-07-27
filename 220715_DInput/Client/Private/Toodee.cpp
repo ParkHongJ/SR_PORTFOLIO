@@ -170,22 +170,24 @@ HRESULT CToodee::Render()
 	if (!m_bActive)
 		return S_OK;
 
-		if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-			return E_FAIL;
+	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
+		return E_FAIL;
 
-		if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
-			return E_FAIL;
+	if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
+		return E_FAIL;
 
-		if (FAILED(Set_RenderState()))
-			return E_FAIL;
+	if (FAILED(Set_RenderState()))
+		return E_FAIL;
 
-		m_pVIBufferCom->Render();
-
-		if (FAILED(Reset_RenderState()))
-			return E_FAIL;
+	m_pVIBufferCom->Render();
+	if (FAILED(Reset_RenderState()))
+		return E_FAIL;
 
 	//---------------------디버그일때 그리기-------------------------
-	//m_pColliderCom->Render();
+	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pBoxCom->Render(Matrix);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	//--------------------------------------------------------------
 
 	return S_OK;
@@ -240,7 +242,14 @@ HRESULT CToodee::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
+
+	CBoxCollider::BOXDESC BoxColliderDesc;
+	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
+
+	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.5f);
+	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 1.f);
+	BoxColliderDesc.bIsTrigger = false;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;
 }

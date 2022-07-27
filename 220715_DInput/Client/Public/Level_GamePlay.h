@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Monster_Pig(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Turret(const _tchar* pLayerTag);
 
 private:
 	void	LoadGameObject();

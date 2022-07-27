@@ -5,7 +5,6 @@
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device),
 	m_bActive(true),
-	m_bIsTrigger(false),
 	m_Tag(L"None")
 {
 	Safe_AddRef(m_pGraphic_Device);
@@ -14,7 +13,6 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphic_Device)
 CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pGraphic_Device(rhs.m_pGraphic_Device),
 	m_bActive(true),
-	m_bIsTrigger(true),
 	m_Tag(rhs.m_Tag)
 {
 	Safe_AddRef(m_pGraphic_Device);
