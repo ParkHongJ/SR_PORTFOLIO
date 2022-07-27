@@ -22,6 +22,12 @@ public:
 		LEFT,
 		UP
 	}DIRECTION;
+	typedef struct BulletDesc
+	{
+		DIRECTION eDir; // 방향
+		_float3 vPos; // 시작위치
+		_float3 vSize;
+	}BULLET_DESC;
 private:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBullet(const CBullet& rhs);
@@ -49,7 +55,12 @@ private:
 private:
 	HRESULT SetUp_Components();
 	DIRECTION m_eDir = UP;
-	_float m_fSpeed = 1.5f;
+	_float m_fSpeed = 6.5f;
+	_float m_fFrame;
+public:
+	void OnTriggerEnter(CGameObject* other);
+	void OnTriggerStay(CGameObject* other);
+	void OnTriggerExit(CGameObject* other);
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

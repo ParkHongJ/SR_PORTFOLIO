@@ -61,6 +61,9 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK);
 	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BLOCK);
+	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET);
+	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK);
 	m_pCollider->End();
 }
 

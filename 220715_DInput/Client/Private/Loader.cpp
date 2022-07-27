@@ -14,6 +14,7 @@
 #include "Block.h"
 #include "Sky.h"
 #include "Turret.h"
+#include "Bullet.h"
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -112,14 +113,19 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	Safe_AddRef(pGameInstance);
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Prototype..."));
-	/* Loading Prototype */
+	
+	/*----------------
+	--프로토타입 생성--
+	----------------*/
 
 	/* For.Prototype_GameObject_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pGraphic_Device))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), 
+		CTerrain::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Toodee*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"), CToodee::Create(m_pGraphic_Device))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"), 
+		CToodee::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Monster_Pig */
@@ -128,7 +134,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"), CCamera_Free::Create(m_pGraphic_Device))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"), 
+		CCamera_Free::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Topdee*/
@@ -146,8 +153,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTurret::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
+		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
-	/* Loading Texture */
+
+	/*------------------
+	-----텍스쳐 생성-----
+	------------------*/
 
 	/* For.Prototype_Component_Texture_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee"),
@@ -172,10 +187,17 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/ElectricBlock/electricBlockSpr_%d.png"), 3))))
 		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Turret */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Turret_%d.png"), 4))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bullet"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 	/* Loading Model */
 
@@ -197,8 +219,6 @@ HRESULT CLoader::Loading_ForHongLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
-	lstrcpy(m_szLoadingText, TEXT("°´???????? ˇ????ß??´?´?. "));
 
 	/*-----------
 	--Prototype--
@@ -223,6 +243,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/*-----------
 	---Texture---
 	------------*/

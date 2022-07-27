@@ -248,7 +248,7 @@ HRESULT CToodee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.5f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 1.f);
-	BoxColliderDesc.bIsTrigger = false;
+	BoxColliderDesc.bIsTrigger = true;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;

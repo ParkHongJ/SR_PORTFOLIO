@@ -2,6 +2,7 @@
 #include "..\Public\Turret.h"
 
 #include "GameInstance.h"
+#include "KeyMgr.h"
 
 CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -11,7 +12,8 @@ CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 CTurret::CTurret(const CTurret & rhs)
 	: CGameObject(rhs)
-	, m_eDir(RIGHT)
+	, m_eDir(RIGHT)/*이거 수정해라*/
+	, m_fCurrentTimer(0.f)
 {
 
 }
@@ -51,7 +53,7 @@ void CTurret::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
 HRESULT CTurret::Render()
@@ -70,18 +72,57 @@ HRESULT CTurret::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
+
+	//m_fCurrentTimer = 0.f;
+	////총알 방향설정 , 생성
+	//CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	//Safe_AddRef(pGameInstance);
+
+	//ImGui::Begin("Test");
+	//_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//ImGui::End();
+	//if (CKeyMgr::Get_Instance()->Key_Down('U'))
+	//{
+	//	vPos.x += 1.f;
+	//	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
+	//		LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
+	//		MSG_BOX(L"총알 생성 실패");
+
+	//	Safe_Release(pGameInstance);
+	//}
+	
+
 	return S_OK;
 }
 
 void CTurret::Fire(_float fTimeDelta)
 {
-	//총알 방향설정 , 생성
+	m_fCurrentTimer += fTimeDelta;
+	if (m_fCurrentTimer > 0.3f)
+	{
+		m_fCurrentTimer = 0.f;
+		//총알 방향설정 , 생성
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
+			LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
+			MSG_BOX(L"총알 생성 실패");
+
+		Safe_Release(pGameInstance);
+	}
+	
 }
 
 HRESULT CTurret::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	return S_OK;
@@ -89,6 +130,7 @@ HRESULT CTurret::Set_RenderState()
 
 HRESULT CTurret::Reset_RenderState()
 {
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	return S_OK;
@@ -118,10 +160,6 @@ HRESULT CTurret::SetUp_Components()
 	return S_OK;
 }
 
-bool CTurret::LoadTextureFromFile(const char * filename, PDIRECT3DTEXTURE9 * out_texture, int * out_width, int * out_height)
-{
-	return false;
-}
 
 CTurret * CTurret::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {

@@ -329,7 +329,7 @@ HRESULT CTopdee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
-
+	BoxColliderDesc.bIsTrigger = true;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;

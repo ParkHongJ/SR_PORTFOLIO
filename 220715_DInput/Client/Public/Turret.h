@@ -44,8 +44,11 @@ private:
 
 private:
 	HRESULT SetUp_Components(); 
-	bool LoadTextureFromFile(const char* filename, PDIRECT3DTEXTURE9* out_texture, int* out_width, int* out_height);
+
+private:
 	DIRECTION m_eDir = UP;
+	_float m_fCurrentTimer;
+
 public:
 	static CTurret* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

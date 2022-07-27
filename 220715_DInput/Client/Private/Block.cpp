@@ -26,8 +26,9 @@ HRESULT CBlock::Initialize(void * pArg)
 	//======================
 	if (pArg != nullptr)
 	{
-		_float3* vTemp = (_float3*)pArg;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *vTemp);
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	return S_OK;
 }

@@ -31,6 +31,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
 		return E_FAIL;
+
+	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Bullet"))))
+		return E_FAIL;*/
+
+	/* 이거 수정해라 */
 	_float3 temp = { 5.f,0.f,2.f };
 	Ready_Layer_Block(L"Layer_Cube", temp);
 	//LoadGameObject();
@@ -197,7 +202,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Turret(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Bullet(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
+		LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 void CLevel_GamePlay::LoadGameObject()
 {
 	HANDLE		hFile = CreateFile(L"../Bin/data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);

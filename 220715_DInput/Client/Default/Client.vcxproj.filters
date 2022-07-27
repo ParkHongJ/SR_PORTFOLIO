@@ -190,6 +190,9 @@
     <ClInclude Include="..\public\Turret.h">
       <Filter>02.GameObject\Turret</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet.h">
+      <Filter>02.GameObject\Turret\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -284,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Turret.cpp">
       <Filter>02.GameObject\Turret</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet.cpp">
+      <Filter>02.GameObject\Turret\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
