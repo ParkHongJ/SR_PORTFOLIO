@@ -38,6 +38,11 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 	//Player가 Toodee일 때, 블럭 위에서 돌아다님
 	//m_pTransformCom->Go_Right(0.4f * fTimeDelta);
 	//Player가 Topdee일 때, PlayerPos를 Chase함
+
+	m_fFrame += 9.0f * fTimeDelta;
+
+	if (m_fFrame >= 9.0f)
+		m_fFrame = 0.f;
 }
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
@@ -61,7 +66,7 @@ HRESULT CMonster_Pig::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 	
-	if (FAILED(m_pTextureCom->Bind_Texture(7)))
+	if (FAILED(m_pTextureCom->Bind_Texture((_uint)m_fFrame)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))

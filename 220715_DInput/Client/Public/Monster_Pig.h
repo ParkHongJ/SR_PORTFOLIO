@@ -42,6 +42,10 @@ private:
 	_float3			m_vTargetPos = _float3(0.f, 0.f, 0.f);
 
 private:
+	_float	m_fFrame = 0.f;
+	_bool	m_bDead;
+
+private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 private:

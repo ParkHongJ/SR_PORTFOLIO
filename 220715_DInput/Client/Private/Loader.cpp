@@ -48,7 +48,7 @@ _uint APIENTRY LoadingMain(void* pArg)
 		break;
 		
 	default:
-		MSG_BOX(L"ˇ??§?? ??˝?´?´?");
+		MSG_BOX(L"레벨이 없습니다");
 		break;
 	}
 
@@ -73,19 +73,19 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 HRESULT CLoader::Loading_ForLogoLevel()
 {
-	lstrcpy(m_szLoadingText, TEXT("°´???????? ˇ????ß??´?´?. "));
+	lstrcpy(m_szLoadingText, TEXT("객체원형을 로딩중입니다. "));
 
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/* °ł¤?¤??????? ˇ?????´?. */	
+	/*  객체원형 로드한다. */	
 
 	/* For.Prototype_GameObject_BackGround */ 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pGraphic_Device))))
 		return E_FAIL;	
 
-	lstrcpy(m_szLoadingText, TEXT("??˝???¸? ˇ????ß??´?´?. "));
-	/* ??˝???¸? ˇ?????´?. */
+	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
+	/* 텍스쳐를 로드한다. */
 
 	/* For.Prototype_Component_Texture_Default */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Default"),
@@ -93,11 +93,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		return E_FAIL;
 
 
-	lstrcpy(m_szLoadingText, TEXT("¸đ?¨?? ˇ????ß??´?´?. "));	
-	/* ¸đ?¨¸? ˇ?????´?. */
+	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));	
+	/* 모델을 로드한다. */
 
 
-	lstrcpy(m_szLoadingText, TEXT("ˇ????? ??ˇ?????˝?´?¤?¤§.  "));
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다.  "));
 
 	Safe_Release(pGameInstance);
 
@@ -159,7 +159,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_ElectricBlock */
@@ -292,7 +292,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 8))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("¸đ?¨?? ˇ????ß??´?´?. "));
