@@ -29,24 +29,6 @@ HRESULT CToodee::Initialize(void * pArg)
 
 void CToodee::Tick(_float fTimeDelta)
 {
-	/* For.Topdee Stop */
-	if (GetKeyState('X') & 0x8000) {
-		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-		if (m_Run) {
-			fPos.y = 0.001f;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-
-			m_Run = false;
-		}
-		else {
-			fPos.y = 0.3f;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-
-			m_Run = true;
-		}
-	}
-
 	/* For.Toodee Dead */
 	if (GetKeyState('F') & 0x8000) {
 		if (m_Dead) {
@@ -56,6 +38,21 @@ void CToodee::Tick(_float fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.f, 0.3f, 0.f));
 			m_Dead = true;
 		}
+	}
+
+	_float4x4 ViewMatrixInv;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrixInv);
+	D3DXMatrixInverse(&ViewMatrixInv, nullptr, &ViewMatrixInv);
+	_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	if (5.f > (*(_float3*)&ViewMatrixInv.m[3][0]).z) {
+		fPos.y = 0.001f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+		m_Run = false;
+	}
+	else {
+		fPos.y = 0.5f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+		m_Run = true;
 	}
 
 	if (!m_Run || m_Dead)
