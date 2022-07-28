@@ -63,7 +63,15 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
 
+	/*m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);*/
+	m_pCollider->End();
 }
 
 HRESULT CMainApp::Render()
@@ -224,7 +232,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		CTransform::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	/* For.Prototype_Component_Collider */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
+		m_pCollider = CCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), 
 		CBoxCollider::Create(m_pGraphic_Device))))
@@ -286,6 +297,8 @@ void CMainApp::Free()
 {
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pRenderer);
+
+	Safe_Release(m_pCollider);
 	Safe_Release(m_pGameInstance);
 
 	CKeyMgr::Get_Instance()->Destroy_Instance();

@@ -17,12 +17,7 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	Safe_AddRef(pGameInstance);
-	/* For.Prototype_Component_Collider */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
-		m_pCollider = CCollider::Create(m_pGraphic_Device))))
-		return E_FAIL;
-	Safe_AddRef(m_pCollider);
+
 
 	Safe_Release(pGameInstance);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
@@ -61,15 +56,7 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-
-	/*m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);*/
-	m_pCollider->End();
+	
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
@@ -311,7 +298,6 @@ CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-	Safe_Release(m_pCollider);
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*= nullptr*/)

@@ -98,7 +98,7 @@ HRESULT CTurret::Render()
 void CTurret::Fire(_float fTimeDelta)
 {
 	m_fCurrentTimer += fTimeDelta;
-	if (m_fCurrentTimer > 0.3f)
+	if (m_fCurrentTimer > 1.f)
 	{
 		m_fCurrentTimer = 0.f;
 		//총알 방향설정 , 생성

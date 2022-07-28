@@ -25,6 +25,8 @@ public:
 
 public:
 	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CGameObject* pGameObject);
+
+	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider, class CTransform* pTransform);
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT End();
@@ -34,7 +36,7 @@ public:
 private:
 	list<class CGameObject*>				m_CollisionObjects[COLLISION_END];
 	typedef list<class CGameObject*>		COLLISIONOBJECTS;
-	map<LONGLONG, bool> m_ColInfo;
+	unordered_map<LONGLONG, bool> m_ColInfo;
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg) override;

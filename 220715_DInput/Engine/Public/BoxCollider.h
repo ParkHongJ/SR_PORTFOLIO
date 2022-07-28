@@ -26,6 +26,7 @@ public:
 
 	_float3 GetMin();
 	_float3 GetMax();
+	void Tick(const _float4x4& matWorld);
 	_float GetRadius() { return m_fRadius; }
 	_uint GetID() { return m_iID; }
 public:

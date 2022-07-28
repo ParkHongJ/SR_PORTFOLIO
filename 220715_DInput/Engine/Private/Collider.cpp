@@ -38,9 +38,21 @@ HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CGam
 }
 
 
+HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, CBoxCollider * pBoxCollider, CTransform * pTransform)
+{
+	if (nullptr == pBoxCollider)
+		return E_FAIL;
+
+	//m_CollisionObjects[eCollisionGroup].push_back(pGameObject->powner);
+
+	Safe_AddRef(pBoxCollider);
+
+	return S_OK;
+}
+
 HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
-	map<LONGLONG, bool>::iterator iter;
+	unordered_map<LONGLONG, bool>::iterator iter;
 
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
@@ -62,8 +74,8 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 			float	fX = 0.f, fZ = 0.f;
 			if (pSour->GetEnabled() && pDest->GetEnabled())
 			{
-				if (Check_Rect(pSour, pDest))
-				//if (Check_RectEx(pSour, pDest, &fX, &fZ))
+				//if (Check_Rect(pSour, pDest))
+				if (Check_RectEx(pSour, pDest, &fX, &fZ))
 				{
 					CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
 					CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
@@ -140,7 +152,7 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 
 HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
-	map<LONGLONG, bool>::iterator iter;
+	unordered_map<LONGLONG, bool>::iterator iter;
 
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
@@ -189,7 +201,6 @@ HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 						pDest->OnTriggerExit(pSour, fTimeDelta);
 						iter->second = false;
 					}
-
 				}
 			}
 		}
