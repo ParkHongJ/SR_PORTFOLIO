@@ -19,21 +19,11 @@ private:
 	virtual ~CGameMgr() = default;
 
 public:
-	HRESULT Set_Player_Active(const _tchar* pTag, CGameObject* pPlayer) {
-		for (auto& pair : m_PlayerActive)
-			if (pair.first == pTag) {
-				pair.second = pPlayer->IsActive();
-				return S_OK;
-			}
+	void Tick(_float fTimeDelta);
+	void LateTick(_float fTimeDelta);
 
-		if (nullptr == pPlayer)
-			return E_FAIL;
-
-		m_PlayerActive.emplace(pTag, pPlayer->IsActive());
-
-		return S_OK;
-	}
-
+public:
+	HRESULT Set_Player_Active(const _tchar* pTag, CGameObject* pPlayer);
 	_bool IsPlayerActive(const _tchar* pTag);
 
 private:

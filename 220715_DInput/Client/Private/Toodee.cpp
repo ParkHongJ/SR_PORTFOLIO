@@ -32,21 +32,6 @@ HRESULT CToodee::Initialize(void * pArg)
 
 void CToodee::Tick(_float fTimeDelta)
 {
-	/* For.Toodee Dead */
-	if (GetKeyState('T') & 0x8000) {
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
-		m_bActive = true;
-		m_eToodeeDir = TOODEE_IDLE;
-		m_pGameMgr->Set_Player_Active(L"Toodee", this);
-		return;
-	}
-	if (GetKeyState('F') & 0x8000) {
-		m_bActive = false;
-		m_eToodeeDir = TOODEE_DEAD;
-		m_pGameMgr->Set_Player_Active(L"Toodee", this);
-		return;
-	}
-
 	/* For.Toodee Run */
 	_float4x4 ViewMatrixInv;
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrixInv);
@@ -62,6 +47,26 @@ void CToodee::Tick(_float fTimeDelta)
 		fPos.y = 0.5f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 		m_bRun = true;
+	}
+
+	/* For.Toodee Dead */
+	if (GetKeyState('T') & 0x8000) {
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
+		m_bActive = true;
+		m_eToodeeDir = TOODEE_IDLE;
+		if (FAILED(m_pGameMgr->Set_Player_Active(L"Toodee", this))) {
+			MSG_BOX(L"Save_Toodee_Active_Failed");
+			return;
+		}
+	}
+	if (GetKeyState('F') & 0x8000) {
+		m_bActive = false;
+		m_eToodeeDir = TOODEE_DEAD;
+		m_eCurruntDir = m_eToodeeDir;
+		if (FAILED(m_pGameMgr->Set_Player_Active(L"Toodee", this))) {
+			MSG_BOX(L"Save_Toodee_Active_Failed");
+			return;
+		}
 	}
 
 	if (!m_bRun || !m_bActive)
@@ -285,12 +290,16 @@ HRESULT CToodee::SetUp_Components()
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.5f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 
 	m_pGameMgr = CGameMgr::Get_Instance();
-	if (FAILED(m_pGameMgr->Set_Player_Active(L"Toodee", this)))
+
+	if (FAILED(m_pGameMgr->Set_Player_Active(L"Toodee", this))) {
+		MSG_BOX(L"Save_Toodee_Active_Failed");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

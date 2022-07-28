@@ -111,18 +111,15 @@ HRESULT CBlock::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	return S_OK;
 }
 
 HRESULT CBlock::Reset_RenderState()
 {
-	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	//m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -158,6 +155,7 @@ HRESULT CBlock::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
+
 	return S_OK;
 }
 
