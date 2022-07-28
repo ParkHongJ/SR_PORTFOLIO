@@ -22,9 +22,9 @@ public:
 	virtual void OnTriggerExit(CGameObject*  other) {};
 
 public:
-	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta) { return true; };
+	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta,_float3 vPreLoaderPos) { return true; };
 	virtual void KKK_Is_Raise(_float3 vTargetPos) {};
-	virtual _bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta) { return true; };
+	virtual _bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta,_bool bHoleCall) { return true; };
 
 protected:
 	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;

@@ -9,7 +9,7 @@
 #include "Level_SENI.h"
 #include "Level_SJH.h"
 #include "Loader.h"
-
+#include "Loading_BackGround.h"
 
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -20,6 +20,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
+	Ready_Layer_BackGround(TEXT("Layer_Loading_BackGround"));
 
 
 	m_eNextLevel = eNextLevel;
@@ -85,6 +87,19 @@ HRESULT CLevel_Loading::Render()
 
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
 	
+	return S_OK;
+}
+
+HRESULT CLevel_Loading::Ready_Layer_BackGround(const _tchar * pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Loading_BackGround"), LEVEL_LOADING, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

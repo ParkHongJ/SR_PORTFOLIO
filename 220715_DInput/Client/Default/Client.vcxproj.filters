@@ -88,6 +88,15 @@
     <Filter Include="02.GameObject\Portal">
       <UniqueIdentifier>{f65cb39e-c497-484f-9238-138d7ddf85eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Hole">
+      <UniqueIdentifier>{d92c17f0-853e-4ede-81b7-babea46c591c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\BackGround\Logo">
+      <UniqueIdentifier>{1abf8f10-1c08-438b-9506-420ee2f7f814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\BackGround\Loading">
+      <UniqueIdentifier>{68de57fc-5041-4cfe-89fb-9a65d60ae16b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -108,9 +117,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Level\Loading\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02.GameObject\BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObject\Terrain</Filter>
@@ -199,6 +205,15 @@
     <ClInclude Include="..\public\Portal.h">
       <Filter>02.GameObject\Portal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Hole.h">
+      <Filter>02.GameObject\Hole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BackGround.h">
+      <Filter>02.GameObject\BackGround\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loading_BackGround.h">
+      <Filter>02.GameObject\BackGround\Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -215,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Loader.cpp">
       <Filter>01.Level\Loading\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>02.GameObject\BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObject\Terrain</Filter>
@@ -299,6 +311,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Portal.cpp">
       <Filter>02.GameObject\Portal</Filter>
+    </ClCompile>  
+    <ClCompile Include="..\Private\Hole.cpp">
+      <Filter>02.GameObject\Hole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BackGround.cpp">
+      <Filter>02.GameObject\BackGround\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loading_BackGround.cpp">
+      <Filter>02.GameObject\BackGround\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

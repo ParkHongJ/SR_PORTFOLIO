@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "KeyMgr.h"
+#include "Loading_BackGround.h"
+
 using namespace Client;
 
 CMainApp::CMainApp()
@@ -35,6 +37,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
+	if (FAILED(Ready_LoadingLevel()))
+		return E_FAIL;
+
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
@@ -64,6 +69,7 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET);
 	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET);
 	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK);
+	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK);
 	m_pCollider->End();
 }
 
@@ -239,6 +245,34 @@ HRESULT CMainApp::Ready_Prototype_Component()
 HRESULT CMainApp::Ready_Prototype_GameObject()
 {
 
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_LoadingLevel()
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	/* For.Prototype_GameObject_BackGround */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loading_BackGround"), CLoading_BackGround::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Default */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Cloud"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/SpinCloud/SpinCloud_%d.png"),6))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Loading_Inside */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Inside"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/InsideCloud/InsideCloud_%d.png"),2))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Loading_BackGround */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_BackGround"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/LoadingBackground.png")))))
+		return E_FAIL;
+	Safe_Release(pGameInstance);
+
+	
+	
+	
 	return S_OK;
 }
 

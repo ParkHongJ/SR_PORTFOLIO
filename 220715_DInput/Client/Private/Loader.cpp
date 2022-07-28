@@ -2,6 +2,7 @@
 #include "..\Public\Loader.h"
 
 #include "GameInstance.h"
+#include "Monster_Pig.h"
 #include "Camera_Free.h"
 #include "BackGround.h"
 #include "Terrain.h"
@@ -9,9 +10,8 @@
 #include "Player.h"
 #include "Topdee.h"
 #include "Toodee.h"
-#include "MyBox.h"
-#include "Monster_Pig.h"
 #include "Block.h"
+#include "Hole.h"
 #include "Sky.h"
 #include "Turret.h"
 #include "Bullet.h"
@@ -346,7 +346,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 	return S_OK;
 }
 
-HRESULT Client::CLoader::Loading_ForGyuHLevel()
+HRESULT CLoader::Loading_ForGyuHLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -369,6 +369,9 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hole"),
+		CHole::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	
 	/* ??¢©???¢¬? ¢§?????¢¥?. */
 
@@ -386,7 +389,17 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Topdee_PreLoader */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_PreLoader.png")))))
+		return E_FAIL;
 	
+	/* For.Prototype_Component_Texture_Hole */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hole"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Hole/Hole_%d.png"),2))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("¢¬©¢?¡§?? ¢§????©¬??¢¥?¢¥?. "));
 	/* ¢¬©¢?¡§¢¬? ¢§?????¢¥?. */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
@@ -394,6 +407,9 @@ HRESULT Client::CLoader::Loading_ForGyuHLevel()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Gyu Loading Complete."));
