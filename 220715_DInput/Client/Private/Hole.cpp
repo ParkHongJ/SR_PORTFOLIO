@@ -38,7 +38,7 @@ void CHole::Tick(_float fTimeDelta)
 	if (m_bActive) {
 		Turn_Check();
 	}
-}
+	}
 
 void CHole::LateTick(_float fTimeDelta)
 {
@@ -48,6 +48,7 @@ void CHole::LateTick(_float fTimeDelta)
 		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
 
+		m_pBoxCom->Tick(m_pTransformCom->Get_WorldMatrix());
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pColliderCom->Add_CollisionGroup(CCollider::HOLE, this);
 	}

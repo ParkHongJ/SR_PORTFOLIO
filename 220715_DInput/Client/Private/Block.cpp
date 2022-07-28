@@ -39,6 +39,7 @@ void CBlock::Tick(_float fTimeDelta)
 
 void CBlock::LateTick(_float fTimeDelta)
 {
+	m_pBoxCollider->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, this);
 }
@@ -55,7 +56,7 @@ HRESULT CBlock::Render()
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
-	//m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;

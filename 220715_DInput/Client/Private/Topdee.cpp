@@ -242,6 +242,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	m_pRenderer_PreLoader_Com->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	//========================================================================
+	m_pBoxCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
 
 

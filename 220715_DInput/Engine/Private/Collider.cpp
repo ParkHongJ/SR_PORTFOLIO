@@ -44,11 +44,15 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
+		CBoxCollider* pSourTemp = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"));
+		
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
+			CBoxCollider* pDestTemp = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"));
+			
 			COLLIDER_ID ID;
-			ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
-			ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
+			ID.Left_ID = pSourTemp->GetID();
+			ID.Right_ID = pDestTemp->GetID();
 			iter = m_ColInfo.find(ID.ID);
 
 			//충돌 정보가 미등록 상태라면
@@ -63,6 +67,7 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 			if (pSour->GetEnabled() && pDest->GetEnabled())
 			{
 				if (Check_RectEx(pSour, pDest, &fX, &fZ))
+				//if (Check_Rect(pSourTemp, pDestTemp))
 				{
 					CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
 					CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
@@ -150,34 +155,34 @@ HRESULT CCollider::End()
 	return S_OK;
 }
 
-bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
+bool CCollider::Check_Rect(class CBoxCollider* pSour, class CBoxCollider* pDest)
 {
-	CBoxCollider* SourCol = (CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider");
+	/*CBoxCollider* SourCol = (CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider");
 	CBoxCollider* DestCol = (CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider");
 	if (SourCol == nullptr || DestCol == nullptr)
 	{
 		return FALSE;
 	}
 	Safe_AddRef(SourCol);
-	Safe_AddRef(DestCol);
+	Safe_AddRef(DestCol);*/
 
-	CTransform* SourTrans = (CTransform*)pSour->Get_Component(L"Com_Transform");
+	/*CTransform* SourTrans = (CTransform*)pSour->Get_Component(L"Com_Transform");
 	CTransform* DestTrans = (CTransform*)pDest->Get_Component(L"Com_Transform");
 	if (SourTrans == nullptr || DestTrans == nullptr)
 	{
 		return FALSE;
 	}
 	Safe_AddRef(SourTrans);
-	Safe_AddRef(DestTrans);
+	Safe_AddRef(DestTrans);*/
 
 	//정보 불러오기
-	_float3 vSourMin = SourCol->GetMin();
-	_float3 vSourMax = SourCol->GetMax();
+	_float3 vSourMin = pSour->GetMin();
+	_float3 vSourMax = pSour->GetMax();
 
-	_float3 vDestMin = DestCol->GetMin();
-	_float3 vDestMax = DestCol->GetMax();
+	_float3 vDestMin = pDest->GetMin();
+	_float3 vDestMax = pDest->GetMax();
 
-	_float4x4 SourWorld;
+	/*_float4x4 SourWorld;
 	_float4x4 DestWorld;
 
 	D3DXMatrixIdentity(&SourWorld);
@@ -197,16 +202,13 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 	D3DXVec3TransformCoord(&vSourMax, &vSourMax, &SourWorld);
 	D3DXVec3TransformCoord(&vDestMin, &vDestMin, &DestWorld);
 	D3DXVec3TransformCoord(&vDestMax, &vDestMax, &DestWorld);
-
-	//x축에 대하여
+*/
+//x축에 대하여
 	if (vSourMax.x < vDestMin.x ||
 		vSourMin.x > vDestMax.x)
 	{
-		Safe_Release(SourCol);
-		Safe_Release(DestCol);
-
-		Safe_Release(SourTrans);
-		Safe_Release(DestTrans);
+		/*Safe_Release(SourCol);
+		Safe_Release(DestCol);*/
 		return FALSE;
 	}
 
@@ -214,11 +216,8 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 	if (vSourMax.y < vDestMin.y ||
 		vSourMin.y > vDestMax.y)
 	{
-		Safe_Release(SourCol);
-		Safe_Release(DestCol);
-
-		Safe_Release(SourTrans);
-		Safe_Release(DestTrans);
+		/*Safe_Release(SourCol);
+		Safe_Release(DestCol);*/
 		return FALSE;
 	}
 
@@ -226,19 +225,13 @@ bool CCollider::Check_Rect(class CGameObject* pSour, class CGameObject* pDest)
 	if (vSourMax.z < vDestMin.z ||
 		vSourMin.z > vDestMax.z)
 	{
-		Safe_Release(SourCol);
-		Safe_Release(DestCol);
-
-		Safe_Release(SourTrans);
-		Safe_Release(DestTrans);
+		/*Safe_Release(SourCol);
+		Safe_Release(DestCol);*/
 		return FALSE;
 	}
 
-	Safe_Release(SourCol);
-	Safe_Release(DestCol);
-
-	Safe_Release(SourTrans);
-	Safe_Release(DestTrans);
+	/*Safe_Release(SourCol);
+	Safe_Release(DestCol);*/
 
 	return TRUE;
 }
@@ -280,7 +273,7 @@ bool CCollider::Check_RectEx(class CGameObject* pSour, class CGameObject* pDest,
 	_float3 vDestPos = DestTrans->Get_State(CTransform::STATE_POSITION);
 	_float3 vSourScale = SourTrans->Get_Scaled();
 	_float3 vDestScale = DestTrans->Get_Scaled();
-	
+
 	D3DXMatrixScaling(&SourWorld, vSourScale.x, vSourScale.y, vSourScale.z);
 	D3DXMatrixScaling(&DestWorld, vDestScale.x, vDestScale.y, vDestScale.z);
 

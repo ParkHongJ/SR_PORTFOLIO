@@ -26,7 +26,7 @@ HRESULT CHong::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Prototype_GameObject_Player"))))
 		return E_FAIL;
 
-	LoadGameObject();
+	//LoadGameObject();
 	return S_OK;
 }
 

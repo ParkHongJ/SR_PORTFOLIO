@@ -2,6 +2,7 @@
 #include "..\Public\Player.h"
 
 #include "GameInstance.h"
+#include "KeyMgr.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -33,45 +34,29 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.0f, 0.5f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.5f, 0.0f, 0.5f));
 	return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (GetKeyState(VK_UP) & 0x8000)
+	
+	if (CKeyMgr::Get_Instance()->Key_Up(VK_RIGHT))
 	{
-		//m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) * fTimeDelta * 3.f);
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
+		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f));
 	}
-	if (GetKeyState('W') & 0x8000)
+	if (CKeyMgr::Get_Instance()->Key_Up(VK_LEFT))
 	{
-		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f) *fTimeDelta*3.f);
+		m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f));
 	}
-	if (GetKeyState('S') & 0x8000)
+	if (CKeyMgr::Get_Instance()->Key_Up(VK_UP))
 	{
-		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) *fTimeDelta*3.f);
+		m_pTransformCom->Translate(_float3(0.f, 0.f, 1.f));
 	}
-	if (GetKeyState(VK_DOWN) & 0x8000)
+	if (CKeyMgr::Get_Instance()->Key_Up(VK_DOWN))
 	{
-		m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-
-		//m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f) * fTimeDelta * 3.f);
+		m_pTransformCom->Translate(_float3(0.f, 0.f, -1.f));
 	}
-
-	if (GetKeyState(VK_LEFT) & 0x8000)
-	{
-
-		m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * 3.f);
-		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta * -1.f);
-	}
-
-	if (GetKeyState(VK_RIGHT) & 0x8000)
-	{
-		//m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), fTimeDelta);
-		m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f) * fTimeDelta * 3.f);
-	}
-
 	//-------
 	/*if (GetKeyState(VK_UP) & 0x8000)
 	{

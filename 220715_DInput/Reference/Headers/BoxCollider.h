@@ -21,6 +21,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	void Tick(_float4x4 matWorld);
 	HRESULT Render(_float4x4 matWorld);//For Debug
 
 	_float3 GetMin();
@@ -37,8 +38,8 @@ public:
 --AABB¿ë º¯¼ö--
 -------------*/
 private:
-	_float3 m_fMin;
-	_float3 m_fMax;
+	_float3 m_vMin;
+	_float3 m_vMax;
 
 	BOXDESC m_BoxDesc;
 /*------------------

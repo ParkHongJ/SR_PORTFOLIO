@@ -80,6 +80,7 @@ void CBullet::LateTick(_float fTimeDelta)
 	m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+	m_pBoxCollider->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pCollider->Add_CollisionGroup(CCollider::BULLET, this);
 }
 
@@ -147,9 +148,12 @@ HRESULT CBullet::SetUp_Components()
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
 	RectDesc.vSize = { 0.5f,0.8f,0.f };
-
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, 
+		TEXT("Prototype_Component_VIBuffer_Rect"), 
+		TEXT("Com_VIBuffer"), 
+		(CComponent**)&m_pVIBufferCom, 
+		this, &RectDesc)))
 		return E_FAIL;
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
@@ -174,7 +178,7 @@ HRESULT CBullet::SetUp_Components()
 	return S_OK;
 }
 
-void CBullet::OnTriggerEnter(CGameObject * other)
+void CBullet::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 {
 	if (other->CompareTag(L"Box"))
 	{
@@ -182,11 +186,11 @@ void CBullet::OnTriggerEnter(CGameObject * other)
 	}
 }
 
-void CBullet::OnTriggerStay(CGameObject * other)
+void CBullet::OnTriggerStay(CGameObject * other, float fTimeDelta)
 {
 }
 
-void CBullet::OnTriggerExit(CGameObject * other)
+void CBullet::OnTriggerExit(CGameObject * other, float fTimeDelta)
 {
 }
 

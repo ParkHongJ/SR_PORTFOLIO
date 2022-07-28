@@ -174,7 +174,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			m_fJumpTime = 0.f;
 		}
 	}
-
+	m_pBoxCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -221,11 +221,11 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 		CTransform* BoxCom = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(BoxCom);
 
-		if(m_pTransformCom->Get_State(CTransform::STATE_POSITION).z >= (BoxCom->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f)))
+		if (m_pTransformCom->Get_State(CTransform::STATE_POSITION).z >= (BoxCom->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f)))
 			m_fDrop_Endline = BoxCom->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f);
-		else {
+		/*else {
 			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-		}
+		}*/
 
 		Safe_Release(BoxCom);
 	}

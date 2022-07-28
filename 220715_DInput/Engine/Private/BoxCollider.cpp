@@ -18,8 +18,8 @@ CBoxCollider::CBoxCollider(const CBoxCollider& rhs)
 	, m_pIB(rhs.m_pIB)
 	, m_iIndexSizeofPrimitive(rhs.m_iIndexSizeofPrimitive)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
-	, m_fMin(rhs.m_fMin)
-	, m_fMax(rhs.m_fMax)
+	, m_vMin(rhs.m_vMin)
+	, m_vMax(rhs.m_vMax)
 	, m_iID(g_iNextID++)
 {
 	Safe_AddRef(m_pVB);
@@ -78,7 +78,7 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 
 	//m_fMin = pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
 
-	m_fMin = pVertices[3].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x,
+	m_vMin = pVertices[3].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x,
 		m_BoxDesc.vPos.y - vSize.y,
 		m_BoxDesc.vPos.z - vSize.z);
 
@@ -91,7 +91,7 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 
 	//m_fMax = pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
 
-	m_fMax = pVertices[5].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
+	m_vMax = pVertices[5].vPosition = _float3(m_BoxDesc.vPos.x + vSize.x,
 		m_BoxDesc.vPos.y + vSize.y,
 		m_BoxDesc.vPos.z + vSize.z);
 
@@ -153,6 +153,22 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 	return S_OK;
 }
 
+void CBoxCollider::Tick(_float4x4 matWorld)
+{
+	_float3 vPos = *(_float3*)&matWorld.m[3][0];
+	_float3 vScale = _float3(D3DXVec3Length(&*(_float3*)&matWorld.m[0][0]),
+		D3DXVec3Length(&*(_float3*)&matWorld.m[1][0]),
+		D3DXVec3Length(&*(_float3*)&matWorld.m[2][0]));
+
+	_float4x4 WorldMatrix;
+	D3DXMatrixIdentity(&WorldMatrix);
+	D3DXMatrixScaling(&WorldMatrix, vScale.x, vScale.y, vScale.z);
+	memcpy(&WorldMatrix.m[3][0], &vPos, sizeof(_float3));
+
+	D3DXVec3TransformCoord(&m_vMin, &m_vMin, &WorldMatrix);
+	D3DXVec3TransformCoord(&m_vMax, &m_vMax, &WorldMatrix);
+}
+
 HRESULT CBoxCollider::Render(_float4x4 matWorld)
 {
 	if (nullptr == m_pGraphic_Device)
@@ -173,12 +189,12 @@ HRESULT CBoxCollider::Render(_float4x4 matWorld)
 
 _float3 CBoxCollider::GetMin()
 {
-	return m_fMin;
+	return m_vMin;
 }
 
 _float3 CBoxCollider::GetMax()
 {
-	return m_fMax;
+	return m_vMax;
 }
 
 CBoxCollider * CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
