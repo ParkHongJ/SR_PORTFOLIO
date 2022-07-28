@@ -96,6 +96,9 @@
     </Filter>
     <Filter Include="02.GameObject\BackGround\Loading">
       <UniqueIdentifier>{68de57fc-5041-4cfe-89fb-9a65d60ae16b}</UniqueIdentifier>
+    </Filter>  
+    <Filter Include="ClientManager\GameMgr">
+      <UniqueIdentifier>{b3631ff4-f0be-46f6-bdf4-7bff43745901}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Loading_BackGround.h">
       <Filter>02.GameObject\BackGround\Loading</Filter>
+    </ClInclude>  
+    <ClInclude Include="..\Public\GameMgr.h">
+      <Filter>ClientManager\GameMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +326,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Loading_BackGround.cpp">
       <Filter>02.GameObject\BackGround\Loading</Filter>
+    </ClCompile>  
+    <ClCompile Include="..\Private\GameMgr.cpp">
+      <Filter>ClientManager\GameMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

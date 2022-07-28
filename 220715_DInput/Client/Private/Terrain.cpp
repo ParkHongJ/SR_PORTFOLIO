@@ -103,9 +103,6 @@ HRESULT CTerrain::Set_RenderState()
 	return S_OK;
 }
 
-
-
-
 HRESULT CTerrain::Reset_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);

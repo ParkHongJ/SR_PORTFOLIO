@@ -3,6 +3,8 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
+#include "GameMgr.h"
+
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
@@ -15,8 +17,8 @@ END
 BEGIN(Client)
 class CToodee final : public CGameObject
 {
-private: /*For.Test*/
-	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_IDLE, TOODEE_END };
+private:
+	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_DEAD, TOODEE_IDLE, TOODEE_END };
 
 private:
 	CToodee(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -29,9 +31,11 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual void OnTriggerExit(CGameObject* other);
-	virtual void OnTriggerEnter(CGameObject* other);
-	virtual void OnTriggerStay(CGameObject*	other);
+
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta);
+	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
+	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
+
 private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
@@ -40,20 +44,21 @@ private:
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
-	/*For.Test*/
+	/* For.Toodee_and_Topdee */
+	CGameMgr* m_pGameMgr = nullptr;
+
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndex = 0;
+
+	_bool m_bRun = true;
 
 	_float m_MoveSpeed = 0.f;
 
 	_bool m_bJump = false;
 	_float m_fJumpPower = 18.f;
 	_float m_fJumpTime = 0.f;
-	_float m_Temp_For_Jump = 0.f;
-
-	_bool m_Run = true;
-	_bool m_Dead = false;
+	_float m_fDrop_Endline = 0.f;
 
 private:
 	HRESULT Set_RenderState();

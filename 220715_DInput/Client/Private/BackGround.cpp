@@ -33,7 +33,7 @@ HRESULT CBackGround::Initialize(void * pArg)
 void CBackGround::Tick(_float fTimeDelta)
 {
 	fSizeAddMgr(fTimeDelta);
-	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0, 1);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0, 1);
 
 	m_fSizeX = _float(g_iWinSizeX + 1.f + m_fSizeAdd);
 	m_fSizeY = _float(g_iWinSizeY + 1.f + m_fSizeAdd);
@@ -55,7 +55,7 @@ void CBackGround::LateTick(_float fTimeDelta)
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	RECT		rcUI;
-	SetRect(&rcUI, m_fX - m_fSizeX * 0.5f, m_fY - m_fSizeY * 0.5f, m_fX + m_fSizeX * 0.5f, m_fY + m_fSizeY * 0.5f);
+	SetRect(&rcUI, _uint(m_fX - m_fSizeX * 0.5f), _uint(m_fY - m_fSizeY * 0.5f), _uint(m_fX + m_fSizeX * 0.5f), _uint(m_fY + m_fSizeY * 0.5f));
 
 	/*if (PtInRect(&rcUI, ptMouse))
 	{

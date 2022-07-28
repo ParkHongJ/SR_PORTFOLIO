@@ -17,9 +17,10 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-	virtual void OnTriggerEnter(CGameObject* other) {};
-	virtual void OnTriggerStay(CGameObject* other) {};
-	virtual void OnTriggerExit(CGameObject*  other) {};
+
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) {};
+	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta) {};
+	virtual void OnTriggerExit(CGameObject*  other, _float fTimeDelta) {};
 
 public:
 	virtual bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta,_float3 vPreLoaderPos) { return true; };

@@ -38,7 +38,7 @@ HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CGam
 }
 
 
-HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup)
+HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
 	map<LONGLONG, bool>::iterator iter;
 
@@ -101,14 +101,14 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 				if (iter->second)
 				{
 					//이전에도 충돌 중이다
-					pSour->OnTriggerStay(pDest);
-					pDest->OnTriggerStay(pSour);
+					pSour->OnTriggerStay(pDest, fTimeDelta);
+					pDest->OnTriggerStay(pSour, fTimeDelta);
 				}
 				else
 				{
 					//이전에는 충돌하지 않았다
-					pSour->OnTriggerEnter(pDest);
-					pDest->OnTriggerEnter(pSour);
+					pSour->OnTriggerEnter(pDest, fTimeDelta);
+					pDest->OnTriggerEnter(pSour, fTimeDelta);
 					iter->second = true;
 				}
 
@@ -121,8 +121,8 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 				if (iter->second)
 				{
 					//이전에는 충돌하고 있었다.
-					pSour->OnTriggerExit(pDest);
-					pDest->OnTriggerExit(pSour);
+					pSour->OnTriggerExit(pDest, fTimeDelta);
+					pDest->OnTriggerExit(pSour, fTimeDelta);
 					iter->second = false;
 				}
 			}
