@@ -42,17 +42,19 @@ private:
 	
 public:
 	bool IsActive() { return m_bActive; }
-
+	bool IsEnabled() { return m_bEnabled; }
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
+	void SetEnabled(bool _bEnabled) { m_bEnabled = _bEnabled; }
 	bool CompareTag(const _tchar* _tag) { 
 		if (m_Tag == _tag) 
 			return TRUE; 
 		else return FALSE; 
 	}
-
+	bool GetEnabled() { return m_bEnabled; }
 protected:
 	bool m_bActive;
 	const _tchar* m_Tag;
+	bool m_bEnabled = true;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

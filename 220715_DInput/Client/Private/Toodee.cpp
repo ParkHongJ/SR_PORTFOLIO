@@ -32,6 +32,8 @@ HRESULT CToodee::Initialize(void * pArg)
 
 void CToodee::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	/* For.Toodee Run */
 	_float4x4 ViewMatrixInv;
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrixInv);

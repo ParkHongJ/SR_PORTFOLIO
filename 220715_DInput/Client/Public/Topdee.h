@@ -94,7 +94,7 @@ private:
 
 	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.05f };
-	_float m_OriPreLoaderY{ 0.5f };
+	_float m_OriPreLoaderY{ 0.8f };
 
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

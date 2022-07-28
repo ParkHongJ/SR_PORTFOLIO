@@ -29,9 +29,9 @@ public:
 	virtual HRESULT Render() override;
 	
 public:
-	virtual void OnTriggerExit(CGameObject* other);
-	virtual void OnTriggerEnter(CGameObject* other);
-	virtual void OnTriggerStay(CGameObject*	other);
+	virtual void OnTriggerExit(CGameObject* other, float fTimeDelta) override;
+	virtual void OnTriggerEnter(CGameObject* other, float fTimeDelta)override;
+	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta)override;
 
 private:
 	void Turn_Check();

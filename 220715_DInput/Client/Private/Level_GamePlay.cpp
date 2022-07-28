@@ -30,13 +30,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
 
-	_float3 temp = { 15.5f,0.3f,1.5f };
+	_float3 temp = { 15.5f,0.3f,4.5f };
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
 

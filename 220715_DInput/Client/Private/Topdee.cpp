@@ -37,6 +37,8 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 void CTopdee::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -126,7 +128,7 @@ void CTopdee::Topdee_PreLoader_Pos_Mgr()
 		++iPreLoaderPosX;
 	
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
-	/*_float(iPreLoaderPosY) = m_OriPreLoaderY;*/
+	//_float iPreLoaderPosY = m_OriPreLoaderY;
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(_float(iPreLoaderPosX)+ 0.5f, _float(iPreLoaderPosY), _float(iPreLoaderPosZ) + 0.5f));
 }
 
@@ -223,6 +225,8 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 
 void CTopdee::LateTick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -244,7 +248,9 @@ void CTopdee::LateTick(_float fTimeDelta)
 }
 
 HRESULT CTopdee::Render()
-{	
+{
+	if (!m_bActive)
+		S_OK;
 #pragma region Debug_Collider
 	Set_ColliderState();
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
@@ -423,6 +429,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
+		m_pRaiseObject->SetEnabled(false);
 	}
 
 	Safe_Release(pGameInstance);
@@ -450,6 +457,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	}
 	
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
+		m_pRaiseObject->SetEnabled(true);
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);

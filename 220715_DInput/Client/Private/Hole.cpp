@@ -73,16 +73,16 @@ HRESULT CHole::Render()
 	return S_OK;
 }
 
-void CHole::OnTriggerExit(CGameObject * other)
+void CHole::OnTriggerExit(CGameObject * other, float fTimeDelta)
 {
 }
 
-void CHole::OnTriggerEnter(CGameObject * other)
+void CHole::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 {
 
 }
 
-void CHole::OnTriggerStay(CGameObject * other)
+void CHole::OnTriggerStay(CGameObject * other, float fTimeDelta)
 {
 	/*방향 x 시간 x 스피드*/
 	if (m_bActive) {
@@ -93,6 +93,7 @@ void CHole::OnTriggerStay(CGameObject * other)
 				CTransform* pBoxTransformCom = (CTransform*)other->Get_Component(L"Com_Transform");
 				if (pBoxTransformCom->Get_State(CTransform::STATE_POSITION).y <= -0.45f) {
 					m_bActive = false;
+					other->SetEnabled(false);
 					return;
 				}
 				_float3 vBoxDir = { 0.f,-1.f,0.f };
