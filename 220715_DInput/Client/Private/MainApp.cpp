@@ -59,8 +59,8 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BLOCK);
+	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BLOCK, fTimeDelta);
 	m_pCollider->End();
 }
 
@@ -149,6 +149,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	/* For.Prototype_Component_VIBuffer_Cube*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Terrain_Cube*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Topdee*/

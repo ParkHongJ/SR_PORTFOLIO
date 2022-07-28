@@ -2,6 +2,8 @@
 #include "..\Public\Topdee.h"
 #include "KeyMgr.h"
 #include "GameInstance.h"
+#include "GameMgr.h"
+
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -21,7 +23,9 @@ HRESULT CTopdee::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
 	SetTag(L"Topdee");
+
 	return S_OK;
 }
 

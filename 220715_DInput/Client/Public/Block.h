@@ -8,7 +8,7 @@ class CRenderer;
 class CCollider;
 class CBoxCollider;
 class CTransform;
-class CVIBuffer_Cube;
+class CVIBuffer_Terrain_Cube;
 END
 
 BEGIN(Client)
@@ -32,11 +32,12 @@ public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta);
 	void KKK_Is_Raise(_float3 vTargetPos);
 	_bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta);
+
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
+	CVIBuffer_Terrain_Cube*	m_pVIBufferCom = nullptr;
 	CCollider*				m_pCollCom = nullptr;
 	CBoxCollider*			m_pBoxCollider = nullptr;
 

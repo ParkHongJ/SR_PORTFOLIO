@@ -157,6 +157,7 @@ _float CGameInstance::Get_TimeDelta(const _tchar * pTimerTag)
 {
 	if (nullptr == m_pTimer_Manager)
 		return E_FAIL;
+
 	return m_pTimer_Manager->Get_TimeDelta(pTimerTag);
 }
 

@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "Camera_Free.h"
 
+#include "Level_Loading.h"
+#include "GameMgr.h"
+
 CLevel_SJH::CLevel_SJH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -32,6 +35,19 @@ HRESULT CLevel_SJH::Initialize()
 void CLevel_SJH::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	/*_bool bToo = CGameMgr::Get_Instance()->IsPlayerActive(L"Toodee");
+
+	if (!bToo) {
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOGO, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}*/
+
 }
 
 HRESULT CLevel_SJH::Render()
@@ -100,8 +116,10 @@ HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f, 0.5f, 0.5f))))
-		return E_FAIL;
+	for (_uint i = 0; i < 29; ++i) {
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
+			return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 	return S_OK;

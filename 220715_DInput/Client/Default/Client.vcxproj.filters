@@ -79,6 +79,9 @@
     <Filter Include="02.GameObject\Sky">
       <UniqueIdentifier>{6aeb102e-a9be-45f9-9ddc-59905a0dfb06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClientManager\GameMgr">
+      <UniqueIdentifier>{b3631ff4-f0be-46f6-bdf4-7bff43745901}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -181,6 +184,9 @@
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GameMgr.h">
+      <Filter>ClientManager\GameMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -272,6 +278,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameMgr.cpp">
+      <Filter>ClientManager\GameMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

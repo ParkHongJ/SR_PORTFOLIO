@@ -157,6 +157,7 @@
     <ClInclude Include="..\public\Block.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\public\Hong.h" />
     <ClInclude Include="..\Public\KeyMgr.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Block.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\private\Hong.cpp" />
     <ClCompile Include="..\Private\KeyMgr.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />

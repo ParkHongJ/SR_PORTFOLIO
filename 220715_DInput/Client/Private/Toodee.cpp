@@ -2,6 +2,7 @@
 #include "Toodee.h"
 
 #include "GameInstance.h"
+
 CToodee::CToodee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -22,7 +23,9 @@ HRESULT CToodee::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.f, 0.3f, 0.f));
+	SetTag(L"Toodee");
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
 
 	return S_OK;
 }
@@ -30,32 +33,38 @@ HRESULT CToodee::Initialize(void * pArg)
 void CToodee::Tick(_float fTimeDelta)
 {
 	/* For.Toodee Dead */
+	if (GetKeyState('T') & 0x8000) {
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
+		m_bActive = true;
+		m_eToodeeDir = TOODEE_IDLE;
+		m_pGameMgr->Set_Player_Active(L"Toodee", this);
+		return;
+	}
 	if (GetKeyState('F') & 0x8000) {
-		if (m_Dead) {
-			m_Dead = false;
-		}
-		else {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(0.f, 0.3f, 0.f));
-			m_Dead = true;
-		}
+		m_bActive = false;
+		m_eToodeeDir = TOODEE_DEAD;
+		m_pGameMgr->Set_Player_Active(L"Toodee", this);
+		return;
 	}
 
+	/* For.Toodee Run */
 	_float4x4 ViewMatrixInv;
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrixInv);
 	D3DXMatrixInverse(&ViewMatrixInv, nullptr, &ViewMatrixInv);
 	_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 	if (5.f > (*(_float3*)&ViewMatrixInv.m[3][0]).z) {
 		fPos.y = 0.001f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-		m_Run = false;
+		m_bRun = false;
 	}
 	else {
 		fPos.y = 0.5f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-		m_Run = true;
+		m_bRun = true;
 	}
 
-	if (!m_Run || m_Dead)
+	if (!m_bRun || !m_bActive)
 		return;
 
 	if (GetKeyState('Z') & 0x8000) {
@@ -65,30 +74,27 @@ void CToodee::Tick(_float fTimeDelta)
 
 	if (GetKeyState(VK_LEFT) & 0x8000) {
 		m_eToodeeDir = TOODEE_LEFT;
-		if (m_eCurruntDir != m_eToodeeDir) {
-			m_eCurruntDir = m_eToodeeDir;
+		if (m_eCurruntDir != m_eToodeeDir)
 			m_MoveSpeed = 0.f;
-		}
 	}
 	else if (GetKeyState(VK_RIGHT) & 0x8000) {
 		m_eToodeeDir = TOODEE_RIGHT;
-		if (m_eCurruntDir != m_eToodeeDir) {
-			m_eCurruntDir = m_eToodeeDir;
+		if (m_eCurruntDir != m_eToodeeDir)
 			m_MoveSpeed = 0.f;
-		}
 	}
 	else {
 		m_eToodeeDir = TOODEE_IDLE;
-		m_eCurruntDir = m_eToodeeDir;
 	}
+
+	m_eCurruntDir = m_eToodeeDir;
 }
 
 void CToodee::LateTick(_float fTimeDelta)
 {
-	if (m_Dead)
+	if (!m_bActive)
 		return;
 
-	if (m_Run) {
+	if (m_bRun) {
 		/*For.Test*/
 		switch (m_eCurruntDir)
 		{
@@ -131,24 +137,24 @@ void CToodee::LateTick(_float fTimeDelta)
 		m_pTransformCom->Go_Straight_2D(fTimeDelta);
 
 		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		D3DXVECTOR3 vGravityPower = _float3(0.f, 0.f, -1.f) * 1.63f * m_fJumpTime * 0.5f;
 
 		if (m_bJump) {
 			fPos -= m_fJumpPower * fTimeDelta * _float3(0.f, 0.f, -1.f);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 
-			if (m_bJump && m_Temp_For_Jump > fPos.z) {
-				fPos.z = m_Temp_For_Jump;
+			if (m_bJump && m_fDrop_Endline - vGravityPower.z  > fPos.z) {
+				fPos.z = m_fDrop_Endline;
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-				m_bJump = false;
 				m_fJumpTime = 0.f;
+				m_bJump = false;
 			}
 		}
 
-		if (0.f < m_pTransformCom->Get_State(CTransform::STATE_POSITION).z) {
-			D3DXVECTOR3 vGravityPower = _float3(0.f, 0.f, -1.f) * 1.63f * m_fJumpTime * 0.5f;
+		if (m_fDrop_Endline - vGravityPower.z < fPos.z) {
 			fPos += vGravityPower;
 
-			if (m_fJumpTime >= 0.6f)
+			if (m_fJumpTime > 0.6f)
 				m_fJumpTime = 0.6f;
 			else
 				m_fJumpTime += fTimeDelta;
@@ -156,13 +162,15 @@ void CToodee::LateTick(_float fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 		}
 		else {
-			fPos.z = m_Temp_For_Jump;
+			fPos.z = m_fDrop_Endline;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+			m_fJumpTime = 0.f;
 		}
 	}
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
+
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CToodee::Render()
@@ -189,6 +197,34 @@ HRESULT CToodee::Render()
 	//--------------------------------------------------------------
 
 	return S_OK;
+}
+
+void CToodee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+{
+}
+
+void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+{
+	_float fBoxSize = 1.f;
+
+	if (other->CompareTag(L"Box"))
+	{
+		CTransform* BoxCom = (CTransform*)other->Get_Component(L"Com_Transform");
+		Safe_AddRef(BoxCom);
+
+		if(m_pTransformCom->Get_State(CTransform::STATE_POSITION).z >= (BoxCom->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f)))
+			m_fDrop_Endline = BoxCom->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f);
+		else {
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+		}
+
+		Safe_Release(BoxCom);
+	}
+}
+
+void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+{
+	m_fDrop_Endline = 0.f;
 }
 
 HRESULT CToodee::Set_RenderState()
@@ -240,8 +276,14 @@ HRESULT CToodee::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this)))
 		return E_FAIL;
+
+	m_pGameMgr = CGameMgr::Get_Instance();
+	if (FAILED(m_pGameMgr->Set_Player_Active(L"Toodee", this)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -275,24 +317,10 @@ void CToodee::Free()
 {
 	__super::Free();
 	Safe_Release(m_pBoxCom);
+	Safe_Release(m_pGameMgr);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
-}
-
-void CToodee::OnTriggerExit(CGameObject* other)
-{
-	int a = 10;
-}
-
-void CToodee::OnTriggerEnter(CGameObject* other)
-{
-	int a = 10;
-}
-
-void CToodee::OnTriggerStay(CGameObject* other)
-{
-	int a = 10;
 }

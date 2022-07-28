@@ -388,8 +388,7 @@ HRESULT CLoader::Loading_ForSJHLevel()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Cube */ // Test
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cube"),
-		CBlock::Create(m_pGraphic_Device))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cube"), CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
