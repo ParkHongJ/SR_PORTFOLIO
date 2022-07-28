@@ -68,7 +68,9 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+
 	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::HOLE, fTimeDelta);
 	m_pCollider->End();
 }
 
