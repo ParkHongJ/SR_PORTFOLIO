@@ -106,7 +106,8 @@ void CTurret::Fire(_float fTimeDelta)
 		Safe_AddRef(pGameInstance);
 
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(
+			TEXT("Prototype_GameObject_Bullet"),
 			LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
 			MSG_BOX(L"총알 생성 실패");
 
@@ -145,8 +146,11 @@ HRESULT CTurret::SetUp_Components()
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
+
+	CVIBuffer_Rect::RECTDESC RectDesc;
+	RectDesc.vSize = { 0.5f,1.f,0.f };
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;

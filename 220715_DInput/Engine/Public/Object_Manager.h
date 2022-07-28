@@ -32,7 +32,6 @@ private: /* 원형객체들을 보관할 커넽이너ㅣ */
 	map<const _tchar*, class CGameObject*>			m_Prototypes;
 	typedef map<const _tchar*, class CGameObject*>	PROTOTYPES;
 
-
 private: /* 사본객체들을 보관할 커넽이너ㅣ */
 	_uint											m_iNumLevels = 0;
 	map<const _tchar*, class CLayer*>*				m_pLayers = nullptr;

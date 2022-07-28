@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Camera_Free.h"
 
+#include "Level_Loading.h"
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -37,7 +38,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	/* 이거 수정해라 */
 	_float3 temp = { 5.f,0.f,2.f };
-	Ready_Layer_Block(L"Layer_Cube", temp);
+	//Ready_Layer_Block(L"Layer_Cube", temp);
 	//LoadGameObject();
 	return S_OK;
 }
@@ -45,7 +46,16 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	if (GetKeyState(VK_SPACE) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_LOGO))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()

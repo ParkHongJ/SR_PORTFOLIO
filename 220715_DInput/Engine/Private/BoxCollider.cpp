@@ -58,7 +58,7 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 	//pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
 	
 	_float3 vSize = m_BoxDesc.vSize * 0.5f;
-	/* 나중에 고쳐라*/
+
 	pVertices[0].vPosition = _float3(m_BoxDesc.vPos.x - vSize.x, 
 									 m_BoxDesc.vPos.y + vSize.y,
 									 m_BoxDesc.vPos.z - vSize.z);

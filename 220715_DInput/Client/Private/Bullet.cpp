@@ -36,6 +36,8 @@ HRESULT CBullet::Initialize(void * pArg)
 
 void CBullet::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	switch (m_eDir)
 	{
 	case DIRECTION::DOWN:
@@ -62,6 +64,8 @@ void CBullet::Tick(_float fTimeDelta)
 
 void CBullet::LateTick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -81,7 +85,8 @@ void CBullet::LateTick(_float fTimeDelta)
 
 HRESULT CBullet::Render()
 {
-
+	if (!m_bActive)
+		return S_OK;
 #pragma region Debug_Collider
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float4x4 Matrix;// = m_pTransformCom->Get_WorldMatrix();
@@ -96,7 +101,7 @@ HRESULT CBullet::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture((_uint)2)))
+	if (FAILED(m_pTextureCom->Bind_Texture((_uint)m_fFrame)))
 		return E_FAIL;
 
 
@@ -139,8 +144,12 @@ HRESULT CBullet::SetUp_Components()
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bullet"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
+
+	CVIBuffer_Rect::RECTDESC RectDesc;
+	RectDesc.vSize = { 0.5f,0.8f,0.f };
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
@@ -167,7 +176,7 @@ HRESULT CBullet::SetUp_Components()
 
 void CBullet::OnTriggerEnter(CGameObject * other)
 {
-	if (other->CompareTag(L"Block"))
+	if (other->CompareTag(L"Box"))
 	{
 		m_bActive = false;
 	}

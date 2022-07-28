@@ -85,6 +85,9 @@
     <Filter Include="02.GameObject\Turret\Bullet">
       <UniqueIdentifier>{19a9c636-445b-4102-ba71-fe6bff0b7e1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Portal">
+      <UniqueIdentifier>{f65cb39e-c497-484f-9238-138d7ddf85eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -193,6 +196,9 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObject\Turret\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Portal.h">
+      <Filter>02.GameObject\Portal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -290,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObject\Turret\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Portal.cpp">
+      <Filter>02.GameObject\Portal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

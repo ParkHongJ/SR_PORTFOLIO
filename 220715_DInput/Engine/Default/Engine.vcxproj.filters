@@ -180,9 +180,6 @@
     <ClInclude Include="..\public\Collider.h">
       <Filter>04.Components\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Cube.h">
-      <Filter>04.Components\SENI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Topdee.h">
       <Filter>04.Components\VIBuffer\VIBuffer_Topdee</Filter>
     </ClInclude>
@@ -203,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Picking.h">
       <Filter>06.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>04.Components\VIBuffer\Cube</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

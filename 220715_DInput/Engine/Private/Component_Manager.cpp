@@ -25,8 +25,12 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar * pPro
 	if (iLevelIndex >= m_iNumLevels)
 		return E_FAIL;
 
+	//이미 원본이 있으면 현재 생성되서 들어온 pPrototype을 삭제함
 	if (nullptr != Find_Component(iLevelIndex, pPrototypeTag))
-		return E_FAIL;
+	{
+		Safe_Release(pPrototype);
+		return S_OK;
+	}
 
 	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);
 

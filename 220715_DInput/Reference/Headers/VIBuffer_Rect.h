@@ -9,7 +9,7 @@ class ENGINE_DLL CVIBuffer_Rect final : public CVIBuffer
 public:
 	typedef struct RectDesc
 	{
-
+		_float3 vSize;
 	}RECTDESC;
 private:
 	CVIBuffer_Rect(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -24,6 +24,8 @@ public:
 	static CVIBuffer_Rect* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
+private:
+	RECTDESC m_RectDesc;
 };
 
 END

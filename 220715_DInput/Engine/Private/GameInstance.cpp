@@ -74,8 +74,9 @@ void CGameInstance::Clear(_uint iLevelIndex)
 {
 	if (nullptr == m_pObject_Manager)
 		return;
-
-	m_pObject_Manager->Clear(iLevelIndex);
+	//이거 수정해라
+	//m_pComponent_Manager->Clear(iLevelIndex);
+ 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
 void CGameInstance::Render_Begin(void)

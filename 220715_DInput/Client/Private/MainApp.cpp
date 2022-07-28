@@ -87,6 +87,65 @@ HRESULT CMainApp::Render()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Scene"))
+		{
+			if (ImGui::MenuItem("Hong", u8"맡은파트이름"))
+			{
+				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			if (ImGui::MenuItem("Sae", u8"맡은파트이름"))
+			{
+				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SENI))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			if (ImGui::MenuItem("Hyeuk", u8"맡은파트이름"))
+			{
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			if (ImGui::MenuItem("Kyuu", u8"맡은파트이름"))
+			{
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
+
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GYUH))))
+					MSG_BOX(L"오픈실패");
+
+				Safe_Release(pGameInstance);
+			}
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Tool", u8"툴모음집"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 

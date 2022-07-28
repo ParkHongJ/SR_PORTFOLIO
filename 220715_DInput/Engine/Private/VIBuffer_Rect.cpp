@@ -12,6 +12,19 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect & rhs)
 
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
+	
+	
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Rect::Initialize(void * pArg)
+{
+	if (nullptr != pArg)
+		memcpy(&m_RectDesc, pArg, sizeof(RECTDESC));
+	else
+	{
+		m_RectDesc.vSize = { 1.f,1.f,1.f };
+	}
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 4;
 	m_dwFVF = D3DFVF_XYZ | D3DFVF_TEX1 /*| D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE3(1)*/;
@@ -26,16 +39,20 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 	m_pVB->Lock(0, /*m_iStride * m_iNumVertices*/0, (void**)&pVertices, 0);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
+	_float3 vSize = m_RectDesc.vSize * 0.5f;
+
+	/*pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);*/
+	pVertices[0].vPosition = _float3(-vSize.x, vSize.y, 0.f);
 	pVertices[0].vTexture = _float2(0.f, 0.f);
 
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
+	/*pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);*/
+	pVertices[1].vPosition = _float3(vSize.x, vSize.y, 0.f);
 	pVertices[1].vTexture = _float2(1.f, 0.f);
 
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
-	pVertices[2].vTexture = _float2(1.f, 1.f);	
+	pVertices[2].vPosition = _float3(vSize.x, -vSize.y, 0.f);
+	pVertices[2].vTexture = _float2(1.f, 1.f);
 
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
+	pVertices[3].vPosition = _float3(-vSize.x, -vSize.y, 0.f);
 	pVertices[3].vTexture = _float2(0.f, 1.f);
 
 	m_pVB->Unlock();
@@ -57,17 +74,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pIndices[1]._0 = 0;
 	pIndices[1]._1 = 2;
 	pIndices[1]._2 = 3;
-	
+
 	m_pIB->Unlock();
-	
-	return S_OK;
-}
-
-HRESULT CVIBuffer_Rect::Initialize(void * pArg)
-{
-	//if (nullptr != pArg)
-	//else 
-
 	return S_OK;
 }
 
