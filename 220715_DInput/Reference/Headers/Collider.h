@@ -13,7 +13,7 @@ class ENGINE_DLL CCollider : public CComponent
 {
 public:
 	enum COLLISIONGROUP {TOODEE, TOPDEE, BULLET, MONSTER, BLOCK,HOLE, COLLISION_END};
-	
+
 private:
 	CCollider(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CCollider(const CCollider& rhs);

@@ -36,10 +36,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
 
+	_float3 temp = { 15.5f,0.3f,1.5f };
+	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
+		return E_FAIL;
+
 	/* 이거 수정해라 */
-	_float3 temp = { 5.f,0.f,2.f };
+//	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);
-	//LoadGameObject();
+	LoadGameObject();
 	return S_OK;
 }
 
@@ -287,5 +291,17 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*= nullptr*/)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_GYUH, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
 }
 
