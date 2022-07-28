@@ -308,7 +308,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 	return S_OK;
 }
 
-HRESULT Client::CLoader::Loading_ForGyuHLevel()
+HRESULT CLoader::Loading_ForGyuHLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
