@@ -7,6 +7,14 @@ CGameMgr::CGameMgr()
 {
 }
 
+void CGameMgr::Tick(_float fTimeDelta)
+{
+}
+
+void CGameMgr::LateTick(_float fTimeDelta)
+{
+}
+
 HRESULT CGameMgr::Set_Player_Active(const _tchar * pTag, CGameObject * pPlayer)
 {
 	for (auto& pair : m_PlayerActive)
