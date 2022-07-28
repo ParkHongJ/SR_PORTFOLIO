@@ -25,7 +25,7 @@ private:
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Turret(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Bullet(const _tchar* pLayerTag);
-
+	HRESULT Ready_Layer_Portal(const _tchar* pLayerTag);
 private:
 	void	LoadGameObject();
 	vector<_float3> m_list;

@@ -8,6 +8,7 @@ class CRenderer;
 class CCollider;
 class CBoxCollider;
 class CTransform;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
@@ -34,9 +35,19 @@ private:
 private:
 	HRESULT SetUp_Components();
 
+private:
+	CTexture* m_pTextureCom = nullptr;
+	CRenderer* m_pRendererCom = nullptr;
+	CCollider* m_pColliderCom = nullptr;
+	CBoxCollider* m_pBoxCom = nullptr;
+	CTransform* m_pTransformCom = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 public:
 	static CPortal* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
+
+private:
+	_float m_fFrame = 0.f;
 };
 END
