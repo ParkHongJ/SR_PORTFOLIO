@@ -27,7 +27,7 @@ HRESULT CTurret::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(8.f, 0.5f, 10.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 0.5f, 10.f));
 	//======================
 	SetTag(L"Turret");
 	//======================

@@ -49,7 +49,7 @@ void CHole::LateTick(_float fTimeDelta)
 
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pColliderCom->Add_CollisionGroup(CCollider::HOLE, this);
+		//m_pColliderCom->Add_CollisionGroup(CCollider::HOLE, this);
 	}
 }
 

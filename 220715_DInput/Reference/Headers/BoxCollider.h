@@ -11,6 +11,7 @@ public:
 	{
 		_float3 vPos;
 		_float3 vSize;
+		_float fRadius;
 		bool	bIsTrigger;
 	}BOXDESC;
 public:
@@ -25,6 +26,7 @@ public:
 
 	_float3 GetMin();
 	_float3 GetMax();
+	_float GetRadius() { return m_fRadius; }
 	_uint GetID() { return m_iID; }
 public:
 	static CBoxCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -41,6 +43,11 @@ private:
 	_float3 m_fMax;
 
 	BOXDESC m_BoxDesc;
+/*--------------
+--구충돌용 변수--
+--------------*/
+private:
+	_float m_fRadius;
 /*------------------
 --그리기용 멤버변수--
 ------------------*/

@@ -242,7 +242,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	m_pRenderer_PreLoader_Com->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	//========================================================================
-	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 
 
 }
@@ -289,23 +289,31 @@ HRESULT CTopdee::Render()
 	return S_OK;
 }
 
-void CTopdee::OnTriggerExit(CGameObject * other)
+void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CTopdee::OnTriggerEnter(CGameObject * other)
+void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 	if (other->CompareTag(L"Box"))
 	{//타이머돌려야함.
-		
+		int a = 10;
+	}
+	if (other->CompareTag(L"Bullet"))
+	{
+		int a = 10;
 	}
 }
 
-void CTopdee::OnTriggerStay(CGameObject * other)
+void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 	if (other->CompareTag(L"Box"))
 	{//밀려나야함
-		
+		int a = 10;
+	}
+	if (other->CompareTag(L"Bullet"))
+	{
+		int a = 10;
 	}
 }
 
@@ -391,6 +399,7 @@ HRESULT CTopdee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+	BoxColliderDesc.fRadius = 0.5f;
 	BoxColliderDesc.bIsTrigger = true;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;

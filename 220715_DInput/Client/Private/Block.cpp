@@ -55,16 +55,16 @@ HRESULT CBlock::Render()
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
-	//m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
 	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	/*_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pBoxCollider->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
 	//--------------------------------------------------------------
 
 	
@@ -142,8 +142,13 @@ HRESULT CBlock::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pCollCom, this)))
 		return E_FAIL;
 
+	CBoxCollider::BOXDESC BoxDesc;
+	BoxDesc.vPos = { 0.f,0.f,0.f };
+	BoxDesc.vSize = { 1.f,1.f,1.f };
+	BoxDesc.bIsTrigger = false;
+	BoxDesc.fRadius = 1.f;
 	/* For.Com_BoxCollider*/
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this, &BoxDesc)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

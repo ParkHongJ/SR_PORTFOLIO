@@ -26,7 +26,6 @@ public:
 private:
 	CGameInstance*				m_pGameInstance = nullptr;
 	CRenderer*					m_pRenderer = nullptr;
-	CCollider*					m_pCollider = nullptr;
 private:
 	LPDIRECT3DDEVICE9			m_pGraphic_Device = nullptr;
 

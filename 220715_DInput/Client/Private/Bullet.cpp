@@ -79,7 +79,7 @@ void CBullet::LateTick(_float fTimeDelta)
 
 	m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollider->Add_CollisionGroup(CCollider::BULLET, this);
 }
 
@@ -120,17 +120,12 @@ HRESULT CBullet::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	return S_OK;
 }
 
 HRESULT CBullet::Reset_RenderState()
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	return S_OK;
 }
@@ -166,6 +161,7 @@ HRESULT CBullet::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+	BoxColliderDesc.fRadius = 0.5f;
 	BoxColliderDesc.bIsTrigger = false;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this, &BoxColliderDesc)))
 		return E_FAIL;
@@ -174,19 +170,19 @@ HRESULT CBullet::SetUp_Components()
 	return S_OK;
 }
 
-void CBullet::OnTriggerEnter(CGameObject * other)
+void CBullet::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
-	if (other->CompareTag(L"Box"))
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee"))
 	{
 		m_bActive = false;
 	}
 }
 
-void CBullet::OnTriggerStay(CGameObject * other)
+void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CBullet::OnTriggerExit(CGameObject * other)
+void CBullet::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 }
 

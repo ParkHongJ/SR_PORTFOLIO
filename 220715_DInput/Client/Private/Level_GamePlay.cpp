@@ -15,6 +15,16 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	Safe_AddRef(pGameInstance);
+	/* For.Prototype_Component_Collider */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
+		m_pCollider = CCollider::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	Safe_AddRef(m_pCollider);
+
+	Safe_Release(pGameInstance);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -30,8 +40,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
@@ -40,6 +50,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
 
+	
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);
@@ -50,6 +61,16 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+
+	/*m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);*/
+	m_pCollider->End();
+
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -290,7 +311,7 @@ CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pCollider);
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*= nullptr*/)

@@ -41,6 +41,7 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 		m_BoxDesc.vSize = { 1.f, 1.f, 1.f };
 		m_BoxDesc.bIsTrigger = false;
 	}
+	m_fRadius = m_BoxDesc.fRadius;
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 8;
 	m_dwFVF = D3DFVF_XYZ;
