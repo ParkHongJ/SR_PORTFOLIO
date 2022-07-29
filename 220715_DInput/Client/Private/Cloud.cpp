@@ -1,40 +1,62 @@
 #include "stdafx.h"
-#include "..\Public\Portal.h"
+#include "..\Public\Cloud.h"
 
+#include "GameMgr.h"
 #include "GameInstance.h"
-CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
+CCloud::CCloud(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
 }
 
-CPortal::CPortal(const CPortal & rhs)
+CCloud::CCloud(const CCloud & rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CPortal::Initialize_Prototype()
+HRESULT CCloud::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPortal::Initialize(void * pArg)
+HRESULT CCloud::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 5.f));
-	m_Tag = L"Portal";
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, 
+		_float3(10.f, 0.5f, 3.f));
 	return S_OK;
 }
 
-void CPortal::Tick(_float fTimeDelta)
+void CCloud::Tick(_float fTimeDelta)
 {
-	m_fFrame += 11.0f * fTimeDelta;
+	m_fFrame += 6.f * fTimeDelta;
 
-	if (m_fFrame >= 11.0f)
+	if (m_fFrame >= 6.f)
 		m_fFrame = 0.f;
+
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	{
+		m_pTransformCom->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
+				_float3(10.f, 5.5f, 3.f),
+				fTimeDelta * 5.f));
+
+		m_bEnabled = false;
+	}
+	else
+	{
+		m_pTransformCom->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
+				_float3(10.f, 0.5f, 3.f),
+				fTimeDelta * 5.f));
+
+		m_bEnabled = true;
+	}
 }
 
-void CPortal::LateTick(_float fTimeDelta)
+void CCloud::LateTick(_float fTimeDelta)
 {
 	_float4x4		ViewMatrix;
 
@@ -47,12 +69,11 @@ void CPortal::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::PORTAL, this);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-
+	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, this);
 }
 
-HRESULT CPortal::Render()
+HRESULT CCloud::Render()
 {
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
@@ -66,7 +87,6 @@ HRESULT CPortal::Render()
 	m_pVIBufferCom->Render();
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-
 	//---------------------디버그일때 그리기-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -77,54 +97,35 @@ HRESULT CPortal::Render()
 	return S_OK;
 }
 
-void CPortal::OnTriggerExit(CGameObject * other)
-{
-}
 
-void CPortal::OnTriggerEnter(CGameObject * other)
-{
-}
-
-void CPortal::OnTriggerStay(CGameObject * other)
-{
-}
-
-HRESULT CPortal::Set_RenderState()
+HRESULT CCloud::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
 	return S_OK;
 }
 
-HRESULT CPortal::Reset_RenderState()
+HRESULT CCloud::Reset_RenderState()
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
 	return S_OK;
 }
 
-HRESULT CPortal::SetUp_Components()
+HRESULT CCloud::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 2.f,2.f,0.f };
+	RectDesc.vSize = { 2.f,1.f,0.f };
+
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this,&RectDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -144,41 +145,45 @@ HRESULT CPortal::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
+	BoxColliderDesc.vSize = _float3(1.8f, 0.5f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
-
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;
 }
 
-CPortal * CPortal::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+_float3 CCloud::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
 {
-	CPortal* pInstance = new CPortal(pGraphic_Device);
+	return vPos + (vTargetPos - vPos) * fTimeDelta;
+}
+
+CCloud * CCloud::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+{
+	CCloud* pInstance = new CCloud(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CPortal"));
+		MSG_BOX(TEXT("Failed To Created : CCloud"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CPortal::Clone(void * pArg)
+CGameObject * CCloud::Clone(void * pArg)
 {
-	CPortal* pInstance = new CPortal(*this);
+	CCloud* pInstance = new CCloud(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Clone : CPortal"));
+		MSG_BOX(TEXT("Failed To Clone : CCloud"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPortal::Free()
+void CCloud::Free()
 {
 	__super::Free();
 	Safe_Release(m_pBoxCom);

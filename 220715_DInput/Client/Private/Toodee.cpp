@@ -175,7 +175,8 @@ void CToodee::LateTick(_float fTimeDelta)
 		}
 	}
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
+	m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
+	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -291,6 +292,8 @@ HRESULT CToodee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.5f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 1.f);
+	BoxColliderDesc.fRadius = 1.f;
+
 	BoxColliderDesc.bIsTrigger = true;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))

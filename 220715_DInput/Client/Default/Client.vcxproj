@@ -158,6 +158,7 @@
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Cloud.h" />
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\public\Hong.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="..\private\Block.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Cloud.cpp" />
     <ClCompile Include="..\Private\Hole.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\private\Hong.cpp" />

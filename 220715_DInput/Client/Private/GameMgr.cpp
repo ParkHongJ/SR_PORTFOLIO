@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\GameMgr.h"
-
+#include "KeyMgr.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -9,6 +9,10 @@ CGameMgr::CGameMgr()
 
 void CGameMgr::Tick(_float fTimeDelta)
 {
+	if (CKeyMgr::Get_Instance()->Key_Down('X'))//X키를 누르면
+	{
+		m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
+	}
 }
 
 void CGameMgr::LateTick(_float fTimeDelta)
@@ -40,4 +44,11 @@ _bool CGameMgr::IsPlayerActive(const _tchar* pTag)
 
 void CGameMgr::Free()
 {
+}
+
+HRESULT CGameMgr::Initialize()
+{
+	//게임모드의 초기화
+	m_eGameMode = TOODEE;
+	return S_OK;
 }

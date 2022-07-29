@@ -41,6 +41,7 @@ HRESULT CBoxCollider::Initialize(void * pArg)
 		m_BoxDesc.vSize = { 1.f, 1.f, 1.f };
 		m_BoxDesc.bIsTrigger = false;
 	}
+	m_fRadius = m_BoxDesc.fRadius;
 	m_iStride = sizeof(VTXTEX);
 	m_iNumVertices = 8;
 	m_dwFVF = D3DFVF_XYZ;
@@ -179,6 +180,25 @@ _float3 CBoxCollider::GetMin()
 _float3 CBoxCollider::GetMax()
 {
 	return m_fMax;
+}
+
+void CBoxCollider::Tick(_float3 _vPos, _float3 _vScale)
+{
+	//_float4x4 WorldMatrix;
+	//D3DXMatrixIdentity(&WorldMatrix);
+	//_float3 vSourPos = *(_float3*)&matWorld.m[3][0];
+	////_float3 vSourScale = SourTrans->Get_Scaled();
+
+	//memcpy(&WorldMatrix.m[3][0], &vSourPos, sizeof(_float3));
+	//D3DXVec3TransformCoord(&m_fMax, &m_fMax, &WorldMatrix);
+	//D3DXVec3TransformCoord(&m_fMin, &m_fMin, &WorldMatrix);
+
+	_float4x4 WorldMatrix;
+	D3DXMatrixIdentity(&WorldMatrix);
+	/*이거 수정해라 스케일없다*/
+	memcpy(&WorldMatrix.m[3][0], &_vPos, sizeof(_float3));
+	D3DXVec3TransformCoord(&m_fMax, &m_fMax, &WorldMatrix);
+	D3DXVec3TransformCoord(&m_fMin, &m_fMin, &WorldMatrix);
 }
 
 CBoxCollider * CBoxCollider::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

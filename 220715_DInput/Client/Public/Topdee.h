@@ -35,9 +35,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	virtual void OnTriggerExit(CGameObject* other);
-	virtual void OnTriggerEnter(CGameObject* other);
-	virtual void OnTriggerStay(CGameObject*	other);
+	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta);
+	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
 
 private:
 	CTexture*				m_pTextureCom = nullptr;

@@ -27,7 +27,7 @@ HRESULT CTurret::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(8.f, 0.5f, 10.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 0.5f, 10.f));
 	//======================
 	SetTag(L"Turret");
 	//======================
@@ -98,7 +98,7 @@ HRESULT CTurret::Render()
 void CTurret::Fire(_float fTimeDelta)
 {
 	m_fCurrentTimer += fTimeDelta;
-	if (m_fCurrentTimer > 0.3f)
+	if (m_fCurrentTimer > 1.f)
 	{
 		m_fCurrentTimer = 0.f;
 		//총알 방향설정 , 생성

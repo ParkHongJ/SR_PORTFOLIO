@@ -27,6 +27,7 @@ private:
 	HRESULT Ready_Layer_Bullet(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Portal(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Cloud(const _tchar* pLayerTag);
 private:
 	void	LoadGameObject();
 	vector<_float3> m_list;

@@ -5,7 +5,7 @@
 #include "Camera_Free.h"
 
 #include "Level_Loading.h"
-
+#include "GameMgr.h"
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -15,6 +15,9 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	Safe_Release(pGameInstance);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -30,16 +33,20 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Cloud(TEXT("Layer_Cloud"))))
 		return E_FAIL;
 
 	_float3 temp = { 15.5f,0.3f,4.5f };
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
 
+	
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);
@@ -50,6 +57,8 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	CGameMgr::Get_Instance()->Tick(fTimeDelta);
+
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -290,7 +299,6 @@ CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*= nullptr*/)
@@ -299,6 +307,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_GYUH, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Cloud(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cloud"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -100,7 +100,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_bPress = true;
 		}
 		else if (CKeyMgr::Get_Instance()->Key_Down('Z'))
-		{//박스들기.
+		{//????.
 			KKK_DropBox(fTimeDelta);
 			KKK_FindBox(fTimeDelta);
 			m_bPress = true;
@@ -198,7 +198,7 @@ void CTopdee::Topdee_Turn_Check()
 
 void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 {
-	/*topdee 텍스쳐 셋팅 
+	/*topdee ??? ?? 
 	left
 	 0, 1 Topdee idle
 	 2, 3 Topdee Left
@@ -250,7 +250,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	/* 카메라의 월드행렬이다. 빌보드.. */
+	/* ???? ??????. ???.. */
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
@@ -261,7 +261,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	m_pRenderer_PreLoader_Com->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	//========================================================================
-	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
+	m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
+	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 
 
 }
@@ -308,17 +309,20 @@ HRESULT CTopdee::Render()
 	return S_OK;
 }
 
-void CTopdee::OnTriggerExit(CGameObject * other)
+void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
+	if (other->CompareTag(L"Portal"))
+	{
+		int a = 10;
+	}
 }
 
-void CTopdee::OnTriggerEnter(CGameObject * other)
-{
-	
+void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+{	
 }
 
-void CTopdee::OnTriggerStay(CGameObject * other)
-{	//되는줄모르고 짠 코드 밀린만큼 미는거임.
+void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+{
 	/*if (other->CompareTag(L"Hole")) 
 	{
 		CTransform* pHoleTransformCom = (CTransform*)other->Get_Component(L"Com_Transform");
@@ -351,7 +355,7 @@ HRESULT CTopdee::Set_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	
-	//이거 탑디랑 같이돌리는중
+	//?? ??? ??????
 	return S_OK;
 }
 
@@ -422,6 +426,7 @@ HRESULT CTopdee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+	BoxColliderDesc.fRadius = 0.5f;
 	BoxColliderDesc.bIsTrigger = true;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
@@ -444,7 +449,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
 
-	auto& iter = (*KKK_m_pBoxList).begin(); // <- 박스가 없을때 터짐
+	auto& iter = (*KKK_m_pBoxList).begin(); // <- ??? ??? ??
 	bool bMove{false};
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)

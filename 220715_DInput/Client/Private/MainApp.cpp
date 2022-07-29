@@ -63,14 +63,18 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
+
+	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+
+	/*m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
 	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
 
 	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::HOLE, fTimeDelta);
+	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::HOLE, fTimeDelta);*/
 	m_pCollider->End();
 }
 
@@ -102,49 +106,49 @@ HRESULT CMainApp::Render()
 		}
 		if (ImGui::BeginMenu("Scene"))
 		{
-			if (ImGui::MenuItem("Hong", u8"맡은파트이름"))
+			if (ImGui::MenuItem("Hong", u8"¸?????????¸§"))
 			{
 				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
-					MSG_BOX(L"오픈실패");
+					MSG_BOX(L"????˝???");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Sae", u8"맡은파트이름"))
+			if (ImGui::MenuItem("Sae", u8"¸?????????¸§"))
 			{
 				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SENI))))
-					MSG_BOX(L"오픈실패");
+					MSG_BOX(L"????˝???");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Hyeuk", u8"맡은파트이름"))
+			if (ImGui::MenuItem("Hyeuk", u8"¸?????????¸§"))
 			{
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
-					MSG_BOX(L"오픈실패");
+					MSG_BOX(L"????˝???");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Kyuu", u8"맡은파트이름"))
+			if (ImGui::MenuItem("Kyuu", u8"¸?????????¸§"))
 			{
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GYUH))))
-					MSG_BOX(L"오픈실패");
+					MSG_BOX(L"????˝???");
 
 				Safe_Release(pGameInstance);
 			}
 			ImGui::Separator();
 
-			if (ImGui::MenuItem("Tool", u8"툴모음집"))
+			if (ImGui::MenuItem("Tool", u8"??¸đ?˝??"))
 			{
 
 			}
@@ -166,9 +170,9 @@ HRESULT CMainApp::Open_Level(LEVEL eLevelID)
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	/* 특정 레벨을 할당하기 전에 로딩레벨을 거쳐 할당되는 형태로 가자. */
+	/* ???¤ ˇ??§?? ??´????? ???? ˇ???ˇ??§?? °??? ??´???´? ????ˇ? °???. */
 
-	/* 할당한 레벨을 레벨매니져에 보관할 수 있또록. gksek. */
+	/* ??´??? ˇ??§?? ˇ??§¸?´????? ?¸°??? ?? ????ˇ?. gksek. */
 	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, eLevelID))))
 		return E_FAIL;
 
@@ -232,16 +236,15 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		CTransform::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
 	/* For.Prototype_Component_Collider */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider"),
 		m_pCollider = CCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
+	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), 
 		CBoxCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	Safe_AddRef(m_pCollider);
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
@@ -297,8 +300,9 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	Safe_Release(m_pGraphic_Device);
-	Safe_Release(m_pCollider);
 	Safe_Release(m_pRenderer);
+
+	Safe_Release(m_pCollider);
 	Safe_Release(m_pGameInstance);
 
 	CKeyMgr::Get_Instance()->Destroy_Instance();
