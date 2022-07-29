@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Topdee.h"
-#include "KeyMgr.h"
-#include "GameInstance.h"
+
 #include "GameMgr.h"
+#include "GameInstance.h"
 
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -25,12 +25,13 @@ HRESULT CTopdee::Initialize(void * pArg)
 		return E_FAIL;
 
 	SetTag(L"Topdee");
+	// 현재 Active를 넣어주는 함수. 죽었다 살았다 할 때 제일 먼저 실행해주어야 함
+	CGameMgr::Get_Instance()->Set_Player_Active(L"Topdee", this);
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 
 	vPreLoaderPos.y += 1.f;
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
-
 
 	return S_OK;
 }
@@ -48,7 +49,7 @@ void CTopdee::Tick(_float fTimeDelta)
 	Topdee_PreLoader_Pos_Mgr();
 	if (m_bTurn) {
 		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		if (pGameInstance->Get_DIKState(DIK_UP) & 0x80)
+		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
 		{
 			Move_Frame(DIR_UP);
 			m_vTargetDir = { 0.f, 0.f, 1.f };
@@ -56,7 +57,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 		}
-		else if (pGameInstance->Get_DIKState(DIK_DOWN) & 0x80)
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
 		{
 			Move_Frame(DIR_DOWN);
 			m_vTargetDir = { 0.f, 0.f, -1.f };
@@ -64,7 +65,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 		}
-		else if (pGameInstance->Get_DIKState(DIK_LEFT) & 0x80)
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 		{
 			Move_Frame(DIR_LEFT);
 			m_vTargetDir = { -1.f, 0.f, 0.f };
@@ -72,7 +73,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 		}
-		else if (pGameInstance->Get_DIKState(DIK_RIGHT) & 0x80)
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 		{
 			Move_Frame(DIR_RIGHT);
 			m_vTargetDir = { 1.f, 0.f, 0.f };
@@ -80,7 +81,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 		}
-		else if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
 		{//박스들기.
 			KKK_DropBox(fTimeDelta);
 			KKK_FindBox(fTimeDelta);

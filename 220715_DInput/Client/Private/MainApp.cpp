@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
-#include "KeyMgr.h"
+#include "GameMgr.h"
 #include "Loading_BackGround.h"
 
 using namespace Client;
@@ -299,7 +299,8 @@ void CMainApp::Free()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pGameInstance);
 
-	CKeyMgr::Get_Instance()->Destroy_Instance();
+	CGameMgr::Destroy_Instance();
+
 	CGameInstance::Release_Engine();
 
 }

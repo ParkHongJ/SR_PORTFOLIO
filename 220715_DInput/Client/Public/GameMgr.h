@@ -5,7 +5,6 @@
 #include "Base.h"
 
 BEGIN(Engine)
-class CGameInstance;
 class CGameObject;
 END
 
@@ -19,18 +18,17 @@ private:
 	virtual ~CGameMgr() = default;
 
 public:
-	void Tick(_float fTimeDelta);
-	void LateTick(_float fTimeDelta);
-
-public:
-	HRESULT Set_Player_Active(const _tchar* pTag, CGameObject* pPlayer);
+	void Set_Player_Active(const _tchar* pTag, CGameObject* pPlayer);
 	_bool IsPlayerActive(const _tchar* pTag);
 
-private:
-	CGameInstance* m_pGameInstance = nullptr;
+	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
+	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
-	map<const _tchar*, _bool> m_PlayerActive;
-	typedef map<const _tchar*, _bool> PLAYERACTIVE;
+private:
+	map<const _tchar*, _bool> m_Data;
+	typedef map<const _tchar*, _bool> DATA;
+
+	_bool m_bKeyState[256] = { false };
 
 public:
 	virtual void Free() override;
