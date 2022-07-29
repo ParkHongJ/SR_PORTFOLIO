@@ -21,7 +21,8 @@ HRESULT CLoading_BackGround::Initialize_Prototype()
 
 HRESULT CLoading_BackGround::Initialize(void * pArg)
 {
-	
+	if (g_iLoadingTexture == 0)
+		g_iLoadingTexture = 1;
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -104,7 +105,7 @@ HRESULT CLoading_BackGround::Render()
 
 
 	D3DXMatrixIdentity(&Matrix);
-	if (FAILED(m_pTexture_InsideCom->Bind_Texture(0)))
+	if (FAILED(m_pTexture_InsideCom->Bind_Texture(g_iLoadingTexture)))
 		return E_FAIL;
 	m_pTransform_InsideCom->Bind_WorldMatrix();
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &Matrix);

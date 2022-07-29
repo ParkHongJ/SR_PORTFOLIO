@@ -23,6 +23,8 @@ HRESULT CTerrain::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fSizeX / 2.f,0.f, m_fSizeY / 2.f));
+
 	return S_OK;
 }
 
@@ -33,25 +35,31 @@ void CTerrain::Tick(_float fTimeDelta)
 
 void CTerrain::LateTick(_float fTimeDelta)
 {	
+	//_float4x4		ViewMatrix;
 
-	/*_float3			vPickPos;
+	//m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	if (GetKeyState(VK_LBUTTON) & 0x8000)
-	{
-		if (m_pVIBufferCom->Picking(m_pTransformCom, &vPickPos))
-		{
-			int a = 10;
-		}
-	}*/
+	///* 카메라의 월드행렬이다. */
+	//D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+
+	//m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
+	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	/* 임시 */
+	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
+	
+	//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CTerrain::Render()
 {
-	_float4x4	Matrix;
-	D3DXMatrixIdentity(&Matrix);
 
-	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &Matrix);
+
+	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
+		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
@@ -73,9 +81,17 @@ HRESULT CTerrain::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
+	///* For.Com_VIBuffer */
+	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	//	return E_FAIL;
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	
+	CVIBuffer_Rect::RECTDESC RectDesc;
+	RectDesc.vSize = { m_fSizeX,m_fSizeY,0.f};
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
+
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))

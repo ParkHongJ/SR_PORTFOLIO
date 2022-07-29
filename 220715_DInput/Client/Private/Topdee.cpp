@@ -36,13 +36,21 @@ HRESULT CTopdee::Initialize(void * pArg)
 		return E_FAIL;
 
 	SetTag(L"Topdee");
+#pragma region WhiteRect
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 
 	vPreLoaderPos.y += 1.f;
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
-
-
+#pragma endregion WhiteRect
+	if (pArg != nullptr)
+	{
+		_float3 vSetPos{ *(_float3*)pArg };
+		_float3 vTopdeeCurPos =m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vTopdeeCurPos.x = vSetPos.x;
+		vTopdeeCurPos.z = vSetPos.z;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeeCurPos);
+	}
 	return S_OK;
 }
 
@@ -306,18 +314,30 @@ void CTopdee::OnTriggerExit(CGameObject * other)
 
 void CTopdee::OnTriggerEnter(CGameObject * other)
 {
-	if (other->CompareTag(L"Box"))
-	{//타이머돌려야함.
-		
-	}
+	
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other)
-{
-	if (other->CompareTag(L"Box"))
-	{//밀려나야함
-		
-	}
+{	//되는줄모르고 짠 코드 밀린만큼 미는거임.
+	/*if (other->CompareTag(L"Hole")) 
+	{
+		CTransform* pHoleTransformCom = (CTransform*)other->Get_Component(L"Com_Transform");
+		_float3 vHolePos = pHoleTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vTopdeeCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vDist = vHolePos - vTopdeeCurPos;
+		_float fLength = D3DXVec3Length(&vDist);
+		_float fHolePushLength(fLength - 1.0f);
+		if (m_eCurDir == DIR_LEFT)
+			vTopdeeCurPos.x += fHolePushLength;
+		else if (m_eCurDir == DIR_RIGHT)
+			vTopdeeCurPos.x -= fHolePushLength;
+		else if (m_eCurDir == DIR_DOWN)
+			vTopdeeCurPos.z -= fHolePushLength;
+		else if (m_eCurDir == DIR_UP)
+			vTopdeeCurPos.z += fHolePushLength;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeeCurPos);
+
+	}*/
 }
 
 HRESULT CTopdee::Set_RenderState()

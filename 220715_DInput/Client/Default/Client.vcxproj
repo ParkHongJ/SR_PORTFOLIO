@@ -176,6 +176,7 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\Sky.h" />
+    <ClInclude Include="..\Public\Spike.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Topdee.h" />
     <ClInclude Include="..\Public\Toodee.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
+    <ClCompile Include="..\Private\Spike.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Topdee.cpp" />
     <ClCompile Include="..\Private\Toodee.cpp" />

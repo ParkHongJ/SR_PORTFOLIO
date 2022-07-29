@@ -37,6 +37,8 @@ private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 
+
+	_float m_fSizeX{ 30.f }, m_fSizeY{ 16.f };
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

@@ -2,14 +2,14 @@
 #include "..\Public\Level_Loading.h"
 #include "GameInstance.h"
 
-#include "Level_Logo.h"
+#include "Loading_BackGround.h"
 #include "Level_GamePlay.h"
-#include "Hong.h"
+#include "Level_Logo.h"
 #include "Level_GyuH.h"
 #include "Level_SENI.h"
 #include "Level_SJH.h"
 #include "Loader.h"
-#include "Loading_BackGround.h"
+#include "Hong.h"
 
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -20,7 +20,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
+	
 	Ready_Layer_BackGround(TEXT("Layer_Loading_BackGround"));
 
 

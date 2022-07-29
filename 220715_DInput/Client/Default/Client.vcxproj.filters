@@ -100,6 +100,9 @@
     <Filter Include="ClientManager\GameMgr">
       <UniqueIdentifier>{b3631ff4-f0be-46f6-bdf4-7bff43745901}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Spike">
+      <UniqueIdentifier>{78b25366-bfcf-423e-a529-79ff4be13148}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -219,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster_Pig.h">
       <Filter>02.GameObject\Monster\Pig</Filter>
+    </ClInclude> 
+    <ClInclude Include="..\Public\Spike.h">
+      <Filter>02.GameObject\Spike</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +335,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameMgr.cpp">
       <Filter>ClientManager\GameMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spike.cpp">
+      <Filter>02.GameObject\Spike</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

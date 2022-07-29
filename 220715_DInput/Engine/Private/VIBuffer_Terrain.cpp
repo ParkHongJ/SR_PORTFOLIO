@@ -40,6 +40,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iNumVerticesX, _uint iNumV
 
 			pVertices[iIndex].vPosition = _float3(j, 0.0f, i);
 			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1) * 30.f, i / _float(m_iNumVerticesZ - 1) * 30.f);
+
 		}
 	}
 	

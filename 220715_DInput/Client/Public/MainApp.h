@@ -47,7 +47,7 @@ private:  /* For.Static */
 	HRESULT Ready_Prototype_GameObject();
 private:
 	HRESULT Ready_LoadingLevel();
-
+	
 public:
 	static CMainApp* Create();
 	virtual void Free();

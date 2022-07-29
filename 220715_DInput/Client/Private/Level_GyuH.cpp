@@ -17,8 +17,8 @@ HRESULT CLevel_GyuH::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
+	_float3 vPos{ 2.0f,0.f,2.0f };
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), vPos)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
@@ -26,7 +26,9 @@ HRESULT CLevel_GyuH::Initialize()
 	m_vPosition = { 15.5f,0.3f,1.5f };
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), m_vPosition)))
 		return E_FAIL;
-	
+	vPos = { 10.0f,0.5f,1.5f };
+	if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), vPos)))
+		return E_FAIL;
 
 	return S_OK;
 	
@@ -56,6 +58,18 @@ HRESULT CLevel_GyuH::Ready_Layer_Hole(const _tchar * pLayerTag,void* pArg)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_GYUH, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_Spike(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Spike"), LEVEL_STATIC, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -129,13 +143,13 @@ HRESULT CLevel_GyuH::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GyuH::Ready_Layer_Topdee(const _tchar * pLayerTag)
+HRESULT CLevel_GyuH::Ready_Layer_Topdee(const _tchar * pLayerTag,void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"), 
-		LEVEL_GYUH, pLayerTag)))
+		LEVEL_GYUH, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
