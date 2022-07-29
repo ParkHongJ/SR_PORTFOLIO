@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Camera_Free.h"
-#include "GameInstance.h"
-#include "KeyMgr.h"
+
 #include "GameMgr.h"
+#include "GameInstance.h"
 CCamera_Free::CCamera_Free(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CCamera(pGraphic_Device)
 {
@@ -25,17 +25,18 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
 	//m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
+
 	return S_OK;
 }
 
 void CCamera_Free::Tick(_float fTimeDelta)
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
 
 	if ((pGameInstance->Get_DIKState(DIK_W) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
@@ -97,7 +98,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 	
-	/*if (CKeyMgr::Get_Instance()->Key_Down('X'))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_X))
 	{
 		m_bMove = !m_bMove;
 	}
@@ -116,7 +117,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
 				_float3(14.5f, 16.7f, 7.9f),
 				fTimeDelta * m_fSpeed));
-	}*/
+	}
 
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
 	{

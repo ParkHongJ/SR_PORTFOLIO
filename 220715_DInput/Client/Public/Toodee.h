@@ -44,9 +44,6 @@ private:
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
-	/* For.Toodee_and_Topdee */
-	CGameMgr* m_pGameMgr = nullptr;
-
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndex = 0;

@@ -27,7 +27,6 @@ HRESULT CInput_Device::Initialize(HINSTANCE hInstance, HWND hWnd)
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr)))
 		return E_FAIL;
 
-
 	if (FAILED(m_pMouse->SetDataFormat(&c_dfDIMouse)))
 		return E_FAIL;
 
