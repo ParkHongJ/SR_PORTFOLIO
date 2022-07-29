@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CMonster_Pig::CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CLandObject(pGraphic_Device)
 {
 }
 
 CMonster_Pig::CMonster_Pig(const CMonster_Pig & rhs)
-	: CGameObject(rhs)
+	: CLandObject(rhs)
 {
 }
 
@@ -20,8 +20,21 @@ HRESULT CMonster_Pig::Initialize_Prototype()
 
 HRESULT CMonster_Pig::Initialize(void * pArg)
 {
+	__super::LANDDESC		LandDesc;
+	ZeroMemory(&LandDesc, sizeof(__super::LANDDESC));
+
+	LandDesc.iTerrainLevelIndex = LEVEL_SENI;
+	LandDesc.pLayerTag = TEXT("Layer_Monster_Pig");
+	LandDesc.iTerrainObjectIndex = 0;
+	LandDesc.pTerrainBufferComTag = TEXT("Com_VIBuffer");
+
+	if (FAILED(CLandObject::Initialize(&LandDesc)))
+		return E_FAIL;
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
+	SetTag(L"Pig");
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 10.f));
 
@@ -30,6 +43,7 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 
 void CMonster_Pig::Tick(_float fTimeDelta)
 {
+	
 	//m_vTargetPos = _float3(1.f, 50.f, 0.f);
 
 	//m_pTransformCom->Chase(m_vTargetPos, fTimeDelta);
@@ -39,6 +53,8 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 	//m_pTransformCom->Go_Right(0.4f * fTimeDelta);
 	//Player가 Topdee일 때, PlayerPos를 Chase함
 
+	//m_pTransformCom->Chase(m_vTopdeePos, 0.1 * fTimeDelta);
+
 	m_fFrame += 9.0f * fTimeDelta;
 
 	if (m_fFrame >= 9.0f)
@@ -47,6 +63,9 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
+	m_vTopdeePos = _float3(10.f, 0.5f, 3.f); //SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_Topdee", 0, L"Com_VIBuffer");
+	m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
+
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -57,7 +76,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-	
+
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -77,27 +96,27 @@ HRESULT CMonster_Pig::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	_float3 temp = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//---------------------디버그일때 그리기-------------------------
+	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pBoxCom->Render(Matrix);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	//--------------------------------------------------------------
 
-	_uint Sour = 1; // 객체에 넘버링 할 수 있음.
-
-	char Sour1[256] = { "Monster1" };
-
-	ImGui::Begin("Inspector");
-
-	ImGui::Text("Monster%d", Sour);
-
-	ImGui::SliderFloat(Sour1, &temp.x, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat(Sour1, &temp.y, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat(Sour1, &temp.z, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, temp);
-
-	ImGui::Spacing();
-
-	ImGui::End();
 
 	return S_OK;
+}
+
+void CMonster_Pig::OnTriggerExit(CGameObject * other)
+{
+}
+
+void CMonster_Pig::OnTriggerEnter(CGameObject * other)
+{
+}
+
+void CMonster_Pig::OnTriggerStay(CGameObject * other)
+{
 }
 
 HRESULT CMonster_Pig::Set_RenderState()
@@ -148,7 +167,17 @@ HRESULT CMonster_Pig::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
+		return E_FAIL;
 
+	CBoxCollider::BOXDESC BoxColliderDesc;
+	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
+
+	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
+	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+	BoxColliderDesc.bIsTrigger = true;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -182,7 +211,8 @@ CGameObject * CMonster_Pig::Clone(void* pArg)
 void CMonster_Pig::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pBoxCom);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
