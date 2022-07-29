@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "LandObject.h"
+#include "GameInstance.h"
 
 BEGIN(Engine)
 class CLayer;
@@ -26,7 +27,7 @@ private:
 	CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CTopdee(const CTopdee& rhs);
 	virtual ~CTopdee() = default;
-
+	
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -75,15 +76,13 @@ private:
 	void	KKK_DropBox(_float fTimeDelta);
 
 private:
-	void Topdee_Turn_Check();
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
 	void Not_My_Turn_Texture();
 	void Go_Lerp(_float fTimeDelta);
 	void Topdee_PreLoader_Pos_Mgr();
 
 private:
-	
-	
+	CLevel::IntializeDesc* m_tInitializeDesc;
 	list<class CGameObject*>* KKK_m_pBoxList;
 	
 	CGameObject* m_pRaiseObject = nullptr;
@@ -92,8 +91,8 @@ private:
 	_float m_fRaising_Box_DelayTimer{ 0.f };
 	_float m_fCollision_Box_DelayTimer{ 0.f };
 
-	_float m_MyTurnY{ 0.5f };
-	_float m_NotMyTurnY{ 0.05f };
+	_float m_MyTurnY{ 0.8f };
+	_float m_NotMyTurnY{ 0.1f };
 	_float m_OriPreLoaderY{ 0.8f };
 
 public:

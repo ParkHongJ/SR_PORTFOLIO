@@ -3,7 +3,8 @@
 
 #include "GameMgr.h"
 #include "GameInstance.h"
-
+#include "GameMgr.h"
+#include "Level.h"
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -37,11 +38,8 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
-		_float3 vSetPos{ *(_float3*)pArg };
-		_float3 vTopdeeCurPos =m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		vTopdeeCurPos.x = vSetPos.x;
-		vTopdeeCurPos.z = vSetPos.z;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeeCurPos);
+		m_tInitializeDesc = (CLevel::INITDESC*)pArg;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tInitializeDesc->vTopdeePos);
 	}
 
 	return S_OK;
@@ -49,6 +47,7 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 void CTopdee::Tick(_float fTimeDelta)
 {
+	
 	if (!m_bActive)
 		return;
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
@@ -57,51 +56,55 @@ void CTopdee::Tick(_float fTimeDelta)
 	//Topdee_Turn_Check();
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
-	if (m_bTurn) {
-		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
-		{
-			Move_Frame(DIR_UP);
-			m_vTargetDir = { 0.f, 0.f, 1.f };
-			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
-		{
-			Move_Frame(DIR_DOWN);
-			m_vTargetDir = { 0.f, 0.f, -1.f };
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
-		{
-			Move_Frame(DIR_LEFT);
-			m_vTargetDir = { -1.f, 0.f, 0.f };
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
-		{
-			Move_Frame(DIR_RIGHT);
-			m_vTargetDir = { 1.f, 0.f, 0.f };
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-		}
-		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
-		{//박스들기.
-			KKK_DropBox(fTimeDelta);
-			KKK_FindBox(fTimeDelta);
-			m_bPress = true;
-		}
-		else
-			m_bPress = false;
+	//_bool bTurnTopdee = CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE;
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	{
+		
+			_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
+			{
+				Move_Frame(DIR_UP);
+				m_vTargetDir = { 0.f, 0.f, 1.f };
+				vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+			}
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
+			{
+				Move_Frame(DIR_DOWN);
+				m_vTargetDir = { 0.f, 0.f, -1.f };
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+			}
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
+			{
+				Move_Frame(DIR_LEFT);
+				m_vTargetDir = { -1.f, 0.f, 0.f };
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+			}
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
+			{
+				Move_Frame(DIR_RIGHT);
+				m_vTargetDir = { 1.f, 0.f, 0.f };
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+			}
+			else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
+			{//박스들기.
+				KKK_DropBox(fTimeDelta);
+				KKK_FindBox(fTimeDelta);
+				m_bPress = true;
+			}
+			else
+				m_bPress = false;
+
 		
 	}
-	else if (!m_bTurn)
+	else // (!CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
 		Not_My_Turn_Texture();
 	if (!m_bPress)	//no keyInput Go Lerp
 		Go_Lerp(fTimeDelta);
@@ -115,7 +118,7 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	_float3 vFinalPosition;
 
 	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
-	if(m_bTurn)
+	if(CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 		vFinalPosition.y = m_MyTurnY;
 	else
 		vFinalPosition.y = m_NotMyTurnY;
@@ -168,24 +171,6 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 	_float3 vfinalPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vfinalPos.y += 1.f;
 	m_pRaiseObject->KKK_Is_Raise(vfinalPos);
-}
-
-void CTopdee::Topdee_Turn_Check()
-{
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	_float4x4		CamWorldMatrix;
-	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
-	_float fCameraZ = (*(_float3*)&CamWorldMatrix.m[3][0]).z;
-	if ((fCameraZ >= -1.f) && (fCameraZ <= 1.f)) {
-		m_bTurn = true;
-	}
-	else {
-		m_bTurn = false;
-	}
-	
 }
 
 void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
@@ -242,7 +227,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	/* ???? ??????. ???.. */
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
@@ -253,7 +237,11 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	m_pRenderer_PreLoader_Com->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	//========================================================================
-	m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//vPos.y = 0.5f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
+
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 
 
@@ -283,7 +271,7 @@ HRESULT CTopdee::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 //========================================
-	if (m_bTurn) {
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
 		if (FAILED(m_pTransform_PreLoader_Com->Bind_WorldMatrix()))
 			return E_FAIL;
 

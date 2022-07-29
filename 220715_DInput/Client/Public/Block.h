@@ -40,6 +40,8 @@ private:
 	CCollider*				m_pCollCom = nullptr;
 	CBoxCollider*			m_pBoxCollider = nullptr;
 
+private:
+	CLevel::IntializeDesc* m_tInitializeDesc;
 	_uint m_iTextureNum{ 0 };
 
 private:

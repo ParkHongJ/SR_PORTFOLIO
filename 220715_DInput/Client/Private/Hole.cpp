@@ -22,7 +22,6 @@ HRESULT CHole::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	SetTag(L"Hole") ;
 	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	if (pArg != nullptr)
 	{
@@ -49,7 +48,6 @@ void CHole::LateTick(_float fTimeDelta)
 
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		//m_pColliderCom->Add_CollisionGroup(CCollider::HOLE, this);
 	}
 }
 
