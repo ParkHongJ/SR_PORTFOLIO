@@ -57,7 +57,7 @@ void CTopdee::Tick(_float fTimeDelta)
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
 	//_bool bTurnTopdee = CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE;
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
 		
 			_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
