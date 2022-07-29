@@ -16,7 +16,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
-	GRAPHICDESC			GraphicDesc;
+	GRAPHICDESC GraphicDesc;
 	ZeroMemory(&GraphicDesc, sizeof(GRAPHICDESC));
 
 	GraphicDesc.hWnd = g_hWnd;
@@ -42,6 +42,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
+	if (FAILED(CGameMgr::Get_Instance()->Initialize()))
+		return E_FAIL;
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -51,6 +54,7 @@ HRESULT CMainApp::Initialize()
 
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX9_Init(m_pGraphic_Device);
+
 	return S_OK;
 }
 

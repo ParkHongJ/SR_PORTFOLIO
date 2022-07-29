@@ -35,8 +35,8 @@ HRESULT CTopdee::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
+	/* For.Topdee_Col */
 	SetTag(L"Topdee");
-	//CGameMgr::Get_Instance()->Set_Player_Active(L"Topdee", this);
 	
 #pragma region WhiteRect
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
@@ -45,6 +45,7 @@ HRESULT CTopdee::Initialize(void * pArg)
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
 #pragma endregion WhiteRect
+
 	if (pArg != nullptr)
 	{
 		_float3 vSetPos{ *(_float3*)pArg };

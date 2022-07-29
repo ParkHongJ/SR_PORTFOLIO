@@ -97,29 +97,8 @@ void CCamera_Free::Tick(_float fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 	}
-	
-	if (CGameMgr::Get_Instance()->Key_Down(DIK_X))
-	{
-		m_bMove = !m_bMove;
-	}
-	if (m_bMove)
-	{
-		m_pTransformCom->Set_State(
-			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(14.5f, 16.7f, 0.f),
-				fTimeDelta * m_fSpeed));
-	}
-	else
-	{
-		m_pTransformCom->Set_State(
-			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(14.5f, 16.7f, 7.9f),
-				fTimeDelta * m_fSpeed));
-	}
 
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,

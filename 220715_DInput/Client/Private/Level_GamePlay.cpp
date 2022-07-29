@@ -16,8 +16,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
 	Safe_Release(pGameInstance);
+
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -57,6 +57,7 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
@@ -132,19 +133,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-//HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
-//{
-//	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-//	Safe_AddRef(pGameInstance);
-//
-//	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag)))
-//		return E_FAIL;
-//
-//	Safe_Release(pGameInstance);
-//
-//	return S_OK;
-//}
-
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -203,7 +191,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_GYUH, pLayerTag)))
+		LEVEL_GYUH, pLayerTag, _float3(3.f, 3.f, 3.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

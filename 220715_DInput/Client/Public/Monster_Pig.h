@@ -50,7 +50,7 @@ private:
 private:
 	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
-	_bool	m_bDead;
+	_bool	m_bTurn;
 
 private:
 	HRESULT Set_RenderState();

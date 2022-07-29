@@ -18,7 +18,7 @@ BEGIN(Client)
 class CToodee final : public CGameObject
 {
 private:
-	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_DEAD, TOODEE_IDLE, TOODEE_END };
+	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_PORTAL, TOODEE_DEAD, TOODEE_IDLE, TOODEE_END };
 
 private:
 	CToodee(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -44,11 +44,11 @@ private:
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
+private:
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndex = 0;
-
-	_bool m_bRun = true;
+	_float m_fFrame = 0.f;
 
 	_float m_MoveSpeed = 0.f;
 
@@ -56,6 +56,8 @@ private:
 	_float m_fJumpPower = 18.f;
 	_float m_fJumpTime = 0.f;
 	_float m_fDrop_Endline = 0.f;
+
+	_bool m_bPortal = false;
 
 private:
 	HRESULT Set_RenderState();

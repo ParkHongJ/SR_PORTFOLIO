@@ -34,7 +34,7 @@ void CCloud::Tick(_float fTimeDelta)
 	if (m_fFrame >= 6.f)
 		m_fFrame = 0.f;
 
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,

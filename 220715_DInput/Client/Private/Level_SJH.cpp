@@ -103,8 +103,12 @@ HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 30; ++i) {
+	for (_uint i = 0; i < 29; ++i) {
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
+			return E_FAIL;
+	}
+	for (_uint i = 0; i < 29; ++i) {
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 15.5f))))
 			return E_FAIL;
 	}
 

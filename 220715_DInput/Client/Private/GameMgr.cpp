@@ -18,35 +18,38 @@ HRESULT CGameMgr::Initialize()
 
 void CGameMgr::Tick(_float fTimeDelta)
 {
+	if (Key_Down(DIK_X)) {
+		Player_Active();
+	}
 }
 
 void CGameMgr::LateTick(_float fTimeDelta)
 {
 }
 
-void CGameMgr::Set_Player_Active(const _tchar * pTag, CGameObject * pPlayer)
-{
-	if (Key_Down(DIK_X))//X키를 누르면
-		{
-			m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
-		}
-
-	// for (auto& pair : m_Data)
-	// 	if (pair.first == pTag) {
-	// 		pair.second = pPlayer->IsActive();
-	// 		return;
-	// 	}
-
-	// m_Data.emplace(pTag, pPlayer->IsActive());
-
-	// return;
-}
-
-_bool CGameMgr::IsPlayerActive(const _tchar* pTag)
+void CGameMgr::Set_Object_Data(const _tchar * pTag, _bool * bData)
 {
 	for (auto& pair : m_Data)
-		if (pair.first == pTag)
-			return pair.second;
+		if (pair.first == pTag) {
+			pair.second = bData;
+			return;
+		}
+
+	m_Data.emplace(pTag, bData);
+	return;
+}
+
+_bool CGameMgr::Get_Object_Data(const _tchar * pTag)
+{
+	for (auto& pair : m_Data)
+		if (pair.first == pTag) {
+			return *(pair.second);
+		}
+}
+
+void CGameMgr::Player_Active()
+{
+	m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
 }
 
 _bool CGameMgr::Key_Pressing(_uchar KeyInput)

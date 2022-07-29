@@ -51,6 +51,7 @@ public:
 		else return FALSE; 
 	}
 	bool GetEnabled() { return m_bEnabled; }
+
 protected:
 	bool m_bActive;
 	const _tchar* m_Tag;

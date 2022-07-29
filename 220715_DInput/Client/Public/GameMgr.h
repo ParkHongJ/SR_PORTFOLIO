@@ -27,15 +27,16 @@ public:
 	GAMEMODE GetMode() { return m_eGameMode; }
 
 public:
-	void Set_Player_Active(const _tchar* pTag, CGameObject* pPlayer);
-	_bool IsPlayerActive(const _tchar* pTag);
+	void Set_Object_Data(const _tchar* pTag, _bool* bData);
+	_bool Get_Object_Data(const _tchar* pTag);
+	void Player_Active();
 
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
 private:
-	map<const _tchar*, _bool> m_Data;
-	typedef map<const _tchar*, _bool> DATA;
+	map<const _tchar*, _bool*> m_Data;
+	typedef map<const _tchar*, _bool*> DATA;
 
 	_bool m_bKeyState[256] = { false };
 
