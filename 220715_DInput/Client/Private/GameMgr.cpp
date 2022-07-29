@@ -28,6 +28,65 @@ void CGameMgr::LateTick(_float fTimeDelta)
 {
 }
 
+void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag, _bool bHole)
+{
+	CLayer* pLayer = CGameInstance::Get_Instance()->Get_Layer(pLayerTag, eLayerLevel);
+	if (pLayer == nullptr)
+		return;
+	
+	list<CGameObject*>* pList= pLayer->KKK_Get_List();
+	if (pList == nullptr)
+		return;
+	for (auto& iter = pList->begin(); iter != pList->end(); ++iter)
+	{
+		CTransform* pTransform = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+		if (pTransform == nullptr)
+			return;
+		m_Obstaclelist.push_back(pTransform->Get_State(CTransform::STATE_POSITION));
+	}
+	if (bHole)
+		m_eHoleLevel = eLayerLevel;
+
+}
+
+_bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist)
+{
+	if (m_Obstaclelist.empty())
+		return false;
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
+		if (fDistance <= 1.0f) {//Objects Position Compare
+			*pOut_ObjectsDist = fDistance - 1.0f;
+			return true;
+		}
+	}
+	return false;
+}
+
+_bool CGameMgr::Check_Box_Down(const _float3 & vBoxPos, _uint * pOut_iHoleNum_in_Layer, LEVEL* pOut_eHoleLevel)
+{
+	if (m_Obstaclelist.empty())
+		return false;
+	_uint i = 0;
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		_float3 vPosOnlyXZ{ vBoxPos.x,0.5f,vBoxPos.z };
+		_float fDistance = D3DXVec3Length(&((*iter) - vPosOnlyXZ));
+		if (fDistance <= 0.2f) {//Debug it Length is 1.9999f So 0.2f is Right
+			*pOut_eHoleLevel = m_eHoleLevel;
+			*pOut_iHoleNum_in_Layer = i;
+			//iter = m_Obstaclelist.erase(iter);
+			iter->x = -100.f;
+			iter->y = -100.f;
+			iter->z = -100.f;
+			return true;
+		}
+		++i;
+	}
+	return false;
+}
+
 void CGameMgr::Set_Object_Data(const _tchar * pTag, _bool * bData)
 {
 	for (auto& pair : m_Data)

@@ -2,6 +2,8 @@
 #include "..\Public\Block.h"
 
 #include "GameInstance.h"
+#include "GameMgr.h"
+
 CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -52,6 +54,8 @@ HRESULT CBlock::Initialize(void * pArg)
 
 void CBlock::Tick(_float fTimeDelta)
 {
+	if(m_bDropBox)
+		Box_Drop_More(fTimeDelta);
 }
 
 void CBlock::LateTick(_float fTimeDelta)
@@ -117,10 +121,27 @@ _bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHole
 	if (!bHoleCall) {
 		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+
+		if (vCurPosition.y <= 0.1f)
+			return true;
+		return false;
 	}
-	if (vCurPosition.y <= 0.1f)
-		return true;
+	else 
+		m_bDropBox = true;
 	return false;
+}
+
+void CBlock::Box_Drop_More(_float fTimeDelta)
+{
+	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
+		m_bDropBox = false;
+		m_bEnabled = false;
+		return;
+	}
+	_float3 vBoxDir = { 0.f,-1.f,0.f };
+	_float fBoxSpeed = m_pTransformCom->Get_Speed();
+	m_pTransformCom->Translate(vBoxDir *fTimeDelta* fBoxSpeed);
 }
 
 HRESULT CBlock::Set_RenderState()

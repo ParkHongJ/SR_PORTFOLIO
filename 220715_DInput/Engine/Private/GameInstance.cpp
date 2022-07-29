@@ -138,6 +138,17 @@ CLayer * CGameInstance::KKK_GetBox()
 		return pLayer;
 }
 
+CLayer * CGameInstance::Get_Layer(const _tchar * pLayerTag, _uint iLevelIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+	CLayer* pLayer = m_pObject_Manager->Get_Layer(pLayerTag, iLevelIndex);
+	if (pLayer == nullptr)
+		return nullptr;
+	else
+		return pLayer;
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)

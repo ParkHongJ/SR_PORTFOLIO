@@ -62,6 +62,8 @@ private:
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
 	_bool	m_bPress{ false };
 	_bool	m_bTurn{ false };
+	_bool	m_bPortal{ false };
+	LEVEL m_eHoleLevel{ LEVEL_END };
 	
 private:
 	HRESULT SetUp_Components();
@@ -82,7 +84,6 @@ private:
 	void Topdee_PreLoader_Pos_Mgr();
 
 private:
-	CLevel::IntializeDesc* m_tInitializeDesc;
 	list<class CGameObject*>* KKK_m_pBoxList;
 	
 	CGameObject* m_pRaiseObject = nullptr;
@@ -91,9 +92,9 @@ private:
 	_float m_fRaising_Box_DelayTimer{ 0.f };
 	_float m_fCollision_Box_DelayTimer{ 0.f };
 
-	_float m_MyTurnY{ 0.8f };
+	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.1f };
-	_float m_OriPreLoaderY{ 0.8f };
+	_float m_OriPreLoaderY{ 0.7f };
 
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

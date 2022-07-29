@@ -2,9 +2,8 @@
 #include "..\Public\Topdee.h"
 
 #include "GameMgr.h"
-#include "GameInstance.h"
-#include "GameMgr.h"
-#include "Level.h"
+
+
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -36,10 +35,11 @@ HRESULT CTopdee::Initialize(void * pArg)
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
 #pragma endregion WhiteRect
 
+	/* For.Portal_Data */
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Topdee_Portal", &m_bPortal);
 	if (pArg != nullptr)
 	{
-		m_tInitializeDesc = (CLevel::INITDESC*)pArg;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tInitializeDesc->vTopdeePos);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)pArg);
 	}
 
 	return S_OK;
@@ -56,7 +56,6 @@ void CTopdee::Tick(_float fTimeDelta)
 	//Topdee_Turn_Check();
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
-	//_bool bTurnTopdee = CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE;
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
 		
@@ -104,7 +103,7 @@ void CTopdee::Tick(_float fTimeDelta)
 
 		
 	}
-	else // (!CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	else
 		Not_My_Turn_Texture();
 	if (!m_bPress)	//no keyInput Go Lerp
 		Go_Lerp(fTimeDelta);
@@ -239,7 +238,21 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	//vPos.y = 0.5f;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	
+	_float fCollisionDist;
+	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist))
+	{
+		if (m_eCurDir == DIR_LEFT)
+			vPos.x -= fCollisionDist;
+		else if (m_eCurDir == DIR_RIGHT)
+			vPos.x += fCollisionDist;
+		else if (m_eCurDir == DIR_UP)
+		 	vPos.z += fCollisionDist;
+		else if (m_eCurDir == DIR_DOWN)
+			vPos.z -= fCollisionDist;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	
 	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
@@ -271,7 +284,7 @@ HRESULT CTopdee::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 //========================================
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE) {
 		if (FAILED(m_pTransform_PreLoader_Com->Bind_WorldMatrix()))
 			return E_FAIL;
 
@@ -303,25 +316,7 @@ void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
-	/*if (other->CompareTag(L"Hole")) 
-	{
-		CTransform* pHoleTransformCom = (CTransform*)other->Get_Component(L"Com_Transform");
-		_float3 vHolePos = pHoleTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vTopdeeCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vDist = vHolePos - vTopdeeCurPos;
-		_float fLength = D3DXVec3Length(&vDist);
-		_float fHolePushLength(fLength - 1.0f);
-		if (m_eCurDir == DIR_LEFT)
-			vTopdeeCurPos.x += fHolePushLength;
-		else if (m_eCurDir == DIR_RIGHT)
-			vTopdeeCurPos.x -= fHolePushLength;
-		else if (m_eCurDir == DIR_DOWN)
-			vTopdeeCurPos.z -= fHolePushLength;
-		else if (m_eCurDir == DIR_UP)
-			vTopdeeCurPos.z += fHolePushLength;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeeCurPos);
-
-	}*/
+	
 }
 
 HRESULT CTopdee::Set_RenderState()
@@ -359,7 +354,6 @@ HRESULT CTopdee::Reset_ColliderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
 }
-
 
 HRESULT CTopdee::SetUp_Components()
 {
@@ -445,7 +439,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
-		m_pRaiseObject->SetEnabled(false);
+		
 	}
 
 	Safe_Release(pGameInstance);
@@ -473,7 +467,19 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	}
 	
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
-		m_pRaiseObject->SetEnabled(true);
+		_uint iLayerHoleNum{ 0 };
+		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))
+		{
+			CLayer* pLayer = CGameInstance::Get_Instance()->Get_Layer(L"Layer_Hole", m_eHoleLevel);
+			if (pLayer == nullptr)
+				return;
+			list<CGameObject*>*pList = pLayer->KKK_Get_List();
+			auto& iter = pList->begin();
+			for (_uint i = 0; i < iLayerHoleNum; ++i)
+				++iter;
+			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb
+			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f,0.f,0.f), fTimeDelta, true);//it can Make Drop More.
+		}
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
@@ -524,4 +530,3 @@ void CTopdee::Free()
 	Safe_Release(m_pTexture_PreLoader_Com);
 
 }
-

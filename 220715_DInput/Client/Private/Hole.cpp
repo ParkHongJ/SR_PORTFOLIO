@@ -33,14 +33,12 @@ HRESULT CHole::Initialize(void * pArg)
 
 void CHole::Tick(_float fTimeDelta)
 {
-	m_fTimeDelta = fTimeDelta;
-	if (m_bActive) {
-		Turn_Check();
-	}
+
+	
 }
 
 void CHole::LateTick(_float fTimeDelta)
-{
+{	
 	if (m_bActive) {
 		_float4x4		ViewMatrix;
 
@@ -68,6 +66,7 @@ HRESULT CHole::Render()
 		if (FAILED(Reset_RenderState()))
 			return E_FAIL;
 	}
+	
 	return S_OK;
 }
 
@@ -82,44 +81,9 @@ void CHole::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 
 void CHole::OnTriggerStay(CGameObject * other, float fTimeDelta, _uint eDirection)
 {
-	/*방향 x 시간 x 스피드*/
-	if (m_bActive) {
-		if (other->CompareTag(L"Box"))
-		{
-			m_bFallFinish = other->KKK_Go_Lerp_Drop(_float3(0.f, 0.f, 0.f), m_fTimeDelta, true);
-			if (m_bFallFinish) {
-				CTransform* pBoxTransformCom = (CTransform*)other->Get_Component(L"Com_Transform");
-				if (pBoxTransformCom->Get_State(CTransform::STATE_POSITION).y <= -0.45f) {
-					m_bActive = false;
-					other->SetEnabled(false);
-					return;
-				}
-				_float3 vBoxDir = { 0.f,-1.f,0.f };
-				_float fBoxSpeed = pBoxTransformCom->Get_Speed();
-				pBoxTransformCom->Translate(vBoxDir *m_fTimeDelta* fBoxSpeed);
-			}
-		}
-	}
+	
 }
 
-void CHole::Turn_Check()
-{
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	_float4x4		CamWorldMatrix;
-	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
-	_float fCameraZ = (*(_float3*)&CamWorldMatrix.m[3][0]).z;
-	if ((fCameraZ >= -1.f) && (fCameraZ <= 1.f)) {
-		m_bTopdeeTurn = true;
-		m_iFrameNum = 1;
-	}
-	else {
-		m_bTopdeeTurn = false;
-		m_iFrameNum = 0;
-	}
-}
 
 HRESULT CHole::Set_RenderState()
 {

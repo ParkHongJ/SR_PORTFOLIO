@@ -43,6 +43,7 @@ private:
 	
 public:
 	bool IsActive() { return m_bActive; }
+	void SetActive(_bool _bActive) { m_bActive = _bActive; }
 	bool IsEnabled() { return m_bEnabled; }
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
 	void SetEnabled(bool _bEnabled) { m_bEnabled = _bEnabled; }

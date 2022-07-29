@@ -17,25 +17,30 @@ HRESULT CLevel_GyuH::Initialize()
 	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-	
-	Ready_ObjectInfo();
-
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"),&m_tInit)))
+	_float3 vInitPos{ 15.5f,0.5f,11.5f };
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), vInitPos)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	for (auto& iter = m_tInit.vHoleList.begin(); iter != m_tInit.vHoleList.end(); ++iter) {
-		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), (*iter))))
+	 vInitPos= { 10.5f,0.5f,11.5f };
+	for (_uint i = 0; i < 3; ++i) {
+		vInitPos.z -= 1.0f;
+		vInitPos.y = 0.3f;
+		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), vInitPos)))
 			return E_FAIL;
 	}
-	for (auto& iter = m_tInit.vSpikeList.begin(); iter != m_tInit.vSpikeList.end(); ++iter) {
-		if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), (*iter))))
+	vInitPos = { 7.f,0.5f,10.5f };
+	for (_uint i = 0; i < 3; ++i) {
+		vInitPos.z -= 1.0f;
+		if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), vInitPos)))
 			return E_FAIL;
 	}
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole",	true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Spike", false);
 	return S_OK;
-	
+
 }
 
 void CLevel_GyuH::Tick(_float fTimeDelta)
@@ -79,21 +84,6 @@ HRESULT CLevel_GyuH::Ready_Layer_Spike(const _tchar * pLayerTag, void * pArg)
 
 	Safe_Release(pGameInstance);
 	return S_OK;
-}
-
-void CLevel_GyuH::Ready_ObjectInfo()
-{
-	m_vPosition = { 13.5f,0.3f,4.5f };
-	_float3 vSpikePos{ 10.0f,0.3f,4.5f };
-	for (int i = 0; i < 3; ++i)
-	{
-		m_tInit.vHoleList.push_back(m_vPosition);
-		m_tInit.vSpikeList.push_back(vSpikePos);
-		m_vPosition.z -= 1.f;
-		vSpikePos.z -= 1.f;
-	}
-	m_tInit.vTopdeePos = { 20.0f, 0.3f, 10.0f };
-
 }
 
 

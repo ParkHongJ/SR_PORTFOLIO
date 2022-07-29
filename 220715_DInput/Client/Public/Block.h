@@ -1,7 +1,9 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
+
 BEGIN(Engine)
+
 class CTexture;
 class CRenderer;
 class CCollider;
@@ -31,6 +33,8 @@ public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos);
 	void KKK_Is_Raise(_float3 vTargetPos);
 	_bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall);
+	void Box_Drop_More(_float fTimeDelta);
+	_bool m_bDropBox{false};
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -41,7 +45,8 @@ private:
 
 
 	_uint m_iTextureNum{ 0 };
-
+	//LEVEL m_eHoleLevel{ LEVEL_END };
+	
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

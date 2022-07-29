@@ -21,6 +21,7 @@ public:
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObjectToLayer(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 	class CLayer* KKK_GetBoxLayer();
+	class CLayer* Get_Layer(const _tchar* pLayerTag, _uint iLevelIndex);
 
 public:
 	void Tick(_float fTimeDelta);

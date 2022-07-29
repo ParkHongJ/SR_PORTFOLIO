@@ -19,7 +19,7 @@ private:
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Spike(const _tchar* pLayerTag, void* pArg = nullptr);
-	void	Ready_ObjectInfo();
+
 	void	LoadGameObject();
 
 public:

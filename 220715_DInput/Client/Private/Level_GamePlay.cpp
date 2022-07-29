@@ -47,7 +47,7 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
 		return E_FAIL;
-	
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);

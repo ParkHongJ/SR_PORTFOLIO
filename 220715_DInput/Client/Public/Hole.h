@@ -34,9 +34,6 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta, _uint eDirection)override;
 
 private:
-	void Turn_Check();
-
-private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
@@ -46,9 +43,7 @@ private:
 	
 private:
 	_uint		m_iFrameNum{ 0 };
-	_float		m_fTimeDelta{ 0.f };
-	_bool		m_bTopdeeTurn{ false };
-	_bool		m_bFallFinish{ false };
+
 
 private:
 	HRESULT Set_RenderState();
