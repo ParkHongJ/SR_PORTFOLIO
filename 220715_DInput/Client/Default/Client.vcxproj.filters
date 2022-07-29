@@ -96,9 +96,12 @@
     </Filter>
     <Filter Include="02.GameObject\BackGround\Loading">
       <UniqueIdentifier>{68de57fc-5041-4cfe-89fb-9a65d60ae16b}</UniqueIdentifier>
-    </Filter>  
+    </Filter>
     <Filter Include="ClientManager\GameMgr">
       <UniqueIdentifier>{b3631ff4-f0be-46f6-bdf4-7bff43745901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Cloud">
+      <UniqueIdentifier>{a9270326-60d5-4ca4-a362-c12fef6363ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +219,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Loading_BackGround.h">
       <Filter>02.GameObject\BackGround\Loading</Filter>
-    </ClInclude>  
+    </ClInclude>
     <ClInclude Include="..\Public\GameMgr.h">
       <Filter>ClientManager\GameMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cloud.h">
+      <Filter>02.GameObject\Cloud</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -317,7 +323,7 @@
     </ClCompile>
     <ClCompile Include="..\private\Portal.cpp">
       <Filter>02.GameObject\Portal</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\Hole.cpp">
       <Filter>02.GameObject\Hole</Filter>
     </ClCompile>
@@ -326,9 +332,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Loading_BackGround.cpp">
       <Filter>02.GameObject\BackGround\Loading</Filter>
-    </ClCompile>  
+    </ClCompile>
     <ClCompile Include="..\Private\GameMgr.cpp">
       <Filter>ClientManager\GameMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cloud.cpp">
+      <Filter>02.GameObject\Cloud</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

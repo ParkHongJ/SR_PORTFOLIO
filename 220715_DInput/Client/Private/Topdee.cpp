@@ -292,6 +292,10 @@ HRESULT CTopdee::Render()
 
 void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
+	if (other->CompareTag(L"Portal"))
+	{
+		int a = 10;
+	}
 }
 
 void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
@@ -313,6 +317,10 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 		int a = 10;
 	}
 	if (other->CompareTag(L"Bullet"))
+	{
+		int a = 10;
+	}
+	if (other->CompareTag(L"Portal"))
 	{
 		int a = 10;
 	}

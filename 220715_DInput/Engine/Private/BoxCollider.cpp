@@ -159,15 +159,15 @@ HRESULT CBoxCollider::Render(_float4x4 matWorld)
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	//m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
+	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
 
-	//m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
+	m_pGraphic_Device->SetStreamSource(0, m_pVB, 0, m_iStride);
 
-	//m_pGraphic_Device->SetIndices(m_pIB);
+	m_pGraphic_Device->SetIndices(m_pIB);
 
-	//m_pGraphic_Device->SetFVF(m_dwFVF);
+	m_pGraphic_Device->SetFVF(m_dwFVF);
 
-	//m_pGraphic_Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12);
+	m_pGraphic_Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12);
 
 	return S_OK;
 }
