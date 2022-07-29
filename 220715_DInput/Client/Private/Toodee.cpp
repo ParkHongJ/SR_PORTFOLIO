@@ -243,7 +243,7 @@ void CToodee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDireciton)
 {
 	_float fBoxSize = 1.f;
 

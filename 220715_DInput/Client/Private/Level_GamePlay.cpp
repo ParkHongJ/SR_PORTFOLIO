@@ -45,7 +45,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	_float3 temp = { 15.5f,0.3f,4.5f };
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
+		return E_FAIL;
 	
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
@@ -60,7 +61,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	if (GetKeyState(VK_SPACE) & 0x8000)
+	/*if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
@@ -69,7 +70,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 			return;
 
 		Safe_Release(pGameInstance);
-	}
+	}*/
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -307,6 +308,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Cloud(const _tchar* pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cloud"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Key"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -31,7 +31,7 @@ public:
 public:
 	virtual void OnTriggerExit(CGameObject* other, float fTimeDelta) override;
 	virtual void OnTriggerEnter(CGameObject* other, float fTimeDelta)override;
-	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta)override;
+	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta, _uint eDirection)override;
 
 private:
 	void Turn_Check();

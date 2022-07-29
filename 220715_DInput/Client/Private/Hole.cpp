@@ -82,7 +82,7 @@ void CHole::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 
 }
 
-void CHole::OnTriggerStay(CGameObject * other, float fTimeDelta)
+void CHole::OnTriggerStay(CGameObject * other, float fTimeDelta, _uint eDirection)
 {
 	/*방향 x 시간 x 스피드*/
 	if (m_bActive) {

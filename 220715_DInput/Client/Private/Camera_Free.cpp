@@ -114,6 +114,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 				fTimeDelta * m_fSpeed));
 
 	m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
+
 	Safe_Release(pGameInstance);
 	__super::Tick(fTimeDelta);
 }
