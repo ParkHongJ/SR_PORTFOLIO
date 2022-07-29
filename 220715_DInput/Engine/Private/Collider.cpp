@@ -152,55 +152,17 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 
 HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
-	unordered_map<LONGLONG, bool>::iterator iter;
-
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			COLLIDER_ID ID;
-			ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
-			ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
-			iter = m_ColInfo.find(ID.ID);
-
-			//충돌 정보가 미등록 상태라면
-			if (m_ColInfo.end() == iter)
-			{
-				//등록해주고 다시찾음
-				m_ColInfo.insert(make_pair(ID.ID, false));
-				iter = m_ColInfo.find(ID.ID);
-			}
-
 			float	fX = 0.f, fZ = 0.f;
 			if (pSour->GetEnabled() && pDest->GetEnabled())
 			{
 				if (Check_Sphere(pSour, pDest))
 				{
-					//현재 충돌 중이다
-					if (iter->second)
-					{
-						//이전에도 충돌 중이다
-						pSour->OnTriggerStay(pDest, fTimeDelta);
-						pDest->OnTriggerStay(pSour, fTimeDelta);
-					}
-					else
-					{
-						//이전에는 충돌하지 않았다
-						pSour->OnTriggerEnter(pDest, fTimeDelta);
-						pDest->OnTriggerEnter(pSour, fTimeDelta);
-						iter->second = true;
-					}
-				}
-				else
-				{
-					//현재 충돌하고있지않다
-					if (iter->second)
-					{
-						//이전에는 충돌하고 있었다.
-						pSour->OnTriggerExit(pDest, fTimeDelta);
-						pDest->OnTriggerExit(pSour, fTimeDelta);
-						iter->second = false;
-					}
+					pSour->OnTriggerStay(pDest, fTimeDelta);
+					pDest->OnTriggerStay(pSour, fTimeDelta);
 				}
 			}
 		}

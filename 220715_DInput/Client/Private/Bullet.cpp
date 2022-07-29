@@ -170,20 +170,12 @@ HRESULT CBullet::SetUp_Components()
 	return S_OK;
 }
 
-void CBullet::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee"))
 	{
 		m_bActive = false;
 	}
-}
-
-void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta)
-{
-}
-
-void CBullet::OnTriggerExit(CGameObject * other, _float fTimeDelta)
-{
 }
 
 CBullet * CBullet::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

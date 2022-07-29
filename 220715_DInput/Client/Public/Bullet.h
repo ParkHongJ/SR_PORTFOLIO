@@ -58,9 +58,7 @@ private:
 	_float m_fSpeed = 6.5f;
 	_float m_fFrame;
 public:
-	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) override;
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta) override;
-	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
