@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "GameMgr.h"
 CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -14,22 +15,25 @@ HRESULT CLevel_GyuH::Initialize()
 		return E_FAIL;
 
 	LoadGameObject();
-
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-	_float3 vPos{ 2.0f,0.f,2.0f };
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), vPos)))
+	
+	Ready_ObjectInfo();
+
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"),&m_tInit)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
-	m_vPosition = { 15.5f,0.3f,1.5f };
-	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), m_vPosition)))
-		return E_FAIL;
-	vPos = { 10.0f,0.5f,1.5f };
-	if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), vPos)))
-		return E_FAIL;
 
+	for (auto& iter = m_tInit.vHoleList.begin(); iter != m_tInit.vHoleList.end(); ++iter) {
+		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), (*iter))))
+			return E_FAIL;
+	}
+	for (auto& iter = m_tInit.vSpikeList.begin(); iter != m_tInit.vSpikeList.end(); ++iter) {
+		if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), (*iter))))
+			return E_FAIL;
+	}
 	return S_OK;
 	
 }
@@ -37,6 +41,7 @@ HRESULT CLevel_GyuH::Initialize()
 void CLevel_GyuH::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
 }
 HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar * pLayerTag, void * pArg)
@@ -75,6 +80,22 @@ HRESULT CLevel_GyuH::Ready_Layer_Spike(const _tchar * pLayerTag, void * pArg)
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
+
+void CLevel_GyuH::Ready_ObjectInfo()
+{
+	m_vPosition = { 13.5f,0.3f,4.5f };
+	_float3 vSpikePos{ 10.0f,0.3f,4.5f };
+	for (int i = 0; i < 3; ++i)
+	{
+		m_tInit.vHoleList.push_back(m_vPosition);
+		m_tInit.vSpikeList.push_back(vSpikePos);
+		m_vPosition.z -= 1.f;
+		vSpikePos.z -= 1.f;
+	}
+	m_tInit.vTopdeePos = { 20.0f, 0.3f, 10.0f };
+
+}
+
 
 void CLevel_GyuH::LoadGameObject()
 {

@@ -39,7 +39,7 @@ private:
 
 	_bool m_bKeyState[256] = { false };
 
-	GAMEMODE m_eGameMode = MODE_END;
+	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
 public:
 	virtual void Free() override;
 };

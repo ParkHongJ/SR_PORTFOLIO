@@ -7,7 +7,6 @@ class CLevel_GyuH final : public CLevel
 public:
 	CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual ~CLevel_GyuH() = default;
-
 public:
 	virtual HRESULT Initialize() override;
 	virtual void	Tick(_float fTimeDelta) override;
@@ -20,6 +19,7 @@ private:
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Spike(const _tchar* pLayerTag, void* pArg = nullptr);
+	void	Ready_ObjectInfo();
 	void	LoadGameObject();
 
 public:

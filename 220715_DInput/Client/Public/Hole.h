@@ -35,7 +35,7 @@ public:
 
 private:
 	void Turn_Check();
-	
+
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
