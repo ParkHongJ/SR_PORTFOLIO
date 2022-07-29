@@ -17,6 +17,22 @@ HRESULT CBlock::Initialize_Prototype()
 	return S_OK;
 }
 
+void CBlock::TextureSelect(const _float3 & vPos)
+{
+	if (vPos.x == 0.5f && vPos.z == 0.5f)// 좌하
+		m_iTextureNum = 2;
+	else if (vPos.x == 28.5f&&vPos.z == 0.5f)//우하
+		m_iTextureNum = 3;
+	else if (vPos.x == 28.5f&&vPos.z == 14.5f)//우상
+		m_iTextureNum = 4;
+	else if (vPos.x == 0.5f&&vPos.z == 14.5f)//좌하
+		m_iTextureNum = 5;
+	else if (((vPos.x != 0.5f) && (vPos.x != 28.5f)) && ((vPos.z == 0.5f) || (vPos.z == 14.5)))//가로
+		m_iTextureNum = 1;
+	else if (((vPos.x == 0.5f) || (vPos.x == 28.5f)) && ((vPos.z != 0.5f) && (vPos.z != 14.5)))//세로
+		m_iTextureNum = 0;
+}
+
 HRESULT CBlock::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
@@ -28,6 +44,7 @@ HRESULT CBlock::Initialize(void * pArg)
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
+		TextureSelect(vPos);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	return S_OK;
@@ -49,22 +66,22 @@ HRESULT CBlock::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 	
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
+	if (FAILED(m_pTextureCom->Bind_Texture(m_iTextureNum)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
-	//m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
 	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	/*_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pBoxCollider->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
 	//--------------------------------------------------------------
 
 	
@@ -105,7 +122,6 @@ _bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHole
 		return true;
 	return false;
 }
-
 
 HRESULT CBlock::Set_RenderState()
 {

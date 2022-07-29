@@ -432,9 +432,14 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"),17))))
 		return E_FAIL;
 
+	///* For.Prototype_Component_Texture_ElectricBlock */ // Test
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
+	//	return E_FAIL;
+
 	/* For.Prototype_Component_Texture_ElectricBlock */ // Test
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"),6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Topdee_PreLoader */

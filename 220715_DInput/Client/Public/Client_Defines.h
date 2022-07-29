@@ -10,5 +10,5 @@ namespace Client
 
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
-
+extern int g_iLoadingTexture;
 using namespace Client;

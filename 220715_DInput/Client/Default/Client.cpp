@@ -11,6 +11,7 @@
 // 전역 변수:
 HINSTANCE g_hInst;                                // 현재 인스턴스입니다.
 HWND g_hWnd;
+int g_iLoadingTexture;
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
@@ -58,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
 		return FALSE;
-
+	g_iLoadingTexture = 0;
 	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
 		return FALSE;
 	

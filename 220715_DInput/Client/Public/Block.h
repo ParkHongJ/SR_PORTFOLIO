@@ -32,7 +32,6 @@ public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos);
 	void KKK_Is_Raise(_float3 vTargetPos);
 	_bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall);
-
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -41,12 +40,14 @@ private:
 	CCollider*				m_pCollCom = nullptr;
 	CBoxCollider*			m_pBoxCollider = nullptr;
 
+	_uint m_iTextureNum{ 0 };
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 private:
 	HRESULT SetUp_Components();
-
+	void TextureSelect(const _float3& vPos);
 public:
 	static CBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
