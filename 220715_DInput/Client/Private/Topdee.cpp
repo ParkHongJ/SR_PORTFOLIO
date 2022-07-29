@@ -64,8 +64,7 @@ void CTopdee::Tick(_float fTimeDelta)
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
-	Topdee_Turn_Check();
+	//Topdee_Turn_Check();
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
 	if (m_bTurn) {

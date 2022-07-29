@@ -170,7 +170,7 @@ HRESULT CBullet::SetUp_Components()
 	return S_OK;
 }
 
-void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
 	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee"))
 	{

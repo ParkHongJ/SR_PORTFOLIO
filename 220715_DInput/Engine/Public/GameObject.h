@@ -19,7 +19,8 @@ public:
 	virtual HRESULT Render();
 
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) {};
-	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta) {};
+	//virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta) {};
+	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) {};
 	virtual void OnTriggerExit(CGameObject*  other, _float fTimeDelta) {};
 
 public:

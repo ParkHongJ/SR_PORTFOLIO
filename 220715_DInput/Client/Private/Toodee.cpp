@@ -25,7 +25,7 @@ HRESULT CToodee::Initialize(void * pArg)
 
 	SetTag(L"Toodee");
 
-	//CGameMgr::Get_Instance()->Set_Player_Active(L"Toodee", this);
+	CGameMgr::Get_Instance()->Set_Player_Active(L"Toodee", this);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
 
@@ -211,7 +211,7 @@ void CToodee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDireciton)
 {
 	_float fBoxSize = 1.f;
 
@@ -225,6 +225,7 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 
 		Safe_Release(TargetBox);
 	}
+	
 }
 
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)

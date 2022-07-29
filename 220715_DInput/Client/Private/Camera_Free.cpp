@@ -98,7 +98,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 	
-	if (CGameMgr::Get_Instance()->Key_Down(DIK_X))
+	/*if (CGameMgr::Get_Instance()->Key_Down(DIK_X))
 	{
 		m_bMove = !m_bMove;
 	}
@@ -117,7 +117,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
 				_float3(14.5f, 16.7f, 7.9f),
 				fTimeDelta * m_fSpeed));
-	}
+	}*/
 
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
 	{
@@ -135,6 +135,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 				fTimeDelta * m_fSpeed));
 
 	m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
+
 	Safe_Release(pGameInstance);
 	__super::Tick(fTimeDelta);
 }

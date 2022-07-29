@@ -12,7 +12,8 @@ union COLLIDER_ID
 class ENGINE_DLL CCollider : public CComponent
 {
 public:
-	enum COLLISIONGROUP {PLAYER, BULLET, MONSTER, BLOCK, PORTAL, COLLISION_END};
+	enum COLLISIONGROUP {PLAYER, BULLET, MONSTER, BLOCK, PORTAL, OBJECT, COLLISION_END};
+	enum DIRECTION { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_END};
 
 private:
 	CCollider(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -28,8 +29,6 @@ public:
 	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider);
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
-
-
 	HRESULT Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT End();
 	bool Check_Sphere(class CGameObject* pSour, class CGameObject* pDest);

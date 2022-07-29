@@ -18,6 +18,10 @@ HRESULT CGameMgr::Initialize()
 
 void CGameMgr::Tick(_float fTimeDelta)
 {
+	if (Key_Down(DIK_X))//X키를 누르면
+	{
+		m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
+	}
 }
 
 void CGameMgr::LateTick(_float fTimeDelta)
@@ -26,10 +30,7 @@ void CGameMgr::LateTick(_float fTimeDelta)
 
 void CGameMgr::Set_Player_Active(const _tchar * pTag, CGameObject * pPlayer)
 {
-	if (Key_Down(DIK_X))//X키를 누르면
-		{
-			m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
-		}
+
 
 	// for (auto& pair : m_Data)
 	// 	if (pair.first == pTag) {

@@ -63,18 +63,17 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+
+	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
-
+	
+	//구충돌로 비교하면서 Stay 호출
 	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
+	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);
 	m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-
-	/*m_pCollider->Collision_Rect(CCollider::TOODEE, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-
-	m_pCollider->Collision_Rect(CCollider::HOLE, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_Rect(CCollider::TOPDEE, CCollider::HOLE, fTimeDelta);*/
+	
+	//구충돌로 비교하면서 OnTrigger호출
+	m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
 	m_pCollider->End();
 }
 

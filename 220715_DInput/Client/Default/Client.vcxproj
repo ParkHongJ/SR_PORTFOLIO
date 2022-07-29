@@ -162,6 +162,8 @@
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\public\Hong.h" />
+    <ClInclude Include="..\public\Key.h" />
+    <ClInclude Include="..\public\KeyBlock.h" />
     <ClInclude Include="..\Public\KeyMgr.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_GyuH.h" />
@@ -204,6 +206,8 @@
     <ClCompile Include="..\Private\Hole.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\private\Hong.cpp" />
+    <ClCompile Include="..\private\Key.cpp" />
+    <ClCompile Include="..\private\KeyBlock.cpp" />
     <ClCompile Include="..\Private\KeyMgr.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_GyuH.cpp" />
