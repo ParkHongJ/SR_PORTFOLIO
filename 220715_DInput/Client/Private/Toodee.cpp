@@ -175,6 +175,7 @@ void CToodee::LateTick(_float fTimeDelta)
 		}
 	}
 
+	m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

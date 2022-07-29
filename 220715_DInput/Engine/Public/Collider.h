@@ -25,17 +25,20 @@ public:
 
 public:
 	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CGameObject* pGameObject);
-
-	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider, class CTransform* pTransform);
+	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider);
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT End();
 	bool Check_Sphere(class CGameObject* pSour, class CGameObject* pDest);
 	bool Check_Rect(class CGameObject* pSour, class CGameObject* pDest);
 	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest, float *pX, float* pZ);
+//	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest, float *pX, float* pZ);
+
 private:
 	list<class CGameObject*>				m_CollisionObjects[COLLISION_END];
 	typedef list<class CGameObject*>		COLLISIONOBJECTS;
+	/*list<class CBoxCollider*>				m_CollisionObjects[COLLISION_END];
+	typedef list<class CBoxCollider*>		COLLISIONOBJECTS;*/
 	unordered_map<LONGLONG, bool> m_ColInfo;
 public:
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

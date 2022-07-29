@@ -28,6 +28,7 @@ public:
 
 public:
 	HRESULT SetOwner(class CGameObject* _pOwner);
+	class CGameObject* GetOwner() {	return m_pOwner; }
 protected:
 	class CGameObject* m_pOwner = nullptr;
 };

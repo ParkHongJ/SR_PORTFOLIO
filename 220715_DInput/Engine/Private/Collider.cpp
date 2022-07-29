@@ -37,68 +37,52 @@ HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CGam
 	return S_OK;
 }
 
-
-HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, CBoxCollider * pBoxCollider, CTransform * pTransform)
-{
-	if (nullptr == pBoxCollider)
-		return E_FAIL;
-
-	//m_CollisionObjects[eCollisionGroup].push_back(pGameObject->powner);
-
-	Safe_AddRef(pBoxCollider);
-
-	return S_OK;
-}
+//HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider)
+//{
+//	if (nullptr == pBoxCollider)
+//		return E_FAIL;
+//
+//	m_CollisionObjects[eCollisionGroup].push_back(pBoxCollider);
+//
+//	Safe_AddRef(pBoxCollider);
+//
+//	return S_OK;
+//}
 
 HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
-	unordered_map<LONGLONG, bool>::iterator iter;
+	//unordered_map<LONGLONG, bool>::iterator iter;
 
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			COLLIDER_ID ID;
-			ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
-			ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
-			iter = m_ColInfo.find(ID.ID);
+			//COLLIDER_ID ID;
+			//ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
+			//ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
+			//iter = m_ColInfo.find(ID.ID);
 
-			//충돌 정보가 미등록 상태라면
-			if (m_ColInfo.end() == iter)
-			{
-				//등록해주고 다시찾음
-				m_ColInfo.insert(make_pair(ID.ID, false));
-				iter = m_ColInfo.find(ID.ID);
-			}
+			////충돌 정보가 미등록 상태라면
+			//if (m_ColInfo.end() == iter)
+			//{
+			//	//등록해주고 다시찾음
+			//	m_ColInfo.insert(make_pair(ID.ID, false));
+			//	iter = m_ColInfo.find(ID.ID);
+			//}
 
 			float	fX = 0.f, fZ = 0.f;
 			if (pSour->GetEnabled() && pDest->GetEnabled())
 			{
-				//if (Check_Rect(pSour, pDest))
+					
 				if (Check_RectEx(pSour, pDest, &fX, &fZ))
 				{
+					pSour->OnTriggerStay(pDest, fTimeDelta);
+					pDest->OnTriggerStay(pSour, fTimeDelta);
 					CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
 					CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
 
 					Safe_AddRef(DestTrans);
 					Safe_AddRef(SourTrans);
-
-
-					//현재 충돌 중이다
-					if (iter->second)
-					{
-						//이전에도 충돌 중이다
-						pSour->OnTriggerStay(pDest, fTimeDelta);
-						pDest->OnTriggerStay(pSour, fTimeDelta);
-					}
-					else
-					{
-						//이전에는 충돌하지 않았다
-						pSour->OnTriggerEnter(pDest, fTimeDelta);
-						pDest->OnTriggerEnter(pSour, fTimeDelta);
-						iter->second = true;
-					}
-
 					if (((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetBoxDesc().bIsTrigger)
 					{
 						// 상하 충돌
@@ -127,23 +111,77 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 							}
 						}
 					}
-
-
 					Safe_Release(DestTrans);
 					Safe_Release(SourTrans);
 				}
-				else
-				{
-					//현재 충돌하고있지않다
-					if (iter->second)
-					{
-						//이전에는 충돌하고 있었다.
-						pSour->OnTriggerExit(pDest, fTimeDelta);
-						pDest->OnTriggerExit(pSour, fTimeDelta);
-						iter->second = false;
-					}
+				////if (Check_Rect(pSour, pDest))
+				//if (Check_RectEx(pSour, pDest, &fX, &fZ))
+				//{
+				//	CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
+				//	CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
 
-				}
+				//	Safe_AddRef(DestTrans);
+				//	Safe_AddRef(SourTrans);
+
+
+				//	//현재 충돌 중이다
+				//	if (iter->second)
+				//	{
+				//		//이전에도 충돌 중이다
+				//		pSour->OnTriggerStay(pDest, fTimeDelta);
+				//		pDest->OnTriggerStay(pSour, fTimeDelta);
+				//	}
+				//	else
+				//	{
+				//		//이전에는 충돌하지 않았다
+				//		pSour->OnTriggerEnter(pDest, fTimeDelta);
+				//		pDest->OnTriggerEnter(pSour, fTimeDelta);
+				//		iter->second = true;
+				//	}
+
+				//	if (((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetBoxDesc().bIsTrigger)
+				//	{
+				//		// 상하 충돌
+				//		if (fX > fZ)
+				//		{
+				//			// 상 충돌
+				//			if (DestTrans->Get_State(CTransform::STATE_POSITION).z > SourTrans->Get_State(CTransform::STATE_POSITION).z)
+				//			{
+				//				SourTrans->Translate(_float3(0.f, 0.f, -fZ));
+				//			}
+				//			else // 하 충돌
+				//			{
+				//				SourTrans->Translate(_float3(0.f, 0.f, fZ));
+				//			}
+				//		}
+				//		else
+				//		{
+				//			// 좌 충돌
+				//			if (DestTrans->Get_State(CTransform::STATE_POSITION).x > SourTrans->Get_State(CTransform::STATE_POSITION).x)
+				//			{
+				//				SourTrans->Translate(_float3(-fX, 0.f, 0.f));
+				//			}
+				//			else // 우 충돌
+				//			{
+				//				SourTrans->Translate(_float3(fX, 0.f, 0.f));
+				//			}
+				//		}
+				//	}
+				//	Safe_Release(DestTrans);
+				//	Safe_Release(SourTrans);
+				//}
+				//else
+				//{
+				//	//현재 충돌하고있지않다
+				//	if (iter->second)
+				//	{
+				//		//이전에는 충돌하고 있었다.
+				//		pSour->OnTriggerExit(pDest, fTimeDelta);
+				//		pDest->OnTriggerExit(pSour, fTimeDelta);
+				//		iter->second = false;
+				//	}
+
+				//}
 			}
 		}
 	}
@@ -156,7 +194,6 @@ HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			float	fX = 0.f, fZ = 0.f;
 			if (pSour->GetEnabled() && pDest->GetEnabled())
 			{
 				if (Check_Sphere(pSour, pDest))
@@ -347,17 +384,17 @@ bool CCollider::Check_RectEx(class CGameObject* pSour, class CGameObject* pDest,
 	_float3 vDestPos = DestTrans->Get_State(CTransform::STATE_POSITION);
 	_float3 vSourScale = SourTrans->Get_Scaled();
 	_float3 vDestScale = DestTrans->Get_Scaled();
-	
+
 	D3DXMatrixScaling(&SourWorld, vSourScale.x, vSourScale.y, vSourScale.z);
 	D3DXMatrixScaling(&DestWorld, vDestScale.x, vDestScale.y, vDestScale.z);
 
 	memcpy(&SourWorld.m[3][0], &vSourPos, sizeof(_float3));
 	memcpy(&DestWorld.m[3][0], &vDestPos, sizeof(_float3));
 
-	D3DXVec3TransformCoord(&vSourMin, &vSourMin, &SourWorld);
+	/*D3DXVec3TransformCoord(&vSourMin, &vSourMin, &SourWorld);
 	D3DXVec3TransformCoord(&vSourMax, &vSourMax, &SourWorld);
 	D3DXVec3TransformCoord(&vDestMin, &vDestMin, &DestWorld);
-	D3DXVec3TransformCoord(&vDestMax, &vDestMax, &DestWorld);
+	D3DXVec3TransformCoord(&vDestMax, &vDestMax, &DestWorld);*/
 
 	_float3		temp1 = SourCol->GetBoxDesc().vPos;
 	_float3		temp2 = DestCol->GetBoxDesc().vPos;
