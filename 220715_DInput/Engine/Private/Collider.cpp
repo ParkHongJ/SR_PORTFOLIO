@@ -166,6 +166,12 @@ HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 	return S_OK;
 }
 
+HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
+{
+
+	return S_OK;
+}
+
 HRESULT CCollider::End()
 {
 	for (auto& List : m_CollisionObjects)

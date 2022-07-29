@@ -28,11 +28,13 @@ public:
 	HRESULT Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBoxCollider* pBoxCollider);
 	HRESULT Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
+
+
+	HRESULT Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta);
 	HRESULT End();
 	bool Check_Sphere(class CGameObject* pSour, class CGameObject* pDest);
 	bool Check_Rect(class CGameObject* pSour, class CGameObject* pDest);
 	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest, float *pX, float* pZ);
-//	bool Check_RectEx(class CGameObject* pSour, class CGameObject* pDest, float *pX, float* pZ);
 
 private:
 	list<class CGameObject*>				m_CollisionObjects[COLLISION_END];
