@@ -32,6 +32,7 @@ protected:
 
 public:
 	HRESULT SetUp_OnTerrain(class CTransform* pTransform, _float fMagicNumber = 0.f);
+	_float3 SetUp_Topdee(class CTransform* pTransform, _uint iTerrainLevelIndex, _tchar* pLayerTag,	_uint	iTerrainObjectIndex, _tchar* pTerrainBufferComTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

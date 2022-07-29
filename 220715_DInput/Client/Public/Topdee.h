@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
 
 BEGIN(Engine)
 class CLayer;
@@ -16,7 +16,7 @@ END
 
 BEGIN(Client)
 
-class CTopdee final : public CGameObject
+class CTopdee final : public CLandObject
 {
 public:
 	enum TOPDEE_DIRECTION { DIR_LEFT, DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_END };

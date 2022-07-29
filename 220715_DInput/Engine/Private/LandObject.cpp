@@ -59,6 +59,21 @@ HRESULT CLandObject::SetUp_OnTerrain(CTransform* pTransform, _float fMagicNumber
 	return S_OK;
 }
 
+_float3 CLandObject::SetUp_Topdee(CTransform* pTransform, _uint iTerrainLevelIndex, _tchar* pLayerTag, _uint	iTerrainObjectIndex, _tchar* pTerrainBufferComTag)
+{
+	CObject_Manager*		pObjectMgr = CObject_Manager::Get_Instance();
+
+	Safe_AddRef(pObjectMgr);
+
+	CTransform*			pTransformm = (CTransform*)pObjectMgr->Get_Component(iTerrainLevelIndex, pLayerTag, pTerrainBufferComTag, iTerrainObjectIndex);
+
+	_float3		vTargetPos = pTransform->Get_State(CTransform::STATE_POSITION);
+
+	Safe_Release(pObjectMgr);
+
+	return vTargetPos;
+}
+
 void CLandObject::Free()
 {
 	__super::Free();

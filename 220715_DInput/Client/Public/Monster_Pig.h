@@ -1,18 +1,20 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
 
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
+class CCollider;
 class CTransform;
+class CBoxCollider;
 class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
 
-class CMonster_Pig final : public CGameObject
+class CMonster_Pig final : public CLandObject
 {
 public:
 	typedef struct tagBackGroundDesc
@@ -32,16 +34,21 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual void OnTriggerExit(CGameObject* other);
+	virtual void OnTriggerEnter(CGameObject* other);
+	virtual void OnTriggerStay(CGameObject*	other);
+
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
+	CCollider*				m_pColliderCom = nullptr;
+	CBoxCollider*			m_pBoxCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 
 private:
-	_float3			m_vTargetPos = _float3(0.f, 0.f, 0.f);
-
-private:
+	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
 	_bool	m_bDead;
 
