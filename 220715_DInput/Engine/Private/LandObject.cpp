@@ -67,7 +67,7 @@ _float3 CLandObject::SetUp_Topdee(CTransform* pTransform, _uint iTerrainLevelInd
 
 	CTransform*			pTransformm = (CTransform*)pObjectMgr->Get_Component(iTerrainLevelIndex, pLayerTag, pTerrainBufferComTag, iTerrainObjectIndex);
 
-	_float3		vTargetPos = pTransform->Get_State(CTransform::STATE_POSITION);
+	_float3		vTargetPos = pTransformm->Get_State(CTransform::STATE_POSITION);
 
 	Safe_Release(pObjectMgr);
 

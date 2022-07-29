@@ -21,17 +21,6 @@ HRESULT CTopdee::Initialize_Prototype()
 
 HRESULT CTopdee::Initialize(void * pArg)
 {
-	__super::LANDDESC		LandDesc;
-	ZeroMemory(&LandDesc, sizeof(__super::LANDDESC));
-
-	LandDesc.iTerrainLevelIndex = LEVEL_GYUH;
-	LandDesc.pLayerTag = TEXT("Layer_Topdee");
-	LandDesc.iTerrainObjectIndex = 0;
-	LandDesc.pTerrainBufferComTag = TEXT("Com_VIBuffer");
-
-	if (FAILED(CLandObject::Initialize(&LandDesc)))
-		return E_FAIL;
-
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 

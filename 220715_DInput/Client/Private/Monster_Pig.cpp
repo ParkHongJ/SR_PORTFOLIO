@@ -2,6 +2,7 @@
 #include "..\Public\Monster_Pig.h"
 
 #include "GameInstance.h"
+#include "GameMgr.h"
 
 CMonster_Pig::CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -20,17 +21,6 @@ HRESULT CMonster_Pig::Initialize_Prototype()
 
 HRESULT CMonster_Pig::Initialize(void * pArg)
 {
-	__super::LANDDESC		LandDesc;
-	ZeroMemory(&LandDesc, sizeof(__super::LANDDESC));
-
-	LandDesc.iTerrainLevelIndex = LEVEL_SENI;
-	LandDesc.pLayerTag = TEXT("Layer_Monster_Pig");
-	LandDesc.iTerrainObjectIndex = 0;
-	LandDesc.pTerrainBufferComTag = TEXT("Com_VIBuffer");
-
-	if (FAILED(CLandObject::Initialize(&LandDesc)))
-		return E_FAIL;
-
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -43,18 +33,6 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 
 void CMonster_Pig::Tick(_float fTimeDelta)
 {
-	
-	//m_vTargetPos = _float3(1.f, 50.f, 0.f);
-
-	//m_pTransformCom->Chase(m_vTargetPos, fTimeDelta);
-	//m_pTransformCom->LookAtForLandObject(m_vTargetPos);
-	
-	//Player가 Toodee일 때, 블럭 위에서 돌아다님
-	//m_pTransformCom->Go_Right(0.4f * fTimeDelta);
-	//Player가 Topdee일 때, PlayerPos를 Chase함
-
-	//m_pTransformCom->Chase(m_vTopdeePos, 0.1 * fTimeDelta);
-
 	m_fFrame += 9.0f * fTimeDelta;
 
 	if (m_fFrame >= 9.0f)
@@ -63,8 +41,13 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
-	m_vTopdeePos = _float3(10.f, 0.5f, 3.f); //SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_Topdee", 0, L"Com_VIBuffer");
+	/*if ( TOODEE )
+		중력 작용 / 블럭 위에서만 돌아다님*/
+
+	//if ( TOPDEE )
+	m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
 	m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
+	
 
 	_float4x4		ViewMatrix;
 
