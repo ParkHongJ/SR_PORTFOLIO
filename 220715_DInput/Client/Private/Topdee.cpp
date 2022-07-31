@@ -2,7 +2,7 @@
 #include "..\Public\Topdee.h"
 
 #include "GameMgr.h"
-
+#include "Block.h"
 
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -50,58 +50,58 @@ void CTopdee::Tick(_float fTimeDelta)
 	
 	if (!m_bActive)
 		return;
+	if (m_bPushBox)
+		m_fPushBoxDelayTimer += fTimeDelta;
+
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-	//Topdee_Turn_Check();
+	ClearCheck(fTimeDelta);
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
-		
-			_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
-			{
-				Move_Frame(DIR_UP);
-				m_vTargetDir = { 0.f, 0.f, 1.f };
-				vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
-				m_pTransformCom->Translate(vTargetPos);
-				m_bPress = true;
-			}
-			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
-			{
-				Move_Frame(DIR_DOWN);
-				m_vTargetDir = { 0.f, 0.f, -1.f };
-				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-				m_pTransformCom->Translate(vTargetPos);
-				m_bPress = true;
-			}
-			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
-			{
-				Move_Frame(DIR_LEFT);
-				m_vTargetDir = { -1.f, 0.f, 0.f };
-				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-				m_pTransformCom->Translate(vTargetPos);
-				m_bPress = true;
-			}
-			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
-			{
-				Move_Frame(DIR_RIGHT);
-				m_vTargetDir = { 1.f, 0.f, 0.f };
-				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-				m_pTransformCom->Translate(vTargetPos);
-				m_bPress = true;
-			}
-			else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
-			{//박스들기.
-				KKK_DropBox(fTimeDelta);
-				KKK_FindBox(fTimeDelta);
-				m_bPress = true;
-			}
-			else
-				m_bPress = false;
-
-		
+		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
+		{
+			Move_Frame(DIR_UP);
+			m_vTargetDir = { 0.f, 0.f, 1.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
+		{
+			Move_Frame(DIR_DOWN);
+			m_vTargetDir = { 0.f, 0.f, -1.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
+		{
+			Move_Frame(DIR_LEFT);
+			m_vTargetDir = { -1.f, 0.f, 0.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
+		{
+			Move_Frame(DIR_RIGHT);
+			m_vTargetDir = { 1.f, 0.f, 0.f };
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
+			m_bPress = true;
+		}
+		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
+		{//박스들기.
+			KKK_DropBox(fTimeDelta);
+			KKK_FindBox(fTimeDelta);
+			m_bPress = true;
+		}
+		else
+			m_bPress = false;
 	}
 	else
 		Not_My_Turn_Texture();
@@ -109,6 +109,25 @@ void CTopdee::Tick(_float fTimeDelta)
 		Go_Lerp(fTimeDelta);
 	
 	Safe_Release(pGameInstance);
+}
+
+void CTopdee::ClearCheck(_float fTimeDelta)
+{
+	if (m_bPortal)
+	{
+		if (CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+			m_eCurState = STATE_CLEAR;
+			m_iFrame = 17;
+			m_fClear_Timer = fTimeDelta;
+		}
+	}
+	else return;
+	
+	if(m_eCurState == STATE_CLEAR)
+	{
+		m_fClear_Timer += fTimeDelta;
+		m_iFrame += _uint(m_fClear_Timer);
+	}
 }
 
 void CTopdee::Go_Lerp(_float fTimeDelta)
@@ -181,6 +200,7 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 	 4, 5 Topdee Up
 	 6, 7 Topdee Right
 	 8~12 Jump
+	 17 ~ 33 Clear
 	 */
 	if (m_eCurState == STATE_IDLE) {
 		if (m_eCurDir == _eInputDirection) {
@@ -216,12 +236,15 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 			m_bMoveFrame = false;
 		}
 	}
+
+	
 }
 
 void CTopdee::LateTick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+#pragma region BillBoard
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -238,7 +261,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//========================================================================
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	//vPos.y = 0.5f;
-	
+#pragma endregion BillBoard
+#pragma region Collision_Obstacle
 	_float fCollisionDist;
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist))
 	{
@@ -252,7 +276,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 			vPos.z -= fCollisionDist;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-	
+#pragma endregion Collision_Obstacle	
+
 	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
@@ -283,7 +308,7 @@ HRESULT CTopdee::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-//========================================
+#pragma region PreLoader
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE) {
 		if (FAILED(m_pTransform_PreLoader_Com->Bind_WorldMatrix()))
 			return E_FAIL;
@@ -297,26 +322,125 @@ HRESULT CTopdee::Render()
 		if (FAILED(Reset_RenderState()))
 			return E_FAIL;
 	}
-//========================================	
+#pragma endregion PreLoader
 
 	return S_OK;
+}
+void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+{
+	
+	
+}
+
+void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
+{// 여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+	if (other->CompareTag(L"Portal"))
+	{
+		m_bPortal = true;
+
+	}
+	else if (other->CompareTag(L"Pig"))
+	{
+
+	}
+	else if (other->CompareTag(L"Box"))
+	{
+		if (m_pRaiseObject != nullptr)
+			return;
+		if (!m_bPushBox) {//처음들어올때.
+			m_fPushBoxDelayTimer += fTimeDelta;
+		}
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
+			return;
+		}
+		else if((m_bPushBox)&&(m_fPushBoxDelayTimer > 0.5f)){
+			m_fPushBoxDelayTimer = 0.f;
+			m_bPushBox = false;
+		}
+		_float3 vTopdeePos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+		vTopdeePos.y = 0.5f;
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
+		
+		if (KKK_m_pBoxList == nullptr)
+		{//if Collision We Must Check NextBox.
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			Safe_AddRef(pGameInstance);
+
+			CLayer* pLayer = pGameInstance->KKK_GetBox();
+			if (pLayer == nullptr)
+				return;
+			KKK_m_pBoxList = pLayer->KKK_Get_List();
+		}
+		_float3 vCurDir{ 0.f,0.f,0.f };
+		if (m_eCurDir == DIR_DOWN)
+			vCurDir.z = -1.0f;
+		else if (m_eCurDir == DIR_UP)
+			vCurDir.z = 1.f;
+		else if (m_eCurDir == DIR_RIGHT)
+			vCurDir.x = 1.f;
+		else if (m_eCurDir == DIR_LEFT)
+			vCurDir.x = -1.f;
+		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
+		//9.5 8.5 7.5
+		_uint iCount = 0;
+		CBlock* pBlock = dynamic_cast<CBlock*>(other);
+		if (pBlock == nullptr)//지금미는 블록이 벽이니?
+			return;
+		FindCanPushBoxes(vOtherPos, vCurDir, iCount);
+		pBlock->Box_Push_More(fTimeDelta, vOtherPos,vCurDir);
+		m_bPushBox = true;
+	}
+}
+
+void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCountReFunc)
+{//들어온값은 다음 박스에 해당.
+	auto& iter = KKK_m_pBoxList->begin();
+	for (_uint i = 0; i < KKK_m_pBoxList->size(); ++i)
+	{
+		CTransform* pNextBlock = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+		_float3 vNextBlockPos = pNextBlock->Get_State(CTransform::STATE_POSITION);
+		if (vPushDir.x == 0.f)
+		{//Up or Down
+			if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z)//찾으려는값임.
+			{
+				if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x) {
+					_vNextBoxPos += vPushDir;
+					++iCountReFunc;
+					
+					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
+					CBlock* pBlock = (CBlock*)(*iter);
+					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);
+
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc);
+					break;
+				}
+			}
+				
+		}
+		else if (vPushDir.z == 0.f)
+		{
+			if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x)//찾으려는값임.
+			{
+				if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z) {
+					_vNextBoxPos += vPushDir;
+					++iCountReFunc;
+					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
+					CBlock* pBlock = (CBlock*)(*iter);
+					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc);
+					break;
+				}
+			}
+		}
+		++iter;
+	}
 }
 
 void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	if (other->CompareTag(L"Portal"))
-	{
-		int a = 10;
-	}
-}
-
-void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
-{	
-}
-
-void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta)
-{
-	
+	m_bPortal = false;
+	m_eCurState = STATE_IDLE;
 }
 
 HRESULT CTopdee::Set_RenderState()
@@ -411,19 +535,19 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject != nullptr)
 		return;
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+	if (KKK_m_pBoxList == nullptr) {
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	CLayer* pLayer = pGameInstance->KKK_GetBox();
-	if (pLayer == nullptr)
-		return;
-	KKK_m_pBoxList = pLayer->KKK_Get_List();
-
+		CLayer* pLayer = pGameInstance->KKK_GetBox();
+		if (pLayer == nullptr)
+			return;
+		KKK_m_pBoxList = pLayer->KKK_Get_List();
+	}
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
 
-	auto& iter = (*KKK_m_pBoxList).begin(); // <- ??? ??? ??
+	auto& iter = (*KKK_m_pBoxList).begin(); 
 	bool bMove{false};
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)

@@ -70,7 +70,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	
+
 	//구충돌로 비교하면서 Stay 호출
 	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
 	m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);

@@ -112,6 +112,9 @@
     <Filter Include="02.GameObject\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Wall\Wall">
+      <UniqueIdentifier>{18e28bcd-a9a4-428d-bd4a-e3ffd836757e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -244,6 +247,9 @@
     <ClInclude Include="..\public\KeyBlock.h">
       <Filter>02.GameObject\KeyBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Wall.h">
+      <Filter>02.GameObject\Wall\Wall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -365,6 +371,9 @@
     </ClCompile>
     <ClCompile Include="..\private\KeyBlock.cpp">
       <Filter>02.GameObject\KeyBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wall.cpp">
+      <Filter>02.GameObject\Wall\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

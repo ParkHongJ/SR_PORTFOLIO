@@ -73,13 +73,50 @@ _bool CGameMgr::Check_Box_Down(const _float3 & vBoxPos, _uint * pOut_iHoleNum_in
 	{
 		_float3 vPosOnlyXZ{ vBoxPos.x,0.5f,vBoxPos.z };
 		_float fDistance = D3DXVec3Length(&((*iter) - vPosOnlyXZ));
-		if (fDistance <= 0.2f) {//Debug it Length is 1.9999f So 0.2f is Right
+		if (fDistance <= 0.23f) {//Debug it Length is 1.9999f
 			*pOut_eHoleLevel = m_eHoleLevel;
 			*pOut_iHoleNum_in_Layer = i;
-			//iter = m_Obstaclelist.erase(iter);
 			iter->x = -100.f;
 			iter->y = -100.f;
 			iter->z = -100.f;
+			return true;
+		}
+		++i;
+	}
+	return false;
+}
+
+_bool CGameMgr::Check_PushBox_Exactly(const _float3 & vBoxPos)
+{
+	if (m_Obstaclelist.empty())
+		return false;
+	_uint i = 0;
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		_float3 vPosOnlyXZ{ vBoxPos.x,0.5f,vBoxPos.z };
+		_float fDistance = D3DXVec3Length(&((*iter) - vPosOnlyXZ));
+		if (fDistance <= 0.2f) {//Debug it Length is 1.9999f
+			iter->x = -100.f;
+			iter->y = -100.f;
+			iter->z = -100.f;
+			CLayer* pLayer = CGameInstance::Get_Instance()->Get_Layer((L"Layer_Hole"), m_eHoleLevel);
+			if (pLayer == nullptr)
+				return false;
+			_uint j = 0;
+			list<CGameObject*>* pList = pLayer->KKK_Get_List();
+			for (auto& iter = pList->begin(); (iter) != pList->end(); ++iter)
+			{
+				if (j != i) {
+					++j;
+					continue;
+				}
+				else
+				{
+					CTransform* pTransform =(CTransform*)(*iter)->Get_Component(L"Com_Transform");
+					pTransform->Set_State(CTransform::STATE_POSITION, _float3(-100.f, -100.f, -100.f));
+					break;
+				}
+			}
 			return true;
 		}
 		++i;

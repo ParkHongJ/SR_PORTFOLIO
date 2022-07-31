@@ -48,6 +48,7 @@ HRESULT CBlock::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		TextureSelect(vPos);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
 	}
 	return S_OK;
 }
@@ -56,6 +57,8 @@ void CBlock::Tick(_float fTimeDelta)
 {
 	if(m_bDropBox)
 		Box_Drop_More(fTimeDelta);
+	if (m_bTopdeePush)
+		Box_Push_More(fTimeDelta,m_vPushFinishPos, m_vPushDir);
 }
 
 void CBlock::LateTick(_float fTimeDelta)
@@ -91,7 +94,19 @@ HRESULT CBlock::Render()
 	
 	return S_OK;
 }
- 
+
+void CBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+{
+}
+
+void CBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+{
+}
+
+void CBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+{
+}
+
 bool CBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -135,6 +150,8 @@ void CBlock::Box_Drop_More(_float fTimeDelta)
 {
 	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
 	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
+		vBoxCurPos.y = -0.45f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vBoxCurPos));
 		m_bDropBox = false;
 		m_bEnabled = false;
 		return;
@@ -142,6 +159,53 @@ void CBlock::Box_Drop_More(_float fTimeDelta)
 	_float3 vBoxDir = { 0.f,-1.f,0.f };
 	_float fBoxSpeed = m_pTransformCom->Get_Speed();
 	m_pTransformCom->Translate(vBoxDir *fTimeDelta* fBoxSpeed);
+}
+
+void CBlock::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos, _float3 vPushDir)
+{
+	if (!m_bEnabled)
+		return;
+	m_bTopdeePush = true;
+	m_vPushFinishPos = vPushFinishPos;
+	m_vPushDir = vPushDir;
+	_float3 vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float fDist = D3DXVec3Length(&(vCurPos - m_vPushFinishPos));
+	if (fDist < 0.2f)
+	{//위치에 도달했을때.
+		Box_Push_Find_A_Place();
+		vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		m_bTopdeePush = false;
+		if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(vCurPos))
+		{//밀리다가 떨어져야 할때.
+			m_bDropBox = true;
+			m_bTopdeePush = false;
+			return;
+		}
+		return;
+	}
+	//위치로 이동중일때.
+	if (vPushDir.x == 0.f)
+	{//Up or Down
+		if (vPushDir.z > 0.f)
+			m_pTransformCom->Go_Straight(fTimeDelta);
+		else
+			m_pTransformCom->Go_Backward(fTimeDelta);
+	}
+	else if (vPushDir.z == 0.f)
+	{
+		if (vPushDir.x > 0.f)
+			m_pTransformCom->Go_Right(fTimeDelta);
+		else
+			m_pTransformCom->Go_Left(fTimeDelta);
+	}
+
+}
+
+void CBlock::Box_Push_Find_A_Place()
+{
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vRightPosition{ (_int(vCurPosition.x) + 0.5f),(_int(vCurPosition.y) + 0.5f),(_int(vCurPosition.z) + 0.5f) };
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vRightPosition);
 }
 
 HRESULT CBlock::Set_RenderState()

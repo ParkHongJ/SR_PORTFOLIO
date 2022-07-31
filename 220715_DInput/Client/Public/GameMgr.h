@@ -27,9 +27,10 @@ public:
 	GAMEMODE GetMode() { return m_eGameMode; }
 
 public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanNotGo Spot.
-	void Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag,_bool bHole);
+	void Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag,_bool bHole);//Caution!! Obstacle Cannot change Pos.
 	_bool Check_Not_Go(const _float3& vCurPos, _float* pOut_ObjectsDist);									// This func Manage Can Go or Not.
 	_bool Check_Box_Down(const _float3& vBoxPos, _uint* pOut_iHoleNum_in_Layer,LEVEL* pOut_eHoleLevel);		// This func Manage Box Can Down.
+	_bool Check_PushBox_Exactly(const _float3& vBoxPos);													// This func Manage PushBox Can Down..
 	list<_float3> m_Obstaclelist;
 	LEVEL m_eHoleLevel{ LEVEL_END };// Remember Input Level.
 

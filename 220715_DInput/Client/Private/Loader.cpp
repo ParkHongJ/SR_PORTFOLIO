@@ -13,12 +13,13 @@
 #include "Portal.h"
 #include "Turret.h"
 #include "Bullet.h"
+#include "Portal.h"
 #include "Block.h"
 #include "Spike.h"
+#include "Cloud.h"
+#include "Wall.h"
 #include "Hole.h"
 #include "Sky.h"
-#include "Portal.h"
-#include "Cloud.h"
 #include "Key.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -183,6 +184,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CKey::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Wall */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"),
+		CWall::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -209,10 +215,21 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
+	///* For.Prototype_Component_Texture_ElectricBlock */ 기존 박스.
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"), 6))))
+	//	return E_FAIL;
+
 	/* For.Prototype_Component_Texture_ElectricBlock */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Stage1_Wall */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_Stage1_Wall"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"), 6))))
 		return E_FAIL;
+
 
 	/* For.Prototype_Component_Texture_Turret */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"),
@@ -317,6 +334,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/ElectricBlock/electricBlockSpr_%d.png"), 3))))
 		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Player"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
@@ -422,6 +440,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Wall */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"),
+		CWall::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Hole */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hole"),
 		CHole::Create(m_pGraphic_Device))))
@@ -438,11 +461,6 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		return E_FAIL;
 	
 	/* ??˝???¸? ˇ?????´?. */
-
-	///* For.Prototype_Component_Texture_Terrain */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/Grass_%d.tga"), 2))))
-	//	return E_FAIL;
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay.png")))))
@@ -453,13 +471,13 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"),17))))
 		return E_FAIL;
 
-	///* For.Prototype_Component_Texture_ElectricBlock */ // Test
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
-	//	return E_FAIL;
-
-	/* For.Prototype_Component_Texture_ElectricBlock */ // Test
+	/* For.Prototype_Component_Texture_ElectricBlock */ 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Stage1_Wall */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_Stage1_Wall"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"),6))))
 		return E_FAIL;
 

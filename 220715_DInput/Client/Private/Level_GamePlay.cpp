@@ -45,13 +45,19 @@ HRESULT CLevel_GamePlay::Initialize()
 	_float3 temp = { 15.5f,0.3f,4.5f };
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
 		return E_FAIL;
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
-	/* 이거 수정해라 */
-//	_float3 temp = { 5.f,0.f,2.f };
-	//Ready_Layer_Block(L"Layer_Cube", temp);
+	_float3 vInitPos = { 12.5f,0.5f,10.5f };
+	for (_uint i = 0; i < 3; ++i) {
+		vInitPos.z -= 1.0f;
+		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
+			return E_FAIL;
+	}
 	LoadGameObject();
+
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
 	return S_OK;
 }
 
@@ -268,29 +274,11 @@ void CLevel_GamePlay::LoadGameObject()
 	for (auto& iter : m_list)
 	{
 		m_vPosition = iter;
-		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
+		Ready_Layer_Wall(L"Layer_Wall", m_vPosition);
 	}
 }
 
-CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
-{
-	CLevel_GamePlay*		pInstance = new CLevel_GamePlay(pGraphic_Device);
-
-	if (FAILED(pInstance->Initialize()))
-	{
-		MSG_BOX(TEXT("Failed To Created : CLevel_GamePlay"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-void CLevel_GamePlay::Free()
-{
-	__super::Free();
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg /*= nullptr*/)
+HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg )
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -326,3 +314,32 @@ HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Wall(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Wall"), LEVEL_STATIC, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+{
+	CLevel_GamePlay*		pInstance = new CLevel_GamePlay(pGraphic_Device);
+
+	if (FAILED(pInstance->Initialize()))
+	{
+		MSG_BOX(TEXT("Failed To Created : CLevel_GamePlay"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CLevel_GamePlay::Free()
+{
+	__super::Free();
+}

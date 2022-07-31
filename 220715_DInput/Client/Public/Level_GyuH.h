@@ -16,10 +16,10 @@ private:
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Wall(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Spike(const _tchar* pLayerTag, void* pArg = nullptr);
-
+	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
 	void	LoadGameObject();
 
 public:

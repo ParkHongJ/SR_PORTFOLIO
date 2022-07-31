@@ -27,7 +27,9 @@ private:
 	CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CTopdee(const CTopdee& rhs);
 	virtual ~CTopdee() = default;
-	
+private:
+	void ClearCheck(_float fTimeDelta);
+
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -35,11 +37,14 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+#pragma region OnCollision
 public:
-	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta);
-	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
+	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta, _uint eDirection);
+	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
+#pragma endregion OnCollision
 
+#pragma region Component
 private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
@@ -52,49 +57,57 @@ private:
 	CTransform*				m_pTransform_PreLoader_Com = nullptr;
 	CRenderer*				m_pRenderer_PreLoader_Com = nullptr;
 	CTexture*				m_pTexture_PreLoader_Com = nullptr;
+#pragma endregion Component
 
+#pragma region Variable
 private:
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };
 	TOPDEE_DIRECTION m_eCurDir{ DIR_END };
-
-private:
 	TOPDEE_STATE	m_eCurState{ STATE_IDLE };
 	_bool	m_bPress{ false };
 	_bool	m_bTurn{ false };
 	_bool	m_bPortal{ false };
-	LEVEL m_eHoleLevel{ LEVEL_END };
-	
+
+	LEVEL m_eHoleLevel{ LEVEL_END }; // for Remember HoleLevel
+
+	_float3 m_vTargetDir{ 0.f,0.f,0.f };
+	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
+	_float m_fRaising_Box_DelayTimer{ 0.f };
+	_float m_fClear_Timer{ 0.f };
+
+	_float m_MyTurnY{ 0.5f };
+	_float m_NotMyTurnY{ 0.1f };
+	_float m_OriPreLoaderY{ 0.7f };
+#pragma endregion Variable
+
+#pragma region RenderState
 private:
 	HRESULT SetUp_Components();
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 	HRESULT Set_ColliderState();
 	HRESULT Reset_ColliderState();
+#pragma endregion RenderState
 
+#pragma region About_Box
 private:
 	void	KKK_FindBox(_float fTimeDelta);
 	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);
 	void	KKK_DropBox(_float fTimeDelta);
+	_bool	WallCheck(const _float3 v);
+	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc);
+	list<class CGameObject*>* KKK_m_pBoxList = nullptr;
+	CGameObject* m_pRaiseObject = nullptr;
+	_float m_fPushBoxDelayTimer{ 0.f };
+	_bool	m_bPushBox{ false };
+#pragma endregion About_Box
 
 private:
 	void Move_Frame(const TOPDEE_DIRECTION& _eInputDirection);
 	void Not_My_Turn_Texture();
 	void Go_Lerp(_float fTimeDelta);
 	void Topdee_PreLoader_Pos_Mgr();
-
-private:
-	list<class CGameObject*>* KKK_m_pBoxList;
-	
-	CGameObject* m_pRaiseObject = nullptr;
-	_float3 m_vTargetDir{0.f,0.f,0.f};
-	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
-	_float m_fRaising_Box_DelayTimer{ 0.f };
-	_float m_fCollision_Box_DelayTimer{ 0.f };
-
-	_float m_MyTurnY{ 0.5f };
-	_float m_NotMyTurnY{ 0.1f };
-	_float m_OriPreLoaderY{ 0.7f };
 
 public:
 	static CTopdee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

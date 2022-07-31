@@ -37,8 +37,17 @@ HRESULT CLevel_GyuH::Initialize()
 		if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), vInitPos)))
 			return E_FAIL;
 	}
+
+	vInitPos = { 12.5f,0.5f,10.5f };
+	for (_uint i = 0; i < 3; ++i) {
+		vInitPos.z -= 1.0f;
+		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
+			return E_FAIL;
+	}
+
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole",	true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Spike", false);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
 	return S_OK;
 
 }
@@ -49,12 +58,12 @@ void CLevel_GyuH::Tick(_float fTimeDelta)
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
 }
-HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar * pLayerTag, void * pArg)
+HRESULT CLevel_GyuH::Ready_Layer_Wall(const _tchar * pLayerTag, void * pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Wall"), LEVEL_STATIC, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -86,6 +95,16 @@ HRESULT CLevel_GyuH::Ready_Layer_Spike(const _tchar * pLayerTag, void * pArg)
 	return S_OK;
 }
 
+HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, pArg)))
+		return E_FAIL;
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
 
 void CLevel_GyuH::LoadGameObject()
 {
@@ -113,7 +132,7 @@ void CLevel_GyuH::LoadGameObject()
 	for (auto& iter : m_list)
 	{
 		m_vPosition = iter;
-		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
+		Ready_Layer_Wall(L"Layer_Wall", m_vPosition);
 	}
 }
 
