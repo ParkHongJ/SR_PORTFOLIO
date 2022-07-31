@@ -137,7 +137,7 @@ _bool CBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHole
 		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 
-		if (vCurPosition.y <= 0.1f)
+		if (vCurPosition.y <= 0.55f)
 			return true;
 		return false;
 	}

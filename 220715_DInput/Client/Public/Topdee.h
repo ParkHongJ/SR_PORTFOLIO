@@ -95,8 +95,7 @@ private:
 	void	KKK_FindBox(_float fTimeDelta);
 	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);
 	void	KKK_DropBox(_float fTimeDelta);
-	_bool	WallCheck(const _float3 v);
-	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc);
+	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList,_bool& bCanPush);
 	list<class CGameObject*>* KKK_m_pBoxList = nullptr;
 	CGameObject* m_pRaiseObject = nullptr;
 	_float m_fPushBoxDelayTimer{ 0.f };

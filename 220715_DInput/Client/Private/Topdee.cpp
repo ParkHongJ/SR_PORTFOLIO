@@ -385,16 +385,32 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		//9.5 8.5 7.5
 		_uint iCount = 0;
 		CBlock* pBlock = dynamic_cast<CBlock*>(other);
-		if (pBlock == nullptr)//지금미는 블록이 벽이니?
+		if (pBlock == nullptr)		//지금미는 블록이 벽이니?
 			return;
-		FindCanPushBoxes(vOtherPos, vCurDir, iCount);
+		list<CGameObject*> PushList;
+		_bool bCanPush{ true };
+		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);
+		if (!bCanPush)
+			return;
+		_float fdist{ 0.f };
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, &fdist)) {
+			return;
+		}
 		pBlock->Box_Push_More(fTimeDelta, vOtherPos,vCurDir);
+		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
+		{
+			CBlock* pBlock= (CBlock*)(*iter);
+			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
+			pBlock->Box_Push_More(fTimeDelta, ((pTransform->Get_State(CTransform::STATE_POSITION) + vCurDir)), vCurDir);
+		}
 		m_bPushBox = true;
 	}
 }
 
-void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCountReFunc)
+void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
 {//들어온값은 다음 박스에 해당.
+	if (!bCanPush)
+		return;
 	auto& iter = KKK_m_pBoxList->begin();
 	for (_uint i = 0; i < KKK_m_pBoxList->size(); ++i)
 	{
@@ -409,10 +425,16 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 					++iCountReFunc;
 					
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
-					CBlock* pBlock = (CBlock*)(*iter);
-					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);
+					_float fdist{ 0.f };
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist)){
+						bCanPush = false;
+						return;
+					}
+					PushList.push_back(*iter);
+					/*CBlock* pBlock = (CBlock*)(*iter);
+					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);*/
 
-					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc);
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc,PushList, bCanPush);
 					break;
 				}
 			}
@@ -426,9 +448,16 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 					_vNextBoxPos += vPushDir;
 					++iCountReFunc;
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
-					CBlock* pBlock = (CBlock*)(*iter);
-					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);
-					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc);
+					_float fdist{ 0.f };
+					CGameMgr::Get_Instance()->Check_Not_Go(vNextBlockPos, &fdist);
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist)) {
+						bCanPush = false;
+						return;
+					}
+					PushList.push_back(*iter);
+				/*	CBlock* pBlock = (CBlock*)(*iter);
+					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);*/
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
 				}
 			}
@@ -579,7 +608,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		m_fRaising_Box_DelayTimer = 15000.f;
 		m_vBoxDropPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		m_vBoxDropPos.y = 0.f;
+		m_vBoxDropPos.y = 0.5f;
 		if (m_eCurDir == DIR_UP)
 			m_vBoxDropPos.z += 1.f;
 		else if (m_eCurDir == DIR_LEFT)
