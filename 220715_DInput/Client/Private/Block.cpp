@@ -52,17 +52,22 @@ HRESULT CBlock::Initialize(void * pArg)
 
 void CBlock::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 }
 
 void CBlock::LateTick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, this);
 }
 
 HRESULT CBlock::Render()
 {
-
+	if (!m_bActive)
+		S_OK;
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 	

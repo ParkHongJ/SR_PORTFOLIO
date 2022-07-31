@@ -52,7 +52,7 @@ public:
 		else return FALSE; 
 	}
 	bool GetEnabled() { return m_bEnabled; }
-
+	void SetActive(bool _bActive) { m_bActive = _bActive; }
 protected:
 	bool m_bActive;
 	const _tchar* m_Tag;

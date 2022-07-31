@@ -28,6 +28,7 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
+	HRESULT GetBoxList();
 private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;

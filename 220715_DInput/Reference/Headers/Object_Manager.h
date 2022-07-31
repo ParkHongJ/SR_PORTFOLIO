@@ -21,7 +21,7 @@ public:
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObjectToLayer(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 	class CLayer* KKK_GetBoxLayer();
-
+	list<class CGameObject*>* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);//레이어 얻어오는 함수
 public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);

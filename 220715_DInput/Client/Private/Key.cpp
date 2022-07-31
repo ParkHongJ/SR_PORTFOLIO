@@ -24,6 +24,7 @@ HRESULT CKey::Initialize(void * pArg)
 		return E_FAIL;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(15.f, 1.5f, 3.f));
+	GetBoxList();
 	return S_OK;
 }
 
@@ -84,10 +85,26 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 	{
 		//키는 사라지고
 		m_bActive = false;
+		for (auto& iter : *m_pBoxList)
+		{
+			iter->SetActive(false);
+		}
 		//박스 사라지게 하는함수
 	}
 }
 
+
+HRESULT CKey::GetBoxList()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance); 
+	m_pBoxList = pGameInstance->GetLayer(LEVEL_SJH, L"Layer_Cube");
+	if (m_pBoxList == nullptr)
+		return E_FAIL;
+	//m_pBoxList = pGameInstance->GetLayer(LEVEL_GAMEPLAY, L"Layer_KeyBox");
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
 
 HRESULT CKey::Set_RenderState()
 {

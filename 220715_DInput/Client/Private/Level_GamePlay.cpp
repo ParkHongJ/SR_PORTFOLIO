@@ -18,6 +18,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_Release(pGameInstance);
 
+	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -51,7 +52,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);
-	LoadGameObject();
 	return S_OK;
 }
 

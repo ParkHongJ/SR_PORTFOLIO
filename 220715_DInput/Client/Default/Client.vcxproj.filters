@@ -109,7 +109,7 @@
     <Filter Include="02.GameObject\Key">
       <UniqueIdentifier>{54825924-2d1c-40a9-8f31-11c02212c6bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\KeyBlock">
+    <Filter Include="02.GameObject\Key\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -242,7 +242,7 @@
       <Filter>02.GameObject\Key</Filter>
     </ClInclude>
     <ClInclude Include="..\public\KeyBlock.h">
-      <Filter>02.GameObject\KeyBlock</Filter>
+      <Filter>02.GameObject\Key\KeyBlock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,7 +364,7 @@
       <Filter>02.GameObject\Key</Filter>
     </ClCompile>
     <ClCompile Include="..\private\KeyBlock.cpp">
-      <Filter>02.GameObject\KeyBlock</Filter>
+      <Filter>02.GameObject\Key\KeyBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
