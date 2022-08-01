@@ -61,6 +61,9 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	/* For.Pig_Col */
+	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
 }
 
 HRESULT CMonster_Pig::Render()

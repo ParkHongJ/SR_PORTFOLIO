@@ -49,12 +49,16 @@ private:
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndex = 0;
 	_float m_fFrame = 0.f;
+	_uint m_iMinFrame = 0;
+	_uint m_iMaxFrame = 0;
 
 	_float m_MoveSpeed = 0.f;
 
 	_bool m_bJump = false;
-	_float m_fJumpPower = 18.f;
+	_bool m_bDrop = false;
+	_float m_fJumpPower = 17.f;
 	_float m_fJumpTime = 0.f;
+
 	_float m_fDrop_Endline = 0.f;
 
 	_bool m_bPortal = false;

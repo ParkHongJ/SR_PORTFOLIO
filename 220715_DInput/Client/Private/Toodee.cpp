@@ -29,7 +29,7 @@ HRESULT CToodee::Initialize(void * pArg)
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 2.f));
 
 	return S_OK;
 }
@@ -40,7 +40,7 @@ void CToodee::Tick(_float fTimeDelta)
 		if (m_bActive)
 			m_bActive = false;
 		else {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 3.f));
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 2.f));
 			m_bActive = true;
 		}
 	}
@@ -105,14 +105,12 @@ void CToodee::LateTick(_float fTimeDelta)
 				if (5 > m_MoveSpeed)
 					m_MoveSpeed += 0.1f;
 				if (!m_bPortal) {
-					if (11 < m_iTexIndex)
-						m_iTexIndex = 5;
-					++m_iTexIndex;
+					m_iMinFrame = 5;
+					m_iMaxFrame = 11;
 				}
 				else {
-					if (68 > m_iTexIndex || 72 < m_iTexIndex)
-						m_iTexIndex = 68;
-					++m_iTexIndex;
+					m_iMinFrame = 68;
+					m_iMaxFrame = 72;
 				}
 				break;
 
@@ -121,27 +119,27 @@ void CToodee::LateTick(_float fTimeDelta)
 				if (5 > m_MoveSpeed)
 					m_MoveSpeed += 0.1f;
 				if (!m_bPortal) {
-					if (11 < m_iTexIndex)
-						m_iTexIndex = 5;
-					++m_iTexIndex;
+					m_iMinFrame = 5;
+					m_iMaxFrame = 11;
 				}
 				else {
-					if (68 > m_iTexIndex || 72 < m_iTexIndex)
-						m_iTexIndex = 68;
-					++m_iTexIndex;
+					m_iMinFrame = 68;
+					m_iMaxFrame = 72;
 				}
 				break;
 
 			case TOODEE_JUMP:
-				if (11 < m_iTexIndex)
-					m_iTexIndex = 5;
-				++m_iTexIndex;
+				m_iMinFrame = 5;
+				m_iMaxFrame = 11;
 				break;
 
 			case TOODEE_PORTAL:
-				if (68 > m_iTexIndex || 72 < m_iTexIndex)
-					m_iTexIndex = 68;
-				++m_iTexIndex;
+				if (0 < m_MoveSpeed)
+					m_MoveSpeed -= 0.1f;
+				else
+					m_MoveSpeed = 0.f;
+				m_iMinFrame = 68;
+				m_iMaxFrame = 72;
 				break;
 
 			case TOODEE_IDLE:
@@ -149,44 +147,38 @@ void CToodee::LateTick(_float fTimeDelta)
 					m_MoveSpeed -= 0.1f;
 				else
 					m_MoveSpeed = 0.f;
-				if (11 < m_iTexIndex)
-					m_iTexIndex = 0;
-				++m_iTexIndex;
+				m_iMinFrame = 0;
+				m_iMaxFrame = 11;
 				break;
 			}
+
+			if (m_iMinFrame > m_iTexIndex || m_iMaxFrame < m_iTexIndex)
+				m_iTexIndex = m_iMinFrame;
+			++m_iTexIndex;
 #pragma endregion
 
 #pragma region Toodee_Jump_and_Drop
 			_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			D3DXVECTOR3 vGravityPower = _float3(0.f, 0.f, -1.f) * 1.63f * m_fJumpTime * 0.5f;
+			_float vGravityPower = -1.63f * m_fJumpTime * 0.5f;
 
-			if (m_bJump) {
-				fPos -= m_fJumpPower * fTimeDelta * _float3(0.f, 0.f, -1.f);
-				m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+			if (m_fDrop_Endline + abs(vGravityPower) <= fPos.z) {
+				if (m_bJump)
+					fPos.z += m_fJumpPower * fTimeDelta;
 
-				if (m_bJump && m_fDrop_Endline - vGravityPower.z  > fPos.z) {
-					fPos.z = m_fDrop_Endline;
-					m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
-					m_fJumpTime = 0.f;
-					m_bJump = false;
-				}
-			}
-
-			if (m_fDrop_Endline - vGravityPower.z < fPos.z) {
-				fPos += vGravityPower;
+				fPos.z += vGravityPower;
 
 				if (m_fJumpTime > 0.6f)
 					m_fJumpTime = 0.6f;
 				else
 					m_fJumpTime += fTimeDelta;
-
-				m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 			}
-			else {
-				fPos.z = m_fDrop_Endline;
-				m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+			if (m_fDrop_Endline + abs(vGravityPower) > fPos.z)
+			{
+				m_bJump = false;
 				m_fJumpTime = 0.f;
+				fPos.z = m_fDrop_Endline;
 			}
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 #pragma endregion
 
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
@@ -201,7 +193,7 @@ void CToodee::LateTick(_float fTimeDelta)
 
 			m_fFrame += fTimeDelta;
 
-			if (m_fFrame > 0.5f) {
+			if (m_fFrame > 0.2f) {
 				if (72 < m_iTexIndex)
 					return;
 				++m_iTexIndex;
@@ -209,6 +201,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			}
 		}
 	}
+	else { m_MoveSpeed = 0.f; }
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
@@ -245,30 +238,50 @@ void CToodee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDireciton)
 {
-	_float fBoxSize = 1.f;
+	if (other->CompareTag(L"Pig"))
+		m_bActive = false;
 
+	if (other->CompareTag(L"Spike"))
+		m_bActive = false;
+
+	if (other->CompareTag(L"Portal"))
+		m_bPortal = true;
+
+	_uint iCurrentDir = 0;
+	_float fBoxSize = 1.f;
 	if (other->CompareTag(L"Box")){
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
 
-		/* maybe_fix_this_part */
-		if(TargetBox->Get_State(CTransform::STATE_POSITION).x - (fBoxSize / 2.f) < m_pTransformCom->Get_State(CTransform::STATE_POSITION).x && 
-			TargetBox->Get_State(CTransform::STATE_POSITION).x + (fBoxSize / 2.f) > m_pTransformCom->Get_State(CTransform::STATE_POSITION).x)
-				m_fDrop_Endline = TargetBox->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f);
+		if (CCollider::DIR_UP == eDireciton) {
+			if(0.2f < m_fJumpTime)
+				m_bJump = false;
+			m_fJumpTime = 0.f;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+				_float3(m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+						m_pTransformCom->Get_State(CTransform::STATE_POSITION).y,
+						TargetBox->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f)));
+		}
+		else if (CCollider::DIR_DOWN == eDireciton) {
+			if (TargetBox->Get_State(CTransform::STATE_POSITION).x - (fBoxSize * 0.45f) < m_pTransformCom->Get_State(CTransform::STATE_POSITION).x
+				&& TargetBox->Get_State(CTransform::STATE_POSITION).x + (fBoxSize * 0.45f) > m_pTransformCom->Get_State(CTransform::STATE_POSITION).x)
+				m_bJump = false;
+		}
+		else if (CCollider::DIR_LEFT == eDireciton) {
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+		}
+		else if (CCollider::DIR_RIGHT == eDireciton) {
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+		}
 
 		Safe_Release(TargetBox);
 	}
-	else if (other->CompareTag(L"Pig")) {
-		m_bActive = false;
-	}
-	else if (other->CompareTag(L"Portal")) {
-		m_bPortal = true;
-	}
+
+	iCurrentDir = eDireciton;
 }
 
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	m_fDrop_Endline = 0.f;
 	m_bPortal = false;
 }
 

@@ -545,6 +545,11 @@ HRESULT CLoader::Loading_ForSJHLevel()
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
+		CSpike::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 	/* Loading Texture */
 
@@ -561,6 +566,11 @@ HRESULT CLoader::Loading_ForSJHLevel()
 	/* For.Prototype_Component_Texture_Toodee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SJH, TEXT("Prototype_Component_Texture_Toodee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 73))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spike"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));

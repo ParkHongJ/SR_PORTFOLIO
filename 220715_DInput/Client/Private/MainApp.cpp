@@ -68,6 +68,8 @@ void CMainApp::Tick(_float fTimeDelta)
 #endif // _DEBUG
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
+	CGameMgr::Get_Instance()->Tick(fTimeDelta);
+
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
 
