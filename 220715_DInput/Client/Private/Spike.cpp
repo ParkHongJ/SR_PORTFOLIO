@@ -31,6 +31,10 @@ HRESULT CSpike::Initialize(void * pArg)
 		
 		_float3 vSetPos{ *(_float3*)pArg };
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vSetPos);
+		m_vToodeePos = vSetPos;
+		vSetPos.y += 0.5f;
+		vSetPos.z -= 1.f;
+		m_vTopdeePos = vSetPos;
 	}
 
 	return S_OK;
@@ -44,10 +48,16 @@ void CSpike::Tick(_float fTimeDelta)
 		if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
 			if (0 < m_iFrame)
 				--m_iFrame;
+			_float3 vPos;
+			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vToodeePos, fTimeDelta * m_fSpeed);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE) {
 			if (5 > m_iFrame)
 				++m_iFrame;
+			_float3 vPos;
+			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vTopdeePos, fTimeDelta * m_fSpeed);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		m_fTime = 0.f;
 	}

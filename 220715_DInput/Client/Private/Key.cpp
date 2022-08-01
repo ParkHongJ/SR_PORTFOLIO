@@ -27,9 +27,6 @@ HRESULT CKey::Initialize(void * pArg)
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-		
-		vPos *= 3.f;
-		m_vTargetPos = vPos;
 	}
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
@@ -46,9 +43,6 @@ void CKey::Tick(_float fTimeDelta)
 	if (m_fFrame >= 12.0f)
 		m_fFrame = 0.f;
 
-	_float3 vPos;
-	vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vTargetPos, fTimeDelta);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 }
 
 void CKey::LateTick(_float fTimeDelta)
@@ -67,9 +61,6 @@ void CKey::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	//m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
-	//Edit hong
-
 	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
 
 }

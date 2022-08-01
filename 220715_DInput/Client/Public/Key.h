@@ -54,16 +54,5 @@ private:
 
 	//열쇠를 먹으면 없어지는 박스리스트 모음
 	list<class CGameObject*>* m_pBoxList;
-	_float3 m_vTargetPos;
-	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
-	{
-		_float3 a = target - current;
-		float magnitude = D3DXVec3Length(&a);
-		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
-		{
-			return target;
-		}
-		return current + a / magnitude * maxDistanceDelta;
-	}
 };
 END

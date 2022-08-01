@@ -49,8 +49,20 @@ public:
 	static CSpike* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
-
+	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
+	{
+		_float3 a = target - current;
+		float magnitude = D3DXVec3Length(&a);
+		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
+		{
+			return target;
+		}
+		return current + a / magnitude * maxDistanceDelta;
+	}
 private:
+	_float3 m_vTopdeePos;
+	_float3 m_vToodeePos;
+	_float m_fSpeed = 13.f;//이동속도
 	_uint m_iFrame = 0;
 	_float m_fTime = 0.f;
 };
