@@ -80,7 +80,7 @@ HRESULT CKey::Render()
 
 void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"TopDee") || other->CompareTag(L"Monster"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"TopDee") || other->CompareTag(L"Pig"))
 	{
 		//키는 사라지고
 		m_bActive = false;

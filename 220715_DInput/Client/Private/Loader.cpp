@@ -21,6 +21,7 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
+#include "BreakingBlock.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -370,9 +371,12 @@ HRESULT CLoader::Loading_ForSENILevel()
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	lstrcpy(m_szLoadingText, TEXT("¡Æ¢¥???????? ¢§????©¬??¢¥?¢¥?. "));
+	lstrcpy(m_szLoadingText, TEXT("Loading Prototype..."));
 
-	/* ¡Æ©©¢´?¢´??????? ¢§?????¢¥?. */
+	/*-----------
+	--Prototype--
+	------------*/
+
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
@@ -383,13 +387,21 @@ HRESULT CLoader::Loading_ForSENILevel()
 		CMonster_Pig::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_BreakingBlock */
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BreakingBlock"),
+	//	CBreakingBlock::Create(m_pGraphic_Device))))
+	//	return E_FAIL;
+
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("??¢©???¢¬? ¢§????©¬??¢¥?¢¥?. "));
-	/* ??¢©???¢¬? ¢§?????¢¥?. */
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
+	
+	/*-----------
+	--Texture--
+	------------*/
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
@@ -401,13 +413,20 @@ HRESULT CLoader::Loading_ForSENILevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("¢¬©¢?¡§?? ¢§????©¬??¢¥?¢¥?. "));
-	/* ¢¬©¢?¡§¢¬? ¢§?????¢¥?. */
+	/* For.Prototype_Component_Texture_BreakingBlock */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/BreakingBlock/breakingSpr_%d.png"), 2))))
+	//	return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
+	
+	/* Loading Model */
+	
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 100, 100))))
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("¢§????? ??¢§?????¢©?¢¥?¢´?¢´¡×.  "));
+	lstrcpy(m_szLoadingText, TEXT("¢§Success!"));
 
 	Safe_Release(pGameInstance);
 
