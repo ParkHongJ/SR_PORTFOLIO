@@ -44,23 +44,34 @@ void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pL
 			return;
 		m_Obstaclelist.push_back(pTransform->Get_State(CTransform::STATE_POSITION));
 	}
-	if (bHole)
+	if (bHole) {
 		m_eHoleLevel = eLayerLevel;
-
+		m_iHoleFinishNum = m_Obstaclelist.size();
+	}
 }
 
-_bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist)
+_bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, _bool bPushCheck)
 {
 	if (m_Obstaclelist.empty())
 		return false;
-	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
-	{
-		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
-		if (fDistance <= 1.0f) {//Objects Position Compare
-			*pOut_ObjectsDist = fDistance - 1.0f;
-			return true;
+	
+		_uint i = 0;
+		for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+		{
+			if (bPushCheck) {
+				if (i < m_iHoleFinishNum) {
+					++i;
+					continue;
+				}
+			}
+			_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
+			if (fDistance <= 1.0f) {//Objects Position Compare
+				*pOut_ObjectsDist = fDistance - 1.0f;
+				return true;
+			}
+			++i;
 		}
-	}
+	
 	return false;
 }
 

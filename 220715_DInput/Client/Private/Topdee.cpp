@@ -264,7 +264,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion BillBoard
 #pragma region Collision_Obstacle
 	_float fCollisionDist;
-	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist))
+	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist,false))
 	{
 		if (m_eCurDir == DIR_LEFT)
 			vPos.x -= fCollisionDist;
@@ -393,7 +393,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (!bCanPush)
 			return;
 		_float fdist{ 0.f };
-		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, &fdist)) {
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, &fdist,true)) {
 			return;
 		}
 		pBlock->Box_Push_More(fTimeDelta, vOtherPos,vCurDir);
@@ -426,14 +426,11 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 					
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist)){
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist,true)){
 						bCanPush = false;
 						return;
 					}
 					PushList.push_back(*iter);
-					/*CBlock* pBlock = (CBlock*)(*iter);
-					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);*/
-
 					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc,PushList, bCanPush);
 					break;
 				}
@@ -449,14 +446,11 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 					++iCountReFunc;
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					CGameMgr::Get_Instance()->Check_Not_Go(vNextBlockPos, &fdist);
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist)) {
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist,true)) {
 						bCanPush = false;
 						return;
 					}
 					PushList.push_back(*iter);
-				/*	CBlock* pBlock = (CBlock*)(*iter);
-					pBlock->Box_Push_More(0.f, vNextBoxPosFix, vPushDir);*/
 					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
 				}
