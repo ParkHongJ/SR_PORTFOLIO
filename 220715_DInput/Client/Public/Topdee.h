@@ -28,7 +28,7 @@ private:
 	CTopdee(const CTopdee& rhs);
 	virtual ~CTopdee() = default;
 private:
-	void ClearCheck(_float fTimeDelta);
+	void ClearCheck(_float fTimeDelta);// GameClear?
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -79,6 +79,11 @@ private:
 	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.1f };
 	_float m_OriPreLoaderY{ 0.7f };
+
+	list<class CGameObject*>* KKK_m_pBoxList = nullptr;
+	CGameObject* m_pRaiseObject = nullptr;
+	_float m_fPushBoxDelayTimer{ 0.f };
+	_bool	m_bPushBox{ false };
 #pragma endregion Variable
 
 #pragma region RenderState
@@ -95,11 +100,8 @@ private:
 	void	KKK_FindBox(_float fTimeDelta);
 	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);
 	void	KKK_DropBox(_float fTimeDelta);
+	void	TopdeeIsPushed(const _float3 _vOtherPos);
 	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList,_bool& bCanPush);
-	list<class CGameObject*>* KKK_m_pBoxList = nullptr;
-	CGameObject* m_pRaiseObject = nullptr;
-	_float m_fPushBoxDelayTimer{ 0.f };
-	_bool	m_bPushBox{ false };
 #pragma endregion About_Box
 
 private:

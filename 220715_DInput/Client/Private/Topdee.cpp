@@ -3,7 +3,7 @@
 
 #include "GameMgr.h"
 #include "Block.h"
-
+#include "Wall.h"
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -345,8 +345,13 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	}
 	else if (other->CompareTag(L"Box"))
 	{
-		if (m_pRaiseObject != nullptr)
+		if (!other->IsEnabled())
 			return;
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//ºÎµúÈù »óÀÚ.
+		TopdeeIsPushed(vOtherPos);
+	/*	if (m_pRaiseObject != nullptr)
+			return;*/
 		if (!m_bPushBox) {//Ã³À½µé¾î¿Ã¶§.
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
@@ -357,10 +362,6 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			m_fPushBoxDelayTimer = 0.f;
 			m_bPushBox = false;
 		}
-		_float3 vTopdeePos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
-		vTopdeePos.y = 0.5f;
-		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
-		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//ºÎµúÈù »óÀÚ.
 		
 		if (KKK_m_pBoxList == nullptr)
 		{//if Collision We Must Check NextBox.
@@ -405,6 +406,22 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		}
 		m_bPushBox = true;
 	}
+}
+
+void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
+{
+	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float fDist = D3DXVec3Length(&(vTopdeePos - _vOtherPos));
+	fDist *= 0.25f;
+	if (m_eCurDir == DIR_LEFT)
+		vTopdeePos.x += fDist;
+	else if (m_eCurDir == DIR_RIGHT)
+	 	vTopdeePos.x -= fDist;
+	else if (m_eCurDir == DIR_UP)
+		vTopdeePos.z -= fDist;
+	else if (m_eCurDir == DIR_DOWN)
+		vTopdeePos.z += fDist;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeePos);
 }
 
 void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
@@ -586,7 +603,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
-		
+		m_pRaiseObject->SetEnabled(false);
 	}
 
 	Safe_Release(pGameInstance);
@@ -627,6 +644,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb
 			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f,0.f,0.f), fTimeDelta, true);//it can Make Drop More.
 		}
+		m_pRaiseObject->SetEnabled(true);
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);

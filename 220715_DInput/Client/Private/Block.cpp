@@ -106,7 +106,7 @@ void CBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 void CBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 }
-
+#pragma region About_Topdee
 bool CBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -207,7 +207,7 @@ void CBlock::Box_Push_Find_A_Place()
 	_float3 vRightPosition{ (_int(vCurPosition.x) + 0.5f),(_int(vCurPosition.y) + 0.5f),(_int(vCurPosition.z) + 0.5f) };
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vRightPosition);
 }
-
+#pragma endregion About_Topdee
 HRESULT CBlock::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
