@@ -6,11 +6,15 @@
 
 CMonster_Pig::CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
+	, m_bOnBlock(false)
+	, m_bOnAir(true)
 {
 }
 
 CMonster_Pig::CMonster_Pig(const CMonster_Pig & rhs)
 	: CLandObject(rhs)
+	, m_bOnBlock(false)
+	, m_bOnAir(true)
 {
 }
 
@@ -41,13 +45,23 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
-	/*if ( TOODEE )
-		중력 작용 / 블럭 위에서만 돌아다님*/
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	{
+		UpdateGravitiy(fTimeDelta);
 
-	//if ( TOPDEE )
-	m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
-	m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
-	
+		if (m_bOnBlock)
+		{
+			m_pTransformCom->Go_Right(0.55 * fTimeDelta);
+		}
+		//어떤 경우에 -fTimeDelta 해줄 것 인지?
+	}
+
+	else
+	{
+		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
+		m_pTransformCom->Chase(m_vTopdeePos, 0.55 * fTimeDelta);
+		m_bOnAir = true;
+	}
 
 	_float4x4		ViewMatrix;
 
@@ -90,15 +104,19 @@ HRESULT CMonster_Pig::Render()
 	return S_OK;
 }
 
-void CMonster_Pig::OnTriggerExit(CGameObject * other)
+void CMonster_Pig::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+{
+	if (other->CompareTag(L"Box"))
+	{
+		m_bOnBlock = true;
+	}
+}
+
+void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CMonster_Pig::OnTriggerEnter(CGameObject * other)
-{
-}
-
-void CMonster_Pig::OnTriggerStay(CGameObject * other)
+void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
 }
 
@@ -163,6 +181,32 @@ HRESULT CMonster_Pig::SetUp_Components()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
+{
+	_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	if (m_bOnBlock)
+	{
+		m_bOnAir = false;
+	}
+	else
+	{
+		m_bOnAir = true;
+	}
+
+	if (m_bOnAir)
+	{
+		vPigPos.z -= -9.8f * fTimeDelta * 0.5f;
+		fTimeDelta += 0.1f;
+	}
+	else
+	{
+		fTimeDelta = 0.f;
+	}
+
+	//m_bOnBlock = false;
 }
 
 CMonster_Pig * CMonster_Pig::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
