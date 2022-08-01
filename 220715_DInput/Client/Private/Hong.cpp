@@ -5,6 +5,7 @@
 #include "Camera_Free.h"
 #include "Level_Loading.h"
 #include "GameObject.h"
+#include <winnt.h>
 CHong::CHong(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -23,10 +24,11 @@ HRESULT CHong::Initialize()
 
 	/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
 		return E_FAIL;*/
-	if (FAILED(Ready_Layer_Player(TEXT("Prototype_GameObject_Player"))))
-		return E_FAIL;
 
-	LoadGameObject();
+	//LoadGameObject();
+
+
+	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL );   
 	return S_OK;
 }
 
@@ -51,9 +53,11 @@ void CHong::Tick(_float fTimeDelta)
 	}
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
-		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"), m_vPosition)))
+		if (FAILED(Ready_Layer_Block(m_SelectPrototypes, m_SelectLayer, m_vPosition)))
 			return;
 		m_list.push_back(m_vPosition);
+
+		m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
 	}
 }
 
@@ -61,49 +65,115 @@ HRESULT CHong::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+	_float4x4 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	matWorld.m[0][0] = 0.1f;
+	matWorld.m[1][1] = 0.1f;
+	matWorld.m[2][2] = 0.1f;
+	memcpy(&matWorld.m[3][0], &m_vPosition, sizeof(_float3));
+	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
+	m_pSphereMesh->DrawSubset(0);
 
 	SetWindowText(g_hWnd, TEXT("홍준레벨임"));
 
-	CreateMap();
 	ImGui::ShowDemoWindow();
 	ImGui::Begin("SelectFolder");
 
-
-	ImGui::Text("Blah");
-	const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
-	static int item_current = 1;
-	ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 4);
-
-	if (ImGui::Button("Open"))
+	//큰 문제점. 서로의 쌍이 맞아야한다
+	//틀리면 절대안댐
+	static int item_current = 0;
+	const char* Layers[] = { 
+		"Layer_topdee",
+		"Layer_Toodee", 
+		"Layer_Cube",
+		"Layer_Monster_Pig",
+		"Layer_Monster_Turret",
+		"Layer_Portal",
+		"Layer_Cloud",
+		"Layer_Hole",
+		"Layer_KeyBox",
+		"Layer_Key"
+	};
+	const char* Prototypes[] =
 	{
-		TCHAR cpath[MAX_PATH] = L"";
+		"Prototype_GameObject_Topdee",
+		"Prototype_GameObject_Toodee",
+		"Prototype_GameObject_Cube",
+		"Prototype_GameObject_Monster_Pig",
+		"Prototype_GameObject_Turret",
+		"Prototype_GameObject_Portal",
+		"Prototype_GameObject_Cloud",
+		"Prototype_GameObject_Hole",
+		"Prototype_GameObject_KeyBox",
+		"Prototype_GameObject_Key"
+	};
+	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 
-		LPITEMIDLIST pDirList;
-		BROWSEINFO browseInfo;
-		browseInfo.hwndOwner = NULL;
-		browseInfo.pidlRoot = NULL;
-		browseInfo.lpszTitle = L"이미지들을 불러올 폴더를 선택해 주세요";
-		browseInfo.pszDisplayName = cpath;
-		browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
-		browseInfo.lpfn = NULL;
-		browseInfo.lParam = 0;
-
-		pDirList = SHBrowseForFolder(&browseInfo);
-		if (pDirList != NULL)
+	if (ImGui::BeginListBox("Layers"))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(Layers); n++)
 		{
-			BOOL bWorking = true;
-			SHGetPathFromIDList(pDirList, cpath);
-			TCHAR *return_path = cpath;
+			const bool is_selected = (item_current == n);
+			if (ImGui::Selectable(Layers[n], is_selected))
+				item_current = n;
 
-
-			/*FindFirstFile(cpath, &test);
-			while (bWorking)
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
 			{
-				bWorking = FindNextFile();
-			}*/
+				ImGui::SetItemDefaultFocus();
+
+				//Layers
+				int strSize = MultiByteToWideChar(CP_ACP, 0, Layers[item_current], -1, NULL, NULL);
+				//wchar_t 메모리 할당
+				const _tchar* szTemp = new WCHAR[strSize];
+				//형 변환
+				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				m_SelectLayer = szTemp;
+				
+				//Prototypes
+				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
+				szTemp = new WCHAR[strSize];
+				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				m_SelectPrototypes = szTemp;
+			}
 		}
-		
+		ImGui::EndListBox();
+		if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
+		if (ImGui::Button("Load")) LoadGameObject();
 	}
+
+
+	//CreateMap();
+	//if (ImGui::Button("Open"))
+	//{
+	//	TCHAR cpath[MAX_PATH] = L"";
+
+	//	LPITEMIDLIST pDirList;
+	//	BROWSEINFO browseInfo;
+	//	browseInfo.hwndOwner = NULL;
+	//	browseInfo.pidlRoot = NULL;
+	//	browseInfo.lpszTitle = L"이미지들을 불러올 폴더를 선택해 주세요";
+	//	browseInfo.pszDisplayName = cpath;
+	//	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
+	//	browseInfo.lpfn = NULL;
+	//	browseInfo.lParam = 0;
+
+	//	pDirList = SHBrowseForFolder(&browseInfo);
+	//	if (pDirList != NULL)
+	//	{
+	//		BOOL bWorking = true;
+	//		SHGetPathFromIDList(pDirList, cpath);
+	//		TCHAR *return_path = cpath;
+
+
+	//		/*FindFirstFile(cpath, &test);
+	//		while (bWorking)
+	//		{
+	//			bWorking = FindNextFile();
+	//		}*/
+	//	}
+	//	
+	//}
 
 	ImGui::End();
 
@@ -156,8 +226,6 @@ HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag)))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -180,12 +248,12 @@ HRESULT CHong::Ready_Layer_Monster(const _tchar * pLayerTag)
 }
 
 
-HRESULT CHong::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
+HRESULT CHong::Ready_Layer_Block(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_HONG, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_HONG, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -240,80 +308,96 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/Map.dat", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
+
 	DWORD	dwByte = 0;
-	for (auto& iter : m_list)
+	DWORD	dwStrByte = 0;
+
+	/*	Map<<Prototype, Layer>, vPosition> */
+	
+	auto iter = m_TestMap.begin();
+
+	while (iter != m_TestMap.end())
 	{
-		WriteFile(hFile, iter, sizeof(_float3), &dwByte, nullptr);
+		// Key값 저장
+		dwStrByte =  sizeof(_tchar) * wcslen(iter->first.first);//sizeof(iter->first.first);
+		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
+		// Key값 저장
+		dwStrByte = sizeof(_tchar) * wcslen(iter->first.second);
+		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
+
+		// Second값 저장
+		WriteFile(hFile, iter->second, sizeof(_float3), &dwByte, nullptr);
+		++iter;
 	}
 	CloseHandle(hFile);
 }
 
 void CHong::LoadGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	DWORD dwByte = 0;
+	DWORD dwStrByte = 0; //String length
+	
+	//Clear Map
+	for (auto& Pair : m_TestMap)
+	{
+		delete Pair.first.second;
+		delete Pair.second;
+	}
+	m_Test.clear();
 
+	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
-		_float3 vBlockPos = { };
-		ReadFile(hFile, vBlockPos, sizeof(_float3), &dwByte, nullptr);
+		// Key 값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pFirst = nullptr;
+		pFirst = new _tchar[dwStrByte];
+		ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
+		pFirst[dwByte / sizeof(_tchar)] = 0;
+
+		//Key값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pSecond = nullptr;
+		pSecond = new _tchar[dwStrByte];
+		ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
+		pSecond[dwByte / sizeof(_tchar)] = 0;
+
+		_float3 vPos = {};
+		ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
 
 		if (0 == dwByte)
 		{
+			Safe_Delete_Array(pFirst);
+			Safe_Delete_Array(pSecond);
 			break;
 		}
-		m_list.push_back(vBlockPos);
+		m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
 	}
 
+	auto iter = m_TestMap.begin();
+
+	while (iter != m_TestMap.end())
+	{
+		Ready_Layer_Block(iter->first.first, iter->first.second, iter->second);
+		++iter;
+	}
 	CloseHandle(hFile);
-
-	for (auto& iter : m_list)
-	{
-		m_vPosition = iter;
-		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
-	}
-}
-
-void CHong::CreateMap()
-{
-	ImGui::Begin("Test");
-	ImGui::DragFloat3("vPos", m_vPosition, 1.f, -100.0f, 100.0f);
-
-	if (ImGui::Button("+X")) m_vPosition.x += 1.f; ImGui::SameLine();
-	if (ImGui::Button("-X")) m_vPosition.x -= 1.f; ImGui::SameLine();
-	if (ImGui::Button("+Z")) m_vPosition.z += 1.f; ImGui::SameLine();
-	if (ImGui::Button("-Z")) m_vPosition.z -= 1.f; 
-
-	if (ImGui::Button("Create"))
-	{
-		/*for (auto& iter : m_list)
-		{
-			if (iter != m_vPosition)
-			{
-				if (!m_list.empty())
-				{
-
-				}
-			}
-		}*/
-		if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"), m_vPosition)))
-			return;
-		m_list.push_back(m_vPosition);
-	}
-	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
-	if (ImGui::Button("Load")) LoadGameObject(); 
-
-	ImGui::End();
 }
 
 void CHong::Free()
 {
 	__super::Free();
+	CKeyMgr::Get_Instance()->Destroy_Instance();
+	m_pSphereMesh->Release();
 }

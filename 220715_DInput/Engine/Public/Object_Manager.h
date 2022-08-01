@@ -23,6 +23,7 @@ public:
 	class CLayer* KKK_GetBoxLayer();
 	class CLayer* Get_Layer(const _tchar* pLayerTag, _uint iLevelIndex);
 
+	list<class CGameObject*>* GetLayer(_uint iLevelIndex, const _tchar* pLayerTag);//레이어 얻어오는 함수
 public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);

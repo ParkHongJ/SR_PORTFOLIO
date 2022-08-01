@@ -21,6 +21,7 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
+#include "KeyBlock.h"
 
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -190,6 +191,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CWall::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_KeyBox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_KeyBox"),
+		CKeyBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -231,6 +236,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"), 6))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_KeyBox */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_KeyBox"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/LockedWall/LockedWall_%d.dds"), 1))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Turret */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"),
@@ -282,6 +291,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+
 	lstrcpy(m_szLoadingText, TEXT("Success!"));
 
 	Safe_Release(pGameInstance);
@@ -296,35 +306,82 @@ HRESULT CLoader::Loading_ForHongLevel()
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	/*-----------
-	--Prototype--
-	------------*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
-		CPlayer::Create(m_pGraphic_Device))))
-		return E_FAIL;
+	/*----------------
+	--프로토타입 생성--
+	----------------*/
+
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Toodee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"),
+		CToodee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Monster_Pig */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_Pig"),
+		CMonster_Pig::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Topdee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Topdee"),
+		CTopdee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Cube */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cube"),
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
-	/* For.Prototype_GameObject_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
-		CSky::Create(m_pGraphic_Device))))
+
+	/* For.Prototype_GameObject_Turret */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Turret"),
+		CTurret::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
+		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Portal"),
+		CPortal::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Hole */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hole"),
 		CHole::Create(m_pGraphic_Device))))
 		return E_FAIL;
-	/*-----------
-	---Texture---
-	------------*/
+
+	/* For.Prototype_GameObject_Cloud */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cloud"),
+		CCloud::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_Key */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Key"),
+		CKey::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_KeyBox */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_KeyBox"),
+		CKeyBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
+
+	/*------------------
+	-----텍스쳐 생성-----
+	------------------*/
+
+	/* For.Prototype_Component_Texture_Topdee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"), 17))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
@@ -343,22 +400,79 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 		return E_FAIL;
+	/* For.Prototype_Component_Texture_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SJH, TEXT("Prototype_Component_Texture_Toodee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 73))))
+		return E_FAIL;
 
-	/*-----------
-	--Component--
-	------------*/
+	/* For.Prototype_Component_Texture_Monster_Pig */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_ElectricBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_Texture_ElectricBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"), 6))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_KeyBox */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_KeyBox"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/LockedWall/LockedWall_%d.dds"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Turret */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Turret_%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bullet"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Portal/portalSpr_%d.png"), 11))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Topdee_PreLoader */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_PreLoader.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Hole */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hole"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Hole/Hole_%d.png"), 2))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Cloud */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Cloud"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/cloudSpr_%d.png"), 6))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Key */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Key"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Key/keySpr_%d.png"), 12))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
+
+	/* Loading Model */
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))//, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"), CVIBuffer_Cube::Create(m_pGraphic_Device))))
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"),
+	CVIBuffer_Cube::Create(m_pGraphic_Device))))
+	return E_FAIL;*/
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"),
+		CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_Cube */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
-		CVIBuffer_Cube::Create(m_pGraphic_Device))))
-		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Success!"));
+
 	Safe_Release(pGameInstance);
 
 	m_isFinished = true;

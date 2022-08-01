@@ -22,8 +22,26 @@ HRESULT CCloud::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, 
-		_float3(10.f, 0.5f, 3.f));
+	if (pArg != nullptr)
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+		m_vToodeePos = vPos;
+		vPos.y += 5.f;
+		m_vTopdeePos = vPos;
+	}
+	else
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+			_float3(10.f, 0.5f, 3.f));
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		m_vToodeePos= vPos;
+		vPos.y += 5.f;
+		m_vTopdeePos = vPos;
+	}
+	m_Tag = L"Box";
 	return S_OK;
 }
 
@@ -39,7 +57,7 @@ void CCloud::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(10.f, 5.5f, 3.f),
+				m_vTopdeePos,
 				fTimeDelta * 5.f));
 
 		m_bEnabled = false;
@@ -49,7 +67,7 @@ void CCloud::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(10.f, 0.5f, 3.f),
+				m_vToodeePos,
 				fTimeDelta * 5.f));
 
 		m_bEnabled = true;

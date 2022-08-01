@@ -1,53 +1,38 @@
 #include "stdafx.h"
-#include "..\Public\Turret.h"
+#include "..\Public\Particle.h"
+
 
 #include "GameInstance.h"
-#include "KeyMgr.h"
 
-CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
+CParticle::CParticle(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
-
 }
 
-CTurret::CTurret(const CTurret & rhs)
+CParticle::CParticle(const CParticle & rhs)
 	: CGameObject(rhs)
-	, m_eDir(RIGHT)/*이거 수정해라*/
-	, m_fCurrentTimer(0.f)
 {
-
 }
 
-HRESULT CTurret::Initialize_Prototype()
+HRESULT CParticle::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CTurret::Initialize(void * pArg)
+HRESULT CParticle::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	if (pArg != nullptr)
-	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-	}
-	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 0.5f, 10.f));
-	//======================
-	SetTag(L"Turret");
-	//======================
-
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
+	m_Tag = L"Particle";
 	return S_OK;
 }
 
-void CTurret::Tick(_float fTimeDelta)
+void CParticle::Tick(_float fTimeDelta)
 {
-	Fire(fTimeDelta);
 }
 
-void CTurret::LateTick(_float fTimeDelta)
+void CParticle::LateTick(_float fTimeDelta)
 {
 	_float4x4		ViewMatrix;
 
@@ -61,14 +46,15 @@ void CTurret::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+
 }
 
-HRESULT CTurret::Render()
+HRESULT CParticle::Render()
 {
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(m_eDir)))
+	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))
@@ -79,54 +65,14 @@ HRESULT CTurret::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-
-	//m_fCurrentTimer = 0.f;
-	////총알 방향설정 , 생성
-	//CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	//Safe_AddRef(pGameInstance);
-
-	//ImGui::Begin("Test");
-	//_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//ImGui::End();
-	//if (CKeyMgr::Get_Instance()->Key_Down('U'))
-	//{
-	//	vPos.x += 1.f;
-	//	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
-	//		LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
-	//		MSG_BOX(L"총알 생성 실패");
-
-	//	Safe_Release(pGameInstance);
-	//}
-	
-
 	return S_OK;
 }
 
-void CTurret::Fire(_float fTimeDelta)
-{
-	m_fCurrentTimer += fTimeDelta;
-	if (m_fCurrentTimer > 1.f)
-	{
-		m_fCurrentTimer = 0.f;
-		//총알 방향설정 , 생성
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(
-			TEXT("Prototype_GameObject_Bullet"),
-			LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
-			MSG_BOX(L"총알 생성 실패");
-
-		Safe_Release(pGameInstance);
-	}
-	
-}
-
-HRESULT CTurret::Set_RenderState()
+HRESULT CParticle::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
+
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -136,7 +82,7 @@ HRESULT CTurret::Set_RenderState()
 	return S_OK;
 }
 
-HRESULT CTurret::Reset_RenderState()
+HRESULT CParticle::Reset_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -144,21 +90,21 @@ HRESULT CTurret::Reset_RenderState()
 	return S_OK;
 }
 
-HRESULT CTurret::SetUp_Components()
-{
-	/* For.Com_Renderer */
+HRESULT CParticle::SetUp_Components()
+{/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
-		return E_FAIL;
-	/* 이거 수정해라 */
-	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 0.5f,1.f,0.f };
+	RectDesc.vSize = { 0.2f,0.2f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Particle"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+		return E_FAIL;
+
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
@@ -168,37 +114,37 @@ HRESULT CTurret::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
+
 	return S_OK;
 }
 
-
-CTurret * CTurret::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CParticle * CParticle::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CTurret*		pInstance = new CTurret(pGraphic_Device);
+	CParticle* pInstance = new CParticle(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CTurret"));
+		MSG_BOX(TEXT("Failed To Created : CParticle"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CTurret::Clone(void * pArg)
+CGameObject * CParticle::Clone(void * pArg)
 {
-	CTurret*		pInstance = new CTurret(*this);
+	CParticle* pInstance = new CParticle(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Clone : CTurret"));
+		MSG_BOX(TEXT("Failed To Clone : CParticle"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CTurret::Free()
+void CParticle::Free()
 {
 	__super::Free();
 	Safe_Release(m_pTransformCom);
@@ -206,4 +152,3 @@ void CTurret::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 }
-

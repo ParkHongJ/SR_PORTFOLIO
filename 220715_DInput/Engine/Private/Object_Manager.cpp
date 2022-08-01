@@ -172,3 +172,14 @@ class CComponent* CObject_Manager::Get_Component(_uint iLevelIndex, const _tchar
 	return pLayer->Get_Component(pComponentTag, iLayerIndex);
 
 }
+
+list<class CGameObject*>* CObject_Manager::GetLayer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	//CLayer*		pLayer = Find_Layer(6, L"Layer_Cube");
+	if (nullptr == pLayer)
+		return nullptr;
+
+	/*이거 수정해라*/
+	return pLayer->KKK_Get_List();
+}

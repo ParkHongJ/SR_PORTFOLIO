@@ -87,16 +87,6 @@ HRESULT CBullet::Render()
 {
 	if (!m_bActive)
 		return S_OK;
-#pragma region Debug_Collider
-	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float4x4 Matrix;// = m_pTransformCom->Get_WorldMatrix();
-	D3DXMatrixIdentity(&Matrix);
-	memcpy(&Matrix.m[3][0], &vPos, sizeof(_float3));
-
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCollider->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-#pragma endregion Debug
 
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;

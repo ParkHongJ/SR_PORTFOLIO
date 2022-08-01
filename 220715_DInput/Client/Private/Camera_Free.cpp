@@ -98,7 +98,9 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		}
 	}
 
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
+	CGameMgr* pGameMgr = CGameMgr::Get_Instance();
+	Safe_AddRef(pGameMgr);
+	if (pGameMgr->GetMode() == CGameMgr::TOPDEE)
 	{
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,
@@ -115,6 +117,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 
 	m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
 
+	Safe_Release(pGameMgr);
 	Safe_Release(pGameInstance);
 	__super::Tick(fTimeDelta);
 }

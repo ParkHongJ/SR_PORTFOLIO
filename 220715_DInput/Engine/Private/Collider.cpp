@@ -128,7 +128,7 @@ HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			if (pSour->GetEnabled() && pDest->GetEnabled())
+			if (pSour->GetEnabled() && pDest->GetEnabled() && pSour != nullptr && pDest != nullptr)
 			{
 				if (Check_Sphere(pSour, pDest))
 				{
@@ -149,6 +149,10 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
+			if (pSour == nullptr || pDest == nullptr)
+			{
+				continue;
+			}
 			COLLIDER_ID ID;
 			ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
 			ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
@@ -192,7 +196,6 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 						pDest->OnTriggerExit(pSour, fTimeDelta);
 						iter->second = false;
 					}
-
 				}
 			}
 		}

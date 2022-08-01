@@ -22,8 +22,16 @@ HRESULT CKey::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		_float3(15.f, 1.5f, 3.f));
+	if (pArg != nullptr)
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		_float3(15.f, 0.5f, 3.f));
+	GetBoxList();
 	return S_OK;
 }
 
@@ -53,7 +61,7 @@ void CKey::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
 
 }
 
@@ -80,14 +88,30 @@ HRESULT CKey::Render()
 
 void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"TopDee") || other->CompareTag(L"Pig"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig"))
 	{
 		//키는 사라지고
 		m_bActive = false;
+		for (auto& iter : *m_pBoxList)
+		{
+			iter->SetActive(false);
+		}
 		//박스 사라지게 하는함수
 	}
 }
 
+
+HRESULT CKey::GetBoxList()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance); 
+	//m_pBoxList = pGameInstance->GetLayer(LEVEL_SJH, L"Layer_Cube");
+	m_pBoxList = pGameInstance->GetLayer(LEVEL_GAMEPLAY, L"Layer_KeyBox");
+	if (m_pBoxList == nullptr)
+		return E_FAIL;
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
 
 HRESULT CKey::Set_RenderState()
 {

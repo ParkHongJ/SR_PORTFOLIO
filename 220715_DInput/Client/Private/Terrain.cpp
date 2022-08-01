@@ -35,6 +35,16 @@ void CTerrain::Tick(_float fTimeDelta)
 
 void CTerrain::LateTick(_float fTimeDelta)
 {	
+	_float3			vPickPos;
+
+	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
+	{
+		if (m_pVIBufferTerrain->Picking(m_pTransformCom, &vPickPos))
+		{
+			int a = 10;
+		}
+	}*/
+
 	//_float4x4		ViewMatrix;
 
 	//m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -45,7 +55,6 @@ void CTerrain::LateTick(_float fTimeDelta)
 	//m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
 	//m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	//m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
 	/* юс╫ц */
 	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	
@@ -81,16 +90,18 @@ HRESULT CTerrain::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
-	///* For.Com_VIBuffer */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
-	//	return E_FAIL;
 	/* For.Com_VIBuffer */
-	
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferTerrain, this)))
+		return E_FAIL;
+
+
+	/* For.Com_VIBuffer */
 	CVIBuffer_Rect::RECTDESC RectDesc;
 	RectDesc.vSize = { m_fSizeX,m_fSizeY,0.f};
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
+
 
 
 	/* For.Com_Texture */
@@ -154,7 +165,7 @@ CGameObject * CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pVIBufferTerrain);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
