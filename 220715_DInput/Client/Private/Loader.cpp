@@ -21,7 +21,7 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
-#include "BreakingBlock.h"
+
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
