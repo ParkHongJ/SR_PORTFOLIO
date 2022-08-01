@@ -31,7 +31,7 @@ HRESULT CKey::Initialize(void * pArg)
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(15.f, 0.5f, 3.f));
-	GetBoxList();
+	//GetBoxList();
 	return S_OK;
 }
 
@@ -61,7 +61,10 @@ void CKey::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
+	//m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
+	//Edit hong
+
+	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
 
 }
 
@@ -92,10 +95,10 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 	{
 		//키는 사라지고
 		m_bActive = false;
-		for (auto& iter : *m_pBoxList)
+		/*for (auto& iter : *m_pBoxList)
 		{
 			iter->SetActive(false);
-		}
+		}*/
 		//박스 사라지게 하는함수
 	}
 }
@@ -149,7 +152,7 @@ HRESULT CKey::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

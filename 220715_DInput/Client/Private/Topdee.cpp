@@ -280,7 +280,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
 
 
 }
@@ -529,7 +529,7 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	//=================================================================
@@ -549,7 +549,7 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_PreLoader"), (CComponent**)&m_pTransform_PreLoader_Com, this, &TransformDesc)))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Topdee_PreLoader */
-	if (FAILED(__super::Add_Component(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
 		return E_FAIL;
 	//=================================================================
 	

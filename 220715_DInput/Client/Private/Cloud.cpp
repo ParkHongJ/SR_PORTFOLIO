@@ -88,7 +88,7 @@ void CCloud::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCom, m_pTransformCom);
 }
 
 HRESULT CCloud::Render()
@@ -143,7 +143,7 @@ HRESULT CCloud::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

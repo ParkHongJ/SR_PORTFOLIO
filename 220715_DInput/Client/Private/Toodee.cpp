@@ -185,7 +185,9 @@ void CToodee::LateTick(_float fTimeDelta)
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);
 
 			m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
-			m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
+			//m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
+			//Edit Hong
+			m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
 		}
 		else if (!m_bActive) {
 			if (68 > m_iTexIndex)
@@ -319,7 +321,7 @@ HRESULT CToodee::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_SJH, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

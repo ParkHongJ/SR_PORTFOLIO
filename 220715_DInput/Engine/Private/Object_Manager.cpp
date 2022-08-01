@@ -68,7 +68,7 @@ HRESULT CObject_Manager::Add_GameObjectToLayer(const _tchar* pPrototypeTag, _uin
 
 CLayer * CObject_Manager::KKK_GetBoxLayer()
 {
-	CLayer*		pLayer = Find_Layer(6, L"Layer_Cube");
+	CLayer*		pLayer = Find_Layer(1, L"Layer_Cube");
 	if (pLayer == nullptr)
 		return nullptr;
 	else

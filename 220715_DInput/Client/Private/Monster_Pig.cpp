@@ -98,7 +98,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	

@@ -86,6 +86,8 @@ HRESULT CHong::Render()
 		"Layer_topdee",
 		"Layer_Toodee", 
 		"Layer_Cube",
+		"Layer_Wall",
+		"Layer_Spike",
 		"Layer_Monster_Pig",
 		"Layer_Monster_Turret",
 		"Layer_Portal",
@@ -99,6 +101,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Topdee",
 		"Prototype_GameObject_Toodee",
 		"Prototype_GameObject_Cube",
+		"Prototype_GameObject_Wall",
+		"Prototype_GameObject_Spike",
 		"Prototype_GameObject_Monster_Pig",
 		"Prototype_GameObject_Turret",
 		"Prototype_GameObject_Portal",
@@ -140,6 +144,7 @@ HRESULT CHong::Render()
 		ImGui::EndListBox();
 		if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
 		if (ImGui::Button("Load")) LoadGameObject();
+		ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	}
 
 
@@ -253,7 +258,7 @@ HRESULT CHong::Ready_Layer_Block(const _tchar* pPrototypeTag, const _tchar* pLay
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_HONG, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -383,6 +388,9 @@ void CHong::LoadGameObject()
 			break;
 		}
 		m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+
+		Safe_Delete_Array(pFirst);
+		Safe_Delete_Array(pSecond);
 	}
 
 	auto iter = m_TestMap.begin();

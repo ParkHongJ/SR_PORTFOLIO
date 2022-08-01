@@ -18,7 +18,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_Release(pGameInstance);
 
-	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -31,7 +30,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
+	/*if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"), _float3(10.f, 0.5f, 3.f))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_KeyBox(TEXT("Layer_KeyBox"))))
+		return E_FAIL;*/
+	/*	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
@@ -44,27 +48,30 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	_float3 temp = { 15.5f,0.3f,4.5f };
-
-	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
+	*/
+	//이상없음
+	/*if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), _float3(12.5f, 0.5f, 10.5f))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_KeyBox(TEXT("Layer_KeyBox"))))
+	if (FAILED(Ready_Layer_Wall(TEXT("Layer_Wall"), _float3(12.5f, 0.5f, 10.5f))))
 		return E_FAIL;
-		
+
+
 	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
 		return E_FAIL;
+		
 	_float3 vInitPos = { 12.5f,0.5f,10.5f };
-	for (_uint i = 0; i < 3; ++i) {
+	for (_uint i = 0; i < 1; ++i) {
 		vInitPos.z -= 1.0f;
 		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
 			return E_FAIL;
 	}
+*/
+
 	LoadGameObject();
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
-
-
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
 	return S_OK;
 }
 
@@ -160,12 +167,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Toodee(const _tchar * pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Toodee(const _tchar * pLayerTag, void* pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), LEVEL_SJH, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), 
+		LEVEL_SJH, pLayerTag, _float3(3.f, 1.f, 14.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -178,7 +186,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -199,13 +207,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster_Pig(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_GYUH, pLayerTag, _float3(3.f, 3.f, 3.f))))
+		LEVEL_GYUH, pLayerTag, _float3(14.f, 1.f, 3.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -256,33 +264,71 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 
 void CLevel_GamePlay::LoadGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	DWORD dwByte = 0;
+	DWORD dwStrByte = 0; //String length
 
+						 //Clear Map
+	/*for (auto& Pair : m_TestMap)
+	{
+		delete Pair.first.second;
+		delete Pair.second;
+	}
+	m_TestMap.clear();*/
+
+	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
-		_float3 vBlockPos = {};
-		ReadFile(hFile, vBlockPos, sizeof(_float3), &dwByte, nullptr);
+		// Key 값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pFirst = nullptr;
+		pFirst = new _tchar[dwStrByte];
+		ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
+		pFirst[dwByte / sizeof(_tchar)] = 0;
+
+		//Key값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pSecond = nullptr;
+		pSecond = new _tchar[dwStrByte];
+		ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
+		pSecond[dwByte / sizeof(_tchar)] = 0;
+
+		_float3 vPos = {};
+		ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
 
 		if (0 == dwByte)
 		{
+			Safe_Delete(pFirst);
+			Safe_Delete(pSecond);
 			break;
 		}
-		m_list.push_back(vBlockPos);
-	}
+		TEST_STRUCT* test = new TEST_STRUCT;
+		test->pFirst = pFirst;
+		test->pSecond = pSecond;
+		/*wstring str1(pFirst);
+		wstring str2(pFirst);*/
+		
 
+		m_TestMap.insert(make_pair(test, vPos));
+		//Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", vPos);
+
+		/*Safe_Delete(pFirst);
+		Safe_Delete(pSecond);*/
+		Safe_Delete_Array(pFirst);
+		Safe_Delete_Array(pSecond);
+	}
 	CloseHandle(hFile);
 
-	for (auto& iter : m_list)
-	{
-		m_vPosition = iter;
-		Ready_Layer_Wall(L"Layer_Wall", m_vPosition);
+	auto iter = m_TestMap.begin();
 
-		Ready_Layer_Block(L"Layer_Cube", iter);
+	while (iter != m_TestMap.end())
+	{
+		Ready_Layer_Object(iter->first->pFirst.c_str(), iter->first->pSecond.c_str(), iter->second);
+		++iter;
 	}
 }
 
@@ -291,7 +337,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg )
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_GYUH, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -310,12 +356,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Cloud(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag, void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Key"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Key"), LEVEL_GAMEPLAY, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -328,7 +374,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall(const _tchar * pLayerTag, void * pArg)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Wall"), LEVEL_STATIC, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Wall"), LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 	Safe_Release(pGameInstance);
 
@@ -362,4 +408,22 @@ CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
+
+	for (auto& Pair : m_TestMap)
+	{
+		delete Pair.first;
+	}
+	m_TestMap.clear();
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg /*= nullptr*/)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
 }
