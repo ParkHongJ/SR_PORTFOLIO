@@ -153,6 +153,8 @@ _bool CGameMgr::Get_Object_Data(const _tchar * pTag)
 		if (pair.first == pTag) {
 			return *(pair.second);
 		}
+
+	return false;
 }
 
 void CGameMgr::Player_Active()

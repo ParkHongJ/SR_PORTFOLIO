@@ -2,6 +2,8 @@
 #include "..\Public\Portal.h"
 
 #include "GameInstance.h"
+#include "GameMgr.h"
+
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -21,6 +23,7 @@ HRESULT CPortal::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
 	if (pArg != nullptr)
 	{
 		_float3 vPos;
@@ -30,6 +33,7 @@ HRESULT CPortal::Initialize(void * pArg)
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
+
 	return S_OK;
 }
 
@@ -39,6 +43,17 @@ void CPortal::Tick(_float fTimeDelta)
 
 	if (m_fFrame >= 11.0f)
 		m_fFrame = 0.f;
+
+#pragma region For.Toodee_Portal_Spr
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
+		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+		m_fFrame_for_Toodee += 17.0f * fTimeDelta;
+
+		if (m_fFrame_for_Toodee >= 17.0f)
+			m_fFrame_for_Toodee = 0.f;
+	}
+	else { m_fFrame_for_Toodee = 0.f; }
+#pragma endregion
 }
 
 void CPortal::LateTick(_float fTimeDelta)
@@ -71,9 +86,25 @@ HRESULT CPortal::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
-	
+
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+
+#pragma region For.Toodee_Portal_Spr
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
+		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_for_Toodee)))
+			return E_FAIL;
+
+		if (FAILED(Set_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom_for_Toodee->Render();
+
+		if (FAILED(Reset_RenderState()))
+			return E_FAIL;
+	}
+#pragma endregion
 
 	//---------------------디버그일때 그리기-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
@@ -158,8 +189,22 @@ HRESULT CPortal::SetUp_Components()
 	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
 	BoxColliderDesc.fRadius = 1.f;
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
+
+#pragma region For.Toodee_Portal_Spr
+	RectDesc.vSize = { 6.f, 6.f, 0.f };
+
+	/* For.Com_VIBuffer_for_Toodee */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Toodee"), (CComponent**)&m_pVIBufferCom_for_Toodee, this, &RectDesc)))
+		return E_FAIL;
+
+	/* For.Com_Texture_for_Toodee */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
+		return E_FAIL;
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -198,4 +243,9 @@ void CPortal::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+
+#pragma region For.Toodee_Portal_Spr
+	Safe_Release(m_pVIBufferCom_for_Toodee);
+	Safe_Release(m_pTextureCom_for_Toodee);
+#pragma endregion
 }

@@ -15,10 +15,10 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_Release(pGameInstance);
 
-	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
@@ -53,18 +53,19 @@ HRESULT CLevel_GamePlay::Initialize()
 		
 	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
 		return E_FAIL;
+
 	_float3 vInitPos = { 12.5f,0.5f,10.5f };
 	for (_uint i = 0; i < 3; ++i) {
 		vInitPos.z -= 1.0f;
 		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
 			return E_FAIL;
 	}
+
 	LoadGameObject();
-
-
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
+
 	return S_OK;
 }
 
@@ -281,8 +282,6 @@ void CLevel_GamePlay::LoadGameObject()
 	{
 		m_vPosition = iter;
 		Ready_Layer_Wall(L"Layer_Wall", m_vPosition);
-
-		Ready_Layer_Block(L"Layer_Cube", iter);
 	}
 }
 

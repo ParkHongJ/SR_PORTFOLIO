@@ -42,6 +42,10 @@ private:
 	CBoxCollider* m_pBoxCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
+
+	CTexture* m_pTextureCom_for_Toodee = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom_for_Toodee = nullptr;
+
 public:
 	static CPortal* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
@@ -49,5 +53,7 @@ public:
 
 private:
 	_float m_fFrame = 0.f;
+
+	_float m_fFrame_for_Toodee = 0.f;
 };
 END
