@@ -33,7 +33,8 @@ public:
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
-	void SpikeAngleMgr();
+	//void SpikeAngleMgr();
+
 private:
 	HRESULT SetUp_Components();
 
@@ -51,5 +52,6 @@ public:
 
 private:
 	_uint m_iFrame = 0;
+	_float m_fTime = 0.f;
 };
 END

@@ -55,61 +55,69 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 
 	for (auto& pSour : m_CollisionObjects[eSourGroup])
 	{
+		CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
+		Safe_AddRef(SourTrans);
+
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			if (pSour->GetEnabled() && pDest->GetEnabled())
-			{
-				float	fX = 0.f, fZ = 0.f;
-				if (Check_RectEx(pSour, pDest, &fX, &fZ))
+			CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
+			Safe_AddRef(DestTrans);
+
+			/* 상호 중점간의 거리가 2.f보다 짧거나 같은 경우에만 충돌계산 */
+			if (2.f >= abs(SourTrans->Get_State(CTransform::STATE_POSITION).x - DestTrans->Get_State(CTransform::STATE_POSITION).x)
+				&& 2.f >= abs(SourTrans->Get_State(CTransform::STATE_POSITION).y - DestTrans->Get_State(CTransform::STATE_POSITION).y)
+				&& 2.f >= abs(SourTrans->Get_State(CTransform::STATE_POSITION).z - DestTrans->Get_State(CTransform::STATE_POSITION).z)) {
+
+				if (pSour->GetEnabled() && pDest->GetEnabled())
 				{
-					CTransform* DestTrans = ((CTransform*)pDest->Get_Component(L"Com_Transform"));
-					CTransform* SourTrans = ((CTransform*)pSour->Get_Component(L"Com_Transform"));
-
-					Safe_AddRef(DestTrans);
-					Safe_AddRef(SourTrans);
-					if (((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetBoxDesc().bIsTrigger)
+					float	fX = 0.f, fZ = 0.f;
+					if (Check_RectEx(pSour, pDest, &fX, &fZ))
 					{
-						// 상하 충돌
-						if (fX > fZ)
+						if (((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetBoxDesc().bIsTrigger)
 						{
-							// 상 충돌
-							if (DestTrans->Get_State(CTransform::STATE_POSITION).z > SourTrans->Get_State(CTransform::STATE_POSITION).z)
+							// 상하 충돌
+							if (fX > fZ)
 							{
-								//투디, 탑디가 상대방 위에 있을때
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_UP);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_UP);
+								// 상 충돌
+								if (DestTrans->Get_State(CTransform::STATE_POSITION).z < SourTrans->Get_State(CTransform::STATE_POSITION).z)
+								{
+									//투디, 탑디가 상대방 위에 있을때
+									pSour->OnTriggerStay(pDest, fTimeDelta, DIR_UP);
+									pDest->OnTriggerStay(pSour, fTimeDelta, DIR_UP);
+								}
+								else // 하 충돌
+								{
+									//투디, 탑디가 상대방 아래에 있을때
+									pSour->OnTriggerStay(pDest, fTimeDelta, DIR_DOWN);
+									pDest->OnTriggerStay(pSour, fTimeDelta, DIR_DOWN);
+								}
 							}
-							else // 하 충돌
+							else
 							{
-								//투디, 탑디가 상대방 아래에 있을때
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_DOWN);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_DOWN);
+
+								//투디, 탑디가 상대방 왼쪽에 있을때
+								// 좌 충돌
+								if (DestTrans->Get_State(CTransform::STATE_POSITION).x > SourTrans->Get_State(CTransform::STATE_POSITION).x)
+								{
+									pSour->OnTriggerStay(pDest, fTimeDelta, DIR_LEFT);
+									pDest->OnTriggerStay(pSour, fTimeDelta, DIR_LEFT);
+								}
+
+								//투디, 탑디가 상대방 오른쪽에 있을때
+								else // 우 충돌
+								{
+									pSour->OnTriggerStay(pDest, fTimeDelta, DIR_RIGHT);
+									pDest->OnTriggerStay(pSour, fTimeDelta, DIR_RIGHT);
+								}
 							}
 						}
-						else
-						{
-
-							//투디, 탑디가 상대방 왼쪽에 있을때
-							// 좌 충돌
-							if (DestTrans->Get_State(CTransform::STATE_POSITION).x > SourTrans->Get_State(CTransform::STATE_POSITION).x)
-							{
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_LEFT);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_LEFT);
-							}
-
-							//투디, 탑디가 상대방 오른쪽에 있을때
-							else // 우 충돌
-							{
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_RIGHT);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_RIGHT);
-							}
-						}
-						Safe_Release(DestTrans);
-						Safe_Release(SourTrans);
 					}
 				}
+				
 			}
+			Safe_Release(DestTrans);
 		}
+		Safe_Release(SourTrans);
 	}
 	return S_OK;
 }
