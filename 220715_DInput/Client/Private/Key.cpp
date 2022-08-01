@@ -27,11 +27,13 @@ HRESULT CKey::Initialize(void * pArg)
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		
+		vPos *= 3.f;
+		m_vTargetPos = vPos;
 	}
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(15.f, 0.5f, 3.f));
-	//GetBoxList();
 	return S_OK;
 }
 
@@ -43,6 +45,10 @@ void CKey::Tick(_float fTimeDelta)
 	m_fFrame += 12.0f * fTimeDelta;
 	if (m_fFrame >= 12.0f)
 		m_fFrame = 0.f;
+
+	_float3 vPos;
+	vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vTargetPos, fTimeDelta);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 }
 
 void CKey::LateTick(_float fTimeDelta)
@@ -91,14 +97,19 @@ HRESULT CKey::Render()
 
 void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
+	if (!m_bActive)
+		return;
+
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig"))
 	{
 		//키는 사라지고
 		m_bActive = false;
-		/*for (auto& iter : *m_pBoxList)
+
+		GetBoxList();
+		for (auto& iter : *m_pBoxList)
 		{
 			iter->SetActive(false);
-		}*/
+		}
 		//박스 사라지게 하는함수
 	}
 }
@@ -108,8 +119,7 @@ HRESULT CKey::GetBoxList()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance); 
-	//m_pBoxList = pGameInstance->GetLayer(LEVEL_SJH, L"Layer_Cube");
-	m_pBoxList = pGameInstance->GetLayer(LEVEL_GAMEPLAY, L"Layer_KeyBox");
+	m_pBoxList = pGameInstance->GetLayer(LEVEL_STAGE1, L"Layer_KeyBox");
 	if (m_pBoxList == nullptr)
 		return E_FAIL;
 	Safe_Release(pGameInstance);

@@ -72,8 +72,11 @@ HRESULT CHong::Render()
 	matWorld.m[2][2] = 0.1f;
 	memcpy(&matWorld.m[3][0], &m_vPosition, sizeof(_float3));
 	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
+
 	m_pSphereMesh->DrawSubset(0);
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	SetWindowText(g_hWnd, TEXT("홍준레벨임"));
 
 	ImGui::ShowDemoWindow();
@@ -328,7 +331,7 @@ void CHong::SaveGameObject()
 	while (iter != m_TestMap.end())
 	{
 		// Key값 저장
-		dwStrByte =  sizeof(_tchar) * wcslen(iter->first.first);//sizeof(iter->first.first);
+		dwStrByte = sizeof(_tchar) * wcslen(iter->first.first);//sizeof(iter->first.first);
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
 		// Key값 저장

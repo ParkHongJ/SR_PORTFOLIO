@@ -46,7 +46,7 @@ void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pL
 	}
 	if (bHole) {
 		m_eHoleLevel = eLayerLevel;
-		m_iHoleFinishNum = m_Obstaclelist.size();
+		m_iHoleFinishNum = (_uint)m_Obstaclelist.size();
 	}
 }
 
@@ -153,6 +153,7 @@ _bool CGameMgr::Get_Object_Data(const _tchar * pTag)
 		if (pair.first == pTag) {
 			return *(pair.second);
 		}
+	return false; // 경고없애기용 기존에는 리턴 안할수도있었음
 }
 
 void CGameMgr::Player_Active()

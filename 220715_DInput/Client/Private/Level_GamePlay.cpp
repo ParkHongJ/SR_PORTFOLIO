@@ -30,45 +30,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"), _float3(10.f, 0.5f, 3.f))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_KeyBox(TEXT("Layer_KeyBox"))))
-		return E_FAIL;*/
-	/*	if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Cloud(TEXT("Layer_Cloud"))))
-		return E_FAIL;
-
-	_float3 temp = { 15.5f,0.3f,4.5f };
-	*/
-	//이상없음
-	/*if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), _float3(12.5f, 0.5f, 10.5f))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Wall(TEXT("Layer_Wall"), _float3(12.5f, 0.5f, 10.5f))))
-		return E_FAIL;
-
-
-	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
-		return E_FAIL;
-		
-	_float3 vInitPos = { 12.5f,0.5f,10.5f };
-	for (_uint i = 0; i < 1; ++i) {
-		vInitPos.z -= 1.0f;
-		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
-			return E_FAIL;
-	}
-*/
-
 	LoadGameObject();
+
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
@@ -81,16 +44,6 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	/*if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_LOGO))))
-			return;
-
-		Safe_Release(pGameInstance);
-	}*/
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -99,32 +52,6 @@ HRESULT CLevel_GamePlay::Render()
 		return E_FAIL;
 
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
-
-	//ImGui::Begin("GamePlay");
-	//
-	//const char* Obj[] = { "Player", "Monster", "Map" };
-	//static int Obj_current_idx = 0; // Here we store our selection data as an index.
-	//const char* combo_preview_value = Obj[Obj_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
-	//if (ImGui::BeginCombo("GamePlay_Object", combo_preview_value))
-	//{
-	//	for (int n = 0; n < IM_ARRAYSIZE(Obj); n++)
-	//	{
-	//		const bool is_selected = (Obj_current_idx == n);
-
-	//		if (ImGui::Selectable(Obj[n], is_selected))
-	//			Obj_current_idx = n;
-
-	//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-	//		if (is_selected)
-	//		{
-	//			ImGui::SetItemDefaultFocus();
-	//		}
-	//	}
-	//	ImGui::EndCombo();
-	//}
-
-	//ImGui::End();
-
 
 	return S_OK;
 }
@@ -213,7 +140,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_GYUH, pLayerTag, _float3(14.f, 1.f, 3.f))))
+		LEVEL_GYUH, pLayerTag, _float3(25.f, 1.f, 3.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -306,14 +233,14 @@ void CLevel_GamePlay::LoadGameObject()
 			Safe_Delete(pSecond);
 			break;
 		}
-		TEST_STRUCT* test = new TEST_STRUCT;
-		test->pFirst = pFirst;
-		test->pSecond = pSecond;
+		TAG_INFO* tagInfo = new TAG_INFO;
+		tagInfo->pPrototypeTag = pFirst;
+		tagInfo->pLayerTag = pSecond;
 		/*wstring str1(pFirst);
 		wstring str2(pFirst);*/
 		
 
-		m_TestMap.insert(make_pair(test, vPos));
+		m_pObjects.insert(make_pair(tagInfo, vPos));
 		//Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", vPos);
 
 		/*Safe_Delete(pFirst);
@@ -323,11 +250,11 @@ void CLevel_GamePlay::LoadGameObject()
 	}
 	CloseHandle(hFile);
 
-	auto iter = m_TestMap.begin();
+	auto iter = m_pObjects.begin();
 
-	while (iter != m_TestMap.end())
+	while (iter != m_pObjects.end())
 	{
-		Ready_Layer_Object(iter->first->pFirst.c_str(), iter->first->pSecond.c_str(), iter->second);
+		Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
 		++iter;
 	}
 }
@@ -409,11 +336,11 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_TestMap)
+	for (auto& Pair : m_pObjects)
 	{
 		delete Pair.first;
 	}
-	m_TestMap.clear();
+	m_pObjects.clear();
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg /*= nullptr*/)

@@ -277,9 +277,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 #pragma endregion Collision_Obstacle	
-
-	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
-
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
 
 
