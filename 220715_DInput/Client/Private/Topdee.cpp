@@ -38,8 +38,11 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
-		m_tInitializeDesc = (CLevel::INITDESC*)pArg;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tInitializeDesc->vTopdeePos);
+		//m_tInitializeDesc = (CLevel::INITDESC*)pArg;
+		//m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_tInitializeDesc->vTopdeePos);
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
 	return S_OK;
@@ -240,6 +243,8 @@ void CTopdee::LateTick(_float fTimeDelta)
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	//vPos.y = 0.5f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	
+	
 	m_pBoxCom->Tick(vPos, m_pTransformCom->Get_Scaled());
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
@@ -524,4 +529,5 @@ void CTopdee::Free()
 	Safe_Release(m_pTexture_PreLoader_Com);
 
 }
+
 

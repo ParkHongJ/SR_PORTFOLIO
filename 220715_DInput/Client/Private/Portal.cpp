@@ -21,7 +21,14 @@ HRESULT CPortal::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
+	if (pArg != nullptr)
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
 	return S_OK;
 }
@@ -49,7 +56,7 @@ void CPortal::LateTick(_float fTimeDelta)
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PORTAL, this);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-
+	
 }
 
 HRESULT CPortal::Render()
@@ -64,6 +71,7 @@ HRESULT CPortal::Render()
 		return E_FAIL;
 
 	m_pVIBufferCom->Render();
+	
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 

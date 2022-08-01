@@ -14,7 +14,7 @@ class CGameMgr final : public CBase
 	DECLARE_SINGLETON(CGameMgr)
 
 public:
-	enum GAMEMODE { TOODEE, TOPDEE, THIRDEE, MODE_END };
+	enum GAMEMODE { TOODEE, TOPDEE, THIRDEE, FREE, MODE_END };
 	
 private:
 	CGameMgr();

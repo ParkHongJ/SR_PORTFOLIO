@@ -24,8 +24,7 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	SetTag(L"Pig");
-
+	m_Tag = L"Pig";
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 10.f));
 
 	return S_OK;
@@ -33,22 +32,37 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 
 void CMonster_Pig::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
 	m_fFrame += 9.0f * fTimeDelta;
 
 	if (m_fFrame >= 9.0f)
 		m_fFrame = 0.f;
+
+	/*if ( TOODEE )
+	중력 작용 / 블럭 위에서만 돌아다님*/
+	CGameMgr* pGameMgr = CGameMgr::Get_Instance();
+	Safe_AddRef(pGameMgr);
+	if (pGameMgr->GetMode() == CGameMgr::TOODEE)
+	{
+		/*_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.z += -9.8f * fTimeDelta * 0.5f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);*/
+	}
+	else
+	{
+		//if ( TOPDEE )
+		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
+		m_pTransformCom->Chase(m_vTopdeePos, 0.5 * fTimeDelta);
+	}
+	Safe_Release(pGameMgr);
 }
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
-	/*if ( TOODEE )
-		중력 작용 / 블럭 위에서만 돌아다님*/
-
-	//if ( TOPDEE )
-	m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
-	m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
+	if (!m_bActive)
+		return;
 	
-
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -60,11 +74,17 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
+	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, this);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
+	
 }
 
 HRESULT CMonster_Pig::Render()
 {
+	if (!m_bActive)
+		return S_OK;
+
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;	
 	
@@ -88,18 +108,6 @@ HRESULT CMonster_Pig::Render()
 
 
 	return S_OK;
-}
-
-void CMonster_Pig::OnTriggerExit(CGameObject * other)
-{
-}
-
-void CMonster_Pig::OnTriggerEnter(CGameObject * other)
-{
-}
-
-void CMonster_Pig::OnTriggerStay(CGameObject * other)
-{
 }
 
 HRESULT CMonster_Pig::Set_RenderState()
@@ -157,8 +165,9 @@ HRESULT CMonster_Pig::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
-	BoxColliderDesc.bIsTrigger = true;
+	BoxColliderDesc.vSize = _float3(.5f, .5f, .5f);
+	BoxColliderDesc.bIsTrigger = false;
+	BoxColliderDesc.fRadius = 1.f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 
@@ -191,6 +200,22 @@ CGameObject * CMonster_Pig::Clone(void* pArg)
 	return pInstance;
 }
 
+void CMonster_Pig::OnTriggerExit(CGameObject* other, _float fTimeDelta, _uint eDirection)
+{
+	int a = 10;
+}
+
+void CMonster_Pig::OnTriggerEnter(CGameObject* other, _float fTimeDelta, _uint eDirection)
+{
+	int a = 10;
+}
+
+void CMonster_Pig::OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection)
+{
+	int a = 10;
+}
+
+
 void CMonster_Pig::Free()
 {
 	__super::Free();
@@ -201,4 +226,3 @@ void CMonster_Pig::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 }
-

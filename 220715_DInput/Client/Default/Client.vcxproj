@@ -159,6 +159,7 @@
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Cloud.h" />
+    <ClInclude Include="..\public\GravityBlock.h" />
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\public\Hong.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Monster_Pig.h" />
+    <ClInclude Include="..\public\Particle.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\Sky.h" />
@@ -203,6 +205,7 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Cloud.cpp" />
+    <ClCompile Include="..\private\GravityBlock.cpp" />
     <ClCompile Include="..\Private\Hole.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\private\Hong.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Monster_Pig.cpp" />
+    <ClCompile Include="..\private\Particle.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />

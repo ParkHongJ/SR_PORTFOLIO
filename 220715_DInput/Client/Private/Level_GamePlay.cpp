@@ -44,11 +44,16 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	_float3 temp = { 15.5f,0.3f,4.5f };
+
 	if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), temp)))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_KeyBox(TEXT("Layer_KeyBox"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Key(TEXT("Layer_Key"))))
 		return E_FAIL;
-	
+
 	/* 이거 수정해라 */
 //	_float3 temp = { 5.f,0.f,2.f };
 	//Ready_Layer_Block(L"Layer_Cube", temp);
@@ -80,30 +85,30 @@ HRESULT CLevel_GamePlay::Render()
 
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
 
-	ImGui::Begin("GamePlay");
-	
-	const char* Obj[] = { "Player", "Monster", "Map" };
-	static int Obj_current_idx = 0; // Here we store our selection data as an index.
-	const char* combo_preview_value = Obj[Obj_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
-	if (ImGui::BeginCombo("GamePlay_Object", combo_preview_value))
-	{
-		for (int n = 0; n < IM_ARRAYSIZE(Obj); n++)
-		{
-			const bool is_selected = (Obj_current_idx == n);
+	//ImGui::Begin("GamePlay");
+	//
+	//const char* Obj[] = { "Player", "Monster", "Map" };
+	//static int Obj_current_idx = 0; // Here we store our selection data as an index.
+	//const char* combo_preview_value = Obj[Obj_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+	//if (ImGui::BeginCombo("GamePlay_Object", combo_preview_value))
+	//{
+	//	for (int n = 0; n < IM_ARRAYSIZE(Obj); n++)
+	//	{
+	//		const bool is_selected = (Obj_current_idx == n);
 
-			if (ImGui::Selectable(Obj[n], is_selected))
-				Obj_current_idx = n;
+	//		if (ImGui::Selectable(Obj[n], is_selected))
+	//			Obj_current_idx = n;
 
-			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-			if (is_selected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
+	//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+	//		if (is_selected)
+	//		{
+	//			ImGui::SetItemDefaultFocus();
+	//		}
+	//	}
+	//	ImGui::EndCombo();
+	//}
 
-	ImGui::End();
+	//ImGui::End();
 
 
 	return S_OK;
@@ -241,7 +246,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-
 void CLevel_GamePlay::LoadGameObject()
 {
 	HANDLE		hFile = CreateFile(L"../Bin/data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -267,8 +271,7 @@ void CLevel_GamePlay::LoadGameObject()
 
 	for (auto& iter : m_list)
 	{
-		m_vPosition = iter;
-		Ready_Layer_Block(L"Layer_Cube", m_vPosition);
+		Ready_Layer_Block(L"Layer_Cube", iter);
 	}
 }
 
@@ -320,6 +323,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Key"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_KeyBox(const _tchar* pLayerTag)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_KeyBox"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

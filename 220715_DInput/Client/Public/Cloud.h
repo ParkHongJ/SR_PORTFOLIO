@@ -45,5 +45,7 @@ public:
 	virtual void Free() override;
 private:
 	_float m_fFrame = 0.f;
+	_float3 m_vToodeePos;
+	_float3 m_vTopdeePos;
 };
 END

@@ -35,9 +35,10 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	virtual void OnTriggerExit(CGameObject* other);
-	virtual void OnTriggerEnter(CGameObject* other);
-	virtual void OnTriggerStay(CGameObject*	other);
+	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta, _uint eDirection);
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta, _uint eDirection);
+	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta, _uint eDirection);
+
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
@@ -51,7 +52,6 @@ private:
 	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
 	_bool	m_bTurn;
-
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

@@ -52,7 +52,6 @@ private:
 	CTransform*				m_pTransform_PreLoader_Com = nullptr;
 	CRenderer*				m_pRenderer_PreLoader_Com = nullptr;
 	CTexture*				m_pTexture_PreLoader_Com = nullptr;
-
 private:
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };

@@ -112,6 +112,12 @@
     <Filter Include="02.GameObject\Key\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\GravityBlock">
+      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Particle">
+      <UniqueIdentifier>{ba486fbf-ac40-4784-90ad-01e3032c673c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -244,6 +250,12 @@
     <ClInclude Include="..\public\KeyBlock.h">
       <Filter>02.GameObject\Key\KeyBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GravityBlock.h">
+      <Filter>02.GameObject\GravityBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Particle.h">
+      <Filter>02.GameObject\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -365,6 +377,12 @@
     </ClCompile>
     <ClCompile Include="..\private\KeyBlock.cpp">
       <Filter>02.GameObject\Key\KeyBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GravityBlock.cpp">
+      <Filter>02.GameObject\GravityBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Particle.cpp">
+      <Filter>02.GameObject\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

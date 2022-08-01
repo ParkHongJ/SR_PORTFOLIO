@@ -57,7 +57,7 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			if (pSour->GetEnabled() && pDest->GetEnabled())
+			if (pSour->GetEnabled() && pDest->GetEnabled() && pSour != nullptr && pDest != nullptr)
 			{
 				float	fX = 0.f, fZ = 0.f;
 				if (Check_RectEx(pSour, pDest, &fX, &fZ))
@@ -76,14 +76,14 @@ HRESULT CCollider::Collision_Rect(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDes
 							if (DestTrans->Get_State(CTransform::STATE_POSITION).z > SourTrans->Get_State(CTransform::STATE_POSITION).z)
 							{
 								//투디, 탑디가 상대방 위에 있을때
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_UP);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_UP);
+								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_DOWN);
+								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_DOWN);
 							}
 							else // 하 충돌
 							{
 								//투디, 탑디가 상대방 아래에 있을때
-								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_DOWN);
-								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_DOWN);
+								pSour->OnTriggerStay(pDest, fTimeDelta, DIR_UP);
+								pDest->OnTriggerStay(pSour, fTimeDelta, DIR_UP);
 							}
 						}
 						else
@@ -120,7 +120,7 @@ HRESULT CCollider::Collision_Sphere(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
-			if (pSour->GetEnabled() && pDest->GetEnabled())
+			if (pSour->GetEnabled() && pDest->GetEnabled() && pSour != nullptr && pDest != nullptr)
 			{
 				if (Check_Sphere(pSour, pDest))
 				{
@@ -141,6 +141,10 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 	{
 		for (auto& pDest : m_CollisionObjects[eDestGroup])
 		{
+			if (pSour == nullptr || pDest == nullptr)
+			{
+				continue;
+			}
 			COLLIDER_ID ID;
 			ID.Left_ID = ((CBoxCollider*)pSour->Get_Component(L"Com_BoxCollider"))->GetID();
 			ID.Right_ID = ((CBoxCollider*)pDest->Get_Component(L"Com_BoxCollider"))->GetID();
@@ -184,7 +188,6 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 						pDest->OnTriggerExit(pSour, fTimeDelta);
 						iter->second = false;
 					}
-
 				}
 			}
 		}

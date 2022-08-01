@@ -279,7 +279,7 @@ _bool CVIBuffer_Terrain::Picking(class CTransform* pTransform, _float3* pOut)
 			_float4x4	WorldMatrix = pTransform->Get_WorldMatrix();
 
 			/* 오른쪽 상단. */
-			if (true == D3DXIntersectTri(&m_pVerticesPos[iIndices[0]], &m_pVerticesPos[iIndices[1]], &m_pVerticesPos[iIndices[2]], &vRayPos, &vRayDir, &fU, &fV, &fDist))
+			if (TRUE == D3DXIntersectTri(&m_pVerticesPos[iIndices[0]], &m_pVerticesPos[iIndices[1]], &m_pVerticesPos[iIndices[2]], &vRayPos, &vRayDir, &fU, &fV, &fDist))
 			{
 				_float3	vPickPos = vRayPos + vRayDir * fDist;
 
@@ -290,7 +290,7 @@ _bool CVIBuffer_Terrain::Picking(class CTransform* pTransform, _float3* pOut)
 			}
 
 			/* 왼쪽 하단. */
-			if (true == D3DXIntersectTri(&m_pVerticesPos[iIndices[0]], &m_pVerticesPos[iIndices[2]], &m_pVerticesPos[iIndices[3]], &vRayPos, &vRayDir, &fU, &fV, &fDist))
+			if (TRUE == D3DXIntersectTri(&m_pVerticesPos[iIndices[0]], &m_pVerticesPos[iIndices[2]], &m_pVerticesPos[iIndices[3]], &vRayPos, &vRayDir, &fU, &fV, &fDist))
 			{
 				_float3	vPickPos = vRayPos + vRayDir * fDist;
 
