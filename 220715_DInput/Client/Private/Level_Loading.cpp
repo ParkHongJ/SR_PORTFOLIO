@@ -51,7 +51,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			case LEVEL_LOGO:
 				pNewLevel = CLevel_Logo::Create(m_pGraphic_Device);
 				break;
-			case LEVEL_GAMEPLAY:
+			case LEVEL_STAGE1:
 				pNewLevel = CLevel_GamePlay::Create(m_pGraphic_Device);
 				break;
 			case LEVEL_HONG:

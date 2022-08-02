@@ -49,6 +49,7 @@ public:
 	static CSpike* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
+	//Current To Target Tick, maxDistanceDelta(fTimeDelta * Speed)
 	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
 	{
 		_float3 a = target - current;

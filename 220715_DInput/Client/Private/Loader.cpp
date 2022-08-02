@@ -41,7 +41,7 @@ _uint APIENTRY LoadingMain(void* pArg)
 	case LEVEL_LOGO:
 		pLoader->Loading_ForLogoLevel();
 		break;
-	case LEVEL_GAMEPLAY:
+	case LEVEL_STAGE1:
 		pLoader->Loading_ForGamePlayLevel();
 		break;
 	case LEVEL_HONG:
