@@ -31,7 +31,6 @@ HRESULT CKey::Initialize(void * pArg)
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(15.f, 0.5f, 3.f));
-	GetBoxList();
 	return S_OK;
 }
 
@@ -43,6 +42,7 @@ void CKey::Tick(_float fTimeDelta)
 	m_fFrame += 12.0f * fTimeDelta;
 	if (m_fFrame >= 12.0f)
 		m_fFrame = 0.f;
+
 }
 
 void CKey::LateTick(_float fTimeDelta)
@@ -61,7 +61,7 @@ void CKey::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
 
 }
 
@@ -88,10 +88,15 @@ HRESULT CKey::Render()
 
 void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
+	if (!m_bActive)
+		return;
+
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig"))
 	{
 		//키는 사라지고
 		m_bActive = false;
+
+		GetBoxList();
 		for (auto& iter : *m_pBoxList)
 		{
 			iter->SetActive(false);
@@ -105,8 +110,7 @@ HRESULT CKey::GetBoxList()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance); 
-	//m_pBoxList = pGameInstance->GetLayer(LEVEL_SJH, L"Layer_Cube");
-	m_pBoxList = pGameInstance->GetLayer(LEVEL_GAMEPLAY, L"Layer_KeyBox");
+	m_pBoxList = pGameInstance->GetLayer(LEVEL_STAGE1, L"Layer_KeyBox");
 	if (m_pBoxList == nullptr)
 		return E_FAIL;
 	Safe_Release(pGameInstance);
@@ -149,7 +153,7 @@ HRESULT CKey::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

@@ -105,7 +105,7 @@ HRESULT CTurret::Render()
 void CTurret::Fire(_float fTimeDelta)
 {
 	m_fCurrentTimer += fTimeDelta;
-	if (m_fCurrentTimer > 1.f)
+	if (m_fCurrentTimer > .3f)
 	{
 		m_fCurrentTimer = 0.f;
 		//총알 방향설정 , 생성
@@ -115,7 +115,7 @@ void CTurret::Fire(_float fTimeDelta)
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Bullet"),
-			LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
+			LEVEL_STAGE1, L"Layer_Monster_Bullet", vPos)))
 			MSG_BOX(L"총알 생성 실패");
 
 		Safe_Release(pGameInstance);
@@ -151,7 +151,7 @@ HRESULT CTurret::SetUp_Components()
 		return E_FAIL;
 	/* 이거 수정해라 */
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;

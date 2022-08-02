@@ -148,6 +148,7 @@ _bool CGameMgr::Get_Object_Data(const _tchar * pTag)
 		if (pair.first == pTag) {
 			return *(pair.second);
 		}
+	return false; // 경고없애기용 기존에는 리턴 안할수도있었음
 }
 
 void CGameMgr::Player_Active()

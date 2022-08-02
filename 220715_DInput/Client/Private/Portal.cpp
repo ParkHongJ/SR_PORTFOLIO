@@ -66,7 +66,7 @@ void CPortal::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::PORTAL, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::PORTAL, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 	
 }
@@ -122,7 +122,7 @@ void CPortal::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 	int a = 10;
 }
 
-void CPortal::OnTriggerStay(CGameObject * other, float fTimeDelta)
+void CPortal::OnTriggerStay(CGameObject * other, float fTimeDelta, _uint eDireciton)
 {
 	int a = 10;
 }
@@ -162,7 +162,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -184,7 +184,7 @@ HRESULT CPortal::SetUp_Components()
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
-	BoxColliderDesc.fRadius = 1.f;
+	BoxColliderDesc.fRadius = .8f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	//==topdeePortal
