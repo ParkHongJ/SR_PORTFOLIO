@@ -61,8 +61,10 @@ void CTopdee::Tick(_float fTimeDelta)
 	Topdee_PreLoader_Pos_Mgr();
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
-		if (!m_bActive)
+		if (!m_bActive) {
+			Safe_Release(pGameInstance);
 			return;
+		}
 		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
 		{
@@ -355,9 +357,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
 		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
 		TopdeeIsPushed(vOtherPos);
-	/*	if (m_pRaiseObject != nullptr)
-			return;*/
-		if (!m_bPushBox) {//처음들어올때.
+		if (!m_bPushBox) {//MakeDelay
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
 		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
@@ -371,7 +371,6 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (KKK_m_pBoxList == nullptr)
 		{//if Collision We Must Check NextBox.
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			Safe_AddRef(pGameInstance);
 			KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(LEVEL_SJH, L"Layer_Cube");
 			if (KKK_m_pBoxList == nullptr)
 				return;
@@ -393,26 +392,26 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			return;
 		list<CGameObject*> PushList;
 		_bool bCanPush{ true };
-		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);
+		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
 		if (!bCanPush)
 			return;
 		_float fdist{ 0.f };
 		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, &fdist,true)) {
 			return;
 		}
-		pBlock->Box_Push_More(fTimeDelta, vOtherPos,vCurDir);
+		pBlock->Box_Push_More(fTimeDelta, vOtherPos,true);//First
 		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
 		{
 			CBlock* pBlock= (CBlock*)(*iter);
 			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
-			pBlock->Box_Push_More(fTimeDelta, ((pTransform->Get_State(CTransform::STATE_POSITION) + vCurDir)), vCurDir);
+			pBlock->Box_Push_More(fTimeDelta, ((pTransform->Get_State(CTransform::STATE_POSITION) + vCurDir)), true);
 		}
 		m_bPushBox = true;
 	}
 }
 
 void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
-{
+{//Box Pushing Topdee
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float fDist = D3DXVec3Length(&(vTopdeePos - _vOtherPos));
 	fDist *= 0.25f;
@@ -579,9 +578,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	if (m_pRaiseObject != nullptr)
 		return;
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
 	if (KKK_m_pBoxList == nullptr) {
-
 		KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(LEVEL_SJH, L"Layer_Cube");
 		if (KKK_m_pBoxList == nullptr)
 			return;
@@ -608,7 +605,6 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 		m_pRaiseObject->SetEnabled(false);
 	}
 
-	Safe_Release(pGameInstance);
 }
 
 void CTopdee::KKK_DropBox(_float fTimeDelta)
@@ -620,26 +616,17 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		m_fRaising_Box_DelayTimer = 15000.f;
-		m_vBoxDropPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		m_vBoxDropPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);/*m_pTransformCom->Get_State(CTransform::STATE_POSITION);*/
 		m_vBoxDropPos.y = 0.5f;
-		if (m_eCurDir == DIR_UP)
-			m_vBoxDropPos.z += 1.f;
-		else if (m_eCurDir == DIR_LEFT)
-			m_vBoxDropPos.x -= 1.f;
-		else if (m_eCurDir == DIR_RIGHT)
-			m_vBoxDropPos.x += 1.f;
-		else if (m_eCurDir == DIR_DOWN)
-			m_vBoxDropPos.z -= 1.f;
 	}
-	
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
 		_uint iLayerHoleNum{ 0 };
-		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))
-		{
-			list<CGameObject*>*pList  =CGameInstance::Get_Instance()->GetLayer(LEVEL_GYUH, L"Layer_Hole");
-			if (pList == nullptr)
+		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))//ask Can Box Drop?
+		{//Rigid Hole
+			list<CGameObject*>*pHoleList  =CGameInstance::Get_Instance()->GetLayer(LEVEL_GYUH, L"Layer_Hole");
+			if (pHoleList == nullptr)
 				return;
-			auto& iter = pList->begin();
+			auto& iter = pHoleList->begin();
 			for (_uint i = 0; i < iLayerHoleNum; ++i)
 				++iter;
 			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb

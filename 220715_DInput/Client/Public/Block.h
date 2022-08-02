@@ -39,11 +39,9 @@ public:
 	void KKK_Is_Raise(_float3 vTargetPos);//When Topdee Raising Box.
 	_bool KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall);//When Topdee ThrowBox
 	void Box_Drop_More(_float fTimeDelta);//when Topdee Throw Box & Falling
-	void Box_Push_More(_float fTimeDelta,_float3 vPushFinishPos, _float3 vPushDir);//When Topdee Push Box
-	void Box_Push_Find_A_Place();//When Topdee Push and Find Right Place
+	void Box_Push_More(_float fTimeDelta,_float3 vPushFinishPos, _bool bFirstCall);//When Topdee Push Box
 	_bool m_bDropBox{ false };	
 	_bool m_bTopdeePush{ false };
-	_float3 m_vPushDir{ 0.f,0.f,0.f };
 	_float3 m_vPushFinishPos{ 0.f,0.f,0.f };
 #pragma endregion About_Topdee
 

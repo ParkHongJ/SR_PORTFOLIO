@@ -100,7 +100,7 @@ _bool CGameMgr::Check_PushBox_Exactly(const _float3 & vBoxPos)
 	_uint i = 0;
 	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
 	{
-		_float3 vPosOnlyXZ{ vBoxPos.x,0.5f,vBoxPos.z };
+		_float3 vPosOnlyXZ{ vBoxPos.x,0.3f,vBoxPos.z };//0.3 means Hole.y is 0.3f
 		_float fDistance = D3DXVec3Length(&((*iter) - vPosOnlyXZ));
 		if (fDistance <= 0.2f) {//Debug it Length is 1.9999f
 			iter->x = -100.f;
