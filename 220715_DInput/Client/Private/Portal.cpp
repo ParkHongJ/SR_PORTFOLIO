@@ -42,6 +42,14 @@ void CPortal::Tick(_float fTimeDelta)
 	if (m_fFrame >= 11.0f)
 		m_fFrame = 0.f;
 
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
+		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+		m_fFrame_For_Topdee += 17.0f * fTimeDelta;
+
+		if (m_fFrame_For_Topdee >= 17.0f)
+			m_fFrame_For_Topdee = 0.f;
+	}
+	else { m_fFrame_For_Topdee = 0.f; }
 
 }
 
@@ -78,6 +86,21 @@ HRESULT CPortal::Render()
 	
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+	//======GameClear
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
+		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
+			return E_FAIL;
+
+		if (FAILED(Set_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom_For_Topdee->Render();
+
+		if (FAILED(Reset_RenderState()))
+			return E_FAIL;
+	}
+	//======GameClear
 
 	//---------------------디버그일때 그리기-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
@@ -168,11 +191,11 @@ HRESULT CPortal::SetUp_Components()
 	RectDesc.vSize = { 6.f,6.f,0.f };
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom_For_Topdee, this, &RectDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Topdee"), (CComponent**)&m_pVIBufferCom_For_Topdee, this, &RectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&pTextureCom_For_Topdee, this)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
 		return E_FAIL;
 
 
@@ -216,6 +239,6 @@ void CPortal::Free()
 	Safe_Release(m_pRendererCom);
 
 	Safe_Release(m_pVIBufferCom_For_Topdee);
-	Safe_Release(pTextureCom_For_Topdee);
+	Safe_Release(m_pTextureCom_For_Topdee);
 	
 }

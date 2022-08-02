@@ -290,8 +290,9 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 HRESULT CTopdee::Render()
 {
-	/*if (!m_bActive)
-		S_OK;*/
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
+		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal"))
+		return S_OK;
 #pragma region Debug_Collider
 	Set_ColliderState();
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
@@ -410,6 +411,12 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	}
 }
 
+void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+{
+	m_bPortal = false;
+	m_eCurState = STATE_IDLE;
+}
+
 void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 {//Box Pushing Topdee
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -418,7 +425,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 	if (m_eCurDir == DIR_LEFT)
 		vTopdeePos.x += fDist;
 	else if (m_eCurDir == DIR_RIGHT)
-	 	vTopdeePos.x -= fDist;
+		vTopdeePos.x -= fDist;
 	else if (m_eCurDir == DIR_UP)
 		vTopdeePos.z -= fDist;
 	else if (m_eCurDir == DIR_DOWN)
@@ -426,7 +433,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeePos);
 }
 
-void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
+void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
 {//들어온값은 다음 박스에 해당.
 	if (!bCanPush)
 		return;
@@ -442,19 +449,19 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 				if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x) {
 					_vNextBoxPos += vPushDir;
 					++iCountReFunc;
-					
+
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist,true)){
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {
 						bCanPush = false;
 						return;
 					}
 					PushList.push_back(*iter);
-					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc,PushList, bCanPush);
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
 				}
 			}
-				
+
 		}
 		else if (vPushDir.z == 0.f)
 		{
@@ -465,7 +472,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 					++iCountReFunc;
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist,true)) {
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {
 						bCanPush = false;
 						return;
 					}
@@ -479,11 +486,6 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos,_float3 vPushDir, _uint& iCo
 	}
 }
 
-void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
-{
-	m_bPortal = false;
-	m_eCurState = STATE_IDLE;
-}
 
 HRESULT CTopdee::Set_RenderState()
 {

@@ -43,7 +43,7 @@ private:
 	CTransform* m_pTransformCom = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
 
-	CTexture* pTextureCom_For_Topdee = nullptr;
+	CTexture* m_pTextureCom_For_Topdee = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_For_Topdee = nullptr;
 
 public:
