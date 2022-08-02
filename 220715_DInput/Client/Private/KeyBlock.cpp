@@ -41,7 +41,6 @@ HRESULT CKeyBlock::Initialize(void* pArg)
 
 void CKeyBlock::Tick(_float fTimeDelta)
 {
-
 	if (!m_bActive)
 		return;
 }
@@ -51,7 +50,7 @@ void CKeyBlock::LateTick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, this);
+	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
 }
 
 HRESULT CKeyBlock::Render()
@@ -85,7 +84,7 @@ HRESULT CKeyBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_KeyBox"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_KeyBox"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */

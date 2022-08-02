@@ -88,7 +88,7 @@ void CCloud::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCom, m_pTransformCom);
 }
 
 HRESULT CCloud::Render()
@@ -136,14 +136,14 @@ HRESULT CCloud::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 2.f,1.f,0.f };
+	RectDesc.vSize = { 3.f,1.5f,0.f };
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -163,7 +163,7 @@ HRESULT CCloud::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(1.8f, 0.5f, 1.f);
+	BoxColliderDesc.vSize = _float3(3.f, 0.5f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;

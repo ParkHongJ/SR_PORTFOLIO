@@ -64,7 +64,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		{
 			m_pTransformCom->Go_Right(0.55 * fTimeDelta);
 		}
-		//¾î¶² °æ¿ì¿¡ -fTimeDelta ÇØÁÙ °Í ÀÎÁö?
+		//ì–´ë–¤ ê²½ìš°ì— -fTimeDelta í•´ì¤„ ê²ƒ ì¸ì§€?
 	}
 
 	/* TOPDEE */
@@ -80,7 +80,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	/* Ä«¸Ş¶óÀÇ ¿ùµåÇà·ÄÀÌ´Ù. */
+	/* ì¹´ë©”ë¼ì˜ ì›”ë“œí–‰ë ¬ì´ë‹¤. */
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
@@ -104,7 +104,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 	}
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 	
@@ -129,7 +129,7 @@ HRESULT CMonster_Pig::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	//---------------------µğ¹ö±×ÀÏ¶§ ±×¸®±â-------------------------
+	//---------------------ë””ë²„ê·¸ì¼ë•Œ ê·¸ë¦¬ê¸°-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pBoxCom->Render(Matrix);

@@ -27,7 +27,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void OnTriggerExit(CGameObject* other, float fTimeDelta);
 	virtual void OnTriggerEnter(CGameObject* other, float fTimeDelta);
-	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta);
+	virtual void OnTriggerStay(CGameObject*	other, float fTimeDelta, _uint eDireciton);
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

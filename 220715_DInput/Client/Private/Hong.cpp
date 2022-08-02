@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Public\Hong.h"
-#include "KeyMgr.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
 #include "Level_Loading.h"
@@ -35,7 +34,7 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
+	/*if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
 	{
 		m_vPosition.x -= 1.f;
 	}
@@ -58,7 +57,7 @@ void CHong::Tick(_float fTimeDelta)
 		m_list.push_back(m_vPosition);
 
 		m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
-	}
+	}*/
 }
 
 HRESULT CHong::Render()
@@ -72,8 +71,11 @@ HRESULT CHong::Render()
 	matWorld.m[2][2] = 0.1f;
 	memcpy(&matWorld.m[3][0], &m_vPosition, sizeof(_float3));
 	m_pGraphic_Device->SetTransform(D3DTS_WORLD, &matWorld);
+
 	m_pSphereMesh->DrawSubset(0);
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	SetWindowText(g_hWnd, TEXT("홍준레벨임"));
 
 	ImGui::ShowDemoWindow();
@@ -86,6 +88,8 @@ HRESULT CHong::Render()
 		"Layer_topdee",
 		"Layer_Toodee", 
 		"Layer_Cube",
+		"Layer_Wall",
+		"Layer_Spike",
 		"Layer_Monster_Pig",
 		"Layer_Monster_Turret",
 		"Layer_Portal",
@@ -99,6 +103,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Topdee",
 		"Prototype_GameObject_Toodee",
 		"Prototype_GameObject_Cube",
+		"Prototype_GameObject_Wall",
+		"Prototype_GameObject_Spike",
 		"Prototype_GameObject_Monster_Pig",
 		"Prototype_GameObject_Turret",
 		"Prototype_GameObject_Portal",
@@ -127,19 +133,20 @@ HRESULT CHong::Render()
 				//wchar_t 메모리 할당
 				const _tchar* szTemp = new WCHAR[strSize];
 				//형 변환
-				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
 				m_SelectLayer = szTemp;
 				
 				//Prototypes
 				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
 				szTemp = new WCHAR[strSize];
-				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
 				m_SelectPrototypes = szTemp;
 			}
 		}
 		ImGui::EndListBox();
 		if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
 		if (ImGui::Button("Load")) LoadGameObject();
+		ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	}
 
 
@@ -253,7 +260,7 @@ HRESULT CHong::Ready_Layer_Block(const _tchar* pPrototypeTag, const _tchar* pLay
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_HONG, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -323,11 +330,11 @@ void CHong::SaveGameObject()
 	while (iter != m_TestMap.end())
 	{
 		// Key값 저장
-		dwStrByte =  sizeof(_tchar) * wcslen(iter->first.first);//sizeof(iter->first.first);
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.first));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
 		// Key값 저장
-		dwStrByte = sizeof(_tchar) * wcslen(iter->first.second);
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.second));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
 
@@ -383,6 +390,9 @@ void CHong::LoadGameObject()
 			break;
 		}
 		m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+
+		Safe_Delete_Array(pFirst);
+		Safe_Delete_Array(pSecond);
 	}
 
 	auto iter = m_TestMap.begin();
@@ -398,6 +408,5 @@ void CHong::LoadGameObject()
 void CHong::Free()
 {
 	__super::Free();
-	CKeyMgr::Get_Instance()->Destroy_Instance();
 	m_pSphereMesh->Release();
 }

@@ -29,7 +29,7 @@ HRESULT CToodee::Initialize(void * pArg)
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 2.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 12.f));
 
 	return S_OK;
 }
@@ -72,6 +72,11 @@ void CToodee::Tick(_float fTimeDelta)
 			m_eToodeeDir = TOODEE_DEAD;
 
 		m_eCurruntDir = m_eToodeeDir;
+	}
+	else
+	{
+		m_bJump = false;
+		m_fJumpTime = 0.f;
 	}
 
 	if (m_bPortal) {
@@ -183,9 +188,8 @@ void CToodee::LateTick(_float fTimeDelta)
 
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);
-
-			m_pBoxCom->Tick(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_Scaled());
-			m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
+			//Edit Hong
+			m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
 		}
 		else if (!m_bActive) {
 			if (68 > m_iTexIndex)
@@ -223,10 +227,10 @@ HRESULT CToodee::Render()
 		return E_FAIL;
 
 	//---------------------디버그일때 그리기-------------------------
-	/*_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pBoxCom->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	//--------------------------------------------------------------
 
 	return S_OK;
@@ -319,7 +323,7 @@ HRESULT CToodee::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_SJH, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

@@ -98,7 +98,6 @@ void CPlayer::LateTick(_float fTimeDelta)
 {
 	//__super::SetUp_OnTerrain(m_pTransformCom, 1.f);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, this);
 }
 
 HRESULT CPlayer::Render()

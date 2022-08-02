@@ -31,6 +31,10 @@ HRESULT CSpike::Initialize(void * pArg)
 		
 		_float3 vSetPos{ *(_float3*)pArg };
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vSetPos);
+		m_vToodeePos = vSetPos;
+		vSetPos.y += 0.5f;
+		vSetPos.z -= 1.f;
+		m_vTopdeePos = vSetPos;
 	}
 
 	return S_OK;
@@ -44,10 +48,18 @@ void CSpike::Tick(_float fTimeDelta)
 		if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
 			if (0 < m_iFrame)
 				--m_iFrame;
+
+			_float3 vPos;
+			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vToodeePos, fTimeDelta * m_fSpeed);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE) {
 			if (5 > m_iFrame)
 				++m_iFrame;
+
+			_float3 vPos;
+			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vTopdeePos, fTimeDelta * m_fSpeed);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		m_fTime = 0.f;
 	}
@@ -70,7 +82,7 @@ void CSpike::LateTick(_float fTimeDelta)
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	/* For.Spike_Col */
-	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
 }
 
 HRESULT CSpike::Render()
@@ -179,7 +191,7 @@ HRESULT CSpike::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spike"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -199,8 +211,9 @@ HRESULT CSpike::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
+	BoxColliderDesc.vSize = _float3(.2f, .2f, .2f);
 	BoxColliderDesc.bIsTrigger = true;
+	BoxColliderDesc.fRadius = 0.05f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 	return S_OK;

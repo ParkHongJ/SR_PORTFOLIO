@@ -80,7 +80,7 @@ void CBullet::LateTick(_float fTimeDelta)
 	m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollider->Add_CollisionGroup(CCollider::BULLET, this);
+	m_pCollider->Add_CollisionGroup(CCollider::BULLET, m_pBoxCollider, m_pTransformCom);
 }
 
 HRESULT CBullet::Render()
@@ -127,7 +127,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 	/* 이거 수정해라 */
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Bullet"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;

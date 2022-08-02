@@ -26,7 +26,6 @@ public:
 
 	_float3 GetMin();
 	_float3 GetMax();
-	void Tick(_float3 _vPos, _float3 _vScale);
 	_float GetRadius() { return m_fRadius; }
 	_uint GetID() { return m_iID; }
 public:
