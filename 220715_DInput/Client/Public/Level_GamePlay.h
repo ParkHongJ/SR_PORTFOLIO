@@ -36,6 +36,7 @@ private:
 	void	LoadGameObject();
 	vector<_float3> m_list;
 	_float3 m_vPosition;
+
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

@@ -30,11 +30,7 @@ void CGameMgr::LateTick(_float fTimeDelta)
 
 void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag, _bool bHole)
 {
-	CLayer* pLayer = CGameInstance::Get_Instance()->Get_Layer(pLayerTag, eLayerLevel);
-	if (pLayer == nullptr)
-		return;
-	
-	list<CGameObject*>* pList= pLayer->KKK_Get_List();
+	list<CGameObject*>* pList = CGameInstance::Get_Instance()->GetLayer(eLayerLevel, pLayerTag);
 	if (pList == nullptr)
 		return;
 	for (auto& iter = pList->begin(); iter != pList->end(); ++iter)
@@ -46,7 +42,7 @@ void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pL
 	}
 	if (bHole) {
 		m_eHoleLevel = eLayerLevel;
-		m_iHoleFinishNum = m_Obstaclelist.size();
+		m_iHoleFinishNum = (_uint)m_Obstaclelist.size();
 	}
 }
 
@@ -66,7 +62,7 @@ _bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, 
 			}
 			_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
 			if (fDistance <= 1.0f) {//Objects Position Compare
-				*pOut_ObjectsDist = fDistance - 1.0f;
+				*pOut_ObjectsDist = abs(fDistance - 1.0f);
 				return true;
 			}
 			++i;
@@ -110,11 +106,10 @@ _bool CGameMgr::Check_PushBox_Exactly(const _float3 & vBoxPos)
 			iter->x = -100.f;
 			iter->y = -100.f;
 			iter->z = -100.f;
-			CLayer* pLayer = CGameInstance::Get_Instance()->Get_Layer((L"Layer_Hole"), m_eHoleLevel);
-			if (pLayer == nullptr)
+			list<CGameObject*>* pList = CGameInstance::Get_Instance()->GetLayer(m_eHoleLevel, (L"Layer_Hole"));
+			if (pList == nullptr)
 				return false;
 			_uint j = 0;
-			list<CGameObject*>* pList = pLayer->KKK_Get_List();
 			for (auto& iter = pList->begin(); (iter) != pList->end(); ++iter)
 			{
 				if (j != i) {

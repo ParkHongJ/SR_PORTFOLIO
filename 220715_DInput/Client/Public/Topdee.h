@@ -28,7 +28,7 @@ private:
 	CTopdee(const CTopdee& rhs);
 	virtual ~CTopdee() = default;
 private:
-	void ClearCheck(_float fTimeDelta);// GameClear?
+	void DeadCheck(_float fTimeDelta);// GameOver
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -74,7 +74,7 @@ private:
 	_float3 m_vTargetDir{ 0.f,0.f,0.f };
 	_float3 m_vBoxDropPos{ -1.f, -1.f, -1.f };
 	_float m_fRaising_Box_DelayTimer{ 0.f };
-	_float m_fClear_Timer{ 0.f };
+	_float m_fDeadTimer{ 0.f };
 
 	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.1f };

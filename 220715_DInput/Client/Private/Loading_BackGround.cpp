@@ -26,11 +26,11 @@ HRESULT CLoading_BackGround::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	D3DXMatrixOrthoLH(&m_ProjMatrix, g_iWinSizeX, g_iWinSizeY, 0, 1);
+	D3DXMatrixOrthoLH(&m_ProjMatrix, (_float)g_iWinSizeX, (_float)g_iWinSizeY, 0, 1);
 
 	
-	m_fX = g_iWinSizeX / 2;
-	m_fY = g_iWinSizeY / 2;
+	m_fX = (_float)(g_iWinSizeX / 2);
+	m_fY = (_float)(g_iWinSizeY / 2);
 	m_pTransform_BackGroundCom->Set_Scaled(_float3(g_iWinSizeX, g_iWinSizeY, 0.f));
 	m_pTransform_BackGroundCom->Set_State(CTransform::STATE_POSITION, _float3(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 1.f));
 

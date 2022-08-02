@@ -46,7 +46,6 @@ HRESULT CLevel_GyuH::Initialize()
 	}
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole",	true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Spike", false);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
 	return S_OK;
 

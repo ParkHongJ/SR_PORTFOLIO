@@ -66,24 +66,6 @@ HRESULT CObject_Manager::Add_GameObjectToLayer(const _tchar* pPrototypeTag, _uin
 	return S_OK;
 }
 
-CLayer * CObject_Manager::KKK_GetBoxLayer()
-{
-	CLayer*		pLayer = Find_Layer(6, L"Layer_Cube");
-	if (pLayer == nullptr)
-		return nullptr;
-	else
-		return pLayer;
-}
-
-CLayer * CObject_Manager::Get_Layer(const _tchar * pLayerTag, _uint iLevelIndex)
-{
-	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
-	if (pLayer == nullptr)
-		return nullptr;
-	else
-		return pLayer;
-}
-
 void CObject_Manager::Tick(_float fTimeDelta)
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)

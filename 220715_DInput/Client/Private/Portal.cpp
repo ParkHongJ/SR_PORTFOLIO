@@ -2,6 +2,7 @@
 #include "..\Public\Portal.h"
 
 #include "GameInstance.h"
+#include "GameMgr.h"
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -21,6 +22,7 @@ HRESULT CPortal::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
 	if (pArg != nullptr)
 	{
 		_float3 vPos;
@@ -39,6 +41,8 @@ void CPortal::Tick(_float fTimeDelta)
 
 	if (m_fFrame >= 11.0f)
 		m_fFrame = 0.f;
+
+
 }
 
 void CPortal::LateTick(_float fTimeDelta)
@@ -160,6 +164,18 @@ HRESULT CPortal::SetUp_Components()
 	BoxColliderDesc.fRadius = 1.f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
+	//==topdeePortal
+	RectDesc.vSize = { 6.f,6.f,0.f };
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom_For_Topdee, this, &RectDesc)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&pTextureCom_For_Topdee, this)))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -198,4 +214,8 @@ void CPortal::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+
+	Safe_Release(m_pVIBufferCom_For_Topdee);
+	Safe_Release(pTextureCom_For_Topdee);
+	
 }
