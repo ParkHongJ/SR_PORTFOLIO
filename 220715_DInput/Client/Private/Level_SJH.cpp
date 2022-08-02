@@ -29,6 +29,9 @@ HRESULT CLevel_SJH::Initialize()
 	if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
@@ -110,13 +113,13 @@ HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
 			return E_FAIL;
 	}
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(3.5f, 0.5f, 3.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(5.5f, 0.5f, 1.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(4.5f, 0.5f, 4.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(7.5f, 0.5f, 2.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(5.5f, 0.5f, 5.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(9.5f, 0.5f, 3.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -128,10 +131,23 @@ HRESULT CLevel_SJH::Ready_Layer_Spike(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Spike"), LEVEL_STATIC, pLayerTag, _float3(5.5f, 0.5f, 1.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Spike"), LEVEL_STATIC, pLayerTag, _float3(13.5f, 0.5f, 1.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_SJH::Ready_Layer_Portal(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(20.5f, 0.5f, 2.5f))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

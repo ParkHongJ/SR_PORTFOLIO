@@ -206,7 +206,6 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 	
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_HONG, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-
 	
 	Safe_Release(pGameInstance);
 

@@ -45,6 +45,8 @@ private:
 
 	CTexture* m_pTextureCom_For_Topdee = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_For_Topdee = nullptr;
+	CTexture* m_pTextureCom_for_Toodee = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom_for_Toodee = nullptr;
 
 public:
 	static CPortal* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -53,6 +55,8 @@ public:
 
 private:
 	_float m_fFrame = 0.f;
-	_float m_fFrame_For_Topdee{ 0.f };
+
+	_float m_fFrame_For_Topdee = 0.f;
+	_float m_fFrame_for_Toodee = 0.f;
 };
 END

@@ -29,7 +29,7 @@ HRESULT CToodee::Initialize(void * pArg)
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 12.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 2.f));
 
 	return S_OK;
 }
@@ -40,13 +40,17 @@ void CToodee::Tick(_float fTimeDelta)
 		if (m_bActive)
 			m_bActive = false;
 		else {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.5f, 2.f));
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 2.f));
 			m_bActive = true;
 		}
 	}
 
 	/* For.Toodee_Turn */
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+			0.3f,
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 		if (m_bActive) {
 			if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
 				if(TOODEE_PORTAL != m_eCurruntDir)
@@ -73,10 +77,11 @@ void CToodee::Tick(_float fTimeDelta)
 
 		m_eCurruntDir = m_eToodeeDir;
 	}
-	else
-	{
-		m_bJump = false;
-		m_fJumpTime = 0.f;
+	else {
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+			0.001f, 
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 	}
 
 	if (m_bPortal) {
@@ -172,8 +177,8 @@ void CToodee::LateTick(_float fTimeDelta)
 
 				fPos.z += vGravityPower;
 
-				if (m_fJumpTime > 0.6f)
-					m_fJumpTime = 0.6f;
+				if (m_fJumpTime > m_fMaxJumpTime)
+					m_fJumpTime = m_fMaxJumpTime;
 				else
 					m_fJumpTime += fTimeDelta;
 			}
@@ -251,25 +256,24 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (other->CompareTag(L"Portal"))
 		m_bPortal = true;
 
-	_uint iCurrentDir = 0;
 	_float fBoxSize = 1.f;
-	if (other->CompareTag(L"Box")){
+	_float fMyLength = 1.5f;
+	if (other->CompareTag(L"Box")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
 
+		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
+
 		if (CCollider::DIR_UP == eDireciton) {
-			if(0.2f < m_fJumpTime)
+			if(0.2f < m_fJumpTime && m_bJump)
 				m_bJump = false;
 			m_fJumpTime = 0.f;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-				_float3(m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-						m_pTransformCom->Get_State(CTransform::STATE_POSITION).y,
-						TargetBox->Get_State(CTransform::STATE_POSITION).z + (fBoxSize * 0.5f)));
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
 		}
 		else if (CCollider::DIR_DOWN == eDireciton) {
-			if (TargetBox->Get_State(CTransform::STATE_POSITION).x - (fBoxSize * 0.45f) < m_pTransformCom->Get_State(CTransform::STATE_POSITION).x
-				&& TargetBox->Get_State(CTransform::STATE_POSITION).x + (fBoxSize * 0.45f) > m_pTransformCom->Get_State(CTransform::STATE_POSITION).x)
-				m_bJump = false;
+			if (fMyLength > abs(vMyPos.z - TargetBox->Get_State(CTransform::STATE_POSITION).z))
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
 		}
 		else if (CCollider::DIR_LEFT == eDireciton) {
 			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
@@ -281,7 +285,24 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		Safe_Release(TargetBox);
 	}
 
-	iCurrentDir = eDireciton;
+	/*
+	Up-Up
+	if (m_bJump) {
+		m_fJumpPower += 1.f;
+		m_fMaxJumpTime += 0.03f;
+	}
+	else if (!m_bJump) {
+		m_fJumpPower = 17.f;
+		m_fMaxJumpTime = 0.6;
+	}
+
+	Down-Down
+	Set_State(Position);
+	m_bJump = false;
+
+	Up-Left/Right
+	maybe m_fMoveSpeed = (vGravityPower) + (m_fJumpPower * fTimeDelta);
+	*/
 }
 
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)

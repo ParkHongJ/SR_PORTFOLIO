@@ -21,6 +21,7 @@ private:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Spike(const _tchar * pLayerTag);
+	HRESULT Ready_Layer_Portal(const _tchar* pLayerTag);
 
 public:
 	static CLevel_SJH* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
