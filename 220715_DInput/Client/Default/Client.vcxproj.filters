@@ -70,9 +70,6 @@
     <Filter Include="ClientManager">
       <UniqueIdentifier>{0d4ef7c2-32a4-446c-919d-8b6f0211055a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ClientManager\KeyMgr">
-      <UniqueIdentifier>{ce080dd4-fea6-46f9-8a42-9cd3d356fb22}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Sky">
       <UniqueIdentifier>{6aeb102e-a9be-45f9-9ddc-59905a0dfb06}</UniqueIdentifier>
     </Filter>
@@ -211,9 +208,6 @@
     <ClInclude Include="..\public\Block.h">
       <Filter>02.GameObject\Block</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\KeyMgr.h">
-      <Filter>ClientManager\KeyMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
@@ -344,9 +338,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Block.cpp">
       <Filter>02.GameObject\Block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\KeyMgr.cpp">
-      <Filter>ClientManager\KeyMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>

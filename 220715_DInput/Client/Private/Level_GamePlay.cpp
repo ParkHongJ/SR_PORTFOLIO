@@ -32,8 +32,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	
 	LoadGameObject();
 
-	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Turret"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Turret"))))
+		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
 		return E_FAIL;
 

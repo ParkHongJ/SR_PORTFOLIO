@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Public\Hong.h"
-#include "KeyMgr.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
 #include "Level_Loading.h"
@@ -35,7 +34,7 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
+	/*if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
 	{
 		m_vPosition.x -= 1.f;
 	}
@@ -58,7 +57,7 @@ void CHong::Tick(_float fTimeDelta)
 		m_list.push_back(m_vPosition);
 
 		m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
-	}
+	}*/
 }
 
 HRESULT CHong::Render()
@@ -134,13 +133,13 @@ HRESULT CHong::Render()
 				//wchar_t 메모리 할당
 				const _tchar* szTemp = new WCHAR[strSize];
 				//형 변환
-				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
 				m_SelectLayer = szTemp;
 				
 				//Prototypes
 				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
 				szTemp = new WCHAR[strSize];
-				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
 				m_SelectPrototypes = szTemp;
 			}
 		}
@@ -331,11 +330,11 @@ void CHong::SaveGameObject()
 	while (iter != m_TestMap.end())
 	{
 		// Key값 저장
-		dwStrByte = sizeof(_tchar) * wcslen(iter->first.first);//sizeof(iter->first.first);
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.first));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
 		// Key값 저장
-		dwStrByte = sizeof(_tchar) * wcslen(iter->first.second);
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.second));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
 
@@ -409,6 +408,5 @@ void CHong::LoadGameObject()
 void CHong::Free()
 {
 	__super::Free();
-	CKeyMgr::Get_Instance()->Destroy_Instance();
 	m_pSphereMesh->Release();
 }

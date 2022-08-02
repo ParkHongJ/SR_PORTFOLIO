@@ -44,18 +44,7 @@ void CCamera::Tick(_float fTimeDelta)
 	ViewMatrix = m_pTransformCom->Get_WorldMatrixInverse();	
 	D3DXMatrixPerspectiveFovLH(&ProjMatrix, m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar);
 
-	/*if (CKeyMgr::Get_Instance()->Key_Down('X'))
-	{
-		test = !test;
-	}
-
-	if (test)
-	{
-		D3DXMatrixPerspectiveFovLH(&ProjMatrix, m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar);
-	}
-	else
-		D3DXMatrixOrthoLH(&ProjMatrix, 34.f, 18.f, m_CameraDesc.fNear, m_CameraDesc.fFar);
-*/
+	
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &ViewMatrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &ProjMatrix);
 }

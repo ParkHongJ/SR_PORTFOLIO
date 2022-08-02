@@ -176,7 +176,8 @@ void CBlock::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos, _float3 vP
 	_float3 vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float fDist = D3DXVec3Length(&(vCurPos - m_vPushFinishPos));
 	if (fDist < 0.2f)
-	{//위치에 도달했을때.
+	{
+		//위치에 도달했을때.
 		Box_Push_Find_A_Place();
 		vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		m_bTopdeePush = false;
