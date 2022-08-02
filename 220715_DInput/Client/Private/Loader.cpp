@@ -2,9 +2,11 @@
 #include "..\Public\Loader.h"
 
 #include "GameInstance.h"
+#include "GravityBlock.h"
 #include "Monster_Pig.h"
 #include "Camera_Free.h"
 #include "BackGround.h"
+#include "KeyBlock.h"
 #include "Terrain.h"
 #include "Monster.h"
 #include "Player.h"
@@ -21,8 +23,8 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
-#include "KeyBlock.h"
-#include "GravityBlock.h"
+#include "WarpBlock.h"
+#include "ElectricBlock.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -614,6 +616,16 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_WarpBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WarpBlock"),
+		CWarpBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ElectricBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ElectricBlock"),
+		CElectricBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"),
 		CWall::Create(m_pGraphic_Device))))
@@ -645,8 +657,8 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"),22))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_ElectricBlock */ 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_ElectricBlock"),
+	/* For.Prototype_Component_Texture_NormalBlock */ 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
 		return E_FAIL;
 
@@ -668,6 +680,16 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	/* For.Prototype_Component_Texture_Spike */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_WarpBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_WarpBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Warp_Block/Warp_Block_%d.dds"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_ElectricBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_ElectricBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/ElectricBlock/Electric_Block_%d.dds"), 2))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("¢¬©¢?¡§?? ¢§????©¬??¢¥?¢¥?. "));

@@ -1,48 +1,47 @@
 #include "stdafx.h"
-#include "..\Public\Block.h"
-
+#include "..\Public\ElectricBlock.h"
 #include "GameInstance.h"
 
 
-CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
+CElectricBlock::CElectricBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
 {
 }
 
-CBlock::CBlock(const CBlock & rhs)
+CElectricBlock::CElectricBlock(const CElectricBlock & rhs)
 	: CInteraction_Block(rhs)
 {
 }
 
-HRESULT CBlock::Initialize_Prototype()
+HRESULT CElectricBlock::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CBlock::Initialize(void * pArg)
-{
+HRESULT CElectricBlock::Initialize(void * pArg)
+{// Texture 1 is On 0 is Off
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	SetTag(L"Box");
-
+	
 	if (pArg != nullptr)
 	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-
+		_float4 vInitStruct;
+		memcpy(&vInitStruct, pArg, sizeof(_float4));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vInitStruct.x, vInitStruct.y, vInitStruct.z));
+		m_iTextureNum = (_uint)vInitStruct.w;			// w means TextureNum 
 	}
 	return S_OK;
 }
 
-void CBlock::Tick(_float fTimeDelta)
+void CElectricBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
 }
 
-void CBlock::LateTick(_float fTimeDelta)
+void CElectricBlock::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
@@ -52,7 +51,7 @@ void CBlock::LateTick(_float fTimeDelta)
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
 }
 
-HRESULT CBlock::Render()
+HRESULT CElectricBlock::Render()
 {
 	if (!m_bActive)
 		S_OK;
@@ -81,19 +80,19 @@ HRESULT CBlock::Render()
 	return S_OK;
 }
 
-void CBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+void CElectricBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+void CElectricBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CElectricBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 }
 
-HRESULT CBlock::Set_RenderState()
+HRESULT CElectricBlock::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -103,14 +102,14 @@ HRESULT CBlock::Set_RenderState()
 	return S_OK;
 }
 
-HRESULT CBlock::Reset_RenderState()
+HRESULT CElectricBlock::Reset_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	return S_OK;
 }
 
-HRESULT CBlock::SetUp_Components()
+HRESULT CElectricBlock::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
@@ -121,7 +120,7 @@ HRESULT CBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -150,33 +149,33 @@ HRESULT CBlock::SetUp_Components()
 	return S_OK;
 }
 
-CBlock * CBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CElectricBlock * CElectricBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CBlock*		pInstance = new CBlock(pGraphic_Device);
+	CElectricBlock*		pInstance = new CElectricBlock(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CBlock"));
+		MSG_BOX(TEXT("Failed To Created : CElectricBlock"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CBlock::Clone(void* pArg)
+CGameObject * CElectricBlock::Clone(void* pArg)
 {
-	CBlock*		pInstance = new CBlock(*this);
+	CElectricBlock*		pInstance = new CElectricBlock(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Clone : CBlock"));
+		MSG_BOX(TEXT("Failed To Clone : CElectricBlock"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBlock::Free()
+void CElectricBlock::Free()
 {
 	__super::Free();
 	

@@ -45,6 +45,11 @@ HRESULT CLevel_GyuH::Initialize()
 			return E_FAIL;
 	}
 
+	_float4 vec4Struct{ 4.5f,0.5f,10.5f, 2.f };
+	if (FAILED(Ready_Layer_WarpBlock((L"Layer_Cube"), vec4Struct)))
+		return E_FAIL;
+
+
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 	return S_OK;
@@ -100,6 +105,17 @@ HRESULT CLevel_GyuH::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_WarpBlock(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_WarpBlock"), LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
 	Safe_Release(pGameInstance);
 	return S_OK;

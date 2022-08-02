@@ -19,7 +19,8 @@ private:
 	HRESULT Ready_Layer_Wall(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Spike(const _tchar* pLayerTag, void* pArg = nullptr);
-	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);//normal
+	HRESULT Ready_Layer_WarpBlock(const _tchar* pLayerTag, void* pArg = nullptr);//warp
 	void	LoadGameObject();
 
 public:

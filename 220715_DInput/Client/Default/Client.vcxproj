@@ -159,6 +159,7 @@
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Cloud.h" />
+    <ClInclude Include="..\Public\ElectricBlock.h" />
     <ClInclude Include="..\public\GravityBlock.h" />
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="..\Public\Toodee.h" />
     <ClInclude Include="..\public\Turret.h" />
     <ClInclude Include="..\Public\Wall.h" />
+    <ClInclude Include="..\Public\WarpBlock.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
@@ -206,6 +208,7 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Cloud.cpp" />
+    <ClCompile Include="..\Private\ElectricBlock.cpp" />
     <ClCompile Include="..\private\GravityBlock.cpp" />
     <ClCompile Include="..\Private\Hole.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
@@ -234,6 +237,7 @@
     <ClCompile Include="..\Private\Toodee.cpp" />
     <ClCompile Include="..\private\Turret.cpp" />
     <ClCompile Include="..\Private\Wall.cpp" />
+    <ClCompile Include="..\Private\WarpBlock.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

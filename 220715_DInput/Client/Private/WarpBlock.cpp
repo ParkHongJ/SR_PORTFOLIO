@@ -1,48 +1,47 @@
 #include "stdafx.h"
-#include "..\Public\Block.h"
-
+#include "..\Public\WarpBlock.h"
 #include "GameInstance.h"
 
 
-CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
+CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
 {
 }
 
-CBlock::CBlock(const CBlock & rhs)
+CWarpBlock::CWarpBlock(const CWarpBlock & rhs)
 	: CInteraction_Block(rhs)
 {
 }
 
-HRESULT CBlock::Initialize_Prototype()
+HRESULT CWarpBlock::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CBlock::Initialize(void * pArg)
-{
+HRESULT CWarpBlock::Initialize(void * pArg)
+{// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	SetTag(L"Box");
-
+	
 	if (pArg != nullptr)
 	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-
+		_float4 vInitStruct;
+		memcpy(&vInitStruct, pArg, sizeof(_float4));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vInitStruct.x, vInitStruct.y, vInitStruct.z));
+		m_iTextureNum = (_uint)vInitStruct.w;			// w means TextureNum 
 	}
 	return S_OK;
 }
 
-void CBlock::Tick(_float fTimeDelta)
+void CWarpBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	
 }
 
-void CBlock::LateTick(_float fTimeDelta)
+void CWarpBlock::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
@@ -52,7 +51,7 @@ void CBlock::LateTick(_float fTimeDelta)
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
 }
 
-HRESULT CBlock::Render()
+HRESULT CWarpBlock::Render()
 {
 	if (!m_bActive)
 		S_OK;
@@ -81,19 +80,19 @@ HRESULT CBlock::Render()
 	return S_OK;
 }
 
-void CBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+void CWarpBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
+void CWarpBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
 }
 
-HRESULT CBlock::Set_RenderState()
+HRESULT CWarpBlock::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -103,14 +102,14 @@ HRESULT CBlock::Set_RenderState()
 	return S_OK;
 }
 
-HRESULT CBlock::Reset_RenderState()
+HRESULT CWarpBlock::Reset_RenderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	return S_OK;
 }
 
-HRESULT CBlock::SetUp_Components()
+HRESULT CWarpBlock::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
@@ -121,7 +120,7 @@ HRESULT CBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_WarpBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -150,33 +149,33 @@ HRESULT CBlock::SetUp_Components()
 	return S_OK;
 }
 
-CBlock * CBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CWarpBlock * CWarpBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CBlock*		pInstance = new CBlock(pGraphic_Device);
+	CWarpBlock*		pInstance = new CWarpBlock(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CBlock"));
+		MSG_BOX(TEXT("Failed To Created : CWarpBlock"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CBlock::Clone(void* pArg)
+CGameObject * CWarpBlock::Clone(void* pArg)
 {
-	CBlock*		pInstance = new CBlock(*this);
+	CWarpBlock*		pInstance = new CWarpBlock(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Clone : CBlock"));
+		MSG_BOX(TEXT("Failed To Clone : CWarpBlock"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBlock::Free()
+void CWarpBlock::Free()
 {
 	__super::Free();
 	

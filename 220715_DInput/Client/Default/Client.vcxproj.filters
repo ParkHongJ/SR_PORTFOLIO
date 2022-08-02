@@ -124,6 +124,12 @@
     <Filter Include="02.GameObject\Block\Interaction_Block\NormalBlock">
       <UniqueIdentifier>{14013a18-37e4-4600-baa1-502916d0453b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block\WarpBlock">
+      <UniqueIdentifier>{2d6e4e99-b38d-4a8e-99de-fcbdb0ee5399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block\ElectricBlock">
+      <UniqueIdentifier>{c25fafe6-6336-49cb-aa01-a68462f72519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -265,6 +271,12 @@
     <ClInclude Include="..\public\Block.h">
       <Filter>02.GameObject\Block\Interaction_Block\NormalBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\WarpBlock.h">
+      <Filter>02.GameObject\Block\Interaction_Block\WarpBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ElectricBlock.h">
+      <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -395,6 +407,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Block.cpp">
       <Filter>02.GameObject\Block\Interaction_Block\NormalBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WarpBlock.cpp">
+      <Filter>02.GameObject\Block\Interaction_Block\WarpBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ElectricBlock.cpp">
+      <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
