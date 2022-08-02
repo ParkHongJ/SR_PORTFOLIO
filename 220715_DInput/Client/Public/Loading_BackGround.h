@@ -45,7 +45,7 @@ private:
 private:
 	_float4x4				m_ProjMatrix;
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY, m_fTimeDelta{0.f};
-	_uint					m_iCloudFrame{0};
+	_float					m_fCloudFrame = 0.f;
 
 private:
 	HRESULT SetUp_Components();

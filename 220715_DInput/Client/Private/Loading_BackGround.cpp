@@ -49,13 +49,9 @@ HRESULT CLoading_BackGround::Initialize(void * pArg)
 
 void CLoading_BackGround::Tick(_float fTimeDelta)
 {
-	m_fTimeDelta += fTimeDelta;
-	if (m_fTimeDelta > 0.5f) {
-		if (m_iCloudFrame >= 5)
-			m_iCloudFrame = 0;
-		++m_iCloudFrame;
-		m_fTimeDelta = 0.f;
-	}
+	m_fCloudFrame += 10.0f * fTimeDelta;
+	if (m_fCloudFrame >= 10.0f)
+		m_fCloudFrame = 0.f;
 }
 
 void CLoading_BackGround::LateTick(_float fTimeDelta)
@@ -113,7 +109,7 @@ HRESULT CLoading_BackGround::Render()
 	m_pVIBuffer_InsideCom->Render();
 
 	D3DXMatrixIdentity(&Matrix);
-	if (FAILED(m_pTexture_CloudCom->Bind_Texture(m_iCloudFrame)))
+	if (FAILED(m_pTexture_CloudCom->Bind_Texture(m_fCloudFrame)))
 		return E_FAIL;
 	m_pTransform_CloudCom->Bind_WorldMatrix();
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &Matrix);

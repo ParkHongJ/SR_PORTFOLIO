@@ -282,7 +282,7 @@ HRESULT CMainApp::Ready_LoadingLevel()
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Default */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Cloud"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/SpinCloud/SpinCloud_%d.png"),6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/SpinCloud/SpinCloud_%d.png"),10))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Loading_Inside */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Inside"),
