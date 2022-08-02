@@ -118,6 +118,9 @@
     <Filter Include="02.GameObject\Block\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClientManager\ParticleMgr">
+      <UniqueIdentifier>{169fc675-e3bb-4b42-bfca-9bc9679d9977}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -256,6 +259,9 @@
     <ClInclude Include="..\Public\Wall.h">
       <Filter>02.GameObject\Block\Wall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ParticleMgr.h">
+      <Filter>ClientManager\ParticleMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -383,6 +389,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wall.cpp">
       <Filter>02.GameObject\Block\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ParticleMgr.cpp">
+      <Filter>ClientManager\ParticleMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

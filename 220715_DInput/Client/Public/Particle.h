@@ -40,8 +40,13 @@ public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 
+public:
+	void SetDirection(const _float3& vDir);
 private:
 	_float m_fFrame = 0.f;
+	_float3 m_vDir;
+	_float m_fSpeed = 2.5f;
+	_float m_fTimer = 0.f;
 };
 END
 

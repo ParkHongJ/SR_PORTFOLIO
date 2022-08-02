@@ -34,7 +34,8 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 	{
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)pArg);
 	}
-
+	else
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.5f, 10.f));
 	return S_OK;
 }
 
@@ -59,20 +60,22 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
 	{
  		UpdateGravitiy(fTimeDelta);
-
-		if (m_bOnBlock)
+		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float vGravityPower = -1.63f * fTimeDelta * 0.5f;
+		if (m_fDrop_Endline + abs(vGravityPower) > fPos.z)
 		{
-			m_pTransformCom->Go_Right(0.55 * fTimeDelta);
+			m_bOnBlock = true;
+			fPos.z = m_fDrop_Endline;
 		}
-		//어떤 경우에 -fTimeDelta 해줄 것 인지?
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 	}
-
 	/* TOPDEE */
 	else
 	{
 		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
 		m_pTransformCom->Chase(m_vTopdeePos, 0.55 * fTimeDelta);
-		m_bOnAir = true;
+		m_bOnBlock = false;
+		m_fDrop_Endline = 0.f; 
 	}
 
 	
@@ -80,14 +83,13 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
-	/* 카메라의 월드행렬이다. */
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	/*_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	_float fCollisionDist;
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPigPos, &fCollisionDist, false))
@@ -102,12 +104,10 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 			vPigPos.z -= fCollisionDist;
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
-	}
+	}*/
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
-	
 }
 
 HRESULT CMonster_Pig::Render()
@@ -129,7 +129,7 @@ HRESULT CMonster_Pig::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	//---------------------디버그일때 그리기-------------------------
+	//---------------------������϶��� �׸���------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pBoxCom->Render(Matrix);
@@ -142,10 +142,10 @@ HRESULT CMonster_Pig::Render()
 
 void CMonster_Pig::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	if (other->CompareTag(L"Box"))
+	/*if (other->CompareTag(L"Box"))
 	{
 		m_bOnBlock = true;
-	}
+	}*/
 }
 
 void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
@@ -154,14 +154,35 @@ void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	if (other->CompareTag(L"Spike"))
-		m_bActive = false;
+	/*if (other->CompareTag(L"Spike"))
+		m_bActive = false;*/
 
-	if (other->CompareTag(L"Box")) 
-	{
+	_float fBoxSize = 1.f;
+	_float fMyLength = 1.5f;
+	if (other->CompareTag(L"Box")) {
+		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
+		Safe_AddRef(TargetBox);
+
+		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
+
+		if (CCollider::DIR_UP == eDirection) {
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
+			m_bOnBlock = true;
+		}
+		/*else if (CCollider::DIR_DOWN == eDirection) {
+			if (fMyLength > abs(vMyPos.z - TargetBox->Get_State(CTransform::STATE_POSITION).z))
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
+		}
+		else if (CCollider::DIR_LEFT == eDirection) {
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+		}
+		else if (CCollider::DIR_RIGHT == eDirection) {
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+		}*/
+
+		Safe_Release(TargetBox);
 	}
-
-	m_eCurDir = (PIG_DIRECTION)eDirection;
 
 	
 }
@@ -221,8 +242,8 @@ HRESULT CMonster_Pig::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(.5f, .5f, .5f);
-	BoxColliderDesc.bIsTrigger = false;
+	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
+	BoxColliderDesc.bIsTrigger = true;
 	BoxColliderDesc.fRadius = 1.f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
@@ -245,16 +266,10 @@ void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPigPos.z += -9.8f * fTimeDelta * 0.3f;
-		fTimeDelta += 0.1f;
-	}
-	else
-	{
-		fTimeDelta = 0.f;
+		vPigPos.z += -9.8f * fTimeDelta * 0.5f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 	}
 
-	m_bOnBlock = false;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 }
 
 CMonster_Pig * CMonster_Pig::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
