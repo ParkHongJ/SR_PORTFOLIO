@@ -118,6 +118,12 @@
     <Filter Include="02.GameObject\Block\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block">
+      <UniqueIdentifier>{c7cd8198-68b2-4e40-9a7c-d25152d67b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block\NormalBlock">
+      <UniqueIdentifier>{14013a18-37e4-4600-baa1-502916d0453b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -205,9 +211,6 @@
     <ClInclude Include="..\Public\Toodee.h">
       <Filter>02.GameObject\Toodee</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Block.h">
-      <Filter>02.GameObject\Block</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
@@ -255,6 +258,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Wall.h">
       <Filter>02.GameObject\Block\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interaction_Block.h">
+      <Filter>02.GameObject\Block\Interaction_Block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Block.h">
+      <Filter>02.GameObject\Block\Interaction_Block\NormalBlock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,9 +345,6 @@
     <ClCompile Include="..\Private\Toodee.cpp">
       <Filter>02.GameObject\Toodee</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Block.cpp">
-      <Filter>02.GameObject\Block</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
     </ClCompile>
@@ -383,6 +389,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wall.cpp">
       <Filter>02.GameObject\Block\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_Block.cpp">
+      <Filter>02.GameObject\Block\Interaction_Block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Block.cpp">
+      <Filter>02.GameObject\Block\Interaction_Block\NormalBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

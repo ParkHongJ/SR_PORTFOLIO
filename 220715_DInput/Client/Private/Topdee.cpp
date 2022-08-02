@@ -2,7 +2,7 @@
 #include "..\Public\Topdee.h"
 
 #include "GameMgr.h"
-#include "Block.h"
+#include "Interaction_Block.h"
 
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -385,7 +385,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
 		//9.5 8.5 7.5
 		_uint iCount = 0;
-		CBlock* pBlock = dynamic_cast<CBlock*>(other);
+		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
 		if (pBlock == nullptr)		//지금미는 블록이 벽이니?
 			return;
 		list<CGameObject*> PushList;
@@ -400,7 +400,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		pBlock->Box_Push_More(fTimeDelta, vOtherPos,true);//First
 		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
 		{
-			CBlock* pBlock= (CBlock*)(*iter);
+			CInteraction_Block* pBlock= (CInteraction_Block*)(*iter);
 			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
 			pBlock->Box_Push_More(fTimeDelta, ((pTransform->Get_State(CTransform::STATE_POSITION) + vCurDir)), true);
 		}
