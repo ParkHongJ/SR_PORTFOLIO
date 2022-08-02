@@ -67,9 +67,6 @@
     <Filter Include="02.GameObject\Toodee">
       <UniqueIdentifier>{00b0ee6b-9e35-4359-bc70-5aa8715efc85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Wall">
-      <UniqueIdentifier>{2cf00ebf-6cc7-4fd0-9e5a-755786aabd50}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ClientManager">
       <UniqueIdentifier>{0d4ef7c2-32a4-446c-919d-8b6f0211055a}</UniqueIdentifier>
     </Filter>
@@ -109,17 +106,20 @@
     <Filter Include="02.GameObject\Key">
       <UniqueIdentifier>{54825924-2d1c-40a9-8f31-11c02212c6bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Key\KeyBlock">
-      <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Wall\Wall">
-      <UniqueIdentifier>{18e28bcd-a9a4-428d-bd4a-e3ffd836757e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\GravityBlock">
-      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Particle">
       <UniqueIdentifier>{ba486fbf-ac40-4784-90ad-01e3032c673c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block">
+      <UniqueIdentifier>{2cf00ebf-6cc7-4fd0-9e5a-755786aabd50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\Wall">
+      <UniqueIdentifier>{18e28bcd-a9a4-428d-bd4a-e3ffd836757e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\GravityBlock">
+      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\KeyBlock">
+      <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +209,7 @@
       <Filter>02.GameObject\Toodee</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Block.h">
-      <Filter>02.GameObject\Wall</Filter>
+      <Filter>02.GameObject\Block</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\KeyMgr.h">
       <Filter>ClientManager\KeyMgr</Filter>
@@ -251,16 +251,16 @@
       <Filter>02.GameObject\Key</Filter>
     </ClInclude>
     <ClInclude Include="..\public\KeyBlock.h">
-      <Filter>02.GameObject\Key\KeyBlock</Filter>
+      <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravityBlock.h">
-      <Filter>02.GameObject\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\GravityBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Particle.h">
       <Filter>02.GameObject\Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Wall.h">
-      <Filter>02.GameObject\Wall\Wall</Filter>
+      <Filter>02.GameObject\Block\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -343,7 +343,7 @@
       <Filter>02.GameObject\Toodee</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Block.cpp">
-      <Filter>02.GameObject\Wall</Filter>
+      <Filter>02.GameObject\Block</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\KeyMgr.cpp">
       <Filter>ClientManager\KeyMgr</Filter>
@@ -382,16 +382,16 @@
       <Filter>02.GameObject\Key</Filter>
     </ClCompile>
     <ClCompile Include="..\private\KeyBlock.cpp">
-      <Filter>02.GameObject\Key\KeyBlock</Filter>
+      <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravityBlock.cpp">
-      <Filter>02.GameObject\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\GravityBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Particle.cpp">
       <Filter>02.GameObject\Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Wall.cpp">
-      <Filter>02.GameObject\Wall\Wall</Filter>
+      <Filter>02.GameObject\Block\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

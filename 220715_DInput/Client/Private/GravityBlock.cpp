@@ -31,8 +31,10 @@ HRESULT CGravityBlock::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 1.f, 3.f));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.5f, .5f, 14.f));
 	
+	m_bOnBlock = false;
+	m_bOnAir = true;
 	return S_OK;
 }
 
@@ -40,6 +42,7 @@ void CGravityBlock::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+
 }
 
 void CGravityBlock::LateTick(_float fTimeDelta)
@@ -51,9 +54,24 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 	{
 		UpdateGravitiy(fTimeDelta);
 	}
+	else
+	{
+		//현재위치
+		_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vFinalPosition; //도착위치
+
+		//z값만 보정 (중력이니까)
+		vFinalPosition.x = vCurPosition.x;
+		vFinalPosition.y = vCurPosition.y;
+		vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
+
+		//러프시작
+		vCurPosition = Lerp(vCurPosition, vFinalPosition, fTimeDelta * 5);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+	}
 	
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 }
 
@@ -87,13 +105,14 @@ void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint 
 	/*if (CCollider::DIR_DOWN == eDirection) {
 		if (TargetBox->Get_State(CTransform::STATE_POSITION).x - (fBoxSize * 0.45f) < m_pTransformCom->Get_State(CTransform::STATE_POSITION).x
 			&& TargetBox->Get_State(CTransform::STATE_POSITION).x + (fBoxSize * 0.45f) > m_pTransformCom->Get_State(CTransform::STATE_POSITION).x)
-			m_bOnBlock = false;
+			m_bOnBlock = true;
 	}*/
+	m_bOnBlock = true;
 }
 
 void CGravityBlock::UpdateGravitiy(_float fTimeDelta)
 {
-	_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	if (m_bOnBlock)
 	{
@@ -106,12 +125,47 @@ void CGravityBlock::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPigPos.z -= -9.8f * fTimeDelta * 0.5f;
+		vPos.z += -9.8f * fTimeDelta * 1.5f;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+}
+
+_bool CGravityBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
+{
+	return _bool();
+}
+
+void CGravityBlock::KKK_Is_Raise(_float3 vTargetPos)
+{
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTargetPos);
+}
+
+_bool CGravityBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall)
+{
+	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	if (!bHoleCall) {
+		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+
+		if (vCurPosition.y <= 0.55f)
+			return true;
+		return false;
 	}
 	else
-	{
-		fTimeDelta = 0.f;
-	}
+		m_bDropBox = true;
+	return false;
+}
+
+void CGravityBlock::Box_Drop_More(_float fTimeDelta)
+{
+}
+
+void CGravityBlock::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos, _float3 vPushDir)
+{
+}
+
+void CGravityBlock::Box_Push_Find_A_Place()
+{
 }
 
 HRESULT CGravityBlock::Set_RenderState()
@@ -142,7 +196,7 @@ HRESULT CGravityBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_KeyBox"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_GravityBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */

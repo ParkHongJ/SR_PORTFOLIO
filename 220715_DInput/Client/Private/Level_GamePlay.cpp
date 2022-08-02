@@ -29,8 +29,13 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
-
+	
 	LoadGameObject();
+
+	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Turret"))))
+		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
+		return E_FAIL;
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
@@ -154,7 +159,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Turret(const _tchar* pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Turret"),
-		LEVEL_GAMEPLAY, pLayerTag)))
+		LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

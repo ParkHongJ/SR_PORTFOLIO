@@ -572,8 +572,8 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject != nullptr)
 		return;
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 	if (KKK_m_pBoxList == nullptr) {
 
 		CLayer* pLayer = pGameInstance->KKK_GetBox();
