@@ -73,12 +73,18 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	else
 	{
 		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
-		m_pTransformCom->Chase(m_vTopdeePos, 0.55 * fTimeDelta);
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float fCollisionDist;
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist, false))
+		{
+			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+		else
+			m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
 		m_bOnBlock = false;
 		m_fDrop_Endline = 0.f; 
 	}
 
-	
 	_float4x4		ViewMatrix;
 
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
@@ -89,22 +95,8 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	/*_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	
 
-	_float fCollisionDist;
-	if (CGameMgr::Get_Instance()->Check_Not_Go(vPigPos, &fCollisionDist, false))
-	{
-		if (m_eCurDir == DIR_LEFT)
-			vPigPos.x -= fCollisionDist;
-		else if (m_eCurDir == DIR_RIGHT)
-			vPigPos.x += fCollisionDist;
-		else if (m_eCurDir == DIR_UP)
-			vPigPos.z += fCollisionDist;
-		else if (m_eCurDir == DIR_DOWN)
-			vPigPos.z -= fCollisionDist;
-
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
-	}*/
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -142,10 +134,6 @@ HRESULT CMonster_Pig::Render()
 
 void CMonster_Pig::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	/*if (other->CompareTag(L"Box"))
-	{
-		m_bOnBlock = true;
-	}*/
 }
 
 void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
@@ -154,11 +142,11 @@ void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	/*if (other->CompareTag(L"Spike"))
-		m_bActive = false;*/
+	if (other->CompareTag(L"Spike"))
+		m_bActive = false;
 
 	_float fBoxSize = 1.f;
-	_float fMyLength = 1.5f;
+	_float fMyLength = .5f;
 	if (other->CompareTag(L"Box")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
@@ -167,10 +155,10 @@ void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint e
 		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
 
 		if (CCollider::DIR_UP == eDirection) {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
 			m_bOnBlock = true;
 		}
-		/*else if (CCollider::DIR_DOWN == eDirection) {
+		else if (CCollider::DIR_DOWN == eDirection) {
 			if (fMyLength > abs(vMyPos.z - TargetBox->Get_State(CTransform::STATE_POSITION).z))
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
 		}
@@ -179,12 +167,9 @@ void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint e
 		}
 		else if (CCollider::DIR_RIGHT == eDirection) {
 			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-		}*/
-
+		}
 		Safe_Release(TargetBox);
 	}
-
-	
 }
 
 HRESULT CMonster_Pig::Set_RenderState()
@@ -242,9 +227,9 @@ HRESULT CMonster_Pig::SetUp_Components()
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
-	BoxColliderDesc.vSize = _float3(1.f, 1.f, 1.f);
+	BoxColliderDesc.vSize = _float3(.5f, .5f, .5f);
 	BoxColliderDesc.bIsTrigger = true;
-	BoxColliderDesc.fRadius = 1.f;
+	BoxColliderDesc.fRadius = .5f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 
@@ -266,7 +251,7 @@ void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPigPos.z += -9.8f * fTimeDelta * 0.5f;
+		vPigPos.z += -9.8f * fTimeDelta;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 	}
 

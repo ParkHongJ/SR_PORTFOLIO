@@ -70,31 +70,6 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	//사각충돌 비교하면서 Stay 방향 호출
-	//m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	//m_pCollider->Collision_Rect(CCollider::MONSTER, CCollider::BLOCK, fTimeDelta);
-
-	//Object Collision
-	//m_pCollider->Collision_Rect(CCollider::OBJECT, CCollider::BLOCK, fTimeDelta);
-
-	//구충돌로 비교하면서 Stay 호출
-	//Player Collision
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::MONSTER, fTimeDelta);
-
-	//Monster Collision
-	//m_pCollider->Collision_Sphere(CCollider::MONSTER, CCollider::OBJECT, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::MONSTER, CCollider::BULLET, fTimeDelta);
-
-	//Bullet Collision
-	//m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-	
-	//구충돌로 비교하면서 OnTrigger호출
-	//m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
-
-	//==================================최종 방어선=========================================
-
 	//구충돌로 비교하면서 Stay 호출
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);

@@ -42,8 +42,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_GYUH, L"Layer_Hole", true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STATIC, L"Layer_Wall", false);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
 	return S_OK;
 }

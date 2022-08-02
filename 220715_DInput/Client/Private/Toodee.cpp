@@ -52,28 +52,28 @@ void CToodee::Tick(_float fTimeDelta)
 			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 		if (m_bActive) {
 			if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
-				if(TOODEE_PORTAL != m_eCurruntDir)
-					m_eToodeeDir = TOODEE_JUMP;
-				m_bJump = true;
-
-				//Hong Edit Effect Test
-				for (int i = 0; i < 10; i++)
+				if (TOODEE_PORTAL != m_eCurruntDir)
 				{
-					random_device rd;
-					default_random_engine eng(rd());
-					uniform_real_distribution<float> distr(-.5f, .5f);
-					//random float
+					m_eToodeeDir = TOODEE_JUMP;
+					//Hong Edit For Effect
+					for (int i = 0; i < 10; i++)
+					{
+						random_device rd;
+						default_random_engine eng(rd());
+						uniform_real_distribution<float> distr(-.5f, .5f);
+						//random float
 
-					_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-					_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-					vPos.x += distr(eng);
-					vPos.z += distr(eng);
-					CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1, 
-						vPos,
-						vPos - vPos2);
+						_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+						_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+						vPos.x += distr(eng);
+						vPos.z += distr(eng);
+						CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+							vPos,
+							vPos - vPos2);
+					}
 				}
+				m_bJump = true;
 			}
-
 			if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT)) {
 				m_eToodeeDir = TOODEE_LEFT;
 				if (m_eCurruntDir != m_eToodeeDir)

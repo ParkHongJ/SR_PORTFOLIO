@@ -344,10 +344,6 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 
 	}
-	else if (other->CompareTag(L"Spike"))
-	{
-		m_bActive = false;
-	}
 	else if (other->CompareTag(L"Box"))
 	{
 		if (!other->IsEnabled())
@@ -494,8 +490,7 @@ HRESULT CTopdee::Set_RenderState()
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	
-	//?? ??? ??????
+
 	return S_OK;
 }
 
@@ -621,8 +616,9 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
 		_uint iLayerHoleNum{ 0 };
 		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))//ask Can Box Drop?
-		{//Rigid Hole
-			list<CGameObject*>*pHoleList  =CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Hole");
+		{
+			//Rigid Hole
+			list<CGameObject*>*pHoleList = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Hole");
 			if (pHoleList == nullptr)
 				return;
 			auto& iter = pHoleList->begin();
