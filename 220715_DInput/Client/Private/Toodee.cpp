@@ -177,8 +177,8 @@ void CToodee::LateTick(_float fTimeDelta)
 
 				fPos.z += vGravityPower;
 
-				if (m_fJumpTime > 0.6f)
-					m_fJumpTime = 0.6f;
+				if (m_fJumpTime > m_fMaxJumpTime)
+					m_fJumpTime = m_fMaxJumpTime;
 				else
 					m_fJumpTime += fTimeDelta;
 			}
@@ -285,6 +285,25 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 		Safe_Release(TargetBox);
 	}
+
+	/*
+	Up-Up
+	if (m_bJump) {
+		m_fJumpPower += 1.f;
+		m_fMaxJumpTime += 0.03f;
+	}
+	else if (!m_bJump) {
+		m_fJumpPower = 17.f;
+		m_fMaxJumpTime = 0.6;
+	}
+
+	Down-Down
+	Set_State(Position);
+	m_bJump = false;
+
+	Up-Left/Right
+	maybe m_fMoveSpeed = (vGravityPower) + (m_fJumpPower * fTimeDelta);
+	*/
 }
 
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)

@@ -3,7 +3,6 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
-
 class CTexture;
 class CRenderer;
 class CCollider;
@@ -13,7 +12,6 @@ class CVIBuffer_Terrain_Cube;
 END
 
 BEGIN(Client)
-
 class CBlock final : public CGameObject
 {
 
@@ -33,6 +31,7 @@ public:
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta);
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
+
 #pragma region About_Topdee
 public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos);//When Topdee Raise Start
@@ -64,11 +63,10 @@ private:
 private:
 	HRESULT SetUp_Components();
 	void TextureSelect(const _float3& vPos);
+
 public:
 	static CBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };
-
-
 END

@@ -113,13 +113,13 @@ HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
 			return E_FAIL;
 	}
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(5.5f, 0.5f, 3.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(5.5f, 0.5f, 1.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(7.5f, 0.5f, 4.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(7.5f, 0.5f, 2.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(9.5f, 0.5f, 5.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(9.5f, 0.5f, 3.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
