@@ -155,6 +155,58 @@ void CGameMgr::Player_Active()
 	m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
 }
 
+_bool CGameMgr::Col_Obj(const _float3 & vCurPos, _float * pOut_ObjectsDist, _uint * pPigDirOut, _bool bPushCheck)
+{
+	if (m_Obstaclelist.empty())
+		return false;
+
+	_uint i = 0;
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		if (bPushCheck) {
+			if (i < m_iHoleFinishNum) {
+				++i;
+				continue;
+			}
+		}
+		_float3 fDistance = (*iter) - vCurPos;
+		if (abs(fDistance.z) > abs(fDistance.x)) {
+			/*Dir Up/Down*/
+			/* - / + */
+			if (fDistance.z < 0) {
+				//vCurPos->OnTriggerStay((*iter), fTimeDelta, DIR_UP);
+				//iter->OnTriggerStay(vPos, fTimeDelta, DIR_UP);
+			}
+			else {
+				//vCurPos->OnTriggerStay((*iter), fTimeDelta, DIR_DOWN);
+				//iter->OnTriggerStay(vPos, fTimeDelta, DIR_DOWN);
+			}
+		}
+		else if (abs(fDistance.x) > abs(fDistance.z)) {
+			/*Dir Left/Right*/
+			/* + / - */
+			if (fDistance.x > 0) {
+				//vCurPos->OnTriggerStay((*iter), fTimeDelta, DIR_LEFT);
+				//iter->OnTriggerStay(vPos, fTimeDelta, DIR_LEFT);
+			}
+			else {
+				//vCurPos->OnTriggerStay((*iter), fTimeDelta, DIR_RIGHT);
+				//iter->OnTriggerStay(vPos, fTimeDelta, DIR_RIGHT);
+			}
+		}
+		//이런거는 collider에서 하는거 아닌지.................
+
+		//if (1.f >= fDistance) {
+		//	*pOut_ObjectsDist = fDistance - 1.0f;
+		//	*pPigDirOut = /*방향출력*/;
+		//	return true;
+		//}
+		//++i;
+	}
+
+	return false;
+}
+
 _bool CGameMgr::Key_Pressing(_uchar KeyInput)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

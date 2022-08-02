@@ -29,7 +29,11 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_Tag = L"Pig";
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(3.f, 0.5f, 10.f));
+	
+	if (pArg != nullptr)
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)pArg);
+	}
 
 	return S_OK;
 }
@@ -38,39 +42,23 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+
 	m_fFrame += 9.0f * fTimeDelta;
 
 	if (m_fFrame >= 9.0f)
 		m_fFrame = 0.f;
 
-	/*if ( TOODEE )
-	중력 작용 / 블럭 위에서만 돌아다님*/
-	CGameMgr* pGameMgr = CGameMgr::Get_Instance();
-	Safe_AddRef(pGameMgr);
-	if (pGameMgr->GetMode() == CGameMgr::TOODEE)
-	{
-		/*_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		vPos.z += -9.8f * fTimeDelta * 0.5f;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);*/
-	}
-	else
-	{
-		//if ( TOPDEE )
-		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
-		m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
-	}
-	Safe_Release(pGameMgr);
 }
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
 {
-	
 	if (!m_bActive)
 		return;
 
+	/* TOODEE */
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
 	{
-		UpdateGravitiy(fTimeDelta);
+ 		UpdateGravitiy(fTimeDelta);
 
 		if (m_bOnBlock)
 		{
@@ -79,6 +67,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		//어떤 경우에 -fTimeDelta 해줄 것 인지?
 	}
 
+	/* TOPDEE */
 	else
 	{
 		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
@@ -97,6 +86,23 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+
+	_float3 vPigPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	_float fCollisionDist;
+	if (CGameMgr::Get_Instance()->Check_Not_Go(vPigPos, &fCollisionDist, false))
+	{
+		if (m_eCurDir == DIR_LEFT)
+			vPigPos.x -= fCollisionDist;
+		else if (m_eCurDir == DIR_RIGHT)
+			vPigPos.x += fCollisionDist;
+		else if (m_eCurDir == DIR_UP)
+			vPigPos.z += fCollisionDist;
+		else if (m_eCurDir == DIR_DOWN)
+			vPigPos.z -= fCollisionDist;
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
+	}
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, this);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -148,6 +154,16 @@ void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
+	if (other->CompareTag(L"Spike"))
+		m_bActive = false;
+
+	if (other->CompareTag(L"Box")) 
+	{
+	}
+
+	m_eCurDir = (PIG_DIRECTION)eDirection;
+
+	
 }
 
 HRESULT CMonster_Pig::Set_RenderState()
@@ -229,7 +245,7 @@ void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPigPos.z -= -9.8f * fTimeDelta * 0.5f;
+		vPigPos.z += -9.8f * fTimeDelta * 0.3f;
 		fTimeDelta += 0.1f;
 	}
 	else
@@ -237,7 +253,8 @@ void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
 		fTimeDelta = 0.f;
 	}
 
-	//m_bOnBlock = false;
+	m_bOnBlock = false;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 }
 
 CMonster_Pig * CMonster_Pig::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
