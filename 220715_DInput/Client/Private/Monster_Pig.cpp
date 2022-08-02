@@ -77,6 +77,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		_float fCollisionDist;
 		if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist, false))
 		{
+			/* 내일 이거 수정해라 */
 			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		else

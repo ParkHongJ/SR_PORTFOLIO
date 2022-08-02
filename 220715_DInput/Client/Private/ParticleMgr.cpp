@@ -15,7 +15,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	Safe_AddRef(pGameInstance);
 
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle"),
 			iNumLevel, L"Layer_Particle")))
