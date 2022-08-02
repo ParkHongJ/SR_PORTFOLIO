@@ -55,6 +55,14 @@ HRESULT CBlock::Initialize(void * pArg)
 
 void CBlock::Tick(_float fTimeDelta)
 {
+	/*_float3 vPos;
+	                                            
+	vPos = 
+	MoveTowards(
+	m_pTransformCom->Get_State(CTransform::STATE_POSITION),  //A지점에서   
+	m_vTopdeePos, //B지점까지
+	fTimeDelta * m_fSpeed); //fTimedelta * Speed의 속도로 이동해라
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);*/
 	if (!m_bActive)
 		return;
 	if(m_bDropBox)

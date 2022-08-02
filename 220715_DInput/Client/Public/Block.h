@@ -65,6 +65,17 @@ private:
 	HRESULT SetUp_Components();
 	void TextureSelect(const _float3& vPos);
 public:
+	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
+	{
+		_float3 a = target - current;
+		float magnitude = D3DXVec3Length(&a);
+		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
+		{
+			return target;
+		}
+		return current + a / magnitude * maxDistanceDelta;
+	}
+public:
 	static CBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
