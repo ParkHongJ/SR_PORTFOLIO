@@ -41,6 +41,8 @@ public:
 	_bool Get_Object_Data(const _tchar* pTag);
 	void Player_Active();
 
+	_bool Col_Obj(const _float3& vCurPos, _float* pOut_ObjectsDist, _uint* pPigDirOut, _bool bPushCheck);
+
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 

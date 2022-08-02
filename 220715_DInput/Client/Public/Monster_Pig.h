@@ -22,6 +22,10 @@ public:
 		_uint		iSizeX;
 		_uint		iSizeY;
 	}BACKDESC;
+
+public://enum DIRECTION { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_END };
+	enum PIG_DIRECTION { DIR_LEFT, DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_END };
+
 private:
 	CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CMonster_Pig(const CMonster_Pig& rhs);
@@ -51,6 +55,8 @@ private:
 	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
 	_bool	m_bTurn;
+	PIG_DIRECTION m_eCurDir = DIR_END;
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
