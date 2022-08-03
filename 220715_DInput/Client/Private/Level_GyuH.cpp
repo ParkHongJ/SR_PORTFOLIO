@@ -45,8 +45,12 @@ HRESULT CLevel_GyuH::Initialize()
 			return E_FAIL;
 	}
 
-	_float4 vec4Struct{ 4.5f,0.5f,10.5f, 2.f };
+	_float4 vec4Struct{ 4.5f,0.5f,10.5f, 1.f };
 	if (FAILED(Ready_Layer_WarpBlock((L"Layer_Cube"), vec4Struct)))
+		return E_FAIL;
+
+	vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
+	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;
 
 
@@ -117,6 +121,18 @@ HRESULT CLevel_GyuH::Ready_Layer_WarpBlock(const _tchar * pLayerTag, void * pArg
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_WarpBlock"), LEVEL_STAGE1, pLayerTag, pArg)))
 		return E_FAIL;
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_ElectricBlock(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_ElectricBlock"), LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

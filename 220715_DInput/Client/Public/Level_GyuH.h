@@ -21,6 +21,8 @@ private:
 	HRESULT Ready_Layer_Spike(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);//normal
 	HRESULT Ready_Layer_WarpBlock(const _tchar* pLayerTag, void* pArg = nullptr);//warp
+	HRESULT Ready_Layer_ElectricBlock(const _tchar* pLayerTag, void* pArg = nullptr);//Electric
+
 	void	LoadGameObject();
 
 public:

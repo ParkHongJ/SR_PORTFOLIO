@@ -6,7 +6,6 @@
 BEGIN(Client)
 class CBlock final : public CInteraction_Block
 {
-
 private:
 	CBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBlock(const CBlock& rhs);
@@ -25,8 +24,8 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
 
 private:
-	_uint m_iTextureNum{ 0 };
-
+	_uint m_iTextureNum = 0 ;
+	
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

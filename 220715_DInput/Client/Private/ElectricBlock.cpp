@@ -38,6 +38,10 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 void CElectricBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	if (m_iTextureNum == 0)
+		m_iTextureNum = 1;
+	else if (m_iTextureNum == 1)
+		m_iTextureNum = 0;
 	
 }
 
