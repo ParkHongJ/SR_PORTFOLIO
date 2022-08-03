@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "ParticleMgr.h"
 #include "GameMgr.h"
 CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -54,7 +55,7 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;
 
-
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 	return S_OK;

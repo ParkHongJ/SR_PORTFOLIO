@@ -2,8 +2,8 @@
 #include "..\Public\Topdee.h"
 
 #include "GameMgr.h"
+#include "ParticleMgr.h"
 #include "Interaction_Block.h"
-
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -487,7 +487,6 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 	}
 }
 
-
 HRESULT CTopdee::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
@@ -647,6 +646,22 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb
 			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f,0.f,0.f), fTimeDelta, true);//it can Make Drop More.
 		}
+#pragma region Particle
+		for (int i = 0; i < 10; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-.5f, .5f);
+			_float3 vPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+#pragma endregion Particle
 		m_pRaiseObject->SetEnabled(true);
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;

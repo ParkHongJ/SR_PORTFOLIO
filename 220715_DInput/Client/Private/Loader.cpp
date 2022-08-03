@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "..\Public\Loader.h"
 
+#include "ElectricBlock.h"
 #include "GameInstance.h"
 #include "GravityBlock.h"
 #include "Monster_Pig.h"
+#include "ParticleMgr.h"
 #include "Camera_Free.h"
 #include "BackGround.h"
+#include "WarpBlock.h"
+#include "Particle.h"
 #include "KeyBlock.h"
 #include "Terrain.h"
 #include "Monster.h"
@@ -16,6 +20,7 @@
 #include "Turret.h"
 #include "Bullet.h"
 #include "Portal.h"
+#include "Button.h"
 #include "Block.h"
 #include "Spike.h"
 #include "Cloud.h"
@@ -23,13 +28,6 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
-#include "WarpBlock.h"
-#include "ElectricBlock.h"
-#include "Button.h"
-#include "KeyBlock.h"
-#include "GravityBlock.h"
-#include "ParticleMgr.h"
-#include "Particle.h"
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -426,6 +424,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
 		CSpike::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -694,6 +693,16 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CSpike::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	
+	/* For.Prototype_GameObject_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
+		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
+		CParticle::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* ??¢©???¢¬? ¢§?????¢¥?. */
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
@@ -740,16 +749,23 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/ElectricBlock/Electric_Block_%d.dds"), 2))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("¢¬©¢?¡§?? ¢§????©¬??¢¥?¢¥?. "));
-	/* ¢¬©¢?¡§¢¬? ¢§?????¢¥?. */
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 32, 18))))
-		return E_FAIL;*/
+	/* For.Prototype_Component_Texture_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
+		return E_FAIL;
+
+
+	//================================ TextureEnd
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Gyu Loading Complete."));
