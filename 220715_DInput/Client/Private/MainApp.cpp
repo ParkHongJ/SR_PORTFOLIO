@@ -70,31 +70,6 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	//사각충돌 비교하면서 Stay 방향 호출
-	//m_pCollider->Collision_Rect(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	//m_pCollider->Collision_Rect(CCollider::MONSTER, CCollider::BLOCK, fTimeDelta);
-
-	//Object Collision
-	//m_pCollider->Collision_Rect(CCollider::OBJECT, CCollider::BLOCK, fTimeDelta);
-
-	//구충돌로 비교하면서 Stay 호출
-	//Player Collision
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::PLAYER, CCollider::MONSTER, fTimeDelta);
-
-	//Monster Collision
-	//m_pCollider->Collision_Sphere(CCollider::MONSTER, CCollider::OBJECT, fTimeDelta);
-	//m_pCollider->Collision_Sphere(CCollider::MONSTER, CCollider::BULLET, fTimeDelta);
-
-	//Bullet Collision
-	//m_pCollider->Collision_Sphere(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-	
-	//구충돌로 비교하면서 OnTrigger호출
-	//m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
-
-	//==================================최종 방어선=========================================
-
 	//구충돌로 비교하면서 Stay 호출
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
@@ -214,9 +189,6 @@ HRESULT CMainApp::Open_Level(LEVEL eLevelID)
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	/* ???¤ ˇ??§?? ??´????? ???? ˇ???ˇ??§?? °??? ??´???´? ????ˇ? °???. */
-
-	/* ??´??? ˇ??§?? ˇ??§¸?´????? ?¸°??? ?? ????ˇ?. gksek. */
 	if (FAILED(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, eLevelID))))
 		return E_FAIL;
 
@@ -310,7 +282,7 @@ HRESULT CMainApp::Ready_LoadingLevel()
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Default */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Cloud"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/SpinCloud/SpinCloud_%d.png"),6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/SpinCloud/SpinCloud_%d.png"),10))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Loading_Inside */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Inside"),

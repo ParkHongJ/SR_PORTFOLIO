@@ -2,6 +2,7 @@
 #include "..\Public\KeyBlock.h"
 
 #include "GameInstance.h"
+#include "ParticleMgr.h"
 CKeyBlock::CKeyBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -71,6 +72,28 @@ HRESULT CKeyBlock::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 	return S_OK;
+}
+
+void CKeyBlock::SetDead()
+{
+	m_bActive = false;
+	//Hong Edit For Effect
+	for (int i = 0; i < 7; i++)
+	{
+		random_device rd;
+		default_random_engine eng(rd());
+		uniform_real_distribution<float> distr(-.8f, .8f);
+		//random float
+
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.x += distr(eng);
+		vPos.z += distr(eng);
+		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			vPos,
+			vPos - vPos2,
+			CParticleMgr::PARTICLE);
+	}
 }
 
 HRESULT CKeyBlock::SetUp_Components()

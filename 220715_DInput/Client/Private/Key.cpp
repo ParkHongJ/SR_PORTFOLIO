@@ -2,6 +2,8 @@
 #include "..\Public\Key.h"
 
 #include "GameInstance.h"
+#include "KeyBlock.h"
+#include "ParticleMgr.h"
 
 CKey::CKey(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -96,10 +98,28 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 		//키는 사라지고
 		m_bActive = false;
 
+		//Hong Edit For Effect
+		for (int i = 0; i < 7; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-.8f, .8f);
+			//random float
+
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
 		GetBoxList();
 		for (auto& iter : *m_pBoxList)
 		{
-			iter->SetActive(false);
+			//iter->SetActive(false);
+			dynamic_cast<CKeyBlock*>(iter)->SetDead();
 		}
 		//박스 사라지게 하는함수
 	}

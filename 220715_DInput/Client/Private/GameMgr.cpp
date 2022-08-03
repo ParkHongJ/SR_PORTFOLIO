@@ -2,7 +2,6 @@
 #include "..\Public\GameMgr.h"
 
 #include "GameInstance.h"
-#include "KeyMgr.h"
 
 IMPLEMENT_SINGLETON(CGameMgr)
 
@@ -50,24 +49,39 @@ _bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, 
 {
 	if (m_Obstaclelist.empty())
 		return false;
-	
-		_uint i = 0;
-		for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
-		{
-			if (bPushCheck) {
-				if (i < m_iHoleFinishNum) {
-					++i;
-					continue;
-				}
+
+	_uint i = 0;
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		if (bPushCheck) {
+			if (i < m_iHoleFinishNum) {
+				++i;
+				continue;
 			}
-			_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
-			if (fDistance <= 1.0f) {//Objects Position Compare
-				*pOut_ObjectsDist = abs(fDistance - 1.0f);
-				return true;
-			}
-			++i;
 		}
-	
+		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
+		if (fDistance <= 1.0f) {//Objects Position Compare
+			*pOut_ObjectsDist = abs(fDistance - 1.0f);
+			return true;
+		}
+		++i;
+	}
+	return false;
+}
+
+_bool CGameMgr::Check_Not_Go_Monster(const _float3 & vCurPos, _float* pOut_ObjectsDist, _bool bPushCheck)
+{
+	if (m_Obstaclelist.empty())
+		return false;
+
+	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
+	{
+		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
+		if (fDistance <= 1.0f) {//Objects Position Compare
+			*pOut_ObjectsDist = abs(fDistance - 1.0f);
+			return true;
+		}
+	}
 	return false;
 }
 

@@ -6,6 +6,7 @@
 
 #include "Level_Loading.h"
 #include "GameMgr.h"
+#include "ParticleMgr.h"
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -30,12 +31,19 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
-	
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
+	//=======================================Test=======================================
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
+		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Particle", L"Layer_Particle")))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Turret", L"Layer_Turret")))
+		return E_FAIL;
+	//==================================================================================
 	LoadGameObject();
 
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
@@ -345,6 +353,7 @@ void CLevel_GamePlay::Free()
 		delete Pair.first;
 	}
 	m_pObjects.clear();
+	CParticleMgr::Get_Instance()->Release();
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg /*= nullptr*/)

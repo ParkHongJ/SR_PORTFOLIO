@@ -26,7 +26,7 @@ HRESULT CHole::Initialize(void * pArg)
 	if (pArg != nullptr)
 	{
 		_float3* vInitPos= (_float3*)pArg;
-		//vInitPos->y -= 0.25f;
+		vInitPos->y -= 0.25f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *vInitPos);
 	}
 	return S_OK;

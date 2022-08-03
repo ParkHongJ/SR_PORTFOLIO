@@ -39,9 +39,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta);
-	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta);
-	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta, _uint eDirection);
+	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) override;
+	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta, _uint eDirection) override;
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
@@ -54,6 +54,7 @@ private:
 private:
 	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
+	_float  m_fDrop_Endline = 0.f;
 	_bool	m_bTurn;
 	PIG_DIRECTION m_eCurDir = DIR_END;
 

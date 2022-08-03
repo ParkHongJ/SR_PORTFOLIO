@@ -3,6 +3,7 @@
 
 
 #include "GameInstance.h"
+#include "ParticleMgr.h"
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -165,6 +166,23 @@ void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee"))
 	{
 		m_bActive = false;
+		for (int i = 0; i < 3; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distrX(.4f, .7f);
+			uniform_real_distribution<float> distrZ(-.4f, .4f);
+			//random float
+
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			vPos.x -= distrX(eng);
+			vPos.z += distrZ(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
 	}
 }
 

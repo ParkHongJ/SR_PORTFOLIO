@@ -26,7 +26,10 @@
 #include "WarpBlock.h"
 #include "ElectricBlock.h"
 #include "Button.h"
-
+#include "KeyBlock.h"
+#include "GravityBlock.h"
+#include "ParticleMgr.h"
+#include "Particle.h"
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -208,6 +211,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GravityBlock"),
 		CGravityBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
+		CParticle::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -302,11 +310,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_Key */
+	/* For.Prototype_Component_Texture_Portal_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Portal/Topdee_Portal_%d.png"), 17))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */

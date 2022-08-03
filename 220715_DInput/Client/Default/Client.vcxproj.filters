@@ -136,6 +136,9 @@
     <Filter Include="02.GameObject\Block\ButtonBlock">
       <UniqueIdentifier>{5d419112-b742-45d7-8b83-906aa2056d5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClientManager\ParticleMgr">
+      <UniqueIdentifier>{169fc675-e3bb-4b42-bfca-9bc9679d9977}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -292,6 +295,9 @@
     <ClInclude Include="..\Public\ButtonBlock_Center.h">
       <Filter>02.GameObject\Block\ButtonBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ParticleMgr.h">
+      <Filter>ClientManager\ParticleMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -437,6 +443,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ButtonBlock_Center.cpp">
       <Filter>02.GameObject\Block\ButtonBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ParticleMgr.cpp">
+      <Filter>ClientManager\ParticleMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

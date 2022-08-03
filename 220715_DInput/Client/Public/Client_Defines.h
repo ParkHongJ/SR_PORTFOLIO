@@ -1,5 +1,5 @@
 #pragma once
-
+#include <random>
 namespace Client
 {
 	static const unsigned int g_iWinSizeX = 1280;
