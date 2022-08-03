@@ -276,10 +276,12 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
 		}
 		else if (CCollider::DIR_LEFT == eDireciton) {
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			if(m_eCurruntDir == TOODEE_RIGHT)
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
 		}
 		else if (CCollider::DIR_RIGHT == eDireciton) {
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			if (m_eCurruntDir == TOODEE_LEFT)
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
 		}
 
 		Safe_Release(TargetBox);
