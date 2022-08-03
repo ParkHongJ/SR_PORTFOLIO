@@ -2,7 +2,7 @@
 
 #include "Client_Defines.h"
 #include "LandObject.h"
-
+#include "GameMgr.h"
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
@@ -57,7 +57,8 @@ private:
 	_float  m_fDrop_Endline = 0.f;
 	_bool	m_bTurn;
 	PIG_DIRECTION m_eCurDir = DIR_END;
-
+	//이전모드
+	CGameMgr::GAMEMODE m_ePreMode = CGameMgr::TOODEE;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

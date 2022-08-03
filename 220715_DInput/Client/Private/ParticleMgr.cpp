@@ -18,7 +18,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	/*=============
 	===Particles===
 	=============*/
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Particle"),

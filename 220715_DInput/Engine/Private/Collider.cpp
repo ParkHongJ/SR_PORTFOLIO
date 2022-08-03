@@ -42,6 +42,9 @@ HRESULT CCollider::Add_CollisionGroup(COLLISIONGROUP eCollisionGroup, class CBox
 
 HRESULT CCollider::Collision_RectEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
+	if (m_pCollisionObjects[eSourGroup].empty() || m_pCollisionObjects[eDestGroup].empty())
+		return S_OK;
+
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])
 	{
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
@@ -102,6 +105,9 @@ HRESULT CCollider::Collision_RectEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 
 HRESULT CCollider::Collision_SphereEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
+	if (m_pCollisionObjects[eSourGroup].empty() || m_pCollisionObjects[eDestGroup].empty())
+		return S_OK;
+
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])
 	{
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
@@ -130,6 +136,9 @@ bool CCollider::Check_SphereEx(CBoxCollider* pSourCol, CTransform* pSourTrans,  
 
 HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROUP eDestGroup, _float fTimeDelta)
 {
+	if (m_pCollisionObjects[eSourGroup].empty() || m_pCollisionObjects[eDestGroup].empty())
+		return S_OK;
+
 	unordered_map<LONGLONG, bool>::iterator iter;
 
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])

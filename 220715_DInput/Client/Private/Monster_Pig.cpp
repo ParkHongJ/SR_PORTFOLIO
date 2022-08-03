@@ -57,8 +57,32 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	//현재모드
+	CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
+	//현재모드와 이전모드를 비교해서 같냐
+	if (eCurMode == m_ePreMode)
+	{
+		//모드가 안바뀜
+	}
+	else
+	{
+		//모드가 바뀐시점
+		if (eCurMode == CGameMgr::TOPDEE)
+		{
+			//현재 바뀐모드가 탑디면 보정
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			vPos.x = _uint(vPos.x) + 0.5f;
+			vPos.z = _uint(vPos.z) + 0.5f;
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			/* 이거 수정해라*/
+			m_eCurDir = DIR_RIGHT;
+		}
+		m_ePreMode = eCurMode;
+	}
 	/* TOODEE */
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	if (eCurMode == CGameMgr::TOODEE)
 	{
  		UpdateGravitiy(fTimeDelta);
 		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -69,6 +93,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 			fPos.z = m_fDrop_Endline;
 		}
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
+
 	}
 	/* TOPDEE */
 	else
@@ -76,6 +101,8 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fCollisionDist;
+
+		_float3 vDir = m_vTopdeePos - vPos;
 		if (CGameMgr::Get_Instance()->Check_Not_Go_Monster(vPos, &fCollisionDist, false))
 		{
 			if (m_eCurDir == DIR_LEFT)
@@ -90,21 +117,20 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		}
 		else
 		{
-			_float3 vDir = m_vTopdeePos - vPos;
 
-			if (vDir.x > vDir.z)
+			if (vDir.x > vDir.z && vDir.x > 0.f)
 			{
 				m_eCurDir = DIR_RIGHT;
 			}
-			else if (vDir.x < vDir.z)
+			else if (vDir.x < vDir.z && vDir.x < 0.f)
 			{
 				m_eCurDir = DIR_LEFT;
 			}
-			else if (vDir.z > vDir.x)
+			else if (vDir.z > vDir.x && vDir.z > 0.f)
 			{
 				m_eCurDir = DIR_UP;
 			}
-			else if (vDir.z < vDir.x)
+			else if (vDir.z < vDir.x && vDir.z < 0.f)
 			{
 				m_eCurDir = DIR_DOWN;
 			}

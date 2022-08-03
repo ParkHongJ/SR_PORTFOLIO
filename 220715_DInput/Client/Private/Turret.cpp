@@ -80,26 +80,6 @@ HRESULT CTurret::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-
-	//m_fCurrentTimer = 0.f;
-	////총알 방향설정 , 생성
-	//CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	//Safe_AddRef(pGameInstance);
-
-	//ImGui::Begin("Test");
-	//_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//ImGui::End();
-	//if (CKeyMgr::Get_Instance()->Key_Down('U'))
-	//{
-	//	vPos.x += 1.f;
-	//	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
-	//		LEVEL_GAMEPLAY, L"Layer_Monster_Bullet", vPos)))
-	//		MSG_BOX(L"총알 생성 실패");
-
-	//	Safe_Release(pGameInstance);
-	//}
-	
-
 	return S_OK;
 }
 
@@ -110,8 +90,8 @@ void CTurret::Fire(_float fTimeDelta)
 	{
 		m_fCurrentTimer = 0.f;
 		
-
-
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
 		for (int i = 0; i < 3; i++)
 		{
 			random_device rd;

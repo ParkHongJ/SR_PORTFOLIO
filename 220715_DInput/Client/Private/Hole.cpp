@@ -35,7 +35,6 @@ HRESULT CHole::Initialize(void * pArg)
 void CHole::Tick(_float fTimeDelta)
 {
 
-	
 }
 
 void CHole::LateTick(_float fTimeDelta)
