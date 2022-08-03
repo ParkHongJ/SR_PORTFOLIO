@@ -689,11 +689,6 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CHole::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Hole */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hole"),
-		CHole::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
 	/* For.Prototype_GameObject_Spike */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
 		CSpike::Create(m_pGraphic_Device))))
