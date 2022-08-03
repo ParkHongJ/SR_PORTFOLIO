@@ -49,7 +49,7 @@ void CBlock::LateTick(_float fTimeDelta)
 		return;
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
+	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
 }
 
 HRESULT CBlock::Render()
@@ -83,14 +83,17 @@ HRESULT CBlock::Render()
 
 void CBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
+	int a = 10;
 }
 
 void CBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
+	int a = 10;
 }
 
 void CBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
+	int a = 10;
 }
 
 HRESULT CBlock::Set_RenderState()

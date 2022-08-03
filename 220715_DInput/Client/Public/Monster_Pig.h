@@ -68,8 +68,8 @@ private:
 	void	UpdateGravitiy(_float fTimeDelta);
 
 private:
-	bool					m_bOnAir;
-	bool					m_bOnBlock;
+	_bool m_bOnAir;
+	_bool m_bOnBlock;
 
 public:
 	static CMonster_Pig* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -4,6 +4,7 @@
 #include "Camera_Free.h"
 #include "Level_Loading.h"
 #include "GameObject.h"
+#include "GameMgr.h"
 #include <winnt.h>
 CHong::CHong(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -18,8 +19,8 @@ HRESULT CHong::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;*/
 
 	/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
 		return E_FAIL;*/
@@ -34,30 +35,30 @@ HRESULT CHong::Initialize()
 void CHong::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	/*if (CKeyMgr::Get_Instance()->Key_Down(VK_LEFT))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_LEFT))
 	{
 		m_vPosition.x -= 1.f;
 	}
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_RIGHT))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_RIGHT))
 	{
 		m_vPosition.x += 1.f;
 	}
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_UP))
 	{
 		m_vPosition.z += 1.f;
 	}
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_DOWN))
 	{
 		m_vPosition.z -= 1.f;
 	}
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
 	{
 		if (FAILED(Ready_Layer_Block(m_SelectPrototypes, m_SelectLayer, m_vPosition)))
 			return;
 		m_list.push_back(m_vPosition);
 
 		m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
-	}*/
+	}
 }
 
 HRESULT CHong::Render()
@@ -124,24 +125,24 @@ HRESULT CHong::Render()
 				item_current = n;
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-			if (is_selected)
-			{
-				ImGui::SetItemDefaultFocus();
+			//if (is_selected)
+			//{
+			//	ImGui::SetItemDefaultFocus();
 
-				//Layers
-				int strSize = MultiByteToWideChar(CP_ACP, 0, Layers[item_current], -1, NULL, NULL);
-				//wchar_t 메모리 할당
-				const _tchar* szTemp = new WCHAR[strSize];
-				//형 변환
-				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
-				m_SelectLayer = szTemp;
-				
-				//Prototypes
-				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
-				szTemp = new WCHAR[strSize];
-				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
-				m_SelectPrototypes = szTemp;
-			}
+			//	//Layers
+			//	int strSize = MultiByteToWideChar(CP_ACP, 0, Layers[item_current], -1, NULL, NULL);
+			//	//wchar_t 메모리 할당
+			//	const _tchar* szTemp = new WCHAR[strSize];
+			//	//형 변환
+			//	MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
+			//	m_SelectLayer = szTemp;
+			//	
+			//	//Prototypes
+			//	strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
+			//	szTemp = new WCHAR[strSize];
+			//	MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
+			//	m_SelectPrototypes = szTemp;
+			//}
 		}
 		ImGui::EndListBox();
 		if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();

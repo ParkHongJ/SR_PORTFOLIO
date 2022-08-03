@@ -54,7 +54,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		m_fPushBoxDelayTimer += fTimeDelta;
 
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	DeadCheck(fTimeDelta);
 	KKK_IsRaise(fTimeDelta, 1);

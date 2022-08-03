@@ -98,7 +98,8 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	/* TOPDEE */
 	else
 	{
-		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
+		/* 이거 수정해라 */ 
+		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_STAGE1, L"Layer_topdee", 0, L"Com_Transform");
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fCollisionDist;
 
@@ -300,7 +301,7 @@ HRESULT CMonster_Pig::SetUp_Components()
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(.5f, .5f, .5f);
 	BoxColliderDesc.bIsTrigger = true;
-	BoxColliderDesc.fRadius = .5f;
+	BoxColliderDesc.fRadius = .1f;
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 

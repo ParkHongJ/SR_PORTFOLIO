@@ -32,8 +32,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 	//=======================================Test=======================================
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(15.5f, .5f, 14.5f))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(13.5f, .5f, 14.5f))))
+		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Particle", L"Layer_Particle")))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
@@ -85,7 +87,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_STAGE1, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -98,7 +100,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -112,7 +114,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Toodee(const _tchar * pLayerTag, void* pArg
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), 
-		LEVEL_SJH, pLayerTag, _float3(3.f, 1.f, 14.f))))
+		LEVEL_STAGE1, pLayerTag, _float3(3.f, 1.f, 14.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -152,7 +154,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_GYUH, pLayerTag, _float3(25.f, 1.f, 3.f))))
+		LEVEL_STAGE1, pLayerTag, _float3(25.f, 1.f, 3.f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -211,15 +213,6 @@ void CLevel_GamePlay::LoadGameObject()
 	DWORD dwByte = 0;
 	DWORD dwStrByte = 0; //String length
 
-						 //Clear Map
-	/*for (auto& Pair : m_TestMap)
-	{
-		delete Pair.first.second;
-		delete Pair.second;
-	}
-	m_TestMap.clear();*/
-
-	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
 		// Key °ª ·Îµå
@@ -353,7 +346,7 @@ void CLevel_GamePlay::Free()
 		delete Pair.first;
 	}
 	m_pObjects.clear();
-	CParticleMgr::Get_Instance()->Release();
+	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg /*= nullptr*/)

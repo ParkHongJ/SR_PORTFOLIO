@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 #include "GameMgr.h"
 CGravityBlock::CGravityBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
-	: CGameObject(pGraphic_Device)
+	: CInteraction_Block(pGraphic_Device)
 {
 }
 
 CGravityBlock::CGravityBlock(const CGravityBlock & rhs)
-	: CGameObject(rhs)
+	: CInteraction_Block(rhs)
 {
 }
 
@@ -22,6 +22,7 @@ HRESULT CGravityBlock::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
+	m_eBlockType = BLOCK_GRAVITY;
 	m_Tag = L"Box";
 
 	if (pArg != nullptr)
@@ -31,32 +32,42 @@ HRESULT CGravityBlock::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.5f, .5f, 14.f));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, .5f, 14.5f));
 	
 	m_bOnBlock = false;
-	m_bOnAir = true;
 	return S_OK;
 }
 
 void CGravityBlock::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 	if (!m_bActive)
 		return;
-	if (m_bDropBox)
-		Box_Drop_More(fTimeDelta);
-	if (m_bTopdeePush)
-		Box_Push_More(fTimeDelta, m_vPushFinishPos, m_vPushDir);
-
 }
 
 void CGravityBlock::LateTick(_float fTimeDelta)
 {
+	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
 		return;
-	
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE)
+	//현재모드
+	CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
+	//현재모드와 이전모드를 비교해서 같냐
+	if (eCurMode != m_ePreMode)
 	{
-		UpdateGravitiy(fTimeDelta);
+		//모드가 바뀐시점
+		if (eCurMode == CGameMgr::TOODEE)
+		{
+			//현재 바뀐모드가 투디면 중력
+			m_bOnBlock = false;
+		}
+		m_ePreMode = eCurMode;
+	}
+
+	if (eCurMode == CGameMgr::TOODEE)
+	{
+		if (m_bAbility)
+			UpdateGravitiy(fTimeDelta);
 	}
 	else
 	{
@@ -74,7 +85,7 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
 	}
 	
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
+	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 }
@@ -104,14 +115,20 @@ HRESULT CGravityBlock::Render()
 void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
 	//밀어내기
-	_float fBoxSize = 1.f;
+	if (other->CompareTag(L"Box") && CCollider::DIR_UP == eDirection && m_bOnBlock == false)
+	{
+		_float fBoxSize = 1.f;
 
-	/*if (CCollider::DIR_DOWN == eDirection) {
-		if (TargetBox->Get_State(CTransform::STATE_POSITION).x - (fBoxSize * 0.45f) < m_pTransformCom->Get_State(CTransform::STATE_POSITION).x
-			&& TargetBox->Get_State(CTransform::STATE_POSITION).x + (fBoxSize * 0.45f) > m_pTransformCom->Get_State(CTransform::STATE_POSITION).x)
-			m_bOnBlock = true;
-	}*/
-	m_bOnBlock = true;
+		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
+		Safe_AddRef(TargetBox);
+
+		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
+
+		m_bOnBlock = true;
+		Safe_Release(TargetBox);
+	}
 }
 
 void CGravityBlock::UpdateGravitiy(_float fTimeDelta)
@@ -132,107 +149,6 @@ void CGravityBlock::UpdateGravitiy(_float fTimeDelta)
 		vPos.z += -9.8f * fTimeDelta * 1.5f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-}
-
-_bool CGravityBlock::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
-{
-	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float3 vDist = (vCurPosition - vFinalPos);
-	_float fLength = D3DXVec3Length(&vDist);
-	if (_int(fLength) <= 1)
-	{
-		if (((_int)vPreLoaderPos.x == (_int)vCurPosition.x) && ((_int)vPreLoaderPos.z == (_int)vCurPosition.z)) {
-			vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
-			return true;
-		}
-		return false;
-	}
-	else
-		return false;
-}
-
-void CGravityBlock::KKK_Is_Raise(_float3 vTargetPos)
-{
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTargetPos);
-}
-
-_bool CGravityBlock::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall)
-{
-	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	if (!bHoleCall) {
-		vCurPosition = vCurPosition + (vFinalPos - vCurPosition) * (fTimeDelta * 5);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
-
-		if (vCurPosition.y <= 0.55f)
-			return true;
-		return false;
-	}
-	else
-		m_bDropBox = true;
-	return false;
-}
-
-void CGravityBlock::Box_Drop_More(_float fTimeDelta)
-{
-	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
-	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
-		vBoxCurPos.y = -0.45f;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vBoxCurPos));
-		m_bDropBox = false;
-		m_bEnabled = false;
-		return;
-	}
-	_float3 vBoxDir = { 0.f,-1.f,0.f };
-	_float fBoxSpeed = m_pTransformCom->Get_Speed();
-	m_pTransformCom->Translate(vBoxDir *fTimeDelta* fBoxSpeed);
-	m_bOnBlock = false;
-}
-
-void CGravityBlock::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos, _float3 vPushDir)
-{
-	if (!m_bEnabled)
-		return;
-	m_bTopdeePush = true;
-	m_vPushFinishPos = vPushFinishPos;
-	m_vPushDir = vPushDir;
-	_float3 vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float fDist = D3DXVec3Length(&(vCurPos - m_vPushFinishPos));
-	if (fDist < 0.2f)
-	{//위치에 도달했을때.
-		Box_Push_Find_A_Place();
-		vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		m_bTopdeePush = false;
-		if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(vCurPos))
-		{//밀리다가 떨어져야 할때.
-			m_bDropBox = true;
-			m_bTopdeePush = false;
-			return;
-		}
-		return;
-	}
-	//위치로 이동중일때.
-	if (vPushDir.x == 0.f)
-	{//Up or Down
-		if (vPushDir.z > 0.f)
-			m_pTransformCom->Go_Straight(fTimeDelta);
-		else
-			m_pTransformCom->Go_Backward(fTimeDelta);
-	}
-	else if (vPushDir.z == 0.f)
-	{
-		if (vPushDir.x > 0.f)
-			m_pTransformCom->Go_Right(fTimeDelta);
-		else
-			m_pTransformCom->Go_Left(fTimeDelta);
-	}
-}
-
-void CGravityBlock::Box_Push_Find_A_Place()
-{
-	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float3 vRightPosition{ (_int(vCurPosition.x) + 0.5f),(_int(vCurPosition.y) + 0.5f),(_int(vCurPosition.z) + 0.5f) };
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vRightPosition);
 }
 
 HRESULT CGravityBlock::Set_RenderState()
@@ -273,7 +189,7 @@ HRESULT CGravityBlock::SetUp_Components()
 	CBoxCollider::BOXDESC BoxDesc;
 	BoxDesc.vPos = { 0.f,0.f,0.f };
 	BoxDesc.vSize = { 1.f,1.f,1.f };
-	BoxDesc.bIsTrigger = false;
+	BoxDesc.bIsTrigger = true;
 	BoxDesc.fRadius = 0.5f;
 	/* For.Com_BoxCollider*/
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this, &BoxDesc)))
@@ -321,11 +237,4 @@ CGameObject * CGravityBlock::Clone(void * pArg)
 void CGravityBlock::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pBoxCollider);
-	Safe_Release(m_pCollCom);
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
 }

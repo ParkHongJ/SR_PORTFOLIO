@@ -39,6 +39,13 @@ private:
 		wstring pPrototypeTag;
 		wstring pLayerTag;
 	}TAG_INFO;
+	typedef struct ObjInfo
+	{
+		_float3 vPos;
+		_uint iNumLevel;
+		_uint iDirection;
+		_uint iTex;
+	}OBJ_INFO;
 	map<TAG_INFO*, _float3> m_pObjects;
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

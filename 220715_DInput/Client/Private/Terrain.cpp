@@ -65,8 +65,6 @@ void CTerrain::LateTick(_float fTimeDelta)
 
 HRESULT CTerrain::Render()
 {
-
-
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
@@ -91,8 +89,8 @@ HRESULT CTerrain::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferTerrain, this)))
-		return E_FAIL;
+	/*if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferTerrain, this)))
+		return E_FAIL;*/
 
 
 	/* For.Com_VIBuffer */
@@ -165,7 +163,7 @@ CGameObject * CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
 	__super::Free();
-	Safe_Release(m_pVIBufferTerrain);
+	//Safe_Release(m_pVIBufferTerrain);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);

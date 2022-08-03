@@ -26,8 +26,12 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 			return E_FAIL;
 	}
 
-	m_Particles = (pGameInstance->GetLayer(iNumLevel, L"Layer_Particle"));
+	m_Particles = pGameInstance->GetLayer(iNumLevel, L"Layer_Particle");
 
+	if (m_Particles == nullptr)
+	{
+		int a = 10;
+	}
 	//파티클 비활성화 상태로 놓기
 	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
 	{
@@ -47,8 +51,12 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	}
 
 	//총알 받아오기
-	m_Bullets = (pGameInstance->GetLayer(iNumLevel, L"Layer_Bullet"));
+	m_Bullets = pGameInstance->GetLayer(iNumLevel, L"Layer_Bullet");
 
+	if (m_Bullets == nullptr)
+	{
+		int a = 1;
+	}
 	//총알 비활성화 상태로 놓기
 	for (auto& iter = m_Bullets->begin(); iter != m_Bullets->end(); ++iter)
 	{
@@ -90,6 +98,10 @@ void CParticleMgr::CreateBullet(_uint iNumLevel, const _float3& vPos, const _flo
 
 	for (auto& iter = m_Bullets->begin(); iter != m_Bullets->end(); ++iter)
 	{
+		if (m_Bullets == nullptr)
+		{
+			break;
+		}
 		//오브젝트가 죽었다면 
 		//사용이 준비 되었다면
 		//m_bActive로 판단함

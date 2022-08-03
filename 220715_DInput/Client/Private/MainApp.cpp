@@ -73,10 +73,17 @@ void CMainApp::Tick(_float fTimeDelta)
 	//구충돌로 비교하면서 Stay 호출
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::INTEREACTION, fTimeDelta);
 	m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::INTEREACTION, fTimeDelta);
+
+	//사각충돌 비교하면서 상호작용블럭
+	m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::INTEREACTION, fTimeDelta);
 							  
 	//Object Collision		   
 	m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::INTEREACTION, fTimeDelta);
 
 	//구충돌로 비교하면서 Stay 호출
 	//Player Collision
@@ -90,6 +97,7 @@ void CMainApp::Tick(_float fTimeDelta)
 								
 	//Bullet Collision		
 	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::INTEREACTION, fTimeDelta);
 
 	//구충돌로 비교하면서 OnTrigger호출
 	m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
@@ -125,51 +133,55 @@ HRESULT CMainApp::Render()
 		}
 		if (ImGui::BeginMenu("Scene"))
 		{
-			if (ImGui::MenuItem("Hong", u8"¸?????????¸§"))
+			if (ImGui::MenuItem("Hong", u8"툴씬"))
 			{
 				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_HONG))))
-					MSG_BOX(L"????˝???");
+					MSG_BOX(L"레벨 오픈 실패");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Sae", u8"¸?????????¸§"))
+			if (ImGui::MenuItem("Sae", u8"박스 버튼"))
 			{
 				CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SENI))))
-					MSG_BOX(L"????˝???");
+					MSG_BOX(L"레벨 오픈 실패");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Hyeuk", u8"¸?????????¸§"))
+			if (ImGui::MenuItem("Hyeuk", u8"투디"))
 			{
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_SJH))))
-					MSG_BOX(L"????˝???");
+					MSG_BOX(L"레벨 오픈 실패");
 
 				Safe_Release(pGameInstance);
 			}
-			if (ImGui::MenuItem("Kyuu", u8"¸?????????¸§"))
+			if (ImGui::MenuItem("Kyuu", u8"탑디"))
 			{
 				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 				Safe_AddRef(pGameInstance);
 
 				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GYUH))))
-					MSG_BOX(L"????˝???");
+					MSG_BOX(L"레벨 오픈 실패");
 
 				Safe_Release(pGameInstance);
 			}
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Tool", u8"??¸đ?˝??"))
+			if (ImGui::MenuItem("STAGE1", u8"STAGE1"))
 			{
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+				Safe_AddRef(pGameInstance);
 
+				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_STAGE1))))
+					MSG_BOX(L"레벨 오픈 실패");
+
+				Safe_Release(pGameInstance);
 			}
 			ImGui::EndMenu();
 		}

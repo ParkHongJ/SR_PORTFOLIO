@@ -29,6 +29,9 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+protected:
+	//박스의 능력활성화할지 말지
+	_bool m_bAbility = true;
 #pragma region About_Topdee
 public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos);//When Topdee Raise Start

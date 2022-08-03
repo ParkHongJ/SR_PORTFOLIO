@@ -32,7 +32,7 @@ private:
 	CTransform*				m_pTransformCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-	CVIBuffer_Terrain*		m_pVIBufferTerrain = nullptr;
+	//CVIBuffer_Terrain*		m_pVIBufferTerrain = nullptr;
 
 private:
 	HRESULT SetUp_Components();

@@ -28,8 +28,11 @@ void CInteraction_Block::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
-	if(m_bDropBox)
+	if (m_bDropBox)
+	{
+		m_bAbility = false;
 		Box_Drop_More(fTimeDelta);
+	}
 	if (m_bTopdeePush)
 		Box_Push_More(fTimeDelta,m_vPushFinishPos,false);
 }

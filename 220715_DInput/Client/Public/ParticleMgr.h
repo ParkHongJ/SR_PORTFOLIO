@@ -22,7 +22,10 @@ public:
 	};
 private:
 	CParticleMgr();
-	virtual ~CParticleMgr() = default;
+	virtual ~CParticleMgr() {
+		m_Particles = nullptr;
+		m_Bullets = nullptr;
+	};
 
 public:
 	HRESULT Initialize(_uint iNumLevel);
@@ -34,7 +37,7 @@ public:
 	virtual void Free() override;
 
 private:
-	list<class CGameObject*>* m_Particles;
-	list<class CGameObject*>* m_Bullets;
+	list<class CGameObject*>* m_Particles = nullptr;
+	list<class CGameObject*>* m_Bullets = nullptr;
 };
 END

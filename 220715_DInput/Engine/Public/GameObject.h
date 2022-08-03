@@ -19,7 +19,6 @@ public:
 	virtual HRESULT Render();
 
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) {};
-	//virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta) {};
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) {};
 	virtual void OnTriggerExit(CGameObject*  other, _float fTimeDelta) {};
 
@@ -55,10 +54,10 @@ public:
 	bool GetEnabled() { return m_bEnabled; }
 
 protected:
-	bool m_bActive;
+	_bool m_bActive;
 	const _tchar* m_Tag;
-	bool m_bEnabled = true;
-
+	_bool m_bEnabled = true;
+	_uint m_iNumLevel;
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

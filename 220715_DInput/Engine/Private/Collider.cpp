@@ -49,6 +49,10 @@ HRESULT CCollider::Collision_RectEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 	{
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == pSour.first)
+			{
+				continue;
+			}
 			/* 상호 중점간의 거리가 2.f보다 짧거나 같은 경우에만 충돌계산 */
 			if (2.f >= abs(pSour.second->Get_State(CTransform::STATE_POSITION).x - pDest.second->Get_State(CTransform::STATE_POSITION).x)
 				&& 2.f >= abs(pSour.second->Get_State(CTransform::STATE_POSITION).y - pDest.second->Get_State(CTransform::STATE_POSITION).y)
@@ -112,6 +116,10 @@ HRESULT CCollider::Collision_SphereEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP 
 	{
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == pSour.first)
+			{
+				continue;
+			}
 			//First : BoxCollider
 			//Second : Transform
 			if (Check_SphereEx(pSour.first, pSour.second, pDest.first, pDest.second))
@@ -145,6 +153,10 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 	{
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == pSour.first)
+			{
+				continue;
+			}
 			COLLIDER_ID ID;
 			ID.Left_ID = pSour.first->GetID();
 			ID.Right_ID = pDest.first->GetID();

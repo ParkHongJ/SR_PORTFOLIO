@@ -223,7 +223,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture_for_Topdee */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
 		return E_FAIL;
 
 	RectDesc.vSize = { 6.f, 6.f, 0.f };
@@ -233,7 +233,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture_for_Toodee */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
 		return E_FAIL;
 #pragma endregion
 
