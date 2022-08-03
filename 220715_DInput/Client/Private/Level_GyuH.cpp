@@ -27,7 +27,7 @@ HRESULT CLevel_GyuH::Initialize()
 	 vInitPos= { 10.5f,0.5f,11.5f };
 	for (_uint i = 0; i < 3; ++i) {
 		vInitPos.z -= 1.0f;
-		vInitPos.y = 0.3f;
+		vInitPos.y = 0.05f;
 		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), vInitPos)))
 			return E_FAIL;
 	}

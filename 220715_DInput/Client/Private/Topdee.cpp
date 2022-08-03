@@ -354,7 +354,9 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			return;
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
 		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
-		TopdeeIsPushed(vOtherPos);
+		TopdeeIsPushed(vOtherPos);//탑디가 밀려나는거.
+		if (vOtherPos.y != 0.5f)
+			return;
 		if (!m_bPushBox) {//MakeDelay
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
@@ -614,9 +616,15 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		return;
 	
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
+		_float3 vDropPosCheck{ m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION) };
+		vDropPosCheck.y = 0.5f;
+		_float fDist{ 0.f };
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vDropPosCheck, &fDist, true))
+		{//final Wall and Block DropPos 
+			return;
+		}
+		m_vBoxDropPos = vDropPosCheck;
 		m_fRaising_Box_DelayTimer = 15000.f;
-		m_vBoxDropPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);/*m_pTransformCom->Get_State(CTransform::STATE_POSITION);*/
-		m_vBoxDropPos.y = 0.5f;
 	}
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
 		_uint iLayerHoleNum{ 0 };

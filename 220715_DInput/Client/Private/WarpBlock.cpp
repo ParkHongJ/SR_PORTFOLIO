@@ -22,7 +22,7 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 {// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	m_eBlockType = BLOCK_WARP;
 	SetTag(L"Box");
 	
 	if (pArg != nullptr)

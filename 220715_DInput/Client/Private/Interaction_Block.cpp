@@ -72,13 +72,13 @@ void CInteraction_Block::KKK_Is_Raise(_float3 vTargetPos)
 _bool CInteraction_Block::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta, _bool bHoleCall)
 {
 	_float fBoxSpeed{ m_pTransformCom->Get_Speed() };
-	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);//Box Cur Pos.
+	_float3 vCurPosition{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };//Box Cur Pos.
 	if (!bHoleCall) {
 		_float3 vHaveToReturnPos{ vFinalPos };
-		vFinalPos = MoveTowards(vCurPosition, vFinalPos, fTimeDelta*fBoxSpeed);
+		vFinalPos = MoveTowards(vCurPosition, vFinalPos, fTimeDelta * fBoxSpeed);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPos);
 		if(vFinalPos == vHaveToReturnPos)
 			return true;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPos);
 		return false;
 	}
 	else 

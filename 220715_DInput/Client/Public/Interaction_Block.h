@@ -14,18 +14,20 @@ END
 BEGIN(Client)//PURE
 class CInteraction_Block : public CGameObject
 {
-
+protected:
+	enum BLOCK_TYPE { BLOCK_NORMAL, BLOCK_WARP, BLOCK_ELECTRIC, BLOCK_GRAVITY, BLOCK_END };
+	BLOCK_TYPE m_eBlockType = BLOCK_END;
 protected:
 	CInteraction_Block(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CInteraction_Block(const CInteraction_Block& rhs);
 	virtual ~CInteraction_Block() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Tick(_float fTimeDelta) override;
-	virtual void LateTick(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize(void* pArg);
+	virtual void Tick(_float fTimeDelta);
+	virtual void LateTick(_float fTimeDelta);
+	virtual HRESULT Render();
 
 #pragma region About_Topdee
 public:

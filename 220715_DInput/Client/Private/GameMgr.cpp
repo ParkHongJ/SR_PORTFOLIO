@@ -78,7 +78,7 @@ _bool CGameMgr::Check_Box_Down(const _float3 & vBoxPos, _uint * pOut_iHoleNum_in
 	_uint i = 0;
 	for (auto& iter = m_Obstaclelist.begin(); iter != m_Obstaclelist.end(); ++iter)
 	{
-		_float3 vPosOnlyXZ{ vBoxPos.x,0.5f,vBoxPos.z };
+		_float3 vPosOnlyXZ{ vBoxPos.x, 0.05f, vBoxPos.z };
 		_float fDistance = D3DXVec3Length(&((*iter) - vPosOnlyXZ));
 		if (fDistance <= 0.23f) {//Debug it Length is 1.9999f
 			*pOut_eHoleLevel = m_eHoleLevel;

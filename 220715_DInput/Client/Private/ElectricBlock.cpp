@@ -20,9 +20,11 @@ HRESULT CElectricBlock::Initialize_Prototype()
 
 HRESULT CElectricBlock::Initialize(void * pArg)
 {// Texture 1 is On 0 is Off
+	__super::Initialize(pArg);
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
+	m_eBlockType = BLOCK_ELECTRIC;
 	SetTag(L"Box");
 	
 	if (pArg != nullptr)

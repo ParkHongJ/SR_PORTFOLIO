@@ -6,7 +6,6 @@
 BEGIN(Client)
 class CWarpBlock final : public CInteraction_Block
 {
-
 private:
 	CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CWarpBlock(const CWarpBlock& rhs);
