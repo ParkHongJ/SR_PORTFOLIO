@@ -32,11 +32,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 	//=======================================Test=======================================
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube")))
+		return E_FAIL;*/
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Particle", L"Layer_Particle")))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Turret", L"Layer_Turret")))
 		return E_FAIL;
 	//==================================================================================
 	LoadGameObject();

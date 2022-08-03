@@ -2,6 +2,7 @@
 #include "..\Public\ParticleMgr.h"
 #include "GameInstance.h"
 #include "Particle.h"
+#include "Bullet.h"
 IMPLEMENT_SINGLETON(CParticleMgr)
 
 
@@ -14,28 +15,46 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
-	for (int i = 0; i < 200; i++)
+	/*=============
+	===Particles===
+	=============*/
+	for (int i = 0; i < 100; i++)
 	{
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle"),
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(
+			TEXT("Prototype_GameObject_Particle"),
 			iNumLevel, L"Layer_Particle")))
 			return E_FAIL;
 	}
 
 	m_Particles = (pGameInstance->GetLayer(iNumLevel, L"Layer_Particle"));
-	
+
+	//파티클 비활성화 상태로 놓기
 	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
 	{
 		(*iter)->SetActive(FALSE);
 	}
 
-	/*auto& iter = (*m_Particles).begin();
-
-	for (_uint i = 0; i < (*m_Particles).size(); ++i)
+	/*=============
+	====Bullets====
+	=============*/
+	for (int i = 0; i < 30; i++)
 	{
-		Safe_AddRef(*iter);
-		iter++;
-	}*/
+		//총알 생성
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(
+			TEXT("Prototype_GameObject_Bullet"),
+			iNumLevel, L"Layer_Bullet")))
+			MSG_BOX(L"총알 생성 실패");
+	}
+
+	//총알 받아오기
+	m_Bullets = (pGameInstance->GetLayer(iNumLevel, L"Layer_Bullet"));
+
+	//총알 비활성화 상태로 놓기
+	for (auto& iter = m_Bullets->begin(); iter != m_Bullets->end(); ++iter)
+	{
+		(*iter)->SetActive(FALSE);
+	}
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -43,9 +62,64 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 void CParticleMgr::Free()
 {
 	m_Particles = nullptr;
+	m_Bullets = nullptr;
 }
 
-HRESULT CParticleMgr::ReuseObj(_uint iNumLevel, const _float3& vPos, const _float3& vDir)
+HRESULT CParticleMgr::ReuseObj(_uint iNumLevel, const _float3& vPos, const _float3& vDir, PARTICLE_TYPE eType)
+{
+	switch (eType)
+	{
+	case CParticleMgr::PARTICLE:
+		CreateParticle(iNumLevel, vPos, vDir);
+		break;
+	case CParticleMgr::BULLET:
+		CreateBullet(iNumLevel, vPos, vDir);
+		break;
+	default:
+		MSG_BOX(L"잘못된 파티클 타입입니다.");
+		break;
+	}
+	
+	return S_OK;
+}
+
+void CParticleMgr::CreateBullet(_uint iNumLevel, const _float3& vPos, const _float3& vDir)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	for (auto& iter = m_Bullets->begin(); iter != m_Bullets->end(); ++iter)
+	{
+		//오브젝트가 죽었다면 
+		//사용이 준비 되었다면
+		//m_bActive로 판단함
+		if (!(*iter)->IsActive())
+		{
+			//살려주고
+			(*iter)->SetActive(TRUE);
+			//위치셋팅
+			CTransform* pTransform = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+			if (pTransform == nullptr)
+			{
+				Safe_Release(pGameInstance);
+				return;
+			}
+			pTransform->Set_Scale(_float3(1.f, 1.f, 1.f));
+			pTransform->Set_State(CTransform::STATE_POSITION, vPos);
+			//방향셋팅
+			//dynamic_cast<CBullet*>(*iter)->SetDirection(vDir);
+			Safe_Release(pGameInstance);
+			return;
+		}
+		if (iter == m_Bullets->end())
+		{
+			MSG_BOX(L"파티클 다썼음");
+		}
+	}
+	Safe_Release(pGameInstance);
+}
+
+void CParticleMgr::CreateParticle(_uint iNumLevel, const _float3& vPos, const _float3& vDir)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -64,20 +138,19 @@ HRESULT CParticleMgr::ReuseObj(_uint iNumLevel, const _float3& vPos, const _floa
 			if (pTransform == nullptr)
 			{
 				Safe_Release(pGameInstance);
-				return E_FAIL;
+				return;
 			}
 			pTransform->Set_Scale(_float3(1.f, 1.f, 1.f));
 			pTransform->Set_State(CTransform::STATE_POSITION, vPos);
 			//방향셋팅
 			dynamic_cast<CParticle*>(*iter)->SetDirection(vDir);
 			Safe_Release(pGameInstance);
-			return S_OK;
+			return;
 		}
- 		if (iter == m_Particles->end())
+		if (iter == m_Particles->end())
 		{
 			MSG_BOX(L"파티클 다썼음");
 		}
 	}
 	Safe_Release(pGameInstance);
-	return S_OK;
 }

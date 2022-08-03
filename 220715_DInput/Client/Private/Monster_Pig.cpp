@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "ParticleMgr.h"
 
 CMonster_Pig::CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -75,13 +76,42 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_GYUH, L"Layer_topdee", 0, L"Com_Transform");
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fCollisionDist;
-		if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist, false))
+		if (CGameMgr::Get_Instance()->Check_Not_Go_Monster(vPos, &fCollisionDist, false))
 		{
-			/* 내일 이거 수정해라 */
-			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			if (m_eCurDir == DIR_LEFT)
+				vPos.x += fCollisionDist + .01f;
+			else if (m_eCurDir == DIR_RIGHT)
+				vPos.x -= fCollisionDist + .01f;
+			else if (m_eCurDir == DIR_UP)
+				vPos.z -= fCollisionDist + .01f;
+			else if (m_eCurDir == DIR_DOWN)
+				vPos.z += fCollisionDist + .01f;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		else
+		{
+			_float3 vDir = m_vTopdeePos - vPos;
+
+			if (vDir.x > vDir.z)
+			{
+				m_eCurDir = DIR_RIGHT;
+			}
+			else if (vDir.x < vDir.z)
+			{
+				m_eCurDir = DIR_LEFT;
+			}
+			else if (vDir.z > vDir.x)
+			{
+				m_eCurDir = DIR_UP;
+			}
+			else if (vDir.z < vDir.x)
+			{
+				m_eCurDir = DIR_DOWN;
+			}
+
 			m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
+			
+		}
 		m_bOnBlock = false;
 		m_fDrop_Endline = 0.f; 
 	}
@@ -95,9 +125,6 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
-	
-
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::MONSTER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -144,8 +171,25 @@ void CMonster_Pig::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
 	if (other->CompareTag(L"Spike"))
+	{
 		m_bActive = false;
+		for (int i = 0; i < 7; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-.8f, .8f);
+			//random float
 
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+	}
 	_float fBoxSize = 1.f;
 	_float fMyLength = .5f;
 	if (other->CompareTag(L"Box")) {
@@ -252,7 +296,7 @@ void CMonster_Pig::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPigPos.z += -9.8f * fTimeDelta;
+		vPigPos.z += -9.8f * fTimeDelta * 0.8f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPigPos);
 	}
 

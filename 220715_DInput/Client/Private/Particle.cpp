@@ -23,7 +23,6 @@ HRESULT CParticle::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Particle";
 	return S_OK;
 }

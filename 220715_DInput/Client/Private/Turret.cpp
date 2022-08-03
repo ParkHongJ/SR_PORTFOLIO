@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "KeyMgr.h"
+#include "ParticleMgr.h"
 
 CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -105,20 +106,29 @@ HRESULT CTurret::Render()
 void CTurret::Fire(_float fTimeDelta)
 {
 	m_fCurrentTimer += fTimeDelta;
-	if (m_fCurrentTimer > .3f)
+	if (m_fCurrentTimer > .2f)
 	{
 		m_fCurrentTimer = 0.f;
-		//총알 방향설정 , 생성
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+		
 
-		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(
-			TEXT("Prototype_GameObject_Bullet"),
-			LEVEL_STAGE1, L"Layer_Monster_Bullet", vPos)))
-			MSG_BOX(L"총알 생성 실패");
 
-		Safe_Release(pGameInstance);
+		for (int i = 0; i < 3; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distrX(.4f, .7f);
+			uniform_real_distribution<float> distrZ(-.4f, .4f);
+			//random float
+
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			vPos.x += distrX(eng);
+			vPos.z += distrZ(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
 	}
 	
 }

@@ -69,7 +69,8 @@ void CToodee::Tick(_float fTimeDelta)
 						vPos.z += distr(eng);
 						CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
 							vPos,
-							vPos - vPos2);
+							vPos - vPos2,
+							CParticleMgr::PARTICLE);
 					}
 				}
 				m_bJump = true;

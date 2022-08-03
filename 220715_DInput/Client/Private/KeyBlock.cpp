@@ -91,7 +91,8 @@ void CKeyBlock::SetDead()
 		vPos.z += distr(eng);
 		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
 			vPos,
-			vPos - vPos2);
+			vPos - vPos2,
+			CParticleMgr::PARTICLE);
 	}
 }
 

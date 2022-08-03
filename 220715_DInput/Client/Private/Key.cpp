@@ -112,7 +112,8 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 			vPos.z += distr(eng);
 			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
 				vPos,
-				vPos - vPos2);
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
 		}
 		GetBoxList();
 		for (auto& iter : *m_pBoxList)
