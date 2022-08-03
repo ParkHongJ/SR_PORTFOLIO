@@ -347,8 +347,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 HRESULT CLoader::Loading_ForHongLevel()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Prototype..."));
 
 	/*----------------
 	--프로토타입 생성--
@@ -422,9 +424,20 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_KeyBox"),
 		CKeyBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/* For.Prototype_GameObject_Spike */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
 		CSpike::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_GravityBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GravityBlock"),
+		CGravityBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
+		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
@@ -433,18 +446,23 @@ HRESULT CLoader::Loading_ForHongLevel()
 	------------------*/
 
 	/* For.Prototype_Component_Texture_Topdee */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GYUH, TEXT("Prototype_Component_Texture_Topdee"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"), 22))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Terrain/Grass_%d.tga"), 2))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Toodee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 73))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Portal_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Toodee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSwirlSpr/Toodee_Swirl_%d.png"), 17))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
@@ -501,6 +519,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/cloudSpr_%d.png"), 6))))
 		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Key */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Key"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Key/keySpr_%d.png"), 12))))
@@ -509,7 +528,20 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
 		return E_FAIL;
+	/* For.Prototype_Component_Texture_GravityBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_GravityBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
+		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Portal_Topdee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Topdee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Portal/Topdee_Portal_%d.png"), 17))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */

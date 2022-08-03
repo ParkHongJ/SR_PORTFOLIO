@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "GameMgr.h"
 #include <winnt.h>
+int CHong::iDir_Select = 0;
+int CHong::iLevel_Select = 0;
 CHong::CHong(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -22,13 +24,13 @@ HRESULT CHong::Initialize()
 	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;*/
 
-	/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
-		return E_FAIL;*/
+		/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
+			return E_FAIL;*/
 
-	//LoadGameObject();
+			//LoadGameObject();
 
 
-	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL );   
+	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 	return S_OK;
 }
 
@@ -51,14 +53,7 @@ void CHong::Tick(_float fTimeDelta)
 	{
 		m_vPosition.z -= 1.f;
 	}
-	if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
-	{
-		if (FAILED(Ready_Layer_Block(m_SelectPrototypes, m_SelectLayer, m_vPosition)))
-			return;
-		m_list.push_back(m_vPosition);
 
-		m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
-	}
 }
 
 HRESULT CHong::Render()
@@ -85,9 +80,9 @@ HRESULT CHong::Render()
 	//큰 문제점. 서로의 쌍이 맞아야한다
 	//틀리면 절대안댐
 	static int item_current = 0;
-	const char* Layers[] = { 
+	const char* Layers[] = {
 		"Layer_topdee",
-		"Layer_Toodee", 
+		"Layer_Toodee",
 		"Layer_Cube",
 		"Layer_Wall",
 		"Layer_Spike",
@@ -122,36 +117,58 @@ HRESULT CHong::Render()
 		{
 			const bool is_selected = (item_current == n);
 			if (ImGui::Selectable(Layers[n], is_selected))
+			{
 				item_current = n;
+			}
+			if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
+			{
+				//Layers
+				int strSize = MultiByteToWideChar(CP_ACP, 0, Layers[item_current], -1, NULL, NULL);
+				//wchar_t 메모리 할당
+				const _tchar* szTemp = new WCHAR[strSize];
+				//형 변환
+				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				//m_SelectLayer = szTemp;
 
-			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-			//if (is_selected)
-			//{
-			//	ImGui::SetItemDefaultFocus();
+				TagInfo* pTaginfo = new TagInfo;
+				pTaginfo->pLayerTag = szTemp;
+				delete szTemp;
+				//Prototypes
+				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
+				szTemp = new WCHAR[strSize];
+				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
+				//m_SelectPrototypes = szTemp;
+				pTaginfo->pPrototypeTag = szTemp;
+				delete szTemp;
 
-			//	//Layers
-			//	int strSize = MultiByteToWideChar(CP_ACP, 0, Layers[item_current], -1, NULL, NULL);
-			//	//wchar_t 메모리 할당
-			//	const _tchar* szTemp = new WCHAR[strSize];
-			//	//형 변환
-			//	MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
-			//	m_SelectLayer = szTemp;
-			//	
-			//	//Prototypes
-			//	strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
-			//	szTemp = new WCHAR[strSize];
-			//	MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
-			//	m_SelectPrototypes = szTemp;
-			//}
+				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), m_vPosition)))
+					return S_OK;
+
+				OBJ_INFO* tObjInfo = new OBJ_INFO;
+				tObjInfo->vPos = m_vPosition;
+				tObjInfo->iDirection = iDir_Select;
+				tObjInfo->iNumLevel = iLevel_Select + 1;
+				m_pObjects.insert({ pTaginfo, tObjInfo });
+				//m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
+			}
 		}
-		ImGui::EndListBox();
-		if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
-		if (ImGui::Button("Load")) LoadGameObject();
-		ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	}
+	ImGui::EndListBox();
+	// Using the _simplified_ one-liner Combo() api here
+	// See "Combo" section for examples of how to use the more flexible BeginCombo()/EndCombo() api.
+	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
+	ImGui::Combo("Direction", &iDir_Select, Directions, IM_ARRAYSIZE(Directions));
+	
+	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4" };
+	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
+
+	ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
+
+	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
+	if (ImGui::Button("Load")) LoadGameObject();
 
 
-	//CreateMap();
+
 	//if (ImGui::Button("Open"))
 	//{
 	//	TCHAR cpath[MAX_PATH] = L"";
@@ -204,10 +221,10 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
-	
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_HONG, pLayerTag, &CameraDesc)))
 		return E_FAIL;
-	
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -254,7 +271,6 @@ HRESULT CHong::Ready_Layer_Monster(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-
 HRESULT CHong::Ready_Layer_Block(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -266,7 +282,6 @@ HRESULT CHong::Ready_Layer_Block(const _tchar* pPrototypeTag, const _tchar* pLay
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
-
 
 CHong * CHong::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
@@ -315,31 +330,50 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	
+	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
 
 	DWORD	dwByte = 0;
 	DWORD	dwStrByte = 0;
 
-	/*	Map<<Prototype, Layer>, vPosition> */
-	
-	auto iter = m_TestMap.begin();
+	//auto iter = m_TestMap.begin();
 
-	while (iter != m_TestMap.end())
+	//while (iter != m_TestMap.end())
+	//{
+	//	// Key값 저장
+	//	dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.first));
+	//	WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+	//	WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
+	//	// Key값 저장
+	//	dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.second));
+	//	WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+	//	WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
+
+	//	// Second값 저장
+	//	WriteFile(hFile, iter->second, sizeof(_float3), &dwByte, nullptr);
+	//	++iter;
+	//}
+
+	auto iter = m_pObjects.begin();
+
+	while (iter != m_pObjects.end())
 	{
 		// Key값 저장
-		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.first));
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first->pPrototypeTag.c_str()));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
+		WriteFile(hFile, iter->first->pPrototypeTag.c_str(), dwStrByte, &dwByte, nullptr);
 		// Key값 저장
-		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.second));
+		dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first->pPrototypeTag.c_str()));
 		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
+		WriteFile(hFile, iter->first->pLayerTag.c_str(), dwStrByte, &dwByte, nullptr);
 
-		// Second값 저장
-		WriteFile(hFile, iter->second, sizeof(_float3), &dwByte, nullptr);
+		//Second값 저장
+		WriteFile(hFile, iter->second->vPos, sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &iter->second->iNumLevel, sizeof(_uint), &dwByte, nullptr);
+		WriteFile(hFile, &iter->second->iDirection, sizeof(_uint), &dwByte, nullptr);
+		WriteFile(hFile, &iter->second->iTex, sizeof(_uint), &dwByte, nullptr);
 		++iter;
 	}
 	CloseHandle(hFile);
@@ -347,25 +381,54 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	DWORD dwByte = 0;
 	DWORD dwStrByte = 0; //String length
-	
+
 	//Clear Map
 	for (auto& Pair : m_TestMap)
 	{
 		delete Pair.first.second;
 		delete Pair.second;
 	}
-	m_Test.clear();
+	m_TestMap.clear();
 
+	OBJ_INFO m_OBJInfo = {};
 	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
+		//// Key 값 로드
+		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		//_tchar*	pFirst = nullptr;
+		//pFirst = new _tchar[dwStrByte];
+		//ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
+		//pFirst[dwByte / sizeof(_tchar)] = 0;
+
+		////Key값 로드
+		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		//_tchar*	pSecond = nullptr;
+		//pSecond = new _tchar[dwStrByte];
+		//ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
+		//pSecond[dwByte / sizeof(_tchar)] = 0;
+
+		//_float3 vPos = {};
+		//ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
+
+		//if (0 == dwByte)
+		//{
+		//	Safe_Delete_Array(pFirst);
+		//	Safe_Delete_Array(pSecond);
+		//	break;
+		//}
+		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+
+		//Safe_Delete_Array(pFirst);
+		//Safe_Delete_Array(pSecond);
+
 		// Key 값 로드
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		_tchar*	pFirst = nullptr;
@@ -380,8 +443,16 @@ void CHong::LoadGameObject()
 		ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
 		pSecond[dwByte / sizeof(_tchar)] = 0;
 
-		_float3 vPos = {};
-		ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
+		TagInfo* tagInfo = new TagInfo;
+		tagInfo->pPrototypeTag = pFirst;
+		Safe_Delete_Array(pFirst);
+		tagInfo->pLayerTag = pSecond;
+		Safe_Delete_Array(pSecond);
+
+		ReadFile(hFile, &m_OBJInfo.vPos, sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iNumLevel, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iDirection, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iTex, sizeof(_uint), &dwByte, nullptr);
 
 		if (0 == dwByte)
 		{
@@ -389,24 +460,46 @@ void CHong::LoadGameObject()
 			Safe_Delete_Array(pSecond);
 			break;
 		}
-		m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+		
 
-		Safe_Delete_Array(pFirst);
-		Safe_Delete_Array(pSecond);
+		ObjInfo* objInfo = new ObjInfo;
+		objInfo->vPos = m_OBJInfo.vPos;
+		objInfo->iNumLevel = m_OBJInfo.iNumLevel;
+		objInfo->iDirection = m_OBJInfo.iDirection;
+		objInfo->iTex = m_OBJInfo.iTex;
+
+		m_pObjects.insert({ tagInfo, objInfo });
 	}
+	auto iter = m_pObjects.begin();
 
-	auto iter = m_TestMap.begin();
+	while (iter != m_pObjects.end())
+	{
+		Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
+		++iter;
+	}
+	/*auto iter = m_TestMap.begin();
 
 	while (iter != m_TestMap.end())
 	{
 		Ready_Layer_Block(iter->first.first, iter->first.second, iter->second);
 		++iter;
-	}
+	}*/
 	CloseHandle(hFile);
 }
 
 void CHong::Free()
 {
 	__super::Free();
+
 	m_pSphereMesh->Release();
+
+	for (auto Pair: m_pObjects)
+	{
+		Pair.first->pPrototypeTag.clear();
+		Pair.first->pLayerTag.clear();
+		delete Pair.first;
+		delete Pair.second;
+	}
+	m_pObjects.clear();
 }
