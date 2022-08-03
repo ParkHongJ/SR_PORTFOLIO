@@ -118,6 +118,12 @@
     <Filter Include="02.GameObject\Block\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Button">
+      <UniqueIdentifier>{d3657bb1-2b8d-433f-967b-876bd693a72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\ButtonBlock">
+      <UniqueIdentifier>{5d419112-b742-45d7-8b83-906aa2056d5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -256,6 +262,15 @@
     <ClInclude Include="..\Public\Wall.h">
       <Filter>02.GameObject\Block\Wall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Button.h">
+      <Filter>02.GameObject\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ButtonBlock.h">
+      <Filter>02.GameObject\Block\ButtonBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ButtonBlock_Center.h">
+      <Filter>02.GameObject\Block\ButtonBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -383,6 +398,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wall.cpp">
       <Filter>02.GameObject\Block\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Button.cpp">
+      <Filter>02.GameObject\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ButtonBlock.cpp">
+      <Filter>02.GameObject\Block\ButtonBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ButtonBlock_Center.cpp">
+      <Filter>02.GameObject\Block\ButtonBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
