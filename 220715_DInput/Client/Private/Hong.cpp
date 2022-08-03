@@ -20,16 +20,6 @@ HRESULT CHong::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-
-	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;*/
-
-		/*if (FAILED(Ready_Layer_Block(TEXT("Layer_Cube"))))
-			return E_FAIL;*/
-
-			//LoadGameObject();
-
-
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 	return S_OK;
 }
@@ -39,19 +29,19 @@ void CHong::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_LEFT))
 	{
-		m_vPosition.x -= 1.f;
+		m_vPosition.x -= m_fMoveSize;
 	}
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_RIGHT))
 	{
-		m_vPosition.x += 1.f;
+		m_vPosition.x += m_fMoveSize;
 	}
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_UP))
 	{
-		m_vPosition.z += 1.f;
+		m_vPosition.z += m_fMoveSize;
 	}
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_DOWN))
 	{
-		m_vPosition.z -= 1.f;
+		m_vPosition.z -= m_fMoveSize;
 	}
 
 }
@@ -92,7 +82,8 @@ HRESULT CHong::Render()
 		"Layer_Cloud",
 		"Layer_Hole",
 		"Layer_KeyBox",
-		"Layer_Key"
+		"Layer_Key",
+		"Layer_Cube"
 	};
 	const char* Prototypes[] =
 	{
@@ -107,7 +98,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Cloud",
 		"Prototype_GameObject_Hole",
 		"Prototype_GameObject_KeyBox",
-		"Prototype_GameObject_Key"
+		"Prototype_GameObject_Key",
+		"Prototype_GameObject_GravityBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 
@@ -128,17 +120,19 @@ HRESULT CHong::Render()
 				const _tchar* szTemp = new WCHAR[strSize];
 				//형 변환
 				MultiByteToWideChar(CP_ACP, 0, Layers[item_current], (_uint)strlen(Layers[item_current]) + 1, (LPWSTR)szTemp, strSize);
-				//m_SelectLayer = szTemp;
 
 				TagInfo* pTaginfo = new TagInfo;
 				pTaginfo->pLayerTag = szTemp;
+
 				delete szTemp;
+
 				//Prototypes
 				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
 				szTemp = new WCHAR[strSize];
+				
 				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
-				//m_SelectPrototypes = szTemp;
 				pTaginfo->pPrototypeTag = szTemp;
+
 				delete szTemp;
 
 				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), m_vPosition)))
@@ -148,12 +142,12 @@ HRESULT CHong::Render()
 				tObjInfo->vPos = m_vPosition;
 				tObjInfo->iDirection = iDir_Select;
 				tObjInfo->iNumLevel = iLevel_Select + 1;
+
 				m_pObjects.insert({ pTaginfo, tObjInfo });
-				//m_TestMap.insert(make_pair(make_pair(m_SelectPrototypes, m_SelectLayer), m_vPosition));
 			}
 		}
+		ImGui::EndListBox();
 	}
-	ImGui::EndListBox();
 	// Using the _simplified_ one-liner Combo() api here
 	// See "Combo" section for examples of how to use the more flexible BeginCombo()/EndCombo() api.
 	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
@@ -163,7 +157,7 @@ HRESULT CHong::Render()
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 
 	ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
-
+	ImGui::DragFloat("MoveSize", &m_fMoveSize, 0.01f, 0.0f, 200.f);
 	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
 	if (ImGui::Button("Load")) LoadGameObject();
 
@@ -230,18 +224,6 @@ HRESULT CHong::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CHong::Ready_Layer_Player(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
@@ -250,22 +232,6 @@ HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag)))
 		return E_FAIL;
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CHong::Ready_Layer_Monster(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	for (_uint i = 0; i < 3; ++i)
-	{
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster"), LEVEL_HONG, pLayerTag)))
-			return E_FAIL;
-	}
-
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -337,24 +303,6 @@ void CHong::SaveGameObject()
 
 	DWORD	dwByte = 0;
 	DWORD	dwStrByte = 0;
-
-	//auto iter = m_TestMap.begin();
-
-	//while (iter != m_TestMap.end())
-	//{
-	//	// Key값 저장
-	//	dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.first));
-	//	WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-	//	WriteFile(hFile, iter->first.first, dwStrByte, &dwByte, nullptr);
-	//	// Key값 저장
-	//	dwStrByte = DWORD(sizeof(_tchar) * wcslen(iter->first.second));
-	//	WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-	//	WriteFile(hFile, iter->first.second, dwStrByte, &dwByte, nullptr);
-
-	//	// Second값 저장
-	//	WriteFile(hFile, iter->second, sizeof(_float3), &dwByte, nullptr);
-	//	++iter;
-	//}
 
 	auto iter = m_pObjects.begin();
 
@@ -456,12 +404,11 @@ void CHong::LoadGameObject()
 
 		if (0 == dwByte)
 		{
+			Safe_Delete(tagInfo);
 			Safe_Delete_Array(pFirst);
 			Safe_Delete_Array(pSecond);
 			break;
-		}
-		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
-		
+		}		
 
 		ObjInfo* objInfo = new ObjInfo;
 		objInfo->vPos = m_OBJInfo.vPos;
@@ -478,13 +425,6 @@ void CHong::LoadGameObject()
 		Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
 		++iter;
 	}
-	/*auto iter = m_TestMap.begin();
-
-	while (iter != m_TestMap.end())
-	{
-		Ready_Layer_Block(iter->first.first, iter->first.second, iter->second);
-		++iter;
-	}*/
 	CloseHandle(hFile);
 }
 

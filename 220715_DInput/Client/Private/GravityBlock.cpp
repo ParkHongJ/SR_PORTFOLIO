@@ -67,22 +67,27 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 	if (eCurMode == CGameMgr::TOODEE)
 	{
 		if (m_bAbility)
+		{
 			UpdateGravitiy(fTimeDelta);
+		}
 	}
 	else
 	{
-		//현재위치
-		_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vFinalPosition; //도착위치
+		if (m_bAbility)
+		{
+			//현재위치
+			_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vFinalPosition; //도착위치
 
-		//z값만 보정 (중력이니까)
-		vFinalPosition.x = vCurPosition.x;
-		vFinalPosition.y = vCurPosition.y;
-		vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
+									//z값만 보정 (중력이니까)
+			vFinalPosition.x = vCurPosition.x;
+			vFinalPosition.y = vCurPosition.y;
+			vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
-		//러프시작
-		vCurPosition = Lerp(vCurPosition, vFinalPosition, fTimeDelta * 5);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+			//러프시작
+			vCurPosition = Lerp(vCurPosition, vFinalPosition, fTimeDelta * 5);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+		}
 	}
 	
 	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
@@ -114,21 +119,25 @@ HRESULT CGravityBlock::Render()
 
 void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	//밀어내기
-	if (other->CompareTag(L"Box") && CCollider::DIR_UP == eDirection && m_bOnBlock == false)
+	if (m_bAbility)
 	{
-		_float fBoxSize = 1.f;
+		//밀어내기
+		if (other->CompareTag(L"Box") && CCollider::DIR_UP == eDirection && m_bOnBlock == false)
+		{
+			_float fBoxSize = 1.f;
 
-		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
-		Safe_AddRef(TargetBox);
+			CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
+			Safe_AddRef(TargetBox);
 
-		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
+			_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
 
-		m_bOnBlock = true;
-		Safe_Release(TargetBox);
+			m_bOnBlock = true;
+			Safe_Release(TargetBox);
+		}
 	}
+	
 }
 
 void CGravityBlock::UpdateGravitiy(_float fTimeDelta)

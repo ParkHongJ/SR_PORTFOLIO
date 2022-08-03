@@ -107,13 +107,13 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		if (CGameMgr::Get_Instance()->Check_Not_Go_Monster(vPos, &fCollisionDist, false))
 		{
 			if (m_eCurDir == DIR_LEFT)
-				vPos.x += fCollisionDist + .01f;
+				vPos.x += fCollisionDist + .0001f;
 			else if (m_eCurDir == DIR_RIGHT)
-				vPos.x -= fCollisionDist + .01f;
+				vPos.x -= fCollisionDist + .0001f;
 			else if (m_eCurDir == DIR_UP)
-				vPos.z -= fCollisionDist + .01f;
+				vPos.z -= fCollisionDist + .0001f;
 			else if (m_eCurDir == DIR_DOWN)
-				vPos.z += fCollisionDist + .01f;
+				vPos.z += fCollisionDist + .0001f;
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
 		else

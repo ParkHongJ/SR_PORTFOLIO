@@ -95,7 +95,6 @@ HRESULT CBullet::Render()
 	if (FAILED(m_pTextureCom->Bind_Texture((_uint)m_fFrame)))
 		return E_FAIL;
 
-
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 

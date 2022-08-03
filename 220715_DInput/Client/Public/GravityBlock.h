@@ -39,7 +39,6 @@ private:
 private:
 	_bool m_bOnAir;
 	_bool m_bOnBlock;
-	_bool m_bAbility = true;
 	CGameMgr::GAMEMODE m_ePreMode;
 
 public:

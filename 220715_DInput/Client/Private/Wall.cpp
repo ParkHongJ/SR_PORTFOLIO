@@ -22,7 +22,6 @@ HRESULT CWall::Initialize_Prototype()
 
 void CWall::TextureSelect(const _float3 & vPos)	// 현 벽들의 위치는 가로: 0.5f ~ 28.5f
 {												//					세로: 0.5f ~ 14.5f 이다.
-
 	if (vPos.x == 0.5f && vPos.z == 0.5f)		// 좌하
 		m_iTextureNum = 2;
 	else if (vPos.x == 28.5f && vPos.z == 0.5f)	//우하

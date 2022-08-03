@@ -112,9 +112,6 @@
     <Filter Include="02.GameObject\Block\Wall">
       <UniqueIdentifier>{18e28bcd-a9a4-428d-bd4a-e3ffd836757e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Block\GravityBlock">
-      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Block\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
@@ -129,7 +126,7 @@
     </Filter>
     <Filter Include="02.GameObject\Block\Interaction_Block\ElectricBlock">
       <UniqueIdentifier>{c25fafe6-6336-49cb-aa01-a68462f72519}</UniqueIdentifier>
-     </Filter>
+    </Filter>
     <Filter Include="02.GameObject\Button">
       <UniqueIdentifier>{d3657bb1-2b8d-433f-967b-876bd693a72d}</UniqueIdentifier>
     </Filter>
@@ -138,6 +135,9 @@
     </Filter>
     <Filter Include="ClientManager\ParticleMgr">
       <UniqueIdentifier>{169fc675-e3bb-4b42-bfca-9bc9679d9977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block\GravityBlock">
+      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +266,7 @@
       <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravityBlock.h">
-      <Filter>02.GameObject\Block\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\Interaction_Block\GravityBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Particle.h">
       <Filter>02.GameObject\Particle</Filter>
@@ -415,7 +415,7 @@
       <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravityBlock.cpp">
-      <Filter>02.GameObject\Block\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\Interaction_Block\GravityBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Particle.cpp">
       <Filter>02.GameObject\Particle</Filter>
@@ -434,7 +434,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\ElectricBlock.cpp">
       <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
-    </ClCompile> 
+    </ClCompile>
     <ClCompile Include="..\Private\Button.cpp">
       <Filter>02.GameObject\Button</Filter>
     </ClCompile>
