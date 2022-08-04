@@ -28,6 +28,7 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
+
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 {
@@ -214,6 +215,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
 		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
+		CSky::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -303,6 +310,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
 		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_GravityBlock */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_GravityBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
@@ -317,6 +325,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Sky.dds")))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */
@@ -753,8 +767,12 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
 		return E_FAIL;
-
-
+	//------------------------------------------------------------------------------------------------------
+	/* For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Stage2_Wall"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"),26))))
+		return E_FAIL;
+	//------------------------------------------------------------------------------------------------------
 	//================================ TextureEnd
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))

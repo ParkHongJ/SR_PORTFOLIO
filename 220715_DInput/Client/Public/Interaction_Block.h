@@ -15,9 +15,6 @@ BEGIN(Client)//PURE
 class CInteraction_Block : public CGameObject
 {
 protected:
-	enum BLOCK_TYPE { BLOCK_NORMAL, BLOCK_WARP, BLOCK_ELECTRIC, BLOCK_GRAVITY, BLOCK_END };
-	BLOCK_TYPE m_eBlockType = BLOCK_END;
-protected:
 	CInteraction_Block(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CInteraction_Block(const CInteraction_Block& rhs);
 	virtual ~CInteraction_Block() = default;
@@ -37,9 +34,14 @@ public:
 	void Box_Drop_More(_float fTimeDelta);//when Topdee Throw Box & Falling
 	void Box_Push_More(_float fTimeDelta,_float3 vPushFinishPos, _bool bFirstCall);//When Topdee Push Box
 
+public:
+	_bool Get_bTopdeeRaise() { return m_bTopdeeRaise; }
+	void Set_bTopdeeRaise(_bool _bTopdeeRaise) { m_bTopdeeRaise = _bTopdeeRaise; }
+
 private:
 	_bool m_bDropBox{ false };	
 	_bool m_bTopdeePush{ false };
+	_bool m_bTopdeeRaise{ false };
 	_float3 m_vPushFinishPos{ 0.f,0.f,0.f };
 #pragma endregion About_Topdee
 

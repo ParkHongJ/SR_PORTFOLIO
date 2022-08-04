@@ -24,7 +24,7 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_eBlockType = BLOCK_ELECTRIC;
+
 	SetTag(L"Box");
 	
 	if (pArg != nullptr)

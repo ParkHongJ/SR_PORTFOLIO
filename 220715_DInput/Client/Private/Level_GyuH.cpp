@@ -15,7 +15,7 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	LoadGameObject();
+	//LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	_float3 vInitPos{ 15.5f,0.5f,11.5f };

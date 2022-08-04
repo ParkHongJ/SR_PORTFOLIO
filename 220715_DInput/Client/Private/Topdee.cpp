@@ -124,11 +124,31 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 
 	m_eCurState = STATE_DEAD;
 	m_fDeadTimer += fTimeDelta;
-	if (m_iFrame > 22) {
+	if (m_fDeadTimer > 0.5f)
+	{
+		m_fDeadTimer = 0.f;
+		++m_iFrame;
+	}
+	if (m_iFrame > 21) {
 		m_iFrame = 17;
 		m_fDeadTimer = 0.f;
+
+		for (int i = 0; i < 50; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-5.5f, 5.5f);
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+
 	}
-	m_iFrame += (_uint)m_fDeadTimer;
 }
 
 void CTopdee::Go_Lerp(_float fTimeDelta)
@@ -282,7 +302,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion Collision_Obstacle	
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
 
-
 }
 
 HRESULT CTopdee::Render()
@@ -330,7 +349,6 @@ HRESULT CTopdee::Render()
 void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 	
-	
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
@@ -342,11 +360,14 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	}
 	else if (other->CompareTag(L"Pig"))
 	{
-
+		m_bActive = false;
 	}
 	else if (other->CompareTag(L"Box"))
-	{
-		if (!other->IsEnabled())
+	{//이거 위치 비교로도 가능.
+		/*if (!other->IsEnabled())
+			return;*/
+		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
+		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
 			return;
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
 		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
@@ -486,7 +507,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 		++iter;
 	}
 }
-
+#pragma region SetRender & Components
 HRESULT CTopdee::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
@@ -573,7 +594,7 @@ HRESULT CTopdee::SetUp_Components()
 		return E_FAIL;
 	return S_OK;
 }
-
+#pragma endregion SetRender & Components
 void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject != nullptr)
@@ -603,7 +624,8 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
-		m_pRaiseObject->SetEnabled(false);
+		((CInteraction_Block*)(*iter))->Set_bTopdeeRaise(true);
+		//m_pRaiseObject->SetEnabled(false);
 	}
 
 }
@@ -662,7 +684,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 				CParticleMgr::PARTICLE);
 		}
 #pragma endregion Particle
-		m_pRaiseObject->SetEnabled(true);
+		((CInteraction_Block*)m_pRaiseObject)->Set_bTopdeeRaise(false);
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
