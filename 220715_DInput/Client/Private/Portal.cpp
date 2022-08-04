@@ -34,6 +34,9 @@ HRESULT CPortal::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
 
+	/* For.Portal_Data */
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_Clear", &m_bClear);
+
 	return S_OK;
 }
 
@@ -44,7 +47,7 @@ void CPortal::Tick(_float fTimeDelta)
 	if (m_fFrame >= 11.0f)
 		m_fFrame = 0.f;
 
-#pragma region For.TooTop_Portal_Spr
+#pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
 		m_fFrame_For_Topdee += 17.0f * fTimeDelta;
@@ -96,25 +99,21 @@ HRESULT CPortal::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-	//======GameClear
+
+#pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
-		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
-			return E_FAIL;
+		if (!m_bClear) {
+			if(CGameMgr::GAMEMODE::TOODEE != CGameMgr::Get_Instance()->GetMode())
+				CGameMgr::Get_Instance()->Player_Active();
+			m_bClear = true;
+		}
 
-		if (FAILED(Set_RenderState()))
-			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+			_float3(m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+				1.f,
+				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
-		m_pVIBufferCom_For_Topdee->Render();
-
-		if (FAILED(Reset_RenderState()))
-			return E_FAIL;
-	}
-	//======GameClear
-
-#pragma region For.Toodee_Portal_Spr
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
-		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
 		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_for_Toodee)))
 			return E_FAIL;
 
@@ -122,6 +121,17 @@ HRESULT CPortal::Render()
 			return E_FAIL;
 
 		m_pVIBufferCom_for_Toodee->Render();
+
+		if (FAILED(Reset_RenderState()))
+			return E_FAIL;
+
+		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
+			return E_FAIL;
+
+		if (FAILED(Set_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom_For_Topdee->Render();
 
 		if (FAILED(Reset_RenderState()))
 			return E_FAIL;
@@ -191,6 +201,28 @@ HRESULT CPortal::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
+#pragma region For.TooTop_Portal_Spr
+	RectDesc.vSize = { 6.f,6.f,0.f };
+
+	/* For.Com_VIBuffer_for_Topdee */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Topdee"), (CComponent**)&m_pVIBufferCom_For_Topdee, this, &RectDesc)))
+		return E_FAIL;
+
+	/* For.Com_Texture_for_Topdee */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
+		return E_FAIL;
+
+	RectDesc.vSize = { 6.f, 6.f, 0.f };
+
+	/* For.Com_VIBuffer_for_Toodee */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Toodee"), (CComponent**)&m_pVIBufferCom_for_Toodee, this, &RectDesc)))
+		return E_FAIL;
+
+	/* For.Com_Texture_for_Toodee */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
+		return E_FAIL;
+#pragma endregion
+
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(TransformDesc));
@@ -214,28 +246,6 @@ HRESULT CPortal::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
-
-#pragma region For.TooTop_Portal_Spr
-	RectDesc.vSize = { 6.f,6.f,0.f };
-
-	/* For.Com_VIBuffer_for_Topdee */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Topdee"), (CComponent**)&m_pVIBufferCom_For_Topdee, this, &RectDesc)))
-		return E_FAIL;
-
-	/* For.Com_Texture_for_Topdee */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
-		return E_FAIL;
-
-	RectDesc.vSize = { 6.f, 6.f, 0.f };
-
-	/* For.Com_VIBuffer_for_Toodee */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Toodee"), (CComponent**)&m_pVIBufferCom_for_Toodee, this, &RectDesc)))
-		return E_FAIL;
-
-	/* For.Com_Texture_for_Toodee */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
-		return E_FAIL;
-#pragma endregion
 
 	return S_OK;
 }
