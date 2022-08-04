@@ -61,32 +61,35 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 			//현재 바뀐모드가 투디면 중력
 			m_bOnBlock = false;
 		}
-		m_ePreMode = eCurMode;
-	}
-
-	if (eCurMode == CGameMgr::TOODEE)
-	{
-		if (m_bAbility)
-		{
-			UpdateGravitiy(fTimeDelta);
-		}
-	}
-	else
-	{
-		if (m_bAbility)
+		else
 		{
 			//현재위치
 			_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 			_float3 vFinalPosition; //도착위치
 
-									//z값만 보정 (중력이니까)
+			//z값만 보정 (중력이니까)
 			vFinalPosition.x = vCurPosition.x;
 			vFinalPosition.y = vCurPosition.y;
 			vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
-			//러프시작
-			vCurPosition = Lerp(vCurPosition, vFinalPosition, fTimeDelta * 5);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+
+			//탑디면 땅에 꺼질수있는지 체크
+			if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+			{
+				//떨어져야 할때.
+				m_bDropBox = true;
+			}
+		}
+		m_ePreMode = eCurMode;
+	}
+
+	if (eCurMode == CGameMgr::TOODEE)
+	{
+		//현재 투디모드고 능력이 활성화라면 중력활성화
+		if (m_bAbility)
+		{
+			UpdateGravitiy(fTimeDelta);
 		}
 	}
 	
@@ -155,7 +158,7 @@ void CGravityBlock::UpdateGravitiy(_float fTimeDelta)
 
 	if (m_bOnAir)
 	{
-		vPos.z += -9.8f * fTimeDelta * 1.5f;
+		vPos.z += -9.8f * fTimeDelta * .7f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 }

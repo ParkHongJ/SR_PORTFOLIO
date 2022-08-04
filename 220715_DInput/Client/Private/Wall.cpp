@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "Hong.h"
 
 CWall::CWall(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -38,16 +39,30 @@ void CWall::TextureSelect(const _float3 & vPos)	// 현 벽들의 위치는 가로: 0.5f ~
 
 HRESULT CWall::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+		m_iTextureNum = ObjInfo.iTex;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	//======================
 	m_Tag = L"Box";
 	//======================
-	if (pArg != nullptr)
+	
+
+	if (m_pTransformCom != nullptr && pArg != nullptr)
+	{
+		_float3 vPos;
+		vPos = ObjInfo.vPos;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
-		TextureSelect(vPos);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	return S_OK;

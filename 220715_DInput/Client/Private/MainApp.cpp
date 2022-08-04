@@ -125,7 +125,7 @@ HRESULT CMainApp::Render()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	if (ImGui::BeginMainMenuBar())
+	/*if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -186,7 +186,7 @@ HRESULT CMainApp::Render()
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
-	}
+	}*/
 
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());

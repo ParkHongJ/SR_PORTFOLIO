@@ -49,6 +49,7 @@ void CSpike::Tick(_float fTimeDelta)
 			if (0 < m_iFrame)
 				--m_iFrame;
 
+			m_bEnabled = true;
 			_float3 vPos;
 			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vToodeePos, fTimeDelta * m_fSpeed);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
@@ -56,7 +57,8 @@ void CSpike::Tick(_float fTimeDelta)
 		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE) {
 			if (5 > m_iFrame)
 				++m_iFrame;
-
+			
+			m_bEnabled = false;
 			_float3 vPos;
 			vPos = MoveTowards(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_vTopdeePos, fTimeDelta * m_fSpeed);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);

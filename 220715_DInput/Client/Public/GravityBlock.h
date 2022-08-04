@@ -40,6 +40,7 @@ private:
 	_bool m_bOnAir;
 	_bool m_bOnBlock;
 	CGameMgr::GAMEMODE m_ePreMode;
+	LEVEL m_eHoleLevel;
 
 public:
 	static CGravityBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

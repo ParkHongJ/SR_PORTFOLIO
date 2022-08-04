@@ -26,7 +26,8 @@ public:
 	{
 		DIRECTION eDir; // 방향
 		_float3 vPos; // 시작위치
-		_float3 vSize;
+		_float3 vDir;
+
 	}BULLET_DESC;
 private:
 	CBullet(LPDIRECT3DDEVICE9 pGraphic_Device);
@@ -54,9 +55,12 @@ private:
 
 private:
 	HRESULT SetUp_Components();
-	DIRECTION m_eDir = UP;
+	DIRECTION m_eDir = RIGHT;
 	_float m_fSpeed = 6.5f;
 	_float m_fFrame;
+	_float3 m_vDir;
+public:
+	void SetUp(void* pArg);
 public:
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
 public:

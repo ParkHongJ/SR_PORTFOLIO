@@ -97,11 +97,11 @@ private:
 
 #pragma region About_Box
 private:
-	void	KKK_FindBox(_float fTimeDelta);
-	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);
-	void	KKK_DropBox(_float fTimeDelta);
-	void	TopdeeIsPushed(const _float3 _vOtherPos);
-	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList,_bool& bCanPush);
+	void	KKK_FindBox(_float fTimeDelta);//ㄷ던질박스를 찾는
+	void	KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride);//들고이쓴
+	void	KKK_DropBox(_float fTimeDelta);//박스를 던진
+	void	TopdeeIsPushed(const _float3 _vOtherPos);//박스가 탑디를 조금 밀쳐내는
+	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList,_bool& bCanPush);//박스앞에박스있는지 밀때체크
 #pragma endregion About_Box
 
 private:

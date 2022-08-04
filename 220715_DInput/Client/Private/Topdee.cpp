@@ -47,7 +47,6 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 void CTopdee::Tick(_float fTimeDelta)
 {
-	
 	/*if (!m_bActive)
 		return;*/
 	if (m_bPushBox)
@@ -353,7 +352,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		TopdeeIsPushed(vOtherPos);//탑디가 밀려나는거.
 		if (vOtherPos.y != 0.5f)
 			return;
-		if (!m_bPushBox) {//MakeDelay
+		if (!m_bPushBox) {//MakseDelay
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
 		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고

@@ -2,6 +2,9 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
+BEGIN(Engine)
+class CGameObject;
+END
 BEGIN(Client)
 
 class CHong final : public CLevel
@@ -49,7 +52,10 @@ private:
 	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
 	static int iDir_Select;
 	static int iLevel_Select;
+	static int iTexNum;
+	_bool m_bIsCube;
 	_float m_fMoveSize = 1.f;
+	list<class CGameObject*>* m_TempList;
 	map<pair<const _tchar*, const _tchar*>, _float3> m_TestMap;
 	//<<프로토타입태그, 레이어태그> 포지션값>
 	//          키값               벨류

@@ -6,8 +6,10 @@
 #include "GameObject.h"
 #include "GameMgr.h"
 #include <winnt.h>
+#include "Wall.h"
 int CHong::iDir_Select = 0;
 int CHong::iLevel_Select = 0;
+int CHong::iTexNum = 0;
 CHong::CHong(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -20,6 +22,23 @@ HRESULT CHong::Initialize()
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Block(
+		L"Prototype_GameObject_Wall", 
+		L"Layer_Temp",
+		_float3(10.f,2.5f,13.f))))
+		return E_FAIL;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	
+	
+	m_TempList = pGameInstance->GetLayer(LEVEL_STAGE1, L"Layer_Temp");
+	
+	
+	
+	Safe_Release(pGameInstance);
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 	return S_OK;
 }
@@ -102,7 +121,21 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_GravityBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
-
+	const char* TexIndex[] =
+	{
+		"Prototype_GameObject_Topdee",
+		"Prototype_GameObject_Cube",
+		"Prototype_GameObject_Wall",
+		"Prototype_GameObject_Spike",
+		"Prototype_GameObject_Monster_Pig",
+		"Prototype_GameObject_Turret",
+		"Prototype_GameObject_Portal",
+		"Prototype_GameObject_Cloud",
+		"Prototype_GameObject_Hole",
+		"Prototype_GameObject_KeyBox",
+		"Prototype_GameObject_Key",
+		"Prototype_GameObject_GravityBlock"
+	};
 	if (ImGui::BeginListBox("Layers"))
 	{
 		for (int n = 0; n < IM_ARRAYSIZE(Layers); n++)
@@ -135,15 +168,32 @@ HRESULT CHong::Render()
 
 				delete szTemp;
 
-				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), m_vPosition)))
-					return S_OK;
-
 				OBJ_INFO* tObjInfo = new OBJ_INFO;
 				tObjInfo->vPos = m_vPosition;
 				tObjInfo->iDirection = iDir_Select;
 				tObjInfo->iNumLevel = iLevel_Select + 1;
 
+				if (m_bIsCube)
+					tObjInfo->iTex = iTexNum;
+
+				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), tObjInfo)))
+					return S_OK;
+
 				m_pObjects.insert({ pTaginfo, tObjInfo });
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	if (ImGui::BeginListBox("Textures"))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(TexIndex); n++)
+		{
+			const bool is_selected = (iTexNum == n);
+			if (ImGui::Selectable(TexIndex[n], is_selected))
+			{
+				iTexNum = n;
+				dynamic_cast<CWall*>(m_TempList->front())->SetTexture(iTexNum);
 			}
 		}
 		ImGui::EndListBox();
@@ -155,9 +205,12 @@ HRESULT CHong::Render()
 	
 	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
-
+	
+	if (ImGui::Checkbox("Cube?", &m_bIsCube)); ImGui::SameLine();
+	ImGui::Text("TextureIndex : %d",iTexNum);
 	ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	ImGui::DragFloat("MoveSize", &m_fMoveSize, 0.01f, 0.0f, 200.f);
+	
 	if (ImGui::Button("Save")) SaveGameObject(); ImGui::SameLine();
 	if (ImGui::Button("Load")) LoadGameObject();
 

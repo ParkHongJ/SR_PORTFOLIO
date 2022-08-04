@@ -46,7 +46,8 @@ private:
 private:
 	HRESULT SetUp_Components();
 	void TextureSelect(const _float3& vPos);
-
+public:
+	void SetTexture(_uint iTextureNum) { m_iTextureNum = iTextureNum; }
 public:
 	static CWall* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

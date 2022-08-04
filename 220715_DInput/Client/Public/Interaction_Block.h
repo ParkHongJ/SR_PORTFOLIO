@@ -40,7 +40,7 @@ public:
 	void Box_Drop_More(_float fTimeDelta);//when Topdee Throw Box & Falling
 	void Box_Push_More(_float fTimeDelta,_float3 vPushFinishPos, _bool bFirstCall);//When Topdee Push Box
 
-private:
+protected:
 	_bool m_bDropBox{ false };	
 	_bool m_bTopdeePush{ false };
 	_float3 m_vPushFinishPos{ 0.f,0.f,0.f };

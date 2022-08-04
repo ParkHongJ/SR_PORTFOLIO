@@ -78,8 +78,28 @@ void CBullet::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
-
+	// Default dir : DOWN
+	//RIGHT
+	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+	//UP
+	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+	
+	switch (m_eDir)
+	{
+	case DOWN:
+		break;
+	case UP:
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+		break;
+	case LEFT:
+		m_pTransformCom->Turn(-m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+		break;
+	case RIGHT:
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
+		break;
+	}
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollider->Add_CollisionGroup(CCollider::BULLET, m_pBoxCollider, m_pTransformCom);
 }
@@ -175,8 +195,10 @@ void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 			vPos.x -= distrX(eng);
 			vPos.z += distrZ(eng);
+
 			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
 				vPos,
 				vPos - vPos2,
@@ -187,7 +209,7 @@ void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 CBullet * CBullet::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CBullet*		pInstance = new CBullet(pGraphic_Device);
+	CBullet* pInstance = new CBullet(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -220,4 +242,17 @@ void CBullet::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+}
+
+void CBullet::SetUp(void* pArg)
+{
+	if (nullptr != pArg)
+	{
+		BULLET_DESC BulletDesc;
+		memcpy(&BulletDesc, pArg, sizeof(BULLET_DESC));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, BulletDesc.vPos);
+		m_eDir = BulletDesc.eDir;
+		m_vDir = BulletDesc.vDir;
+	}
+	
 }
