@@ -38,6 +38,7 @@ public:
 
 private:
 	CTexture* m_pTextureCom = nullptr;
+	CTexture* m_pTextureCom_Died = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CCollider* m_pColliderCom = nullptr;
 	CBoxCollider* m_pBoxCom = nullptr;
@@ -47,6 +48,7 @@ private:
 private:
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
+	_uint m_iTexIndexDied = 0;
 	_uint m_iTexIndex = 0;
 	_float m_fFrame = 0.f;
 	_uint m_iMinFrame = 0;
@@ -64,6 +66,7 @@ private:
 	_float m_fDrop_Endline = 0.f;
 
 	_bool m_bPortal = false;
+	_bool m_bDiedEff = false;
 
 private:
 	HRESULT Set_RenderState();

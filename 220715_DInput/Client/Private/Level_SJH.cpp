@@ -70,7 +70,7 @@ HRESULT CLevel_SJH::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_SJH, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_STAGE1, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -83,7 +83,7 @@ HRESULT CLevel_SJH::Ready_Layer_Toodee(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), LEVEL_SJH, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -96,7 +96,7 @@ HRESULT CLevel_SJH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_SJH, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -110,16 +110,16 @@ HRESULT CLevel_SJH::Ready_Layer_Block(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	for (_uint i = 0; i < 29; ++i) {
-		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
+		if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, _float3(0.5f + i, 0.5f, 0.5f))))
 			return E_FAIL;
 	}
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(5.5f, 0.5f, 1.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, _float3(5.5f, 0.5f, 1.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(7.5f, 0.5f, 2.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, _float3(7.5f, 0.5f, 2.5f))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_SJH, pLayerTag, _float3(9.5f, 0.5f, 3.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, _float3(9.5f, 0.5f, 3.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -131,7 +131,7 @@ HRESULT CLevel_SJH::Ready_Layer_Spike(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Spike"), LEVEL_STATIC, pLayerTag, _float3(13.5f, 0.5f, 1.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Spike"), LEVEL_STAGE1, pLayerTag, _float3(13.5f, 0.5f, 1.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -143,7 +143,7 @@ HRESULT CLevel_SJH::Ready_Layer_Portal(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Portal"), LEVEL_GAMEPLAY, pLayerTag, _float3(20.5f, 0.5f, 2.5f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Portal"), LEVEL_STAGE1, pLayerTag, _float3(20.5f, 0.5f, 2.5f))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -34,6 +34,9 @@ HRESULT CPortal::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
 
+	/* For.Portal_Data */
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_Clear", &m_bClear);
+
 	return S_OK;
 }
 
@@ -44,7 +47,7 @@ void CPortal::Tick(_float fTimeDelta)
 	if (m_fFrame >= 11.0f)
 		m_fFrame = 0.f;
 
-#pragma region For.TooTop_Portal_Spr
+#pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
 		m_fFrame_For_Topdee += 17.0f * fTimeDelta;
@@ -96,25 +99,21 @@ HRESULT CPortal::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-	//======GameClear
+
+#pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
-		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
-			return E_FAIL;
+		if (!m_bClear) {
+			if(CGameMgr::GAMEMODE::TOODEE != CGameMgr::Get_Instance()->GetMode())
+				CGameMgr::Get_Instance()->Player_Active();
+			m_bClear = true;
+		}
 
-		if (FAILED(Set_RenderState()))
-			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+			_float3(m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+				1.f,
+				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
-		m_pVIBufferCom_For_Topdee->Render();
-
-		if (FAILED(Reset_RenderState()))
-			return E_FAIL;
-	}
-	//======GameClear
-
-#pragma region For.Toodee_Portal_Spr
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
-		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
 		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_for_Toodee)))
 			return E_FAIL;
 
@@ -122,6 +121,17 @@ HRESULT CPortal::Render()
 			return E_FAIL;
 
 		m_pVIBufferCom_for_Toodee->Render();
+
+		if (FAILED(Reset_RenderState()))
+			return E_FAIL;
+
+		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
+			return E_FAIL;
+
+		if (FAILED(Set_RenderState()))
+			return E_FAIL;
+
+		m_pVIBufferCom_For_Topdee->Render();
 
 		if (FAILED(Reset_RenderState()))
 			return E_FAIL;
