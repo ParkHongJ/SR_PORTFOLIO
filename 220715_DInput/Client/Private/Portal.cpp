@@ -36,6 +36,7 @@ HRESULT CPortal::Initialize(void * pArg)
 
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_Clear", &m_bClear);
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_NextLevel", &m_bNextLeel);
 
 	return S_OK;
 }
@@ -50,18 +51,13 @@ void CPortal::Tick(_float fTimeDelta)
 #pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
-		m_fFrame_For_Topdee += 17.0f * fTimeDelta;
-		m_fFrame_for_Toodee += 17.0f * fTimeDelta;
+		m_fFrame_For_TopToo += 17.0f * fTimeDelta;
 
-		if (m_fFrame_For_Topdee >= 17.0f)
-			m_fFrame_For_Topdee = 0.f;
-
-			if (m_fFrame_for_Toodee >= 17.0f)
-			m_fFrame_for_Toodee = 0.f;
+		if (m_fFrame_For_TopToo >= 17.0f)
+			m_bNextLeel = true;
 	}
 	else { 
-		m_fFrame_For_Topdee = 0.f;
-		m_fFrame_for_Toodee = 0.f;
+		m_fFrame_For_TopToo = 0.f;
 	}
 #pragma endregion
 }
@@ -114,7 +110,7 @@ HRESULT CPortal::Render()
 				1.f,
 				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
-		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_for_Toodee)))
+		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_For_TopToo)))
 			return E_FAIL;
 
 		if (FAILED(Set_RenderState()))
@@ -125,7 +121,7 @@ HRESULT CPortal::Render()
 		if (FAILED(Reset_RenderState()))
 			return E_FAIL;
 
-		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_Topdee)))
+		if (FAILED(m_pTextureCom_For_Topdee->Bind_Texture((_uint)m_fFrame_For_TopToo)))
 			return E_FAIL;
 
 		if (FAILED(Set_RenderState()))
