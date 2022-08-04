@@ -32,6 +32,7 @@
 #include "Particle.h"
 #include "ButtonBlock.h"
 #include "ButtonBlock_Center.h"
+#include "BreakingBlock.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -596,9 +597,9 @@ HRESULT CLoader::Loading_ForSENILevel()
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_BreakingBlock */
-	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BreakingBlock"),
-	//	CBreakingBlock::Create(m_pGraphic_Device))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BreakingBlock"),
+		CBreakingBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
@@ -657,9 +658,9 @@ HRESULT CLoader::Loading_ForSENILevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_BreakingBlock */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/BreakingBlock/breakingSpr_%d.png"), 2))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Breaking/BreakingSpr_%d.dds"), 1))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 	

@@ -22,6 +22,7 @@ private:
 	HRESULT Ready_Layer_Monster_Pig(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Button(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_ButtonBlock(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_BreakingBlock(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg);
 
 public:

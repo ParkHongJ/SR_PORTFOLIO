@@ -129,7 +129,7 @@
     </Filter>
     <Filter Include="02.GameObject\Block\Interaction_Block\ElectricBlock">
       <UniqueIdentifier>{c25fafe6-6336-49cb-aa01-a68462f72519}</UniqueIdentifier>
-     </Filter>
+    </Filter>
     <Filter Include="02.GameObject\Button">
       <UniqueIdentifier>{d3657bb1-2b8d-433f-967b-876bd693a72d}</UniqueIdentifier>
     </Filter>
@@ -138,6 +138,9 @@
     </Filter>
     <Filter Include="ClientManager\ParticleMgr">
       <UniqueIdentifier>{169fc675-e3bb-4b42-bfca-9bc9679d9977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\BreakingBlock">
+      <UniqueIdentifier>{8b41e1d5-94ad-4bae-9363-8682f85876c8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +301,9 @@
     <ClInclude Include="..\public\ParticleMgr.h">
       <Filter>ClientManager\ParticleMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BreakingBlock.h">
+      <Filter>02.GameObject\Block\BreakingBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -434,7 +440,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\ElectricBlock.cpp">
       <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
-    </ClCompile> 
+    </ClCompile>
     <ClCompile Include="..\Private\Button.cpp">
       <Filter>02.GameObject\Button</Filter>
     </ClCompile>
@@ -446,6 +452,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ParticleMgr.cpp">
       <Filter>ClientManager\ParticleMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BreakingBlock.cpp">
+      <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

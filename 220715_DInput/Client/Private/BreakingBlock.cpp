@@ -1,34 +1,29 @@
 #include "stdafx.h"
-#include "..\Public\ButtonBlock.h"
+#include "..\Public\BreakingBlock.h"
 
 #include "GameInstance.h"
-#include "ParticleMgr.h"
-
-CButtonBlock::CButtonBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
+CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
-
 }
 
-CButtonBlock::CButtonBlock(const CButtonBlock& rhs)
+CBreakingBlock::CBreakingBlock(const CBreakingBlock & rhs)
 	: CGameObject(rhs)
 {
-
 }
 
-HRESULT CButtonBlock::Initialize_Prototype()
+HRESULT CBreakingBlock::Initialize_Prototype()
 {
 	return S_OK;
-
 }
 
-HRESULT CButtonBlock::Initialize(void* pArg)
+HRESULT CBreakingBlock::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	//======================
+
 	SetTag(L"Box");
-	//======================
+	
 	if (pArg != nullptr)
 	{
 		_float3 vPos;
@@ -37,18 +32,18 @@ HRESULT CButtonBlock::Initialize(void* pArg)
 	}
 
 	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 1.f, 3.f));
-	
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(25.f, 1.f, 5.f));
+
 	return S_OK;
 }
 
-void CButtonBlock::Tick(_float fTimeDelta)
+void CBreakingBlock::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
 }
 
-void CButtonBlock::LateTick(_float fTimeDelta)
+void CBreakingBlock::LateTick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
@@ -57,7 +52,7 @@ void CButtonBlock::LateTick(_float fTimeDelta)
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
 }
 
-HRESULT CButtonBlock::Render()
+HRESULT CBreakingBlock::Render()
 {
 	if (!m_bActive)
 		S_OK;
@@ -79,29 +74,24 @@ HRESULT CButtonBlock::Render()
 	return S_OK;
 }
 
-void CButtonBlock::SetDead()
+HRESULT CBreakingBlock::Set_RenderState()
 {
-	m_bActive = false;
-	//Particle Effect
-	for (int i = 0; i < 7; i++)
-	{
-		random_device rd;
-		default_random_engine eng(rd());
-		uniform_real_distribution<float> distr(-.8f, .8f);
-		//random float
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
 
-		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		vPos.x += distr(eng);
-		vPos.z += distr(eng);
-		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
-			vPos,
-			vPos - vPos2,
-			CParticleMgr::PARTICLE);
-	}
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	return S_OK;
 }
 
-HRESULT CButtonBlock::SetUp_Components()
+HRESULT CBreakingBlock::Reset_RenderState()
+{
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	return S_OK;
+}
+
+HRESULT CBreakingBlock::SetUp_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
@@ -112,7 +102,7 @@ HRESULT CButtonBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_ButtonBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -141,27 +131,35 @@ HRESULT CButtonBlock::SetUp_Components()
 	return S_OK;
 }
 
-HRESULT CButtonBlock::Reset_RenderState()
+CBreakingBlock * CBreakingBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	CBreakingBlock*		pInstance = new CBreakingBlock(pGraphic_Device);
 
-	return S_OK;
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX(TEXT("Failed To Created : CBreakingBlock"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
-HRESULT CButtonBlock::Set_RenderState()
+CGameObject * CBreakingBlock::Clone(void* pArg)
 {
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
+	CBreakingBlock*		pInstance = new CBreakingBlock(*this);
 
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX(TEXT("Failed To Clone : CBreakingBlock"));
+		Safe_Release(pInstance);
+	}
 
-	return S_OK;
+	return pInstance;
 }
 
-void CButtonBlock::Free()
+void CBreakingBlock::Free()
 {
 	__super::Free();
-
 	Safe_Release(m_pBoxCollider);
 	Safe_Release(m_pCollCom);
 	Safe_Release(m_pTransformCom);
@@ -170,28 +168,3 @@ void CButtonBlock::Free()
 	Safe_Release(m_pRendererCom);
 }
 
-CGameObject* CButtonBlock::Clone(void* pArg)
-{
-	CButtonBlock*		pInstance = new CButtonBlock(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX(TEXT("Failed To Clone : CButtonBlock"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CButtonBlock* CButtonBlock::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
-{
-	CButtonBlock*		pInstance = new CButtonBlock(pGraphic_Device);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX(TEXT("Failed To Created : CButtonBlock"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
