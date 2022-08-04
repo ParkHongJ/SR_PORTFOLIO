@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <unordered_map>
 
-
 #include <process.h>
 
 #include "Engine_Macro.h"

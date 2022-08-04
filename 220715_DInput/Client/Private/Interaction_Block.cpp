@@ -84,19 +84,21 @@ _bool CInteraction_Block::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta,
 			return true;
 		return false;
 	}
-	else 
+	else {
 		m_bDropBox = true;
-	return false;
+		m_bEnabled = false;
+	}
+		return false;
 }
 
 void CInteraction_Block::Box_Drop_More(_float fTimeDelta)
 {
+	m_bEnabled = false;
 	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
 	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
 		vBoxCurPos.y = -0.45f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vBoxCurPos));
 		m_bDropBox = false;
-		m_bEnabled = false;
 		return;
 	}
 	_float3 vBoxDir = { 0.f,-1.f,0.f };

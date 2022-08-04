@@ -53,7 +53,7 @@ HRESULT CSky::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(2)))
+	if (FAILED(m_pTextureCom->Bind_Texture(0)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))
@@ -99,11 +99,11 @@ HRESULT CSky::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC , TEXT("Prototype_Component_Texture_Sky"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

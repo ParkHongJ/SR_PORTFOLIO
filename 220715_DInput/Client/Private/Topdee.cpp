@@ -2,8 +2,8 @@
 #include "..\Public\Topdee.h"
 
 #include "GameMgr.h"
+#include "ParticleMgr.h"
 #include "Interaction_Block.h"
-
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
 {
@@ -123,11 +123,31 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 
 	m_eCurState = STATE_DEAD;
 	m_fDeadTimer += fTimeDelta;
-	if (m_iFrame > 22) {
+	if (m_fDeadTimer > 0.5f)
+	{
+		m_fDeadTimer = 0.f;
+		++m_iFrame;
+	}
+	if (m_iFrame > 21) {
 		m_iFrame = 17;
 		m_fDeadTimer = 0.f;
+
+		for (int i = 0; i < 50; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-5.5f, 5.5f);
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+
 	}
-	m_iFrame += (_uint)m_fDeadTimer;
 }
 
 void CTopdee::Go_Lerp(_float fTimeDelta)
@@ -281,7 +301,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion Collision_Obstacle	
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
 
-
 }
 
 HRESULT CTopdee::Render()
@@ -329,7 +348,6 @@ HRESULT CTopdee::Render()
 void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 	
-	
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
@@ -341,11 +359,14 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	}
 	else if (other->CompareTag(L"Pig"))
 	{
-
+		m_bActive = false;
 	}
 	else if (other->CompareTag(L"Box"))
-	{
-		if (!other->IsEnabled())
+	{//이거 위치 비교로도 가능.
+		/*if (!other->IsEnabled())
+			return;*/
+		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
+		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
 			return;
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
 		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
@@ -380,7 +401,6 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		else if (m_eCurDir == DIR_LEFT)
 			vCurDir.x = -1.f;
 		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
-		//9.5 8.5 7.5
 		_uint iCount = 0;
 		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
 		if (pBlock == nullptr)		//지금미는 블록이 벽이니?
@@ -395,11 +415,13 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			return;
 		}
 		pBlock->Box_Push_More(fTimeDelta, vOtherPos,true);//First
+		//_uint iCount{ 0 };
 		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
 		{
 			CInteraction_Block* pBlock= (CInteraction_Block*)(*iter);
 			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
-			pBlock->Box_Push_More(fTimeDelta, ((pTransform->Get_State(CTransform::STATE_POSITION) + vCurDir)), true);
+			_float3 vPos{pTransform->Get_State(CTransform::STATE_POSITION)};
+			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
 		}
 		m_bPushBox = true;
 	}
@@ -415,7 +437,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 {//Box Pushing Topdee
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float fDist = D3DXVec3Length(&(vTopdeePos - _vOtherPos));
-	fDist *= 0.25f;
+	fDist *= 0.2f;
 	if (m_eCurDir == DIR_LEFT)
 		vTopdeePos.x += fDist;
 	else if (m_eCurDir == DIR_RIGHT)
@@ -428,7 +450,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 }
 
 void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
-{//들어온값은 다음 박스에 해당.
+{//들어온값은 다음 박스에 해당. 리스트에 담겨야하는 사이즈는 2개이다.
 	if (!bCanPush)
 		return;
 	auto& iter = KKK_m_pBoxList->begin();
@@ -436,6 +458,11 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 	{
 		CTransform* pNextBlock = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
 		_float3 vNextBlockPos = pNextBlock->Get_State(CTransform::STATE_POSITION);
+		if (vNextBlockPos.y < 0.f)
+		{//
+			++iter;
+			continue;
+		}
 		if (vPushDir.x == 0.f)
 		{//Up or Down
 			if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z)//찾으려는값임.
@@ -446,7 +473,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {//WallCheck
 						bCanPush = false;
 						return;
 					}
@@ -479,8 +506,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 		++iter;
 	}
 }
-
-
+#pragma region SetRender & Components
 HRESULT CTopdee::Set_RenderState()
 {
 	if (nullptr == m_pGraphic_Device)
@@ -567,7 +593,7 @@ HRESULT CTopdee::SetUp_Components()
 		return E_FAIL;
 	return S_OK;
 }
-
+#pragma endregion SetRender & Components
 void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
 	if (m_pRaiseObject != nullptr)
@@ -597,7 +623,8 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	else {
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
-		m_pRaiseObject->SetEnabled(false);
+		((CInteraction_Block*)(*iter))->Set_bTopdeeRaise(true);
+		//m_pRaiseObject->SetEnabled(false);
 	}
 
 }
@@ -617,6 +644,12 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		{//final Wall and Block DropPos 
 			return;
 		}
+		for (auto& iter = KKK_m_pBoxList->begin(); iter != KKK_m_pBoxList->end(); ++iter)
+		{
+			CTransform* pTransform = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+			if (pTransform->Get_State(CTransform::STATE_POSITION) == vDropPosCheck)
+				return;
+		}
 		m_vBoxDropPos = vDropPosCheck;
 		m_fRaising_Box_DelayTimer = 15000.f;
 	}
@@ -634,7 +667,23 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb
 			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f,0.f,0.f), fTimeDelta, true);//it can Make Drop More.
 		}
-		m_pRaiseObject->SetEnabled(true);
+#pragma region Particle
+		for (int i = 0; i < 10; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-.5f, .5f);
+			_float3 vPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+#pragma endregion Particle
+		((CInteraction_Block*)m_pRaiseObject)->Set_bTopdeeRaise(false);
 		m_pRaiseObject = nullptr;
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);

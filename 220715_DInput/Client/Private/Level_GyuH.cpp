@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "ParticleMgr.h"
 #include "GameMgr.h"
 CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -14,7 +15,7 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	LoadGameObject();
+	//LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	_float3 vInitPos{ 15.5f,0.5f,11.5f };
@@ -24,13 +25,14 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	 vInitPos= { 10.5f,0.5f,11.5f };
+	 vInitPos= { 10.5f,0.26f,5.5f };
 	for (_uint i = 0; i < 3; ++i) {
-		vInitPos.z -= 1.0f;
-		vInitPos.y = 0.05f;
+		vInitPos.x += 1.0f;
+		vInitPos.y = 0.26f;
 		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), vInitPos)))
 			return E_FAIL;
 	}
+
 	vInitPos = { 7.f,0.5f,10.5f };
 	for (_uint i = 0; i < 3; ++i) {
 		vInitPos.z -= 1.0f;
@@ -38,8 +40,8 @@ HRESULT CLevel_GyuH::Initialize()
 			return E_FAIL;
 	}
 
-	vInitPos = { 12.5f,0.5f,10.5f };
-	for (_uint i = 0; i < 3; ++i) {
+	vInitPos = { 12.5f,0.5f,11.5f };
+	for (_uint i = 0; i < 4; ++i) {
 		vInitPos.z -= 1.0f;
 		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
 			return E_FAIL;
@@ -53,7 +55,7 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;
 
-
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 	return S_OK;

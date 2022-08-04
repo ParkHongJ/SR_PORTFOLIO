@@ -22,7 +22,6 @@ HRESULT CGravityBlock::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_eBlockType = BLOCK_GRAVITY;
 	m_Tag = L"Box";
 
 	if (pArg != nullptr)

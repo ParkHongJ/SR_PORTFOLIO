@@ -23,7 +23,7 @@ HRESULT CMetalBlock::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_eBlockType = BLOCK_NORMAL;
+
 	SetTag(L"Box");
 
 	if (pArg != nullptr)

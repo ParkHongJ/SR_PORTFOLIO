@@ -23,7 +23,7 @@ HRESULT CBlock::Initialize(void * pArg)
 {
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	m_eBlockType = BLOCK_NORMAL;
+
 	SetTag(L"Box");
 
 	if (pArg != nullptr)
@@ -31,7 +31,6 @@ HRESULT CBlock::Initialize(void * pArg)
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-
 	}
 	return S_OK;
 }
@@ -123,7 +122,7 @@ HRESULT CBlock::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
-	/* For.Com_Texture */
+	/* For.Com_Texture */ 
 	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
