@@ -142,6 +142,9 @@
     <Filter Include="02.GameObject\Block\Interaction_Block\MetalBlock">
       <UniqueIdentifier>{7c4247e9-3162-44d8-a5a4-fae8899131c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Block\BreakingBlock">
+      <UniqueIdentifier>{8b41e1d5-94ad-4bae-9363-8682f85876c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -304,6 +307,9 @@
     <ClInclude Include="..\public\MetalBlock.h">
       <Filter>02.GameObject\Block\Interaction_Block\MetalBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BreakingBlock.h">
+      <Filter>02.GameObject\Block\BreakingBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -455,6 +461,9 @@
     </ClCompile>
     <ClCompile Include="..\private\MetalBlock.cpp">
       <Filter>02.GameObject\Block\Interaction_Block\MetalBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BreakingBlock.cpp">
+      <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

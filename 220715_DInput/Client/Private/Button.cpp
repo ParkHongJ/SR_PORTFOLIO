@@ -2,14 +2,21 @@
 #include "..\Public\Button.h"
 
 #include "GameInstance.h"
+#include "ButtonBlock.h"
+#include "ButtonBlock_Center.h"
+#include "ParticleMgr.h"
 
 CButton::CButton(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
+	, m_bPress(false)
+	, m_bCheck(false)
 {
 }
 
 CButton::CButton(const CButton & rhs)
 	: CGameObject(rhs)
+	, m_bPress(false)
+	, m_bCheck(false)
 {
 }
 
@@ -23,6 +30,13 @@ HRESULT CButton::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	
+	if (pArg != nullptr)
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.5f, 3.f));
 	return S_OK;
 }
@@ -49,7 +63,7 @@ void CButton::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
+	m_pColliderCom->Add_CollisionGroup(CCollider::PORTAL, m_pBoxCom, m_pTransformCom);
 
 }
 
@@ -61,9 +75,16 @@ HRESULT CButton::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
-		return E_FAIL;
+	if (!m_bPress) {
+		if (FAILED(m_pTextureCom->Bind_Texture(0)))
+			return E_FAIL;
+	}
 
+	else if (m_bPress) {
+		if (FAILED(m_pTextureCom->Bind_Texture(1)))
+			return E_FAIL;
+	}
+		
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
@@ -81,27 +102,34 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig"))
 	{
-		//밟은 이미지 출력해야함
-		m_pTextureCom->Bind_Texture(1);
-		
-		//버튼박스는 아직 손안댐
+		m_bPress = true;
+
 		GetBoxList();
-		for (auto& iter : *m_pBoxList)
+		if(!m_bCheck)
 		{
-			iter->SetActive(false);
+			for (auto& iter : *m_pBoxList)
+			{
+				//iter->SetActive(false);
+				dynamic_cast<CButtonBlock*>(iter)->SetDead();
+				//dynamic_cast<CButtonBlock_Center*>(iter)->SetDead();
+
+				m_bCheck = true;
+			}
 		}
 	}
 }
 
 void CButton::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	m_pTextureCom->Bind_Texture(0);
+	m_bPress = false;
+	m_bCheck = false;
 
 	GetBoxList();
 	for (auto& iter : *m_pBoxList)
 	{
-		iter->SetActive(true);
+	iter->SetActive(true);
 	}
+
 }
 
 
@@ -109,7 +137,7 @@ HRESULT CButton::GetBoxList()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance); 
-	m_pBoxList = pGameInstance->GetLayer(LEVEL_STAGE1, L"Layer_ButtonBox");
+	m_pBoxList = pGameInstance->GetLayer(LEVEL_SENI, L"Layer_ButtonBlock");
 	if (m_pBoxList == nullptr)
 		return E_FAIL;
 	Safe_Release(pGameInstance);
@@ -143,9 +171,11 @@ HRESULT CButton::SetUp_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
-
+	
+	CVIBuffer_Rect::RECTDESC RectDesc;
+	RectDesc.vSize = { 0.5f,0.6f,0.f };
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

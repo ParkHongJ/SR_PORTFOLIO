@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Camera_Free.h"
 #include "Level_Loading.h"
+#include "ParticleMgr.h"
 
 
 CLevel_SENI::CLevel_SENI(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -22,14 +23,23 @@ HRESULT CLevel_SENI::Initialize()
 	//if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
 	//	return E_FAIL;
 
-	if (FAILED(Ready_Layer_Button(TEXT("Layer_topdee"))))
+	_float3 vInitPos{ 15.5f,0.5f,11.5f };
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), vInitPos)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Button(TEXT("Layer_Button"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_ButtonBlock(TEXT("Layer_ButtonBlock"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_BreakingBlock(TEXT("Layer_BreakingBlock"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
+
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 
 	return S_OK;
 }
@@ -118,21 +128,21 @@ HRESULT CLevel_SENI::Ready_Layer_Button(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SENI::Ready_Layer_Topdee(const _tchar * pLayerTag)
+HRESULT CLevel_SENI::Ready_Layer_ButtonBlock(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_GYUH, pLayerTag, _float3(25.f, 1.f, 3.f))))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_ButtonBlock"), LEVEL_SENI, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
+
 	return S_OK;
 }
 
-/*HRESULT CLevel_SENI::Ready_Layer_BreakingBlock(const _tchar * pLayerTag)
+HRESULT CLevel_SENI::Ready_Layer_BreakingBlock(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -140,12 +150,25 @@ HRESULT CLevel_SENI::Ready_Layer_Topdee(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_BreakingBlock"), LEVEL_SENI, pLayerTag)))
 		return E_FAIL;
 
-
 	Safe_Release(pGameInstance);
 
 
 	return S_OK;
-}*/
+}
+
+HRESULT CLevel_SENI::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
+		LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 
 CLevel_SENI * CLevel_SENI::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
@@ -163,7 +186,7 @@ CLevel_SENI * CLevel_SENI::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_SENI::Free()
 {
 	__super::Free();
-
+	CParticleMgr::Get_Instance()->Release();
 }
 
 

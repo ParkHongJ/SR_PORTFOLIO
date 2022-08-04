@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Block.h" />
+    <ClInclude Include="..\Public\BreakingBlock.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\Button.h" />
     <ClInclude Include="..\Public\ButtonBlock.h" />
@@ -210,6 +211,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Block.cpp" />
+    <ClCompile Include="..\Private\BreakingBlock.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\Button.cpp" />
     <ClCompile Include="..\Private\ButtonBlock.cpp" />
