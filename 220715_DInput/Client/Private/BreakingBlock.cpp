@@ -2,13 +2,16 @@
 #include "..\Public\BreakingBlock.h"
 
 #include "GameInstance.h"
+#include "ParticleMgr.h"
 CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
+	, m_fOnBlock(0.f)
 {
 }
 
 CBreakingBlock::CBreakingBlock(const CBreakingBlock & rhs)
 	: CGameObject(rhs)
+	, m_fOnBlock(0.f)
 {
 }
 
@@ -72,6 +75,43 @@ HRESULT CBreakingBlock::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
+{
+	if (!m_bActive)
+		return;
+
+	m_fOnBlock += fTimeDelta;
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig"))
+	{
+		if (1.f <= m_fOnBlock)
+		{
+			m_bActive = false;
+
+			for (int i = 0; i < 7; i++)
+			{
+				random_device rd;
+				default_random_engine eng(rd());
+				uniform_real_distribution<float> distr(-.8f, .8f);
+				//random float
+
+				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				vPos.x += distr(eng);
+				vPos.z += distr(eng);
+				CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+					vPos,
+					vPos - vPos2,
+					CParticleMgr::PARTICLE);
+			}
+		}
+	}
+}
+
+void CBreakingBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+{
+	m_fOnBlock = 0.f;
 }
 
 HRESULT CBreakingBlock::Set_RenderState()

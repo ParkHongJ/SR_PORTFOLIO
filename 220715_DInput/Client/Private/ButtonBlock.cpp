@@ -97,7 +97,7 @@ void CButtonBlock::SetDead()
 		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
 			vPos,
 			vPos - vPos2,
-			CParticleMgr::PARTICLE);
+			CParticleMgr::BUTTON);
 	}
 }
 

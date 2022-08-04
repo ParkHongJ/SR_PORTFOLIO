@@ -20,7 +20,7 @@ HRESULT CLevel_SENI::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster_Pig(TEXT("Layer_Monster_Pig"))))
+	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
 	//	return E_FAIL;
 
 	_float3 vInitPos{ 15.5f,0.5f,11.5f };
@@ -98,21 +98,6 @@ HRESULT CLevel_SENI::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SENI::Ready_Layer_Monster_Pig(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster_Pig"), LEVEL_SENI, pLayerTag)))
-		return E_FAIL;
-
-
-	Safe_Release(pGameInstance);
-
-
-	return S_OK;
-}
-
 HRESULT CLevel_SENI::Ready_Layer_Button(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -167,6 +152,18 @@ HRESULT CLevel_SENI::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg)
 
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLevel_SENI::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
