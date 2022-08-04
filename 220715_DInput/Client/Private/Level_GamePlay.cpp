@@ -62,19 +62,15 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
-		if (CGameMgr::Get_Instance()->Key_Down(DIK_RETURN))
-		{
-			//여기서 씬 넘겨줘야함
-			CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-			Safe_AddRef(pGameInstance);
+		//여기서 씬 넘겨줘야함
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
-			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-				LEVEL_HONG))))
-				return;
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_HONG))))
+			MSG_BOX(L"레벨 오픈 실패");
 
-			Safe_Release(pGameInstance);
-			return;
-		}
+		Safe_Release(pGameInstance);
 	}
 }
 
@@ -226,7 +222,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 
 void CLevel_GamePlay::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/temp.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -234,8 +230,38 @@ void CLevel_GamePlay::LoadGameObject()
 	DWORD dwByte = 0;
 	DWORD dwStrByte = 0; //String length
 
+	OBJ_INFO m_OBJInfo = {};
+	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
+		//// Key 값 로드
+		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		//_tchar*	pFirst = nullptr;
+		//pFirst = new _tchar[dwStrByte];
+		//ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
+		//pFirst[dwByte / sizeof(_tchar)] = 0;
+
+		////Key값 로드
+		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		//_tchar*	pSecond = nullptr;
+		//pSecond = new _tchar[dwStrByte];
+		//ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
+		//pSecond[dwByte / sizeof(_tchar)] = 0;
+
+		//_float3 vPos = {};
+		//ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
+
+		//if (0 == dwByte)
+		//{
+		//	Safe_Delete_Array(pFirst);
+		//	Safe_Delete_Array(pSecond);
+		//	break;
+		//}
+		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
+
+		//Safe_Delete_Array(pFirst);
+		//Safe_Delete_Array(pSecond);
+
 		// Key 값 로드
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		_tchar*	pFirst = nullptr;
@@ -250,32 +276,33 @@ void CLevel_GamePlay::LoadGameObject()
 		ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
 		pSecond[dwByte / sizeof(_tchar)] = 0;
 
-		_float3 vPos = {};
-		ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
+		TagInfo* tagInfo = new TagInfo;
+		tagInfo->pPrototypeTag = pFirst;
+		Safe_Delete_Array(pFirst);
+		tagInfo->pLayerTag = pSecond;
+		Safe_Delete_Array(pSecond);
+
+		ReadFile(hFile, &m_OBJInfo.vPos, sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iNumLevel, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iDirection, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iTex, sizeof(_uint), &dwByte, nullptr);
 
 		if (0 == dwByte)
 		{
-			Safe_Delete(pFirst);
-			Safe_Delete(pSecond);
+			Safe_Delete(tagInfo);
+			Safe_Delete_Array(pFirst);
+			Safe_Delete_Array(pSecond);
 			break;
 		}
-		TAG_INFO* tagInfo = new TAG_INFO;
-		tagInfo->pPrototypeTag = pFirst;
-		tagInfo->pLayerTag = pSecond;
-		/*wstring str1(pFirst);
-		wstring str2(pFirst);*/
-		
 
-		m_pObjects.insert(make_pair(tagInfo, vPos));
-		//Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", vPos);
+		ObjInfo* objInfo = new ObjInfo;
+		objInfo->vPos = m_OBJInfo.vPos;
+		objInfo->iNumLevel = m_OBJInfo.iNumLevel;
+		objInfo->iDirection = m_OBJInfo.iDirection;
+		objInfo->iTex = m_OBJInfo.iTex;
 
-		/*Safe_Delete(pFirst);
-		Safe_Delete(pSecond);*/
-		Safe_Delete_Array(pFirst);
-		Safe_Delete_Array(pSecond);
+		m_pObjects.insert({ tagInfo, objInfo });
 	}
-	CloseHandle(hFile);
-
 	auto iter = m_pObjects.begin();
 
 	while (iter != m_pObjects.end())
@@ -283,6 +310,7 @@ void CLevel_GamePlay::LoadGameObject()
 		Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
 		++iter;
 	}
+	CloseHandle(hFile);
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg )
@@ -362,11 +390,15 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_pObjects)
+	for (auto Pair : m_pObjects)
 	{
+		Pair.first->pPrototypeTag.clear();
+		Pair.first->pLayerTag.clear();
 		delete Pair.first;
+		delete Pair.second;
 	}
 	m_pObjects.clear();
+
 	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
 

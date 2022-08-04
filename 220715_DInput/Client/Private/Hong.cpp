@@ -123,18 +123,11 @@ HRESULT CHong::Render()
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
 	{
-		"Prototype_GameObject_Topdee",
-		"Prototype_GameObject_Cube",
-		"Prototype_GameObject_Wall",
-		"Prototype_GameObject_Spike",
-		"Prototype_GameObject_Monster_Pig",
-		"Prototype_GameObject_Turret",
-		"Prototype_GameObject_Portal",
-		"Prototype_GameObject_Cloud",
-		"Prototype_GameObject_Hole",
-		"Prototype_GameObject_KeyBox",
-		"Prototype_GameObject_Key",
-		"Prototype_GameObject_GravityBlock"
+		"TEX_0","TEX_1","TEX_2","TEX_3","TEX_4","TEX_5",
+		"TEX_6","TEX_7","TEX_8","TEX_9","TEX_10","TEX_11",
+		"TEX_12","TEX_13","TEX_14","TEX_15","TEX_16","TEX_17"
+		,"TEX_18","TEX_19","TEX_20","TEX_21","TEX_22","TEX_23"
+		,"TEX_24","TEX_25"
 	};
 	if (ImGui::BeginListBox("Layers"))
 	{
@@ -206,7 +199,7 @@ HRESULT CHong::Render()
 	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
-	if (ImGui::Checkbox("Cube?", &m_bIsCube)); ImGui::SameLine();
+	ImGui::Checkbox("Cube?", &m_bIsCube); ImGui::SameLine();
 	ImGui::Text("TextureIndex : %d",iTexNum);
 	ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	ImGui::DragFloat("MoveSize", &m_fMoveSize, 0.01f, 0.0f, 200.f);

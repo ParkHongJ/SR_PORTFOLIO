@@ -51,7 +51,7 @@ HRESULT CWall::Initialize(void * pArg)
 	//======================
 	m_Tag = L"Box";
 	//======================
-	
+
 
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{

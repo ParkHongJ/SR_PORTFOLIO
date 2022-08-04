@@ -46,7 +46,8 @@ private:
 		_uint iDirection;
 		_uint iTex;
 	}OBJ_INFO;
-	map<TAG_INFO*, _float3> m_pObjects;
+
+	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

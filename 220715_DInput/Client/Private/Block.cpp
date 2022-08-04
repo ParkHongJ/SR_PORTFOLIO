@@ -2,6 +2,7 @@
 #include "..\Public\Block.h"
 
 #include "GameInstance.h"
+#include "Hong.h"
 
 
 CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -21,12 +22,26 @@ HRESULT CBlock::Initialize_Prototype()
 
 HRESULT CBlock::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	//======================
+	m_Tag = L"Box";
+	//======================
 
-	SetTag(L"Box");
 
-	if (pArg != nullptr)
+	if (m_pTransformCom != nullptr && pArg != nullptr)
+	{
+		_float3 vPos;
+		vPos = ObjInfo.vPos;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
@@ -123,7 +138,7 @@ HRESULT CBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */ 
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_NormalBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
