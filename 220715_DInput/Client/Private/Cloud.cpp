@@ -3,6 +3,7 @@
 
 #include "GameMgr.h"
 #include "GameInstance.h"
+#include "Hong.h"
 CCloud::CCloud(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -20,27 +21,32 @@ HRESULT CCloud::Initialize_Prototype()
 
 HRESULT CCloud::Initialize(void * pArg)
 {
-	if (FAILED(SetUp_Components()))
-		return E_FAIL;
+	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
+	if (FAILED(SetUp_Components()))
+		return E_FAIL;
 
-		m_vToodeePos = vPos;
-		vPos.y += 5.f;
-		m_vTopdeePos = vPos;
-	}
-	else
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-			_float3(10.f, 0.5f, 3.f));
-		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		m_vToodeePos= vPos;
-		vPos.y += 5.f;
-		m_vTopdeePos = vPos;
-	}
+	_float3 vPos;
+	vPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+	m_vToodeePos = vPos;
+	vPos.y += 5.f;
+	m_vTopdeePos = vPos;
+		/*}
+		else
+		{
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+				_float3(10.f, 0.5f, 3.f));
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			m_vToodeePos= vPos;
+			vPos.y += 5.f;
+			m_vTopdeePos = vPos;
+		}*/
 	m_Tag = L"Box";
 	return S_OK;
 }
@@ -150,7 +156,7 @@ HRESULT CCloud::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

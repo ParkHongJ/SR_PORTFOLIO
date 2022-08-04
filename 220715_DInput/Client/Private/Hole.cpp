@@ -2,6 +2,7 @@
 #include "..\Public\Hole.h"
 
 #include "GameInstance.h"
+#include "Hong.h"
 
 CHole::CHole(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -20,13 +21,24 @@ HRESULT CHole::Initialize_Prototype()
 
 HRESULT CHole::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
+	_float3 vPos;
+	vPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
 	m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	if (pArg != nullptr)
 	{
 		_float3* vInitPos= (_float3*)pArg;
-		vInitPos->y -= 0.24f;
+		vInitPos->y -= 0.49f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *vInitPos);
 	}
 	return S_OK;
@@ -40,11 +52,9 @@ void CHole::Tick(_float fTimeDelta)
 void CHole::LateTick(_float fTimeDelta)
 {	
 	if (m_bActive) {
-		_float4x4		ViewMatrix;
+		_float4x4	ViewMatrix;
 
 		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 }
@@ -120,7 +130,7 @@ HRESULT CHole::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Hole"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Hole"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

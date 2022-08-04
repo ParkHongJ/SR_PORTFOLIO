@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Level_Stage2.h"
-
+#include "..\Public\Level_Stage3.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
 
@@ -9,14 +8,18 @@
 #include "ParticleMgr.h"
 #include "Toodee.h"
 #include "Topdee.h"
-CLevel_Stage2::CLevel_Stage2(LPDIRECT3DDEVICE9 pGraphic_Device)
+
+CLevel_Stage3::CLevel_Stage3(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
 }
-HRESULT CLevel_Stage2::Initialize()
+
+HRESULT CLevel_Stage3::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
+	CGameMgr::Get_Instance()->Initialize();
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -31,15 +34,15 @@ HRESULT CLevel_Stage2::Initialize()
 		return E_FAIL;
 	LoadGameObject();
 
-	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE2);
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE3);
 
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE2, L"Layer_Hole", true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE2, L"Layer_Wall", false);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE3, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE3, L"Layer_Wall", false);
 
 	return S_OK;
 }
 
-void CLevel_Stage2::Tick(_float fTimeDelta)
+void CLevel_Stage3::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -51,26 +54,26 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		Safe_AddRef(pGameInstance);
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE1))))
+			LEVEL_STAGE4))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		Safe_Release(pGameInstance);
 	}
 }
 
-HRESULT CLevel_Stage2::Render()
+HRESULT CLevel_Stage3::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Level_2"));
+	SetWindowText(g_hWnd, TEXT("LEVEL_3"));
 
 	return S_OK;
 }
 
-void CLevel_Stage2::LoadGameObject()
+void CLevel_Stage3::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -79,6 +82,7 @@ void CLevel_Stage2::LoadGameObject()
 	DWORD dwStrByte = 0; //String length
 
 	OBJ_INFO m_OBJInfo = {};
+	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
 		// Key 값 로드
@@ -132,7 +136,7 @@ void CLevel_Stage2::LoadGameObject()
 	CloseHandle(hFile);
 }
 
-HRESULT CLevel_Stage2::Ready_Layer_Camera(const _tchar * pLayerTag)
+HRESULT CLevel_Stage3::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -150,7 +154,7 @@ HRESULT CLevel_Stage2::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), 
-		LEVEL_STAGE2, pLayerTag, &CameraDesc)))
+		LEVEL_STAGE3, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -158,14 +162,14 @@ HRESULT CLevel_Stage2::Ready_Layer_Camera(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage2::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_Stage3::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	_uint Level = LEVEL_STAGE2;
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"),
-		LEVEL_STAGE2, pLayerTag, &Level)))
+	_uint Level = LEVEL_STAGE3;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), 
+		LEVEL_STAGE3, pLayerTag, &Level)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), 
@@ -177,16 +181,17 @@ HRESULT CLevel_Stage2::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage2::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
+HRESULT CLevel_Stage3::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	CToodee::PLAYER_INFO Info;
-	Info.iNumLevel = LEVEL_STAGE2;
+	Info.iNumLevel = LEVEL_STAGE3;
 	Info.vPos = _float3(3.f, 1.f, 14.f);
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
-		LEVEL_STAGE2, pLayerTag, &Info)))
+		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -194,16 +199,16 @@ HRESULT CLevel_Stage2::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage2::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
+HRESULT CLevel_Stage3::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	CTopdee::PLAYER_INFO Info;
-	Info.iNumLevel = LEVEL_STAGE2;
-	Info.vPos = _float3(25.f, 1.f, 3.f);
+	Info.iNumLevel = LEVEL_STAGE3;
+	Info.vPos = _float3(18.f, 1.f, 5.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_STAGE2, pLayerTag, &Info)))
+		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -211,13 +216,13 @@ HRESULT CLevel_Stage2::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage2::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void * pArg)
+HRESULT CLevel_Stage3::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void * pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag,
-		LEVEL_STAGE2, pLayerTag, pArg)))
+		LEVEL_STAGE3, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -225,20 +230,20 @@ HRESULT CLevel_Stage2::Ready_Layer_Object(const _tchar * pPrototypeTag, const _t
 	return S_OK;
 }
 
-CLevel_Stage2 * CLevel_Stage2::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
+CLevel_Stage3 * CLevel_Stage3::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 {
-	CLevel_Stage2*		pInstance = new CLevel_Stage2(pGraphic_Device);
+	CLevel_Stage3*		pInstance = new CLevel_Stage3(pGraphic_Device);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CLevel_Stage2"));
+		MSG_BOX(TEXT("Failed To Created : CLevel_Stage3"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CLevel_Stage2::Free()
+void CLevel_Stage3::Free()
 {
 	__super::Free();
 

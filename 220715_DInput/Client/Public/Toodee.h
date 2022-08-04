@@ -17,6 +17,12 @@ END
 BEGIN(Client)
 class CToodee final : public CGameObject
 {
+public:
+	typedef struct PlayerInfo
+	{
+		_float3 vPos;
+		_uint iNumLevel;
+	}PLAYER_INFO;
 private:
 	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_PORTAL, TOODEE_DEAD, TOODEE_IDLE, TOODEE_END };
 

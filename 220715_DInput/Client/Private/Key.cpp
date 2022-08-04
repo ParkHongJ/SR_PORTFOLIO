@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "KeyBlock.h"
 #include "ParticleMgr.h"
+#include "Hong.h"
 
 CKey::CKey(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -22,8 +23,15 @@ HRESULT CKey::Initialize_Prototype()
 
 HRESULT CKey::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+
 	if (pArg != nullptr)
 	{
 		_float3 vPos;
@@ -110,18 +118,26 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);
 		}
+
 		GetBoxList();
-		for (auto& iter : *m_pBoxList)
+
+		if (m_pBoxList == nullptr)
 		{
-			//iter->SetActive(false);
-			dynamic_cast<CKeyBlock*>(iter)->SetDead();
+			MSG_BOX(L"KeyBlock비어있음");
 		}
+		else
+		{
+			for (auto& iter : *m_pBoxList)
+			{
+				dynamic_cast<CKeyBlock*>(iter)->SetDead();
+			}
 		//박스 사라지게 하는함수
+		}
 	}
 }
 
@@ -130,7 +146,7 @@ HRESULT CKey::GetBoxList()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance); 
-	m_pBoxList = pGameInstance->GetLayer(LEVEL_STAGE1, L"Layer_KeyBox");
+	m_pBoxList = pGameInstance->GetLayer(m_iNumLevel, L"Layer_KeyBox");
 	if (m_pBoxList == nullptr)
 		return E_FAIL;
 	Safe_Release(pGameInstance);
@@ -173,7 +189,7 @@ HRESULT CKey::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Key"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

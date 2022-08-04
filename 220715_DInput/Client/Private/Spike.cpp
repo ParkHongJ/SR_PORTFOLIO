@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "Hong.h"
 
 CSpike::CSpike(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -21,6 +22,12 @@ HRESULT CSpike::Initialize_Prototype()
 
 HRESULT CSpike::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -28,11 +35,10 @@ HRESULT CSpike::Initialize(void * pArg)
 	
 	if (pArg != nullptr)
 	{
-		
-		_float3 vSetPos{ *(_float3*)pArg };
+		_float3 vSetPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vSetPos);
 		m_vToodeePos = vSetPos;
-		vSetPos.y += 0.5f;
+		vSetPos.y += .8f;
 		vSetPos.z -= 1.f;
 		m_vTopdeePos = vSetPos;
 	}
@@ -193,7 +199,7 @@ HRESULT CSpike::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Spike"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

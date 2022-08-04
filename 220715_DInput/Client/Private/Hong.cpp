@@ -24,11 +24,10 @@ HRESULT CHong::Initialize()
 		return E_FAIL;
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_Block(
-		L"Prototype_GameObject_Wall", 
+	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -83,7 +82,7 @@ HRESULT CHong::Render()
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	SetWindowText(g_hWnd, TEXT("홍준레벨임"));
 
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 	ImGui::Begin("SelectFolder");
 
 	//큰 문제점. 서로의 쌍이 맞아야한다
@@ -102,7 +101,9 @@ HRESULT CHong::Render()
 		"Layer_Hole",
 		"Layer_KeyBox",
 		"Layer_Key",
-		"Layer_Cube"
+		"Layer_Cube",
+		"Layer_ButtonBlock",
+		"Layer_Button"
 	};
 	const char* Prototypes[] =
 	{
@@ -118,7 +119,9 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Hole",
 		"Prototype_GameObject_KeyBox",
 		"Prototype_GameObject_Key",
-		"Prototype_GameObject_GravityBlock"
+		"Prototype_GameObject_GravityBlock",
+		"Prototype_GameObject_ButtonBlock",
+		"Prototype_GameObject_Button"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
@@ -167,12 +170,23 @@ HRESULT CHong::Render()
 				tObjInfo->iNumLevel = iLevel_Select + 1;
 
 				if (m_bIsCube)
+				{
 					tObjInfo->iTex = iTexNum;
-
-				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), tObjInfo)))
-					return S_OK;
-
+				}
+				else
+				{
+					tObjInfo->iTex = 0;
+				}
 				m_pObjects.insert({ pTaginfo, tObjInfo });
+
+				OBJ_INFO tempObj;
+				tempObj.vPos = tObjInfo->vPos;
+				tempObj.iDirection = tObjInfo->iDirection;
+				tempObj.iNumLevel = LEVEL_STAGE1;
+				tempObj.iTex = iTexNum;
+				//Test
+				if (FAILED(Ready_Layer_Block(pTaginfo->pPrototypeTag.c_str(), pTaginfo->pLayerTag.c_str(), &tempObj)))
+					MSG_BOX(L"생성 실패");
 			}
 		}
 		ImGui::EndListBox();
@@ -186,7 +200,7 @@ HRESULT CHong::Render()
 			if (ImGui::Selectable(TexIndex[n], is_selected))
 			{
 				iTexNum = n;
-				dynamic_cast<CWall*>(m_TempList->front())->SetTexture(iTexNum);
+				//dynamic_cast<CWall*>(m_TempList->front())->SetTexture(iTexNum);
 			}
 		}
 		ImGui::EndListBox();
@@ -199,8 +213,10 @@ HRESULT CHong::Render()
 	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
-	ImGui::Checkbox("Cube?", &m_bIsCube); ImGui::SameLine();
-	ImGui::Text("TextureIndex : %d",iTexNum);
+	ImGui::Checkbox("Wall?", &m_bIsCube); ImGui::SameLine();
+
+	ImGui::Text("TextureIndex : %d", iTexNum);
+
 	ImGui::DragFloat3("Position", m_vPosition, 0.1f, 0.0f, 200.f);
 	ImGui::DragFloat("MoveSize", &m_fMoveSize, 0.01f, 0.0f, 200.f);
 	
@@ -395,34 +411,6 @@ void CHong::LoadGameObject()
 	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
-		//// Key 값 로드
-		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		//_tchar*	pFirst = nullptr;
-		//pFirst = new _tchar[dwStrByte];
-		//ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
-		//pFirst[dwByte / sizeof(_tchar)] = 0;
-
-		////Key값 로드
-		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		//_tchar*	pSecond = nullptr;
-		//pSecond = new _tchar[dwStrByte];
-		//ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
-		//pSecond[dwByte / sizeof(_tchar)] = 0;
-
-		//_float3 vPos = {};
-		//ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
-
-		//if (0 == dwByte)
-		//{
-		//	Safe_Delete_Array(pFirst);
-		//	Safe_Delete_Array(pSecond);
-		//	break;
-		//}
-		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
-
-		//Safe_Delete_Array(pFirst);
-		//Safe_Delete_Array(pSecond);
-
 		// Key 값 로드
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		_tchar*	pFirst = nullptr;
@@ -468,7 +456,13 @@ void CHong::LoadGameObject()
 
 	while (iter != m_pObjects.end())
 	{
-		Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
+		OBJ_INFO tempObj;
+		tempObj.vPos = iter->second->vPos;
+		tempObj.iNumLevel = LEVEL_STAGE1;
+		tempObj.iDirection = iter->second->iDirection;
+		tempObj.iTex = iter->second->iTex;
+
+		Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), &tempObj);
 		++iter;
 	}
 	CloseHandle(hFile);

@@ -21,12 +21,19 @@ HRESULT CTopdee::Initialize_Prototype()
 
 HRESULT CTopdee::Initialize(void * pArg)
 {
+	PLAYER_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(PLAYER_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	/* For.Topdee_Col */
 	SetTag(L"Topdee");
-	
+	_float3 vPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 #pragma region WhiteRect
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 
@@ -37,11 +44,6 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Topdee_Portal", &m_bPortal);
-	if (pArg != nullptr)
-	{
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)pArg);
-	}
-
 	return S_OK;
 }
 
@@ -141,7 +143,7 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 			_float3 vPos2 = vPos;
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);
@@ -362,7 +364,8 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		m_bActive = false;
 	}
 	else if (other->CompareTag(L"Box"))
-	{//이거 위치 비교로도 가능.
+	{
+		//이거 위치 비교로도 가능.
 		/*if (!other->IsEnabled())
 			return;*/
 		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
@@ -379,15 +382,15 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
 			return;
 		}
-		else if((m_bPushBox)&&(m_fPushBoxDelayTimer > 0.5f)){
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
 			m_fPushBoxDelayTimer = 0.f;
 			m_bPushBox = false;
 		}
-		
+
 		if (KKK_m_pBoxList == nullptr)
 		{//if Collision We Must Check NextBox.
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Cube");
+			KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
 			if (KKK_m_pBoxList == nullptr)
 				return;
 		}
@@ -403,7 +406,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
 		_uint iCount = 0;
 		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
-		if (pBlock == nullptr)		//지금미는 블록이 벽이니?
+		if (pBlock == nullptr)//지금미는 블록이 벽이니?
 			return;
 		list<CGameObject*> PushList;
 		_bool bCanPush{ true };
@@ -450,7 +453,8 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
 }
 
 void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
-{//들어온값은 다음 박스에 해당. 리스트에 담겨야하는 사이즈는 2개이다.
+{
+	//들어온값은 다음 박스에 해당. 리스트에 담겨야하는 사이즈는 2개이다.
 	if (!bCanPush)
 		return;
 	auto& iter = KKK_m_pBoxList->begin();
@@ -552,7 +556,8 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	/*이거 수정해라*/
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Topdee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	//=================================================================
@@ -572,7 +577,7 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_PreLoader"), (CComponent**)&m_pTransform_PreLoader_Com, this, &TransformDesc)))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Topdee_PreLoader */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
 		return E_FAIL;
 	//=================================================================
 	
@@ -600,7 +605,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (KKK_m_pBoxList == nullptr) {
-		KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Cube");
+		KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
 		if (KKK_m_pBoxList == nullptr)
 			return;
 	}
@@ -658,7 +663,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))//ask Can Box Drop?
 		{
 			//Rigid Hole
-			list<CGameObject*>*pHoleList = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Hole");
+			list<CGameObject*>*pHoleList = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Hole");
 			if (pHoleList == nullptr)
 				return;
 			auto& iter = pHoleList->begin();
@@ -677,7 +682,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			_float3 vPos2 = vPos;
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);

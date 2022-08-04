@@ -4,11 +4,11 @@
 #include "Level.h"
 
 BEGIN(Client)
-class CLevel_Stage2 final : public CLevel
+class CLevel_Stage3 final : public CLevel
 {
 private:
-	CLevel_Stage2(LPDIRECT3DDEVICE9 pGraphic_Device);
-	virtual ~CLevel_Stage2() = default;
+	CLevel_Stage3(LPDIRECT3DDEVICE9 pGraphic_Device);
+	virtual ~CLevel_Stage3() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -39,7 +39,7 @@ private:
 	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
 
 public:
-	static CLevel_Stage2* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CLevel_Stage3* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
 };
 

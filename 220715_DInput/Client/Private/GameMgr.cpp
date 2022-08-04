@@ -13,6 +13,8 @@ HRESULT CGameMgr::Initialize()
 {
 	//게임모드의 초기화
 	m_eGameMode = TOODEE;
+	m_iHoleFinishNum = 0;
+	m_Obstaclelist.clear();
 	return S_OK;
 }
 

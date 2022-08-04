@@ -7,6 +7,8 @@
 #include "Level_Loading.h"
 #include "GameMgr.h"
 #include "ParticleMgr.h"
+#include "Toodee.h"
+#include "Topdee.h"
 
 CLevel_GamePlay::CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -17,9 +19,7 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_Release(pGameInstance);
+	CGameMgr::Get_Instance()->Initialize();
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -43,8 +43,8 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;*/
 	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
 	//	return E_FAIL;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Turret", L"Layer_Turret")))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Turret", L"Layer_Turret")))
+		return E_FAIL;*/
 	//==================================================================================
 	LoadGameObject();
 
@@ -61,17 +61,17 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
-		//여기서 씬 넘겨줘야함
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
+	//if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
+	//	//여기서 씬 넘겨줘야함
+	//	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	//	Safe_AddRef(pGameInstance);
 
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_HONG))))
-			MSG_BOX(L"레벨 오픈 실패");
+	//	if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+	//		LEVEL_STAGE2))))
+	//		MSG_BOX(L"레벨 오픈 실패");
 
-		Safe_Release(pGameInstance);
-	}
+	//	Safe_Release(pGameInstance);
+	//}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -130,8 +130,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Toodee(const _tchar * pLayerTag, void* pArg
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CToodee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	Info.vPos = _float3(3.f, 1.f, 14.f);
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), 
-		LEVEL_STAGE1, pLayerTag, _float3(3.f, 1.f, 14.f))))
+		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -170,8 +174,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CTopdee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	//Info.vPos = _float3(26.f, 1.f, 2.f);
+	Info.vPos = _float3(26.f, 1.f, 2.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
-		LEVEL_STAGE1, pLayerTag, _float3(25.f, 1.f, 3.f))))
+		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -222,7 +230,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 
 void CLevel_GamePlay::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -234,34 +242,6 @@ void CLevel_GamePlay::LoadGameObject()
 	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
-		//// Key 값 로드
-		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		//_tchar*	pFirst = nullptr;
-		//pFirst = new _tchar[dwStrByte];
-		//ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
-		//pFirst[dwByte / sizeof(_tchar)] = 0;
-
-		////Key값 로드
-		//ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-		//_tchar*	pSecond = nullptr;
-		//pSecond = new _tchar[dwStrByte];
-		//ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
-		//pSecond[dwByte / sizeof(_tchar)] = 0;
-
-		//_float3 vPos = {};
-		//ReadFile(hFile, vPos, sizeof(_float3), &dwByte, nullptr);
-
-		//if (0 == dwByte)
-		//{
-		//	Safe_Delete_Array(pFirst);
-		//	Safe_Delete_Array(pSecond);
-		//	break;
-		//}
-		//m_TestMap.insert(make_pair(make_pair(pFirst, pSecond), vPos));
-
-		//Safe_Delete_Array(pFirst);
-		//Safe_Delete_Array(pSecond);
-
 		// Key 값 로드
 		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
 		_tchar*	pFirst = nullptr;

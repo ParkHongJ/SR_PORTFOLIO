@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "Hong.h"
 
 CPortal::CPortal(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -21,17 +22,20 @@ HRESULT CPortal::Initialize_Prototype()
 
 HRESULT CPortal::Initialize(void * pArg)
 {
+
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	if (pArg != nullptr)
-	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-	}
-	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
+	_float3 vPos;
+	vPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
 
 	/* For.Portal_Data */
@@ -194,7 +198,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Portal"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -229,7 +233,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture_for_Topdee */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Portal_Topdee"), TEXT("Com_Texture_Topdee"), (CComponent**)&m_pTextureCom_For_Topdee, this)))
 		return E_FAIL;
 
 	RectDesc.vSize = { 6.f, 6.f, 0.f };
@@ -239,7 +243,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture_for_Toodee */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Portal_Toodee"), TEXT("Com_Texture_Toodee"), (CComponent**)&m_pTextureCom_for_Toodee, this)))
 		return E_FAIL;
 #pragma endregion
 

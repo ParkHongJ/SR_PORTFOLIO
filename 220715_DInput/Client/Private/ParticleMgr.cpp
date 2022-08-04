@@ -15,15 +15,24 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	if (m_Particles != nullptr)
+	{
+		MSG_BOX(L"파티클 이미 있음");
+	}
+	if (m_Bullets != nullptr)
+	{
+		MSG_BOX(L"총알 이미 있음");
+	}
 	/*=============
 	===Particles===
 	=============*/
+	_uint iLevel = iNumLevel;
 	for (int i = 0; i < 200; i++)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Particle"),
-			iNumLevel, L"Layer_Particle")))
-			return E_FAIL;
+			iNumLevel, L"Layer_Particle", &iLevel)))
+			MSG_BOX(L"파티클 생성 실패");
 	}
 
 	m_Particles = pGameInstance->GetLayer(iNumLevel, L"Layer_Particle");
@@ -46,7 +55,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 		//총알 생성
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Bullet"),
-			iNumLevel, L"Layer_Bullet")))
+			iNumLevel, L"Layer_Bullet", &iLevel)))
 			MSG_BOX(L"총알 생성 실패");
 	}
 

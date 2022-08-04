@@ -145,6 +145,12 @@
     <Filter Include="02.GameObject\Block\BreakingBlock">
       <UniqueIdentifier>{8b41e1d5-94ad-4bae-9363-8682f85876c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGE_2">
+      <UniqueIdentifier>{15ad254a-d808-4317-9ca0-a0215185be48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\STAGE_3">
+      <UniqueIdentifier>{d240e02d-961f-47b3-af1f-ead4a9ad543e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -310,6 +316,12 @@
     <ClInclude Include="..\Public\BreakingBlock.h">
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Stage2.h">
+      <Filter>01.Level\STAGE_2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage3.h">
+      <Filter>01.Level\STAGE_3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -464,6 +476,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BreakingBlock.cpp">
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Stage2.cpp">
+      <Filter>01.Level\STAGE_2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage3.cpp">
+      <Filter>01.Level\STAGE_3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

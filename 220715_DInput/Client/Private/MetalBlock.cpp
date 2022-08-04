@@ -69,6 +69,7 @@ HRESULT CMetalBlock::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
+	return S_OK;
 }
 
 void CMetalBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)

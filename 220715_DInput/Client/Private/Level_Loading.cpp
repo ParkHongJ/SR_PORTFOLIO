@@ -8,8 +8,10 @@
 #include "Level_GyuH.h"
 #include "Level_SENI.h"
 #include "Level_SJH.h"
+#include "Level_Stage2.h"
 #include "Loader.h"
 #include "Hong.h"
+#include "Level_Stage3.h"
 
 CLevel_Loading::CLevel_Loading(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -53,6 +55,12 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 				break;
 			case LEVEL_STAGE1:
 				pNewLevel = CLevel_GamePlay::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_STAGE2:
+				pNewLevel = CLevel_Stage2::Create(m_pGraphic_Device);
+				break;
+			case LEVEL_STAGE3:
+				pNewLevel = CLevel_Stage3::Create(m_pGraphic_Device);
 				break;
 			case LEVEL_HONG:
 				pNewLevel = CHong::Create(m_pGraphic_Device);

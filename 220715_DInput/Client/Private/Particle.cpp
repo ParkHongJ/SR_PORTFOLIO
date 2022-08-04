@@ -21,9 +21,14 @@ HRESULT CParticle::Initialize_Prototype()
 
 HRESULT CParticle::Initialize(void * pArg)
 {
+	if (pArg != nullptr)
+	{
+		memcpy(&m_iNumLevel, pArg, sizeof(_uint));
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	m_Tag = L"Particle";
+
 	return S_OK;
 }
 
@@ -127,7 +132,7 @@ HRESULT CParticle::SetUp_Components()
 
 	//이거 수정해라
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Particle"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

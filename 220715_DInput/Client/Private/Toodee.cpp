@@ -21,6 +21,13 @@ HRESULT CToodee::Initialize_Prototype()
 
 HRESULT CToodee::Initialize(void * pArg)
 {
+
+	PLAYER_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(PLAYER_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -30,7 +37,9 @@ HRESULT CToodee::Initialize(void * pArg)
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 12.f));
+	_float3 vPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 12.f));
 
 	return S_OK;
 }
@@ -85,7 +94,7 @@ void CToodee::Tick(_float fTimeDelta)
 							_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 							vPos.x += distr(eng);
 							vPos.z += distr(eng);
-							CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+							CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 								vPos,
 								vPos - vPos2,
 								CParticleMgr::PARTICLE);
@@ -263,7 +272,7 @@ void CToodee::LateTick(_float fTimeDelta)
 
 						vPos.x += distr(eng);
 						vPos.z += distr(eng);
-						CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+						CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 							vPos,
 							vPos - vPos2,
 							CParticleMgr::PARTICLE);
@@ -429,11 +438,11 @@ HRESULT CToodee::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Toodee"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Texture_Died */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee_Died"), TEXT("Com_Texture_Died"), (CComponent**)&m_pTextureCom_Died, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Toodee_Died"), TEXT("Com_Texture_Died"), (CComponent**)&m_pTextureCom_Died, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

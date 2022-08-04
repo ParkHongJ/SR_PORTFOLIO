@@ -50,6 +50,8 @@ HRESULT CButtonBlock::Initialize(void* pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
+
+	return S_OK;
 }
 
 void CButtonBlock::Tick(_float fTimeDelta)

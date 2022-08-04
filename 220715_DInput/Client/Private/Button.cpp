@@ -5,6 +5,7 @@
 #include "ButtonBlock.h"
 #include "ButtonBlock_Center.h"
 #include "ParticleMgr.h"
+#include "Hong.h"
 
 CButton::CButton(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -27,18 +28,31 @@ HRESULT CButton::Initialize_Prototype()
 
 HRESULT CButton::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	
-	if (pArg != nullptr)
+	//======================
+	//======================
+
+
+	if (m_pTransformCom != nullptr && pArg != nullptr)
+	{
+		_float3 vPos;
+		vPos = ObjInfo.vPos;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.5f, 3.f));
-	return S_OK;
+	GetBoxList();
 }
 
 void CButton::Tick(_float fTimeDelta)
@@ -104,7 +118,7 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 		m_bPress = true;
 
-		GetBoxList();
+		//GetBoxList();
 		if(!m_bCheck)
 		{
 			for (auto& iter : *m_pBoxList)
@@ -124,10 +138,10 @@ void CButton::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 	m_bPress = false;
 	m_bCheck = false;
 
-	GetBoxList();
+	//GetBoxList();
 	for (auto& iter : *m_pBoxList)
 	{
-	iter->SetActive(true);
+		iter->SetActive(true);
 	}
 
 }
@@ -137,7 +151,7 @@ HRESULT CButton::GetBoxList()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance); 
-	m_pBoxList = pGameInstance->GetLayer(LEVEL_SENI, L"Layer_ButtonBlock");
+	m_pBoxList = pGameInstance->GetLayer(m_iNumLevel, L"Layer_ButtonBlock");
 	if (m_pBoxList == nullptr)
 		return E_FAIL;
 	Safe_Release(pGameInstance);
@@ -179,7 +193,7 @@ HRESULT CButton::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_SENI, TEXT("Prototype_Component_Texture_Button"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Button"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

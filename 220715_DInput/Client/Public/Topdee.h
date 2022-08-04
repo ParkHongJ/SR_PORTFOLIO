@@ -20,6 +20,12 @@ BEGIN(Client)
 class CTopdee final : public CLandObject
 {
 public:
+	typedef struct PlayerInfo
+	{
+		_float3 vPos;
+		_uint iNumLevel;
+	}PLAYER_INFO;
+public:
 	enum TOPDEE_DIRECTION { DIR_LEFT, DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_END };
 	enum TOPDEE_STATE	 {STATE_IDLE, STATE_JUMP, STATE_CLEAR, STATE_DEAD, STATE_END};
 

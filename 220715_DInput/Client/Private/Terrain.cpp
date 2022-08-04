@@ -20,6 +20,13 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
+	m_iNumLevel = LEVEL_STAGE1;
+
+	if (pArg != nullptr)
+	{
+		memcpy(&m_iNumLevel, pArg, sizeof(_uint));
+	}
+
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
@@ -103,7 +110,7 @@ HRESULT CTerrain::SetUp_Components()
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

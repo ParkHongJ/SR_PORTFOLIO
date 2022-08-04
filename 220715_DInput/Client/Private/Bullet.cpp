@@ -22,15 +22,20 @@ HRESULT CBullet::Initialize_Prototype()
 
 HRESULT CBullet::Initialize(void * pArg)
 {
+	if (pArg != nullptr)
+	{
+		memcpy(&m_iNumLevel, pArg, sizeof(_uint));
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	if (nullptr != pArg)
+	/*if (nullptr != pArg)
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		m_eDir = RIGHT;
-	}
+	}*/
+	
 	m_Tag = L"Bullet";
 	return S_OK;
 }
@@ -147,7 +152,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 	/* 이거 수정해라 */
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Bullet"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;

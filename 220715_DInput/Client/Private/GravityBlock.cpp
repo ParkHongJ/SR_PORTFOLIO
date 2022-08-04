@@ -83,7 +83,7 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 			vFinalPosition.y = vCurPosition.y;
 			vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPosition);
 
 			//탑디면 땅에 꺼질수있는지 체크
 			if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
@@ -104,7 +104,9 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 		}
 	}
 	
+	//생각해보자
 	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
+	
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 }
