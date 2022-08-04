@@ -45,6 +45,10 @@ private:
 private:
 	HRESULT SetUp_Components();
 
+private:
+	_bool m_bPress;
+	_bool m_bCheck;
+
 public:
 	static CButton* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
