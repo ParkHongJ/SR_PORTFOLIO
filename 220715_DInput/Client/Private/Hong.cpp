@@ -7,6 +7,7 @@
 #include "GameMgr.h"
 #include <winnt.h>
 #include "Wall.h"
+#include "ParticleMgr.h"
 int CHong::iDir_Select = 0;
 int CHong::iLevel_Select = 0;
 int CHong::iTexNum = 0;
@@ -20,6 +21,7 @@ HRESULT CHong::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	CGameMgr::Get_Instance()->Initialize();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
@@ -39,6 +41,10 @@ HRESULT CHong::Initialize()
 	
 	Safe_Release(pGameInstance);
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
+
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 	return S_OK;
 }
 
@@ -210,7 +216,7 @@ HRESULT CHong::Render()
 	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
 	ImGui::Combo("Direction", &iDir_Select, Directions, IM_ARRAYSIZE(Directions));
 	
-	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4" };
+	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5", "LEVEL_STAGE6" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
 	ImGui::Checkbox("Wall?", &m_bIsCube); ImGui::SameLine();
@@ -482,4 +488,5 @@ void CHong::Free()
 		delete Pair.second;
 	}
 	m_pObjects.clear();
+	CParticleMgr::Get_Instance()->Destroy_Instance();
 }

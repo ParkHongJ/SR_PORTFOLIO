@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "GameMgr.h"
 #include "ParticleMgr.h"
+#include "Hong.h"
 
 CMonster_Pig::CMonster_Pig(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -26,17 +27,28 @@ HRESULT CMonster_Pig::Initialize_Prototype()
 
 HRESULT CMonster_Pig::Initialize(void * pArg)
 {
-	if (FAILED(SetUp_Components()))
-		return E_FAIL;
-
-	m_Tag = L"Pig";
-	
+	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, *(_float3*)pArg);
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
+	if (FAILED(SetUp_Components()))
+		return E_FAIL;
+	m_Tag = L"Pig";
+	
+	if (m_pTransformCom != nullptr && pArg != nullptr)
+	{
+		_float3 vPos;
+		vPos = ObjInfo.vPos;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.5f, 10.f));
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
 	return S_OK;
 }
 
@@ -69,13 +81,13 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		//모드가 바뀐시점
 		if (eCurMode == CGameMgr::TOPDEE)
 		{
-			//현재 바뀐모드가 탑디면 보정
-			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			////현재 바뀐모드가 탑디면 보정
+			//_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-			vPos.x = _uint(vPos.x) + 0.5f;
-			vPos.z = _uint(vPos.z) + 0.5f;
+			//vPos.x = _uint(vPos.x) + 0.5f;
+			//vPos.z = _uint(vPos.z) + 0.5f;
 
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 			/* 이거 수정해라*/
 			m_eCurDir = DIR_RIGHT;
 		}
@@ -86,7 +98,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	{
  		UpdateGravitiy(fTimeDelta);
 		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float vGravityPower = -1.63f * fTimeDelta * 0.5f;
+		_float vGravityPower = -1.63f * fTimeDelta * 0.8f;
 		if (m_fDrop_Endline + abs(vGravityPower) > fPos.z)
 		{
 			m_bOnBlock = true;
@@ -99,7 +111,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	else
 	{
 		/* 이거 수정해라 */ 
-		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, LEVEL_STAGE1, L"Layer_topdee", 0, L"Com_Transform");
+		m_vTopdeePos = __super::SetUp_Topdee(m_pTransformCom, m_iNumLevel, L"Layer_topdee", 0, L"Com_Transform");
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float fCollisionDist;
 
@@ -279,7 +291,7 @@ HRESULT CMonster_Pig::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Monster_Pig"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Monster_Pig"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */

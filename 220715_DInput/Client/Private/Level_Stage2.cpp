@@ -9,14 +9,18 @@
 #include "ParticleMgr.h"
 #include "Toodee.h"
 #include "Topdee.h"
+
 CLevel_Stage2::CLevel_Stage2(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
 }
+
 HRESULT CLevel_Stage2::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
+	CGameMgr::Get_Instance()->Initialize();
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;

@@ -16,9 +16,6 @@
     <Filter Include="01.Level\Loading">
       <UniqueIdentifier>{b4cb89dd-5bcb-4e60-89a1-65b33e8a1ae8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Level\GamePlay">
-      <UniqueIdentifier>{6b6b40dc-024d-402a-ae58-4b1f507ec70c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\Loading\Loader">
       <UniqueIdentifier>{42ca2c1a-afe5-47fe-9efb-c239a35b48f1}</UniqueIdentifier>
     </Filter>
@@ -145,14 +142,23 @@
     <Filter Include="02.GameObject\Block\BreakingBlock">
       <UniqueIdentifier>{8b41e1d5-94ad-4bae-9363-8682f85876c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Level\STAGE_2">
+    <Filter Include="01.Level\STAGES">
+      <UniqueIdentifier>{3caba773-522b-4cde-a124-006928128bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\STAGES\GamePlay">
+      <UniqueIdentifier>{6b6b40dc-024d-402a-ae58-4b1f507ec70c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_2">
       <UniqueIdentifier>{15ad254a-d808-4317-9ca0-a0215185be48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Level\STAGE_3">
+    <Filter Include="01.Level\STAGES\STAGE_3">
       <UniqueIdentifier>{d240e02d-961f-47b3-af1f-ead4a9ad543e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Level\STAGE_4">
+    <Filter Include="01.Level\STAGES\STAGE_4">
       <UniqueIdentifier>{b8eeaf49-0ce5-476a-b682-1024b956c06b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_5">
+      <UniqueIdentifier>{10acebf9-d403-4c1f-ba60-35ce9e8a46b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,7 +176,7 @@
       <Filter>01.Level\Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Level\GamePlay</Filter>
+      <Filter>01.Level\STAGES\GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Level\Loading\Loader</Filter>
@@ -320,13 +326,16 @@
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Stage2.h">
-      <Filter>01.Level\STAGE_2</Filter>
+      <Filter>01.Level\STAGES\STAGE_2</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Stage3.h">
-      <Filter>01.Level\STAGE_3</Filter>
+      <Filter>01.Level\STAGES\STAGE_3</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Stage4.h">
-      <Filter>01.Level\STAGE_4</Filter>
+      <Filter>01.Level\STAGES\STAGE_4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage5.h">
+      <Filter>01.Level\STAGES\STAGE_5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -340,7 +349,7 @@
       <Filter>01.Level\Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Level\GamePlay</Filter>
+      <Filter>01.Level\STAGES\GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loader.cpp">
       <Filter>01.Level\Loading\Loader</Filter>
@@ -484,13 +493,16 @@
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Stage2.cpp">
-      <Filter>01.Level\STAGE_2</Filter>
+      <Filter>01.Level\STAGES\STAGE_2</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage3.cpp">
-      <Filter>01.Level\STAGE_3</Filter>
+      <Filter>01.Level\STAGES\STAGE_3</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage4.cpp">
-      <Filter>01.Level\STAGE_4</Filter>
+      <Filter>01.Level\STAGES\STAGE_4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage5.cpp">
+      <Filter>01.Level\STAGES\STAGE_5</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

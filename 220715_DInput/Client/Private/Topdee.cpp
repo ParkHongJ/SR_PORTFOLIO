@@ -486,7 +486,6 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 					break;
 				}
 			}
-
 		}
 		else if (vPushDir.z == 0.f)
 		{
