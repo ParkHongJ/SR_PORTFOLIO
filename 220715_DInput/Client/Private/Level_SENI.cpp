@@ -183,7 +183,7 @@ CLevel_SENI * CLevel_SENI::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_SENI::Free()
 {
 	__super::Free();
-	CParticleMgr::Get_Instance()->Release();
+	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
 
 

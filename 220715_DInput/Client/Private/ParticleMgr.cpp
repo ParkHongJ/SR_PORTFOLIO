@@ -84,14 +84,14 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 			return E_FAIL;
 	}
 
-	m_Particles = pGameInstance->GetLayer(iNumLevel, L"Layer_Particle_Button");
+	m_Buttons = pGameInstance->GetLayer(iNumLevel, L"Layer_Particle_Button");
 
-	if (m_Particles == nullptr)
+	if (m_Buttons == nullptr)
 	{
 		int a = 10;
 	}
 	//파티클 비활성화 상태로 놓기
-	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
+	for (auto& iter = m_Buttons->begin(); iter != m_Buttons->end(); ++iter)
 	{
 		(*iter)->SetActive(FALSE);
 	}

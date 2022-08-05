@@ -46,6 +46,7 @@ void CParticle_Button::Tick(_float fTimeDelta)
 	else
 		m_pTransformCom->Translate(m_vDir * fTimeDelta * -0.1f);
 
+	// 스케일 0~0.5 랜덤으로 뽑고 (생성할때 / 이미 랜덤으로 생성된 조각을 들고있는 것)
 	if (!m_bCheck)
 	{
 		random_device rd;
