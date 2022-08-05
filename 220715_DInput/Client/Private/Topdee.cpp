@@ -42,6 +42,14 @@ HRESULT CTopdee::Initialize(void * pArg)
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(vPreLoaderPos));
 #pragma endregion WhiteRect
 
+	if (KKK_m_pBoxList != nullptr)
+	{
+
+	}
+	if (m_pRaiseObject != nullptr)
+	{
+		m_pRaiseObject = nullptr;
+	}
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Topdee_Portal", &m_bPortal);
 	return S_OK;
