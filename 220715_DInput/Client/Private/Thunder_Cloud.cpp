@@ -28,11 +28,19 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y + 1.5f, vPos.z-0.1f));
+		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z-0.01f));
 		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, vPos);
+		m_vToodeePos = vPos;
+		vPos.y += 5.f;
+		m_vTopdeePos = vPos;
 	}
 		
 	return S_OK;
+}
+
+_float3 CThunder_Cloud::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
+{
+	return vPos + (vTargetPos - vPos) * fTimeDelta;
 }
 
 void CThunder_Cloud::Tick(_float fTimeDelta)
@@ -48,7 +56,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 	if (m_fFrame_Rain >= 13.0f)
 		m_fFrame_Rain = 0.f;
 
-	/*if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
 		m_pTransformCom_Cloud->Set_State(
 			CTransform::STATE_POSITION,
@@ -60,14 +68,14 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		m_pTransformCom->Set_State(
+		m_pTransformCom_Cloud->Set_State(
 			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
+			Lerp(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
 				m_vToodeePos,
 				fTimeDelta * 5.f));
 
 		m_bEnabled = true;
-	}*/
+	}
 
 }
 

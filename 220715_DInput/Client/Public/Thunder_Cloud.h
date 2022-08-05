@@ -38,6 +38,9 @@ private:
 	CTransform* m_pTransformCom_Rain = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_Rain = nullptr;
 
+public:
+	_float3 Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta);
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
@@ -53,5 +56,8 @@ public:
 private:
 	_float m_fFrame_Cloud = 0.f;
 	_float m_fFrame_Rain = 0.f;
+
+	_float3 m_vToodeePos;
+	_float3 m_vTopdeePos;
 };
 END
