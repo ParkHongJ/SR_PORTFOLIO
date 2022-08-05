@@ -664,8 +664,9 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			vCurDir.x = 1.f;
 		else if (m_eCurDir == DIR_LEFT)
 			vCurDir.x = -1.f;
-		_float fDist{ 0.f };
+		_float fDist{ -1.f };
 		if (CGameMgr::Get_Instance()->Check_Not_Go(vDropPosCheck,vCurDir, &fDist, true))
+		//if (CGameMgr::Get_Instance()->Check_Not_Go(m_pTransformCom->Get_State(CTransform::STATE_POSITION), vCurDir, &fDist, true))
 		{//final Wall and Block DropPos 
 			return;
 		}

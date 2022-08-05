@@ -65,7 +65,16 @@ _bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, const _float3& vObjectDir,
 		_float fDistance = D3DXVec3Length(&vObject_DirVector);
 		if (fDistance <= 1.f) {//Objects Position Compare
 			if (bPushCheck) {
-				if (vObject_DirVector != vObjectDir) {
+				if (*pOut_ObjectsDist == -1.f)
+				{
+					if (fDistance == 0.f)
+						return true;
+					else {
+						++i;
+						continue;
+					}
+				}
+				else if (vObject_DirVector != vObjectDir) {
 					++i;
 					continue;
 				}
