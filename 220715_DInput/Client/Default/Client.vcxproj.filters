@@ -145,6 +145,9 @@
     <Filter Include="02.GameObject\Block\BreakingBlock">
       <UniqueIdentifier>{8b41e1d5-94ad-4bae-9363-8682f85876c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Cloud\Thunder_Cloud">
+      <UniqueIdentifier>{ea1f163c-023e-43b6-a555-ec6c0d0dc9af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -310,6 +313,9 @@
     <ClInclude Include="..\Public\BreakingBlock.h">
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Thunder_Cloud.h">
+      <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -464,6 +470,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BreakingBlock.cpp">
       <Filter>02.GameObject\Block\BreakingBlock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Thunder_Cloud.cpp">
+      <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -131,7 +131,7 @@ _bool CGameMgr::Check_PushBox_Exactly(const _float3 & vBoxPos)
 					continue;
 				}
 				else
-				{
+				{//rigid Hole
 					CTransform* pTransform =(CTransform*)(*iter)->Get_Component(L"Com_Transform");
 					pTransform->Set_State(CTransform::STATE_POSITION, _float3(-100.f, -100.f, -100.f));
 					break;
