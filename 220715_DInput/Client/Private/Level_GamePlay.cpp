@@ -61,6 +61,18 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
+	if (CGameMgr::Get_Instance()->Key_Down('N'))
+	{
+		//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE2))))
+			MSG_BOX(L"∑π∫ß ø¿«¬ Ω«∆–");
+
+		Safe_Release(pGameInstance);
+	}
 	//if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
 	//	//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
 	//	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();

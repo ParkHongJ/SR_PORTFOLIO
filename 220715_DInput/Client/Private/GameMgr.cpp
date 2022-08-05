@@ -62,7 +62,7 @@ _bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, 
 			}
 		}
 		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
-		if (fDistance <= 1.0f) {//Objects Position Compare
+		if (fDistance <= 1.f) {//Objects Position Compare
 			*pOut_ObjectsDist = abs(fDistance - 1.0f);
 			return true;
 		}

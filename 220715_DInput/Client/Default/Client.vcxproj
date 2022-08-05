@@ -179,6 +179,7 @@
     <ClInclude Include="..\Public\Level_SJH.h" />
     <ClInclude Include="..\Public\Level_Stage2.h" />
     <ClInclude Include="..\public\Level_Stage3.h" />
+    <ClInclude Include="..\public\Level_Stage4.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\Public\Loading_BackGround.h" />
     <ClInclude Include="..\Public\MainApp.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="..\Private\Level_SJH.cpp" />
     <ClCompile Include="..\Private\Level_Stage2.cpp" />
     <ClCompile Include="..\private\Level_Stage3.cpp" />
+    <ClCompile Include="..\private\Level_Stage4.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\Private\Loading_BackGround.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />

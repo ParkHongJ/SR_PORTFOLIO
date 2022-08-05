@@ -121,6 +121,10 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		//GetBoxList();
 		if(!m_bCheck)
 		{
+			if (m_pBoxList == nullptr)
+			{
+				GetBoxList();
+			}
 			for (auto& iter : *m_pBoxList)
 			{
 				//iter->SetActive(false);
@@ -138,7 +142,11 @@ void CButton::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 	m_bPress = false;
 	m_bCheck = false;
 
-	//GetBoxList();
+	if (m_pBoxList == nullptr)
+	{
+		GetBoxList();
+	}
+
 	for (auto& iter : *m_pBoxList)
 	{
 		iter->SetActive(true);

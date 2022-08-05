@@ -151,6 +151,9 @@
     <Filter Include="01.Level\STAGE_3">
       <UniqueIdentifier>{d240e02d-961f-47b3-af1f-ead4a9ad543e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGE_4">
+      <UniqueIdentifier>{b8eeaf49-0ce5-476a-b682-1024b956c06b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -322,6 +325,9 @@
     <ClInclude Include="..\public\Level_Stage3.h">
       <Filter>01.Level\STAGE_3</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Stage4.h">
+      <Filter>01.Level\STAGE_4</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -482,6 +488,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage3.cpp">
       <Filter>01.Level\STAGE_3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage4.cpp">
+      <Filter>01.Level\STAGE_4</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
