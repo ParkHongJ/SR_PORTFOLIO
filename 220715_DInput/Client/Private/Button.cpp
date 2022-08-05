@@ -37,7 +37,7 @@ HRESULT CButton::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.5f, 3.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 0.5f, 10.2f));
 	return S_OK;
 }
 

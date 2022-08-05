@@ -6,11 +6,13 @@
 
 CParticle_Button::CParticle_Button(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
+	, m_bCheck(false)
 {
 }
 
 CParticle_Button::CParticle_Button(const CParticle_Button & rhs)
 	: CGameObject(rhs)
+	, m_bCheck(false)
 {
 }
 
@@ -31,21 +33,29 @@ void CParticle_Button::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
-	_float3 vScale = m_pTransformCom->Get_Scaled();
+	
 	m_fTimer += fTimeDelta;
-	if (m_fTimer > 1.5f)
+	if (m_fTimer > 1.6f)
 	{
-		m_bActive = false;
 		m_fTimer = 0.f;
 		return;
 	}
-	vScale.x = vScale.x - fTimeDelta * 3.f;
-	vScale.y = vScale.y - fTimeDelta * 3.f;
-	vScale.z = vScale.z - fTimeDelta * 3.f;
 	
-	m_pTransformCom->Set_Scaled(vScale);
+	if (0.8f < m_fTimer)
+		m_pTransformCom->Translate(m_vDir * fTimeDelta * 0.1f);
+	else
+		m_pTransformCom->Translate(m_vDir * fTimeDelta * -0.1f);
 
-	m_pTransformCom->Translate(m_vDir * fTimeDelta);
+	if (!m_bCheck)
+	{
+		random_device rd;
+		default_random_engine eng(rd());
+		uniform_int_distribution<int> distr(0, 3);
+		//random int
+
+		m_iRand = distr(eng);
+		m_bCheck = true;
+	}
 }
 
 void CParticle_Button::LateTick(_float fTimeDelta)
@@ -78,7 +88,7 @@ HRESULT CParticle_Button::Render()
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
+	if (FAILED(m_pTextureCom->Bind_Texture(m_iRand)))
 		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))

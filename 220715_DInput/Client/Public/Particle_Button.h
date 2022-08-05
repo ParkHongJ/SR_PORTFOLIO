@@ -47,6 +47,8 @@ private:
 	_float3 m_vDir;
 	_float m_fSpeed = 2.5f;
 	_float m_fTimer = 0.f;
+	_uint m_iRand;
+	_bool m_bCheck;
 };
 END
 

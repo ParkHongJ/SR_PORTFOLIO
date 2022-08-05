@@ -216,7 +216,7 @@ void CParticleMgr::CreateButton(_uint iNumLevel, const _float3 & vPos, const _fl
 				Safe_Release(pGameInstance);
 				return;
 			}
-			pTransform->Set_Scale(_float3(1.f, 1.f, 1.f));
+			pTransform->Set_Scale(_float3(0.7f, 0.7f, 0.7f));
 			pTransform->Set_State(CTransform::STATE_POSITION, vPos);
 			//방향셋팅
 			dynamic_cast<CParticle_Button*>(*iter)->SetDirection(vDir);
