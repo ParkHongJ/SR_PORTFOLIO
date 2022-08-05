@@ -2,6 +2,7 @@
 #include "..\Public\Loader.h"
 
 #include "ButtonBlock_Center.h"
+#include "Particle_Button.h"
 #include "BreakingBlock.h"
 #include "ElectricBlock.h"
 #include "GameInstance.h"
@@ -359,6 +360,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_%d.dds"), 1))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_BreakingBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Breaking/BreakingSpr_%d.dds"), 1))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */
@@ -685,6 +691,11 @@ HRESULT CLoader::Loading_ForSENILevel()
 		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Particle_Button */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Button"),
+		CParticle_Button::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Bullet */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
 		CBullet::Create(m_pGraphic_Device))))
@@ -722,7 +733,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Monster_Pig"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Monster_Pig"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
@@ -744,6 +755,11 @@ HRESULT CLoader::Loading_ForSENILevel()
 	/* For.Prototype_Component_Texture_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Button */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Button"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Bullet */

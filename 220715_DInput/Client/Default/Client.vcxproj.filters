@@ -307,9 +307,6 @@
     <ClInclude Include="..\Public\ElectricBlock.h">
       <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Button.h">
-      <Filter>02.GameObject\Button</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ButtonBlock.h">
       <Filter>02.GameObject\Block\ButtonBlock</Filter>
     </ClInclude>
@@ -336,6 +333,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Level_Stage5.h">
       <Filter>01.Level\STAGES\STAGE_5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Button.h">
+      <Filter>02.GameObject\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Button.h">
+      <Filter>02.GameObject\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -503,6 +506,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage5.cpp">
       <Filter>01.Level\STAGES\STAGE_5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Button.cpp">
+      <Filter>02.GameObject\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

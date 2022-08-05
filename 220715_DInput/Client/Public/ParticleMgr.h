@@ -18,6 +18,7 @@ public:
 	{
 		PARTICLE,
 		BULLET,
+		BUTTON,
 		PARTICLE_END
 	};
 private:
@@ -25,6 +26,7 @@ private:
 	virtual ~CParticleMgr() {
 		m_Particles = nullptr;
 		m_Bullets = nullptr;
+		m_Buttons = nullptr;
 	};
 
 public:
@@ -33,11 +35,13 @@ public:
 private:
 	void CreateBullet(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 	void CreateParticle(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
+	void CreateButton(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 public:
 	virtual void Free() override;
 
 private:
 	list<class CGameObject*>* m_Particles = nullptr;
 	list<class CGameObject*>* m_Bullets = nullptr;
+	list<class CGameObject*>* m_Buttons = nullptr;
 };
 END

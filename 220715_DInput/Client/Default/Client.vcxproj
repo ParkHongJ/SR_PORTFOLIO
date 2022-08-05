@@ -189,6 +189,7 @@
     <ClInclude Include="..\Public\Monster_Pig.h" />
     <ClInclude Include="..\public\Particle.h" />
     <ClInclude Include="..\public\ParticleMgr.h" />
+    <ClInclude Include="..\Public\Particle_Button.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\Sky.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="..\Private\Monster_Pig.cpp" />
     <ClCompile Include="..\private\Particle.cpp" />
     <ClCompile Include="..\private\ParticleMgr.cpp" />
+    <ClCompile Include="..\Private\Particle_Button.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
