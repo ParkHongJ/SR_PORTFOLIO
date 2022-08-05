@@ -288,7 +288,16 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion BillBoard
 #pragma region Collision_Obstacle
 	_float fCollisionDist;
-	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, &fCollisionDist,false))
+	_float3 vCurDir{ 0.f,0.f,0.f };
+	if (m_eCurDir == DIR_DOWN)
+		vCurDir.z = -1.0f;
+	else if (m_eCurDir == DIR_UP)
+		vCurDir.z = 1.f;
+	else if (m_eCurDir == DIR_RIGHT)
+		vCurDir.x = 1.f;
+	else if (m_eCurDir == DIR_LEFT)
+		vCurDir.x = -1.f;
+	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir,&fCollisionDist,false))
 	{
 		if (m_eCurDir == DIR_LEFT)
 			vPos.x += fCollisionDist;
@@ -414,9 +423,11 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (!bCanPush)
 			return;
 		_float fdist{ 0.f };
-		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, &fdist,true)) {
+		vOtherPos -= vCurDir;
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, vCurDir, &fdist,true)) {
 			return;
 		}
+		vOtherPos += vCurDir;
 		pBlock->Box_Push_More(fTimeDelta, vOtherPos,true);//First
 		//_uint iCount{ 0 };
 		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
@@ -477,7 +488,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {//WallCheck
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix,vPushDir, &fdist, true)) {//WallCheck
 						bCanPush = false;
 						return;
 					}
@@ -497,7 +508,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 					++iCountReFunc;
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
-					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, &fdist, true)) {
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix,vPushDir, &fdist, true)) {
 						bCanPush = false;
 						return;
 					}
@@ -644,8 +655,17 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		_float3 vDropPosCheck{ m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION) };
 		vDropPosCheck.y = 0.5f;
+		_float3 vCurDir{ 0.f,0.f,0.f };
+		if (m_eCurDir == DIR_DOWN)
+			vCurDir.z = -1.0f;
+		else if (m_eCurDir == DIR_UP)
+			vCurDir.z = 1.f;
+		else if (m_eCurDir == DIR_RIGHT)
+			vCurDir.x = 1.f;
+		else if (m_eCurDir == DIR_LEFT)
+			vCurDir.x = -1.f;
 		_float fDist{ 0.f };
-		if (CGameMgr::Get_Instance()->Check_Not_Go(vDropPosCheck, &fDist, true))
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vDropPosCheck,vCurDir, &fDist, true))
 		{//final Wall and Block DropPos 
 			return;
 		}

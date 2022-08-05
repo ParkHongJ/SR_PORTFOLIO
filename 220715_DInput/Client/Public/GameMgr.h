@@ -28,7 +28,7 @@ public:
 
 public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanNotGo Spot.
 	void Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag,_bool bHole);//Caution!! Obstacle Cannot change Pos.
-	_bool Check_Not_Go(const _float3& vCurPos, _float* pOut_ObjectsDist,_bool bPushCheck);					// This func Manage Can Go or Not.
+	_bool Check_Not_Go(const _float3& vCurPos,  const _float3& vObjectDir, _float* pOut_ObjectsDist, _bool bPushCheck);// This func Manage Can Go or Not.
 	_bool Check_Not_Go_Monster(const _float3& vCurPos, _float* pOut_ObjectsDist, _bool bPushCheck);					// This func Manage Can Go or Not.
 
 	_bool Check_Box_Down(const _float3& vBoxPos, _uint* pOut_iHoleNum_in_Layer,LEVEL* pOut_eHoleLevel);		// This func Manage Box Can Down.
