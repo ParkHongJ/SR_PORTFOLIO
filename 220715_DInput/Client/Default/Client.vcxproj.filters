@@ -160,6 +160,9 @@
     <Filter Include="01.Level\STAGES\STAGE_5">
       <UniqueIdentifier>{10acebf9-d403-4c1f-ba60-35ce9e8a46b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Cloud\Thunder_Cloud">
+      <UniqueIdentifier>{ea1f163c-023e-43b6-a555-ec6c0d0dc9af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -340,6 +343,9 @@
     <ClInclude Include="..\Public\Particle_Button.h">
       <Filter>02.GameObject\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Thunder_Cloud.h">
+      <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -509,6 +515,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Button.cpp">
       <Filter>02.GameObject\Particle</Filter>
+    </ClCompile> 
+    <ClCompile Include="..\Private\Thunder_Cloud.cpp">
+      <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

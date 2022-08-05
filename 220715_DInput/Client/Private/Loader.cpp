@@ -4,6 +4,7 @@
 #include "ButtonBlock_Center.h"
 #include "Particle_Button.h"
 #include "BreakingBlock.h"
+#include "Thunder_Cloud.h"
 #include "ElectricBlock.h"
 #include "GameInstance.h"
 #include "GravityBlock.h"
@@ -201,6 +202,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cloud"),
 		CCloud::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/* For.Prototype_GameObject_Key */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Key"),
 		CKey::Create(m_pGraphic_Device))))
@@ -858,6 +860,12 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Thunder_Cloud */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Thunder_Cloud"),
+		CThunder_Cloud::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* ??¢©???¢¬? ¢§?????¢¥?. */
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
@@ -907,12 +915,12 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
 		return E_FAIL;
-	//------------------------------------------------------------------------------------------------------
-	/* For.Prototype_Component_Texture_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Stage2_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"),26))))
+
+	/* For.Prototype_Component_Texture_Cloud */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/cloudSpr_%d.png"), 6))))
 		return E_FAIL;
-	//------------------------------------------------------------------------------------------------------
+
 	//================================ TextureEnd
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
@@ -924,6 +932,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	/* For.Prototype_Component_Texture_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Rain */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Rain_Thunder/Rain_Thunder_%d.png"),13))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Gyu Loading Complete."));

@@ -228,6 +228,10 @@ HRESULT CLevel_GyuH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), 
 		LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
+	_float3 vPos{ 10.0f,0.5f,10.f };
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
+		LEVEL_STAGE1, pLayerTag,vPos)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
