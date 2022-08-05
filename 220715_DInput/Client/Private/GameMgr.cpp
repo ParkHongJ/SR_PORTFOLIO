@@ -47,7 +47,7 @@ void CGameMgr::Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pL
 	}
 }
 
-_bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, _bool bPushCheck)
+_bool CGameMgr::Check_Not_Go(const _float3& vCurPos, const _float3& vObjectDir, _float* pOut_ObjectsDist, _bool bPushCheck)// This func Manage Can Go or Not.
 {
 	if (m_Obstaclelist.empty())
 		return false;
@@ -61,8 +61,24 @@ _bool CGameMgr::Check_Not_Go(const _float3 & vCurPos, _float* pOut_ObjectsDist, 
 				continue;
 			}
 		}
-		_float fDistance = D3DXVec3Length(&((*iter) - vCurPos));
+		_float3 vObject_DirVector = ((*iter) - vCurPos);
+		_float fDistance = D3DXVec3Length(&vObject_DirVector);
 		if (fDistance <= 1.f) {//Objects Position Compare
+			if (bPushCheck) {
+				if (*pOut_ObjectsDist == -1.f)
+				{
+					if (fDistance == 0.f)
+						return true;
+					else {
+						++i;
+						continue;
+					}
+				}
+				else if (vObject_DirVector != vObjectDir) {
+					++i;
+					continue;
+				}
+			}
 			*pOut_ObjectsDist = abs(fDistance - 1.0f);
 			return true;
 		}
