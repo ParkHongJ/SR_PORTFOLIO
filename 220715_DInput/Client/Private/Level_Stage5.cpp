@@ -20,6 +20,7 @@ HRESULT CLevel_Stage5::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE5);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 

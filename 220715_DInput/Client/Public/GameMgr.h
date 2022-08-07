@@ -3,7 +3,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Base.h"
-
+#include "Transform.h"
 BEGIN(Engine)
 class CGameObject;
 END
@@ -21,7 +21,7 @@ private:
 	virtual ~CGameMgr() = default;
 
 public:
-	HRESULT Initialize();
+	HRESULT Initialize(_uint iNumLevel = NULL);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	GAMEMODE GetMode() { return m_eGameMode; }
@@ -48,13 +48,22 @@ public:
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
+	void AddKey() { m_iKey++; }
+
+	void DeleteKey();
+	void TempFunc(CTransform* temp) { tempTransform = temp; }//홍준 테스트용. 탑디정보를 받아오기위해 게임매니저에 임시저장
+	CTransform* TempTrasnform() { return tempTransform; }
 private:
+	CTransform* tempTransform = nullptr;//홍준 테스트용
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
 
 	_bool m_bKeyState[256] = { false };
 
 	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
+
+	_uint m_iNumLevel;
+	_uint m_iKey = 0;
 public:
 	virtual void Free() override;
 };

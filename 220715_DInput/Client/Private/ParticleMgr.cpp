@@ -80,7 +80,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Particle_Button"),
-			iNumLevel, L"Layer_Particle_Button")))
+			iNumLevel, L"Layer_Particle_Button", &iLevel)))
 			return E_FAIL;
 	}
 

@@ -49,6 +49,7 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
+	m_fSpeed = 3.f;
 	return S_OK;
 }
 
@@ -62,6 +63,22 @@ void CMonster_Pig::Tick(_float fTimeDelta)
 	if (m_fFrame >= 9.0f)
 		m_fFrame = 0.f;
 
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		//투디일때 추격, 땅 위에있냐
+		if (m_bOnBlock)
+		{
+			if (m_eCurDir == DIR_RIGHT)
+			{
+				m_pTransformCom->Translate(_float3(1.f,0.f,0.f) * fTimeDelta * m_fSpeed);
+			}
+			else if (m_eCurDir == DIR_LEFT)
+			{
+				m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f) * fTimeDelta * m_fSpeed);
+			}
+			
+		}
+	}
 }
 
 void CMonster_Pig::LateTick(_float fTimeDelta)
@@ -70,16 +87,16 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		return;
 
 	//현재모드
-	CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
+	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
 	//현재모드와 이전모드를 비교해서 같냐
-	if (eCurMode == m_ePreMode)
+	if (m_eCurMode == m_ePreMode)
 	{
 		//모드가 안바뀜
 	}
 	else
 	{
 		//모드가 바뀐시점
-		if (eCurMode == CGameMgr::TOPDEE)
+		if (m_eCurMode == CGameMgr::TOPDEE)
 		{
 			////현재 바뀐모드가 탑디면 보정
 			//_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -91,10 +108,10 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 			/* 이거 수정해라*/
 			m_eCurDir = DIR_RIGHT;
 		}
-		m_ePreMode = eCurMode;
+		m_ePreMode = m_eCurMode;
 	}
 	/* TOODEE */
-	if (eCurMode == CGameMgr::TOODEE)
+	if (m_eCurMode == CGameMgr::TOODEE)
 	{
  		UpdateGravitiy(fTimeDelta);
 		_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -244,13 +261,23 @@ void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint e
 		}
 		else if (CCollider::DIR_DOWN == eDirection) {
 			if (fMyLength > abs(vMyPos.z - TargetBox->Get_State(CTransform::STATE_POSITION).z))
-				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x - (fMyLength - abs(vMyPos.x - vBoxPos.x)), vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z))));
 		}
 		else if (CCollider::DIR_LEFT == eDirection) {
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x + (fMyLength - abs(vMyPos.x - vBoxPos.x)), vMyPos.y, vMyPos.z));
+			if (m_eCurMode == CGameMgr::TOODEE && m_bOnBlock && m_eCurDir == DIR_RIGHT)
+			{
+				m_eCurDir = DIR_LEFT;
+			}
+
 		}
 		else if (CCollider::DIR_RIGHT == eDirection) {
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x - (fMyLength - abs(vMyPos.x - vBoxPos.x)), vMyPos.y, vMyPos.z));
+			if (m_eCurMode == CGameMgr::TOODEE && m_bOnBlock && m_eCurDir == DIR_LEFT)
+			{
+				m_eCurDir = DIR_RIGHT;
+			}
 		}
 		Safe_Release(TargetBox);
 	}
@@ -286,8 +313,12 @@ HRESULT CMonster_Pig::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
+	CVIBuffer_Rect::RECTDESC tRectDesc;
+	tRectDesc.vSize.x = 1.5f;
+	tRectDesc.vSize.y = 1.5f;
+	tRectDesc.vSize.z = 0.f;
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &tRectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

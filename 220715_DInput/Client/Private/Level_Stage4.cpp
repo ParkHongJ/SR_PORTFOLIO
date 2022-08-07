@@ -18,7 +18,7 @@ HRESULT CLevel_Stage4::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	CGameMgr::Get_Instance()->Initialize();
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE4);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 

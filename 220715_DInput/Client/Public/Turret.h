@@ -15,10 +15,10 @@ class CTurret final : public CGameObject
 public:
 	typedef enum Direction
 	{
-		DOWN = 0, 
+		UP = 0,
 		RIGHT, 
-		LEFT, 
-		UP
+		DOWN, 
+		LEFT
 	}DIRECTION;
 private:
 	CTurret(LPDIRECT3DDEVICE9 pGraphic_Device);

@@ -21,7 +21,6 @@ HRESULT CToodee::Initialize_Prototype()
 
 HRESULT CToodee::Initialize(void * pArg)
 {
-
 	PLAYER_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
@@ -40,7 +39,7 @@ HRESULT CToodee::Initialize(void * pArg)
 	_float3 vPos = ObjInfo.vPos;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 12.f));
-
+	CGameMgr::Get_Instance()->TempFunc(m_pTransformCom);//test For HOng
 	return S_OK;
 }
 
@@ -109,8 +108,10 @@ void CToodee::Tick(_float fTimeDelta)
 					m_eToodeeDir = TOODEE_LEFT;
 
 				m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
-				if (5.f > m_MoveSpeed)
-					m_MoveSpeed += 0.1f;
+				//Edit Hong
+				m_MoveSpeed = 5.f;
+				/*if (5.f > m_MoveSpeed)
+				m_MoveSpeed += 0.5f;*/
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -125,8 +126,10 @@ void CToodee::Tick(_float fTimeDelta)
 					m_eToodeeDir = TOODEE_RIGHT;
 
 				m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-				if (5.f > m_MoveSpeed)
-					m_MoveSpeed += 0.1f;
+				//Edit Hong
+				m_MoveSpeed = 5.f;
+				/*if (5.f > m_MoveSpeed)
+					m_MoveSpeed += 0.5f;*/
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -192,9 +195,10 @@ void CToodee::LateTick(_float fTimeDelta)
 				break;
 
 			case TOODEE_IDLE:
-				if (0.f < m_MoveSpeed)
+				//Edit Hong
+				/*if (0.f < m_MoveSpeed)
 					m_MoveSpeed -= 0.1f;
-				else
+				else*/
 					m_MoveSpeed = 0.f;
 				m_iMinFrame = 0;
 				m_iMaxFrame = 12;
@@ -259,7 +263,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			else {
 				if (!m_bDiedEff) {
 					//Hong Edit For Effect
-					for (int i = 0; i < 50; i++) {
+					for (int i = 0; i < 8; i++) {
 						random_device rd;
 						default_random_engine eng(rd());
 						uniform_real_distribution<float> distr(-.5f, .5f);

@@ -5,6 +5,7 @@
 #include "KeyBlock.h"
 #include "ParticleMgr.h"
 #include "Hong.h"
+#include "GameMgr.h"
 
 CKey::CKey(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -41,6 +42,8 @@ HRESULT CKey::Initialize(void * pArg)
 	else
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 		_float3(15.f, 0.5f, 3.f));
+
+	CGameMgr::Get_Instance()->AddKey();
 	return S_OK;
 }
 
@@ -124,20 +127,25 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 				CParticleMgr::PARTICLE);
 		}
 
-		GetBoxList();
+		CGameMgr::Get_Instance()->DeleteKey();
 
-		if (m_pBoxList == nullptr)
-		{
-			MSG_BOX(L"KeyBlock비어있음");
-		}
-		else
-		{
-			for (auto& iter : *m_pBoxList)
-			{
-				dynamic_cast<CKeyBlock*>(iter)->SetDead();
-			}
-		//박스 사라지게 하는함수
-		}
+
+
+
+		//GetBoxList();
+
+		//if (m_pBoxList == nullptr)
+		//{
+		//	MSG_BOX(L"KeyBlock비어있음");
+		//}
+		//else
+		//{
+		//	for (auto& iter : *m_pBoxList)
+		//	{
+		//		dynamic_cast<CKeyBlock*>(iter)->SetDead();
+		//	}
+		////박스 사라지게 하는함수
+		//}
 	}
 }
 

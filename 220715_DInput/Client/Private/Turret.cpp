@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "KeyMgr.h"
 #include "ParticleMgr.h"
+#include "Hong.h"
 
 CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -13,7 +14,6 @@ CTurret::CTurret(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 CTurret::CTurret(const CTurret & rhs)
 	: CGameObject(rhs)
-	, m_eDir(RIGHT)/*이거 수정해라*/
 	, m_fCurrentTimer(0.f)
 {
 
@@ -26,16 +26,18 @@ HRESULT CTurret::Initialize_Prototype()
 
 HRESULT CTurret::Initialize(void * pArg)
 {
-	if (FAILED(SetUp_Components()))
-		return E_FAIL;
+	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
 	}
-	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(20.f, 0.5f, 10.f));
+	if (FAILED(SetUp_Components()))
+		return E_FAIL;
+	
+	
+	m_eDir = (DIRECTION)ObjInfo.iDirection;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, ObjInfo.vPos);
 	//======================
 	SetTag(L"Turret");
 	//======================
@@ -91,7 +93,7 @@ void CTurret::Fire(_float fTimeDelta)
 		m_fCurrentTimer = 0.f;
 		
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
+		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
 		for (int i = 0; i < 3; i++)
 		{
 			random_device rd;
@@ -104,7 +106,7 @@ void CTurret::Fire(_float fTimeDelta)
 			_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 			vPos.x += distrX(eng);
 			vPos.z += distrZ(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);
@@ -141,7 +143,7 @@ HRESULT CTurret::SetUp_Components()
 		return E_FAIL;
 	/* 이거 수정해라 */
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Turret"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;

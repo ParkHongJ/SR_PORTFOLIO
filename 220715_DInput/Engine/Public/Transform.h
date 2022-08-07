@@ -43,7 +43,7 @@ public:
 		memcpy(&m_WorldMatrix.m[eState][0], &State, sizeof(_float3));		
 	}
 	void Set_Scale(_float3& vScale);
-
+	void Set_WorldMatrix(_float4x4& m_world) { m_WorldMatrix = m_world; }
 	void Set_TransformDesc_Speed(_float fSpeed) {
 		m_TransformDesc.fSpeedPerSec = fSpeed;
 	}/*For.Test*/

@@ -52,8 +52,10 @@ HRESULT CButton::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 0.5f, 10.2f));
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPos.y += 0.6f;
+	vPos.z -= 0.5f;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
 
@@ -95,7 +97,6 @@ HRESULT CButton::Render()
 		if (FAILED(m_pTextureCom->Bind_Texture(0)))
 			return E_FAIL;
 	}
-
 	else if (m_bPress) {
 		if (FAILED(m_pTextureCom->Bind_Texture(1)))
 			return E_FAIL;
