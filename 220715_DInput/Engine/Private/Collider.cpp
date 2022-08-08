@@ -274,6 +274,81 @@ bool CCollider::Check_RectEx(class CBoxCollider* pSourCol, class CTransform* pSo
 	return FALSE;
 }
 
+void CCollider::AddRayList(const _float3 & _vRayPos, const _float3 & _vRayDir)
+{
+	m_RayList.push_back(make_pair(_vRayPos, _vRayDir));
+}
+
+bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
+{	//First : BoxCollider
+	//Second : Transform
+	for (auto& pDest : m_pCollisionObjects[eDestGroup])
+	{
+		if (m_pCollisionObjects[eDestGroup].empty()||m_RayList.empty())
+			return false;
+		CBoxCollider::BOXDESC pBoxDesc =pDest.first->GetBoxDesc();
+		_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
+		_float3 pDestPos{ pDest.second->Get_State(CTransform::STATE_POSITION) };
+		_float3 pBox_Top_VB[4];
+		if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
+			pBox_Top_VB[0] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+			pBox_Top_VB[1] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+			pBox_Top_VB[2] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z - pBoxHalfSize.z);
+			pBox_Top_VB[3] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z - pBoxHalfSize.z);
+		}
+		else {//투디턴일땐 x축기준 +된위치에 렉트를 잡아주어야한다.
+			pBox_Top_VB[0] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+			pBox_Top_VB[1] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+			pBox_Top_VB[2] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y - pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+			pBox_Top_VB[3] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y - pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
+		}
+		float		fU, fV, fDist;
+		for (auto& Pair : m_RayList) {//Pair first = Pos second Dir
+			if (bTurn_Topdee)
+			{//탑디턴인데 dir이 - z이면 컨티뉴.
+				if (Pair.second.z < 0.f)
+					continue;
+			}
+			else
+			{//투디턴인데 dir이 -y이면 컨티뉴
+				if (Pair.second.y < 0.f)
+					continue;
+			}
+			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			{
+				pDest.first->GetOwner()->Set_bRayCasted(true);
+				return true;
+			}
+
+			/* 왼쪽 하단. */
+			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			{
+				pDest.first->GetOwner()->Set_bRayCasted(true);
+				return true;
+			}
+
+			pDest.first->GetOwner()->Set_bRayCasted(false);
+		}
+
+	}
+	
+
+	return false;
+}
+
+void CCollider::Clear_RayList()
+{
+
+	//for (auto& Pair : m_RayInfo)
+	//{
+	//	Safe_Release(Pair.first);
+	//	Safe_Release(Pair.second);
+	//}
+	m_RayList.clear();
+	
+	return;
+}
+
 HRESULT CCollider::Render()
 {
 	return S_OK;

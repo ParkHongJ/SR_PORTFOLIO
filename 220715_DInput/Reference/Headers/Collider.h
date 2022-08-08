@@ -33,6 +33,12 @@ public:
 	bool Check_SphereEx(class CBoxCollider* pSourCol, class CTransform* pSourTrans, class CBoxCollider* pDestCol, class CTransform* pDestTrans);
 	bool Check_RectEx(class CBoxCollider* pSourCol, class CTransform* pSourTrans, class CBoxCollider* pDestCol, class CTransform* pDestTrans, float *pX, float* pZ);
 
+public:
+	void AddRayList(const _float3& _vRayPos, const _float3& _vRayDir);
+	bool Collision_Ray_Top(COLLISIONGROUP eDestGroup,_bool bTurn_Topdee);
+	void Clear_RayList();
+	list<pair<_float3, _float3>>m_RayList;	// first vRaystartPos, second vRayDirection
+
 private:
 	list <pair<class CBoxCollider*, class CTransform* >> m_pCollisionObjects[COLLISION_END];
 	typedef list<pair<class CBoxCollider*, class CTransform*>>		COLLISIONOBJECTS;

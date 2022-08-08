@@ -23,7 +23,7 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 	__super::Initialize(pArg);
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
+	m_bRayCasted = false;
 
 	SetTag(L"Box");
 	
@@ -40,11 +40,6 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 void CElectricBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (m_iTextureNum == 0)
-		m_iTextureNum = 1;
-	else if (m_iTextureNum == 1)
-		m_iTextureNum = 0;
-	
 }
 
 void CElectricBlock::LateTick(_float fTimeDelta)
@@ -53,6 +48,11 @@ void CElectricBlock::LateTick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	if (m_bRayCasted)
+		TextureChange();
+	else
+		m_iTextureNum = 0;
+
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
 }
@@ -60,7 +60,8 @@ void CElectricBlock::LateTick(_float fTimeDelta)
 HRESULT CElectricBlock::Render()
 {
 	if (!m_bActive)
-		S_OK;
+		return S_OK;
+
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 	
@@ -96,6 +97,14 @@ void CElectricBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CElectricBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
+}
+
+void CElectricBlock::TextureChange()
+{
+	if (m_iTextureNum == 0)
+		m_iTextureNum = 1;
+	else
+		m_iTextureNum = 0;
 }
 
 HRESULT CElectricBlock::Set_RenderState()

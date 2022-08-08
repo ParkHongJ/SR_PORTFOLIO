@@ -5,6 +5,7 @@
 #include "Camera_Free.h"
 #include "ParticleMgr.h"
 #include "GameMgr.h"
+#include "Topdee.h"
 CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -18,14 +19,16 @@ HRESULT CLevel_GyuH::Initialize()
 	//LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-	_float3 vInitPos{ 15.5f,0.5f,11.5f };
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), vInitPos)))
+	CTopdee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	Info.vPos = _float3(25.f, 1.f, 3.f);
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), &Info)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	 vInitPos= { 10.5f,0.26f,5.5f };
+	/* vInitPos= { 10.5f,0.26f,5.5f };
 	for (_uint i = 0; i < 3; ++i) {
 		vInitPos.x += 1.0f;
 		vInitPos.y = 0.26f;
@@ -49,15 +52,15 @@ HRESULT CLevel_GyuH::Initialize()
 
 	_float4 vec4Struct{ 4.5f,0.5f,10.5f, 1.f };
 	if (FAILED(Ready_Layer_WarpBlock((L"Layer_Cube"), vec4Struct)))
-		return E_FAIL;
+		return E_FAIL;*/
 
-	vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
+	_float4 vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
 	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
+	//CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);*/
 	return S_OK;
 
 }

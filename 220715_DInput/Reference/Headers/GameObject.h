@@ -43,6 +43,8 @@ private:
 public:
 	bool IsActive() { return m_bActive; }
 	void SetActive(_bool _bActive) { m_bActive = _bActive; }
+	void Set_bRayCasted(_bool _bRayCasted) { m_bRayCasted= _bRayCasted; }
+	_bool Get_bRayCasted() { return m_bRayCasted; }
 	bool IsEnabled() { return m_bEnabled; }
 	void SetTag(const _tchar* _tag) { m_Tag = _tag; }
 	void SetEnabled(bool _bEnabled) { m_bEnabled = _bEnabled; }
@@ -55,6 +57,7 @@ public:
 
 protected:
 	_bool m_bActive;
+	_bool m_bRayCasted = false;
 	const _tchar* m_Tag;
 	_bool m_bEnabled = true;
 	_uint m_iNumLevel;

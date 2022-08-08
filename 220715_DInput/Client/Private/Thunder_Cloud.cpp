@@ -29,12 +29,16 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z-0.01f));
-		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, vPos);
+		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z - 2.f));
 		m_vToodeePos = vPos;
 		vPos.y += 5.f;
 		m_vTopdeePos = vPos;
-	}
-		
+	}// 이니셜라이즈 할때 레이를 두방향으로쏠예정 
+	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vTopdeePos.y, vCloudPos.z)		, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 -z방향
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x - 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
 	return S_OK;
 }
 
@@ -64,6 +68,12 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 				m_vTopdeePos,
 				fTimeDelta * 5.f));
 
+		m_pTransformCom_Rain->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
+				_float3(m_vTopdeePos.x, m_vTopdeePos.y - 3.f, m_vTopdeePos.z),
+				fTimeDelta * 5.f));
+		//이게 어디에 천둥이치고있는지가 정확하게 보이지않음
 		m_bEnabled = false;
 	}
 	else
@@ -72,6 +82,12 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
 				m_vToodeePos,
+				fTimeDelta * 5.f));
+
+		m_pTransformCom_Rain->Set_State(
+			CTransform::STATE_POSITION,
+			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
+				_float3(m_vToodeePos.x, m_vToodeePos.y, m_vToodeePos.z - 2.f),
 				fTimeDelta * 5.f));
 
 		m_bEnabled = true;
@@ -139,7 +155,13 @@ HRESULT CThunder_Cloud::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-
+	//---------------------디버그일때 그리기-------------------------
+	_float4x4 Matrix = m_pTransformCom_Cloud->Get_WorldMatrix();
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_pBoxCom->Render(Matrix);
+	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	//--------------------------------------------------------------
+	//문제상황은 탑디일때 어디가 비맞는 위치인지 분간하기가어렵다
 	return S_OK;
 }
 
@@ -198,10 +220,13 @@ HRESULT CThunder_Cloud::SetUp_Components()
 	/* For.Com_Transform */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_Rain"), (CComponent**)&m_pTransformCom_Rain, this, &TransformDesc)))
 		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
+		return E_FAIL;
 //==================================================================Cloud End
 	
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"), TEXT("Com_Texture_Cloud"), (CComponent**)&m_pTextureCom_Cloud, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"), TEXT("Com_Texture_Cloud"), (CComponent**)&m_pTextureCom_Cloud, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -216,6 +241,14 @@ HRESULT CThunder_Cloud::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Cloud"), (CComponent**)&m_pVIBufferCom_Cloud, this, &RectDesc2)))
 		return E_FAIL;
 
+	CBoxCollider::BOXDESC BoxColliderDesc;
+	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
+
+	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
+	BoxColliderDesc.vSize = _float3(3.f, 0.5f, 1.f);
+	BoxColliderDesc.bIsTrigger = true;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
+		return E_FAIL;
 	
 
 	return S_OK;
@@ -254,6 +287,7 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pVIBufferCom_Cloud);
 	Safe_Release(m_pRendererCom_Cloud);
 	Safe_Release(m_pTransformCom_Cloud);
+	Safe_Release(m_pColliderCom);
 	//====================================CloudEnd
 	Safe_Release(m_pTextureCom_Rain);
 	Safe_Release(m_pTransformCom_Rain);

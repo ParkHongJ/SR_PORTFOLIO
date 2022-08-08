@@ -8,6 +8,8 @@ class CTexture;
 class CRenderer;
 class CVIBuffer_Rect;
 class CTransform;
+class CBoxCollider;
+class CCollider;
 END
 
 
@@ -37,6 +39,8 @@ private:
 	CTexture*	m_pTextureCom_Rain = nullptr;
 	CTransform* m_pTransformCom_Rain = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_Rain = nullptr;
+	CBoxCollider* m_pBoxCom = nullptr;
+	CCollider* m_pColliderCom = nullptr;
 
 public:
 	_float3 Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta);

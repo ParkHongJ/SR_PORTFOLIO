@@ -917,8 +917,8 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Cloud */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Cloud"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/cloudSpr_%d.png"), 6))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_%d.png"), 6))))
 		return E_FAIL;
 
 	//================================ TextureEnd

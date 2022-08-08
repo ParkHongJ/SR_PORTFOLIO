@@ -26,6 +26,7 @@ public:
 
 private:
 	_uint m_iTextureNum = 0;
+	void TextureChange();
 
 private:
 	HRESULT Set_RenderState();
