@@ -80,7 +80,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
 			TEXT("Prototype_GameObject_Particle_Button"),
-			iNumLevel, L"Layer_Particle_Button")))
+			iNumLevel, L"Layer_Particle_Button", &iLevel)))
 			return E_FAIL;
 	}
 
@@ -105,6 +105,19 @@ void CParticleMgr::Free()
 	m_Particles = nullptr;
 	m_Bullets = nullptr;
 	m_Buttons = nullptr;
+}
+
+void CParticleMgr::EraseButton()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	for (auto& iter = m_Buttons->begin(); iter != m_Buttons->end(); ++iter)
+	{
+		(*iter)->SetActive(FALSE);
+		int a = 10;
+	}
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CParticleMgr::ReuseObj(_uint iNumLevel, const _float3& vPos, const _float3& vDir, PARTICLE_TYPE eType)
@@ -209,7 +222,7 @@ void CParticleMgr::CreateButton(_uint iNumLevel, const _float3 & vPos, const _fl
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
+	for (auto& iter = m_Buttons->begin(); iter != m_Buttons->end(); ++iter)
 	{
 		//오브젝트가 죽었다면 
 		//사용이 준비 되었다면
@@ -232,7 +245,7 @@ void CParticleMgr::CreateButton(_uint iNumLevel, const _float3 & vPos, const _fl
 			Safe_Release(pGameInstance);
 			return;
 		}
-		if (iter == m_Particles->end())
+		if (iter == m_Buttons->end())
 		{
 			MSG_BOX(L"파티클 다썼음");
 		}

@@ -36,10 +36,7 @@ HRESULT CButton::Initialize(void * pArg)
 	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	//======================
-	//======================
-
-
+	
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
@@ -53,7 +50,6 @@ HRESULT CButton::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 0.5f, 10.2f));
 	return S_OK;
 }
 
@@ -120,20 +116,22 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 		m_bPress = true;
 
-		//GetBoxList();
 		if(!m_bCheck)
 		{
+			GetBoxList();
 			if (m_pBoxList == nullptr)
 			{
-				GetBoxList();
+				MSG_BOX(L"ButtonBlock비어있음");
 			}
-			for (auto& iter : *m_pBoxList)
+			else
 			{
-				//iter->SetActive(false);
-				dynamic_cast<CButtonBlock*>(iter)->SetDead();
-				//dynamic_cast<CButtonBlock_Center*>(iter)->SetDead();
+				for (auto& iter : *m_pBoxList)
+				{
+					dynamic_cast<CButtonBlock*>(iter)->SetDead();
+					//dynamic_cast<CButtonBlock_Center*>(iter)->SetDead();
 
-				m_bCheck = true;
+					m_bCheck = true;
+				}
 			}
 		}
 	}
@@ -144,14 +142,16 @@ void CButton::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 	m_bPress = false;
 	m_bCheck = false;
 
+	GetBoxList();
 	if (m_pBoxList == nullptr)
 	{
-		GetBoxList();
+		MSG_BOX(L"ButtonBlock비어있음");
 	}
 
 	for (auto& iter : *m_pBoxList)
 	{
 		iter->SetActive(true);
+		CParticleMgr::Get_Instance()->EraseButton();
 	}
 
 }

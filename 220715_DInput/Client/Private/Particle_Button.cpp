@@ -23,9 +23,23 @@ HRESULT CParticle_Button::Initialize_Prototype()
 
 HRESULT CParticle_Button::Initialize(void * pArg)
 {
+	if (pArg != nullptr)
+	{
+		memcpy(&m_iNumLevel, pArg, sizeof(_uint));
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	m_Tag = L"Particle";
+
+	/*_float3 vScale = m_pTransformCom->Get_Scaled();
+
+	random_device random;
+	mt19937 rd(random());
+	uniform_real_distribution<float> range(.1f, .5f);
+
+	vScale = vScale * range(rd);
+	m_pTransformCom->Set_Scaled(vScale);*/
+
 	return S_OK;
 }
 
@@ -42,17 +56,25 @@ void CParticle_Button::Tick(_float fTimeDelta)
 	}
 	
 	if (0.8f < m_fTimer)
-		m_pTransformCom->Translate(m_vDir * fTimeDelta * 0.1f);
+		m_pTransformCom->Translate(m_vDir * fTimeDelta * 0.2f);
 	else
-		m_pTransformCom->Translate(m_vDir * fTimeDelta * -0.1f);
+		m_pTransformCom->Translate(m_vDir * fTimeDelta * -0.2f);
 
-	// 스케일 0~0.5 랜덤으로 뽑고 (생성할때 / 이미 랜덤으로 생성된 조각을 들고있는 것)
 	if (!m_bCheck)
 	{
-		random_device rd;
-		default_random_engine eng(rd());
+		//Scale Random
+		_float3 vScale = m_pTransformCom->Get_Scaled();
+
+		random_device random;
+		mt19937 rd(random());
+		uniform_real_distribution<float> range(.2f, .8f);
+
+		vScale = vScale * range(rd);
+		m_pTransformCom->Set_Scaled(vScale);
+		
+		//Render Random
+		default_random_engine eng(random());
 		uniform_int_distribution<int> distr(0, 3);
-		//random int
 
 		m_iRand = distr(eng);
 		m_bCheck = true;
@@ -138,7 +160,7 @@ HRESULT CParticle_Button::SetUp_Components()
 
 	//이거 수정해라
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Button"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
