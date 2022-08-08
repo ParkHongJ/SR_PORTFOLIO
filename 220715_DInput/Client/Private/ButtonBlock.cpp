@@ -96,19 +96,19 @@ void CButtonBlock::SetDead()
 	m_bActive = false;
 
 	//Particle Effect
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		random_device rd;
 		default_random_engine eng(rd());
-		uniform_real_distribution<float> distr(-.8f, .8f);
+		uniform_real_distribution<float> distr(-.6f, .6f);
 		//random float
 
-		//랜덤 위치값 주는 것
+		//Pos Random
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		vPos.x += distr(eng);
 		vPos.z += distr(eng);
-		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 			vPos,
 			vPos - vPos2,
 			CParticleMgr::BUTTON);

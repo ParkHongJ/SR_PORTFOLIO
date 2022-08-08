@@ -55,7 +55,6 @@ public:
 	virtual void Free() override;
 
 private:
-	//열쇠를 먹으면 없어지는 박스리스트 모음 ->버튼으로 교체해야함
 	list<class CGameObject*>* m_pBoxList;
 };
 END

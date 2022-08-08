@@ -36,8 +36,10 @@ private:
 	void CreateBullet(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 	void CreateParticle(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 	void CreateButton(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
+
 public:
 	virtual void Free() override;
+	void EraseButton();
 
 private:
 	list<class CGameObject*>* m_Particles = nullptr;

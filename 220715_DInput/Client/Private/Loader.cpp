@@ -72,7 +72,7 @@ _uint APIENTRY LoadingMain(void* pArg)
 		pLoader->Loading_ForGyuHLevel();
 		break;
 	case LEVEL_SENI:
-		pLoader->Loading_ForSENILevel();
+		pLoader->Loading_ForSENILevel(LEVEL_SENI);
 		break;
 	case LEVEL_SJH:
 		pLoader->Loading_ForSJHLevel();
@@ -652,7 +652,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_ForSENILevel()
+HRESULT CLoader::Loading_ForSENILevel(_uint iNumLevel)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -730,57 +730,57 @@ HRESULT CLoader::Loading_ForSENILevel()
 	------------*/
 
 	/* For.Prototype_Component_Texture_Terrain */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Topdee */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Topdee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"), 22))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Topdee_PreLoader */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_PreLoader.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Monster_Pig */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Monster_Pig"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Monster_Pig"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Button */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_Button"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Button"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Button/buttonSpr_0%d.png"), 2))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_ButtonBlock */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_ButtonBlock"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_ButtonBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_%d.dds"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_ButtonBlock_Center */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_ButtonBlock_Center"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_ButtonBlock_Center"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_Center_%d.dds"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle_Button */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Button"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Bullet */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Bullet"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Bullet"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_BreakingBlock */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SENI, TEXT("Prototype_Component_Texture_BreakingBlock"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_BreakingBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Breaking/BreakingSpr_%d.dds"), 1))))
 		return E_FAIL;
 
@@ -788,7 +788,7 @@ HRESULT CLoader::Loading_ForSENILevel()
 	
 	/* Loading Model */
 	
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
 		return E_FAIL;
 

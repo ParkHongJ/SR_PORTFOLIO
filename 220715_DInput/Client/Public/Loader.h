@@ -37,7 +37,7 @@ public:
 	HRESULT Loading_ForGamePlayLevel();
 	HRESULT Loading_ForHongLevel();
 	HRESULT Loading_ForGyuHLevel();
-	HRESULT Loading_ForSENILevel();
+	HRESULT Loading_ForSENILevel(_uint iNumLevel);
 	HRESULT Loading_ForSJHLevel();
 	HRESULT Loading_ForLEVEL2(_uint iNumLevel);
 	HRESULT Loading_ForLEVEL3(_uint iNumLevel);
