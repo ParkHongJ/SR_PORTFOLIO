@@ -21,7 +21,7 @@ HRESULT CHong::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	CGameMgr::Get_Instance()->Initialize();
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))

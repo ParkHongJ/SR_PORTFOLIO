@@ -4,6 +4,8 @@
 #include "Particle_Spark.h"
 #include "GameObject.h"
 #include "Base.h"
+#include "Transform.h"
+#include "Tookee.h"
 BEGIN(Engine)
 class CGameObject;
 END
@@ -21,7 +23,7 @@ private:
 	virtual ~CGameMgr() = default;
 
 public:
-	HRESULT Initialize();
+	HRESULT Initialize(_uint iNumLevel = NULL);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	GAMEMODE GetMode() { return m_eGameMode; }
@@ -48,7 +50,51 @@ public:
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
+
+	//현재 매커니즘
+	//투디 or 탑디 이동명령 -> 게임매니저 -> 투키
+	void ControlTooKee(CTookee::STATE _eState);
+	void SetTookee(CTookee* _TooKee) { 
+		m_Tookee = _TooKee;
+		Safe_AddRef(m_Tookee);
+	}
+	void SetStateTooKee(CTookee::STATE _eState) 
+	{ 
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetState(_eState); 
+		}
+	}
+	void SetScaeTookee(_float3 _vScale) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetScale(_vScale);
+		}
+	}
+	void SetMoveSpeedTookee(_float _fSpeed) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetSpeed(_fSpeed);
+		}
+	}
+	void SetJumpTookee() {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetJump();
+		}
+	}
+	/* Key 전용 */
+	void AddKey() { m_iKey++; }
+	void DeleteKey();
+	void SetPosition(_float fTimeDelta, _float3 vDir) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetPosition(fTimeDelta, vDir);
+		}
+	}
+	//===Key===
 private:
+	CTransform* tempTransform = nullptr;//홍준 테스트용
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
 
@@ -57,6 +103,11 @@ private:
 	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
 	CParticle_Spark* m_pParticle_Spark = nullptr;
 
+
+	_uint m_iNumLevel;
+	_uint m_iKey = 0;
+
+	class CTookee* m_Tookee = nullptr;
 public:
 	virtual void Free() override;
 };

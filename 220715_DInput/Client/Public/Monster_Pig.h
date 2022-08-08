@@ -52,6 +52,11 @@ private:
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 
 private:
+
+	_bool m_bOnAir;
+	_bool m_bOnBlock;
+	_float m_fSpeed;
+
 	_float3	m_vTopdeePos;
 	_float	m_fFrame = 0.f;
 	_float  m_fDrop_Endline = 0.f;
@@ -59,6 +64,7 @@ private:
 	PIG_DIRECTION m_eCurDir = DIR_END;
 	//이전모드
 	CGameMgr::GAMEMODE m_ePreMode = CGameMgr::TOODEE;
+	CGameMgr::GAMEMODE m_eCurMode;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
@@ -66,10 +72,6 @@ private:
 private:
 	HRESULT SetUp_Components();
 	void	UpdateGravitiy(_float fTimeDelta);
-
-private:
-	_bool m_bOnAir;
-	_bool m_bOnBlock;
 
 public:
 	static CMonster_Pig* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

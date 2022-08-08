@@ -21,7 +21,6 @@ HRESULT CToodee::Initialize_Prototype()
 
 HRESULT CToodee::Initialize(void * pArg)
 {
-
 	PLAYER_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
@@ -39,8 +38,6 @@ HRESULT CToodee::Initialize(void * pArg)
 
 	_float3 vPos = ObjInfo.vPos;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 12.f));
-
 	return S_OK;
 }
 
@@ -79,26 +76,17 @@ void CToodee::Tick(_float fTimeDelta)
 			}
 
 			if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
+				if (m_eCurruntDir != TOODEE_JUMP)
+				{
+					//SetJump for Tookee
+					CGameMgr::Get_Instance()->SetJumpTookee();
+				}
 				if (TOODEE_PORTAL != m_eCurruntDir) {
 					m_eToodeeDir = TOODEE_JUMP;
 
 					if (!m_bJump) {
 						//Hong Edit For Effect
-						for (int i = 0; i < 10; i++) {
-							random_device rd;
-							default_random_engine eng(rd());
-							uniform_real_distribution<float> distr(-.5f, .5f);
-							//random float
-
-							_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-							_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-							vPos.x += distr(eng);
-							vPos.z += distr(eng);
-							CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
-								vPos,
-								vPos - vPos2,
-								CParticleMgr::PARTICLE);
-						}
+						CreateEffect();
 					}
 				}
 				m_bJump = true;
@@ -109,8 +97,11 @@ void CToodee::Tick(_float fTimeDelta)
 					m_eToodeeDir = TOODEE_LEFT;
 
 				m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
-				if (5.f > m_MoveSpeed)
-					m_MoveSpeed += 0.1f;
+				//Edit Hong
+				CGameMgr::Get_Instance()->SetScaeTookee(_float3(-1.f, 1.f, 1.f));
+				m_MoveSpeed = 5.f;
+				/*if (5.f > m_MoveSpeed)
+				m_MoveSpeed += 0.5f;*/
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -119,14 +110,21 @@ void CToodee::Tick(_float fTimeDelta)
 					m_iMinFrame = 30;
 					m_iMaxFrame = 37;
 				}
+
+				//Set State For Tookee
+				//SetStateTookee();
 			}
 			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT)) {
+				//점프 상태가 아니고 이동을 했다면
 				if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-					m_eToodeeDir = TOODEE_RIGHT;
+					m_eToodeeDir = TOODEE_RIGHT; //현재 상태를 이동으로 바꿈
 
 				m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-				if (5.f > m_MoveSpeed)
-					m_MoveSpeed += 0.1f;
+				//Edit Hong
+				CGameMgr::Get_Instance()->SetScaeTookee(_float3(1.f, 1.f, 1.f));
+				m_MoveSpeed = 5.f;
+				/*if (5.f > m_MoveSpeed)
+					m_MoveSpeed += 0.5f;*/
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -135,6 +133,10 @@ void CToodee::Tick(_float fTimeDelta)
 					m_iMinFrame = 30;
 					m_iMaxFrame = 37;
 				}
+
+				//Set State For Tookee
+				//이때는 상태가 변하는게아니라 이동만 해야함..
+				//SetStateTookee();
 			}
 			else {
 				if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
@@ -148,11 +150,13 @@ void CToodee::Tick(_float fTimeDelta)
 		m_eCurruntDir = m_eToodeeDir;
 	}
 	else {
+		//GameMode : Topdee pos
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
 			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
 			0.001f, 
 			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 	}
+
 }
 
 void CToodee::LateTick(_float fTimeDelta)
@@ -192,10 +196,11 @@ void CToodee::LateTick(_float fTimeDelta)
 				break;
 
 			case TOODEE_IDLE:
-				if (0.f < m_MoveSpeed)
+				//Edit Hong
+				/*if (0.f < m_MoveSpeed)
 					m_MoveSpeed -= 0.1f;
-				else
-					m_MoveSpeed = 0.f;
+				else*/
+				m_MoveSpeed = 0.f;
 				m_iMinFrame = 0;
 				m_iMaxFrame = 12;
 				break;
@@ -241,7 +246,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 #pragma endregion
-
+			SetStateTookee();
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);
 			//Edit Hong
@@ -259,7 +264,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			else {
 				if (!m_bDiedEff) {
 					//Hong Edit For Effect
-					for (int i = 0; i < 50; i++) {
+					for (int i = 0; i < 8; i++) {
 						random_device rd;
 						default_random_engine eng(rd());
 						uniform_real_distribution<float> distr(-.5f, .5f);
@@ -360,20 +365,52 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z) - 0.001f)));
 		}
 		else if (CCollider::DIR_LEFT == eDireciton) {
-			if (m_eCurruntDir == TOODEE_RIGHT)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurruntDir == TOODEE_JUMP)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if (m_eCurruntDir == TOODEE_IDLE)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//Edit Hong
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+
+			//if (m_eCurruntDir == TOODEE_RIGHT)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			//}
+			//else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurruntDir == TOODEE_JUMP)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			//}
+			//else if (m_eCurruntDir == TOODEE_IDLE)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			//}
 		}
 		else if (CCollider::DIR_RIGHT == eDireciton) {
-			if (m_eCurruntDir == TOODEE_LEFT)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurruntDir == TOODEE_JUMP)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if(m_eCurruntDir == TOODEE_IDLE)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//Edit Hong
+			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+
+			//if (m_eCurruntDir == TOODEE_LEFT)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			//}
+			//else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurruntDir == TOODEE_JUMP)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			//}
+			//else if (m_eCurruntDir == TOODEE_IDLE)
+			//{
+			//	//Edit Hong
+			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			//}
 		}
 
 		Safe_Release(TargetBox);
@@ -402,6 +439,50 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 	m_bPortal = false;
+}
+
+void CToodee::SetStateTookee()
+{
+	//SetState Tookee
+	switch (m_eCurruntDir)
+	{
+	case CToodee::TOODEE_LEFT:
+		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::STATE::TOOKEE_LEFT);
+		break;
+	case CToodee::TOODEE_RIGHT:
+		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::STATE::TOOKEE_RIGHT);
+		break;
+	case CToodee::TOODEE_JUMP:
+		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::STATE::TOOKEE_JUMP);
+		
+		CGameMgr::Get_Instance()->SetMoveSpeedTookee(m_MoveSpeed);
+		break;
+	case CToodee::TOODEE_IDLE:
+		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::STATE::TOOKEE_IDLE);
+
+		break;
+	default:
+		break;
+	}
+}
+
+void CToodee::CreateEffect()
+{
+	for (int i = 0; i < 10; i++) {
+		random_device rd;
+		default_random_engine eng(rd());
+		uniform_real_distribution<float> distr(-.5f, .5f);
+		//random float
+
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.x += distr(eng);
+		vPos.z += distr(eng);
+		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+			vPos,
+			vPos - vPos2,
+			CParticleMgr::PARTICLE);
+	}
 }
 
 HRESULT CToodee::Set_RenderState()
@@ -512,3 +593,6 @@ void CToodee::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 }
+
+
+

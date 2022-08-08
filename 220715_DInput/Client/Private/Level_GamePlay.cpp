@@ -19,7 +19,7 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	CGameMgr::Get_Instance()->Initialize();
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -43,8 +43,12 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;*/
 	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
 	//	return E_FAIL;
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Turret", L"Layer_Turret")))
-		return E_FAIL;*/
+
+	ObjInfo objInfo;
+	objInfo.vPos = _float3(3.f,1.f,3.f);
+	objInfo.iNumLevel = LEVEL_STAGE1;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
+		return E_FAIL;
 	//==================================================================================
 	LoadGameObject();
 

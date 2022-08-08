@@ -3,6 +3,7 @@
 
 
 #include "GameInstance.h"
+#include "Hong.h"
 
 CParticle_Button::CParticle_Button(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -30,15 +31,6 @@ HRESULT CParticle_Button::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	m_Tag = L"Particle";
-
-	/*_float3 vScale = m_pTransformCom->Get_Scaled();
-
-	random_device random;
-	mt19937 rd(random());
-	uniform_real_distribution<float> range(.1f, .5f);
-
-	vScale = vScale * range(rd);
-	m_pTransformCom->Set_Scaled(vScale);*/
 
 	return S_OK;
 }

@@ -197,6 +197,7 @@
     <ClInclude Include="..\Public\Spike.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Thunder_Cloud.h" />
+    <ClInclude Include="..\public\Tookee.h" />
     <ClInclude Include="..\Public\Topdee.h" />
     <ClInclude Include="..\Public\Toodee.h" />
     <ClInclude Include="..\public\Turret.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="..\Private\Spike.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Thunder_Cloud.cpp" />
+    <ClCompile Include="..\private\Tookee.cpp" />
     <ClCompile Include="..\Private\Topdee.cpp" />
     <ClCompile Include="..\Private\Toodee.cpp" />
     <ClCompile Include="..\private\Turret.cpp" />

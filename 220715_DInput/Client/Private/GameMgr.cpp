@@ -2,19 +2,26 @@
 #include "..\Public\GameMgr.h"
 
 #include "GameInstance.h"
-
+#include "KeyBlock.h"
+#include "Tookee.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
 {
 }
 
-HRESULT CGameMgr::Initialize()
+HRESULT CGameMgr::Initialize(_uint iNumLevel)
 {
 	//게임모드의 초기화
 	m_eGameMode = TOODEE;
 	m_iHoleFinishNum = 0;
+	m_iNumLevel = iNumLevel;
+	m_iKey = 0;
 	m_Obstaclelist.clear();
+	if (m_Tookee != nullptr)
+	{
+		Safe_Release(m_Tookee);
+	}
 	return S_OK;
 }
 
@@ -304,5 +311,36 @@ _bool CGameMgr::Key_Down(_uchar KeyInput)
 
 void CGameMgr::Free()
 {
+	if (m_Tookee != nullptr)
+	{
+		Safe_Release(m_Tookee);
+	}
 	m_Data.clear();
+}
+
+void CGameMgr::DeleteKey()
+{
+	m_iKey--;
+	if (m_iKey <= 0)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+		list<CGameObject*>* m_pBoxList = pGameInstance->GetLayer(m_iNumLevel, L"Layer_KeyBox");
+		if (m_pBoxList == nullptr)
+			return;
+		for (auto& iter : *m_pBoxList)
+		{
+			dynamic_cast<CKeyBlock*>(iter)->SetDead();
+		}
+
+		Safe_Release(pGameInstance);
+	}
+}
+
+void CGameMgr::ControlTooKee(CTookee::STATE _eState)
+{
+	if (m_Tookee != nullptr)
+	{
+
+	}
 }

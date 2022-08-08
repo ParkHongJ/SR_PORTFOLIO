@@ -166,6 +166,9 @@
     <Filter Include="02.GameObject\Particle\Particle_Spark">
       <UniqueIdentifier>{cc6e0146-1a10-4ba5-bca2-db7b7869efee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Tookee">
+      <UniqueIdentifier>{7766fda1-2a0d-4a54-8b6b-1627170a34f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -352,6 +355,9 @@
     <ClInclude Include="..\Public\Particle_Spark.h">
       <Filter>02.GameObject\Particle\Particle_Spark</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Tookee.h">
+      <Filter>02.GameObject\Tookee</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -527,6 +533,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Spark.cpp">
       <Filter>02.GameObject\Particle\Particle_Spark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Tookee.cpp">
+      <Filter>02.GameObject\Tookee</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
