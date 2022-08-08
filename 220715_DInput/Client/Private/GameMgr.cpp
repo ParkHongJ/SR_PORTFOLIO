@@ -2,7 +2,7 @@
 #include "..\Public\GameMgr.h"
 
 #include "GameInstance.h"
-
+#include "Particle_Spark.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -21,6 +21,7 @@ HRESULT CGameMgr::Initialize()
 void CGameMgr::Tick(_float fTimeDelta)
 {
 	if (Key_Down(DIK_X)) {
+		Particle_To_Player();
 		Player_Active();
 	}
 }
@@ -182,6 +183,30 @@ _bool CGameMgr::Get_Object_Data(const _tchar * pTag)
 		}
 
 	return false;
+}
+
+void CGameMgr::Particle_To_Player()
+{
+	if (m_pParticle_Spark == nullptr)
+	{
+		m_pParticle_Spark = (CParticle_Spark*)CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Particle_Spark")->front();
+		if (m_pParticle_Spark == nullptr)
+			return;
+	}
+	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Topdee")->front();
+	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Toodee")->front();
+	if (pTopdee == nullptr || pToodee == nullptr)
+		return;
+	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Tranform"));
+	_float3 vTopdeePos{ pTopdeeTrans->Get_State(CTransform::STATE_POSITION) };
+	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Tranform"));
+	_float3 vToodeePos{ pToodeeTrans->Get_State(CTransform::STATE_POSITION) };
+
+	if (m_eGameMode == TOODEE)//투디에서 탑디로.
+		m_pParticle_Spark->Make_Bazier(vToodeePos, vTopdeePos);
+	else if (m_eGameMode == TOPDEE)//탑디에서 투디로
+		m_pParticle_Spark->Make_Bazier(vTopdeePos, vToodeePos);
+	
 }
 
 void CGameMgr::Player_Active()

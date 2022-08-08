@@ -22,7 +22,8 @@ private:
 	HRESULT Ready_Layer_Block(const _tchar* pLayerTag, void* pArg = nullptr);//normal
 	HRESULT Ready_Layer_WarpBlock(const _tchar* pLayerTag, void* pArg = nullptr);//warp
 	HRESULT Ready_Layer_ElectricBlock(const _tchar* pLayerTag, void* pArg = nullptr);//Electric
-
+	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag);//toodee
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);//toodee
 	void	LoadGameObject();
 
 public:

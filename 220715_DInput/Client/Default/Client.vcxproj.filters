@@ -163,6 +163,9 @@
     <Filter Include="02.GameObject\Cloud\Thunder_Cloud">
       <UniqueIdentifier>{ea1f163c-023e-43b6-a555-ec6c0d0dc9af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Particle\Particle_Spark">
+      <UniqueIdentifier>{cc6e0146-1a10-4ba5-bca2-db7b7869efee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -346,6 +349,9 @@
     <ClInclude Include="..\Public\Thunder_Cloud.h">
       <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle_Spark.h">
+      <Filter>02.GameObject\Particle\Particle_Spark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -515,9 +521,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Button.cpp">
       <Filter>02.GameObject\Particle</Filter>
-    </ClCompile> 
+    </ClCompile>
     <ClCompile Include="..\Private\Thunder_Cloud.cpp">
       <Filter>02.GameObject\Cloud\Thunder_Cloud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Spark.cpp">
+      <Filter>02.GameObject\Particle\Particle_Spark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

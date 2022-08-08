@@ -6,6 +6,8 @@
 #include "ParticleMgr.h"
 #include "GameMgr.h"
 #include "Topdee.h"
+#include "Toodee.h"
+
 CLevel_GyuH::CLevel_GyuH(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -25,6 +27,12 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), &Info)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
+	
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -139,6 +147,37 @@ HRESULT CLevel_GyuH::Ready_Layer_ElectricBlock(const _tchar * pLayerTag, void * 
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_Toodee(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CToodee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	Info.vPos = _float3(3.f, 1.f, 14.f);
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
+		LEVEL_STAGE1, pLayerTag, &Info)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GyuH::Ready_Layer_Particle_Spark(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STAGE1, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

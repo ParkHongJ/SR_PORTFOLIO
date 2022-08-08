@@ -3,6 +3,7 @@
 
 #include "ButtonBlock_Center.h"
 #include "Particle_Button.h"
+#include "Particle_Spark.h"
 #include "BreakingBlock.h"
 #include "Thunder_Cloud.h"
 #include "ElectricBlock.h"
@@ -815,6 +816,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTopdee::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Toodee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"),
+		CToodee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pGraphic_Device))))
@@ -860,6 +866,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CParticle::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Particle_Button */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Spark"),
+		CParticle_Spark::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Thunder_Cloud */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Thunder_Cloud"),
 		CThunder_Cloud::Create(m_pGraphic_Device))))
@@ -874,6 +885,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	/* For.Prototype_Component_Texture_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Spr/Topdee_Spr_%d.png"),22))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 38))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_NormalBlock */ 
@@ -921,12 +937,14 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_%d.png"), 6))))
 		return E_FAIL;
 
-	//================================ TextureEnd
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
+	/* For.Prototype_Component_Texture_Particle_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Spark"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
+	/* For.Prototype_Component_Texture_Toodee_Died */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee_Died"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeDiedSpr/toodeeDiedSpr_%d.png"), 5))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle */
@@ -936,7 +954,16 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 
 	/* For.Prototype_Component_Texture_Rain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Rain_Thunder/Rain_Thunder_%d.png"),13))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Rain_Thunder/Rain_Thunder_%d.png"), 13))))
+		return E_FAIL;
+
+
+	//================================ TextureEnd
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Gyu Loading Complete."));

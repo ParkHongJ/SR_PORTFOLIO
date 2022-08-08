@@ -33,7 +33,6 @@ public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanN
 
 	_bool Check_Box_Down(const _float3& vBoxPos, _uint* pOut_iHoleNum_in_Layer,LEVEL* pOut_eHoleLevel);		// This func Manage Box Can Down.
 	_bool Check_PushBox_Exactly(const _float3& vBoxPos);													// This func Manage PushBox Can Down..
-	
 	list<_float3> m_Obstaclelist;
 	LEVEL m_eHoleLevel{ LEVEL_END };// Remember Input Level.
 	_uint m_iHoleFinishNum{0};// Remember Input FinalHoleNumber.
@@ -41,6 +40,7 @@ public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanN
 public:
 	void Set_Object_Data(const _tchar* pTag, _bool* bData);
 	_bool Get_Object_Data(const _tchar* pTag);
+	void Particle_To_Player();
 	void Player_Active();
 
 	_bool Col_Obj(const _float3& vCurPos, _float* pOut_ObjectsDist, _uint* pPigDirOut, _bool bPushCheck);
@@ -55,6 +55,7 @@ private:
 	_bool m_bKeyState[256] = { false };
 
 	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
+	CParticle_Spark* m_pParticle_Spark = nullptr;
 public:
 	virtual void Free() override;
 };
