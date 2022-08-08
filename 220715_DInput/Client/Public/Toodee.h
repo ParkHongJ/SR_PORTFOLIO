@@ -42,6 +42,10 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta, _uint eDireciton) override;
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
 
+public:
+	//Edit Hong. 기존 이펙트생성 함수로 변경
+	void CreateEffect();
+	void SetStateTookee();
 private:
 	CTexture* m_pTextureCom = nullptr;
 	CTexture* m_pTextureCom_Died = nullptr;
@@ -73,14 +77,13 @@ private:
 
 	_bool m_bPortal = false;
 	_bool m_bDiedEff = false;
-
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 
 private:
 	HRESULT SetUp_Components();
-
+	
 public:
 	static CToodee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

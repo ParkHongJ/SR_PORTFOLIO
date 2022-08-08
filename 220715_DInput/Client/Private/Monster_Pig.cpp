@@ -165,7 +165,7 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 				m_eCurDir = DIR_DOWN;
 			}
 
-			m_pTransformCom->Chase(m_vTopdeePos, 0.3 * fTimeDelta);
+			m_pTransformCom->Chase(m_vTopdeePos, 0.3f * fTimeDelta);
 			
 		}
 		m_bOnBlock = false;

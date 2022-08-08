@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Base.h"
 #include "Transform.h"
+#include "Tookee.h"
 BEGIN(Engine)
 class CGameObject;
 END
@@ -48,11 +49,49 @@ public:
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
-	void AddKey() { m_iKey++; }
 
+	//현재 매커니즘
+	//투디 or 탑디 이동명령 -> 게임매니저 -> 투키
+	void ControlTooKee(CTookee::STATE _eState);
+	void SetTookee(CTookee* _TooKee) { 
+		m_Tookee = _TooKee;
+		Safe_AddRef(m_Tookee);
+	}
+	void SetStateTooKee(CTookee::STATE _eState) 
+	{ 
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetState(_eState); 
+		}
+	}
+	void SetScaeTookee(_float3 _vScale) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetScale(_vScale);
+		}
+	}
+	void SetMoveSpeedTookee(_float _fSpeed) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetSpeed(_fSpeed);
+		}
+	}
+	void SetJumpTookee() {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetJump();
+		}
+	}
+	/* Key 전용 */
+	void AddKey() { m_iKey++; }
 	void DeleteKey();
-	void TempFunc(CTransform* temp) { tempTransform = temp; }//홍준 테스트용. 탑디정보를 받아오기위해 게임매니저에 임시저장
-	CTransform* TempTrasnform() { return tempTransform; }
+	void SetPosition(_float fTimeDelta, _float3 vDir) {
+		if (m_Tookee != nullptr)
+		{
+			m_Tookee->SetPosition(fTimeDelta, vDir);
+		}
+	}
+	//===Key===
 private:
 	CTransform* tempTransform = nullptr;//홍준 테스트용
 	map<const _tchar*, _bool*> m_Data;
@@ -64,6 +103,8 @@ private:
 
 	_uint m_iNumLevel;
 	_uint m_iKey = 0;
+
+	class CTookee* m_Tookee = nullptr;
 public:
 	virtual void Free() override;
 };

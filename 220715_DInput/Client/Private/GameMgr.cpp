@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "KeyBlock.h"
-
+#include "Tookee.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -18,6 +18,10 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 	m_iNumLevel = iNumLevel;
 	m_iKey = 0;
 	m_Obstaclelist.clear();
+	if (m_Tookee != nullptr)
+	{
+		Safe_Release(m_Tookee);
+	}
 	return S_OK;
 }
 
@@ -282,6 +286,10 @@ _bool CGameMgr::Key_Down(_uchar KeyInput)
 
 void CGameMgr::Free()
 {
+	if (m_Tookee != nullptr)
+	{
+		Safe_Release(m_Tookee);
+	}
 	m_Data.clear();
 }
 
@@ -301,5 +309,13 @@ void CGameMgr::DeleteKey()
 		}
 
 		Safe_Release(pGameInstance);
+	}
+}
+
+void CGameMgr::ControlTooKee(CTookee::STATE _eState)
+{
+	if (m_Tookee != nullptr)
+	{
+
 	}
 }

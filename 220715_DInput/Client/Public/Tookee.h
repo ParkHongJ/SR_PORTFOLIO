@@ -1,6 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
-#include "LandObject.h"
+#include "GameObject.h"
 
 BEGIN(Engine)
 class CTexture;
@@ -12,8 +12,11 @@ class CVIBuffer_Toodee_Rect;
 END
 
 BEGIN(Client)
-class CTookee : public CLandObject
+class CTookee final : public CGameObject
 {
+public:
+	enum STATE { TOOKEE_LEFT, TOOKEE_RIGHT, TOOKEE_UP, TOOKEE_DOWN, TOOKEE_JUMP, TOOKEE_IDLE, TOOKEE_END };
+
 private:
 	CTookee(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CTookee(const CTookee& rhs);
@@ -40,13 +43,37 @@ private:
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
 	_uint m_iTexIndex = 0;
+
+
+	_bool m_bJump = false;
+	_bool m_bDrop = false;
+	_float m_fJumpPower = 17.f;
+	_float m_fJumpTime = 0.f;
+	_float m_fMaxJumpTime = 0.6f;
+	_float m_fDrop_Endline = 0.f;
+
+	/*CGameMgr::GAMEMODE m_ePreMod= CGameMgr::TOODEE;
+	CGameMgr::GAMEMODE m_eCurMod;*/
+	//투키의 현재상태, TOODE, TOPDEE 분리할까? 말까?
+	STATE m_eCurState;
+	_float3 m_fScale = {1.f,1.f,1.f};
+	_float m_fSpeed = 5.f;
+//TOODEE일 경우 : X축 이동과 점프, 중력이 필요함
+//TOPDEE일 경우 : X,Z축 이동이 필요함 홀과 충돌필요
+public:
+	void Move(STATE _eState, _float fTimeDelta);
+	void Jump(_float fTimeDelta);
+	void CreateEffect();
+	void SetState(STATE _eState) { m_eCurState = _eState; }
+	void SetJump() { m_bJump = true; }
+	void SetSpeed(_float _fSpeed) { m_fSpeed = _fSpeed; }
+	void SetScale(_float3 _vScale);
+	void SetPosition(_float fTimeDelta, _float3 vDir);
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
-
 private:
 	HRESULT SetUp_Components();
-	CTransform* m_Toodee;
 public:
 	static CTookee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);
