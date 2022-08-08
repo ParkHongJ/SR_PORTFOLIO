@@ -7,6 +7,7 @@
 #include "ParticleMgr.h"
 #include "Topdee.h"
 #include "Hong.h"
+#include "GameMgr.h"
 
 
 CLevel_SENI::CLevel_SENI(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -58,6 +59,19 @@ HRESULT CLevel_SENI::Initialize()
 void CLevel_SENI::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F4))
+	{
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_SENI))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CLevel_SENI::Render()
