@@ -34,7 +34,11 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	//=======================================Test=======================================
-	
+	ObjInfo objInfo1;
+	objInfo1.vPos = _float3(3.5f, .5f, 4.5f);
+	objInfo1.iNumLevel = LEVEL_STAGE1;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo1)))
+		return E_FAIL;
 	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(15.5f, .5f, 5.5f))))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(13.5f, .5f, 5.5f))))

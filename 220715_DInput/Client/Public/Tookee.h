@@ -60,6 +60,9 @@ private:
 //TOODEE일 경우 : X축 이동과 점프, 중력이 필요함
 //TOPDEE일 경우 : X,Z축 이동이 필요함 홀과 충돌필요
 public:
+	/*===============
+	==TooKeeControl==
+	===============*/
 	void Move(STATE _eState, _float fTimeDelta);
 	void Jump(_float fTimeDelta);
 	void CreateEffect();
@@ -68,6 +71,17 @@ public:
 	void SetSpeed(_float _fSpeed) { m_fSpeed = _fSpeed; }
 	void SetScale(_float3 _vScale);
 	void SetPosition(_float fTimeDelta, _float3 vDir);
+public:
+	/* For Topdee*/
+	void	TopdeeIsPushed(const _float3 _vPos);
+	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush);//박스앞에박스있는지 밀때체크
+
+private:
+	//For Topdee
+	list<class CGameObject*>* m_pBoxList = nullptr;
+	_bool	m_bPushBox = false;
+	_float m_fPushBoxDelayTimer = 0.f;
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

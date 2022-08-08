@@ -83,6 +83,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
+			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
 			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
@@ -93,16 +94,18 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
+			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
 			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 		{
 			Move_Frame(DIR_LEFT);
 			m_vTargetDir = { -1.f, 0.f, 0.f };
-			m_pTransformCom->Translate(vTargetPos);
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
+			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
 			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
@@ -113,6 +116,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
+			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
 			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
@@ -127,8 +131,11 @@ void CTopdee::Tick(_float fTimeDelta)
 	else
 		Not_My_Turn_Texture();
 	if (!m_bPress && m_bActive)
+	{
 		Go_Lerp(fTimeDelta);
-	
+		//Edit Hong 
+		//키를뗏으면 투키를 보정시켜라
+	}
 	Safe_Release(pGameInstance);
 }
 
@@ -315,15 +322,36 @@ void CTopdee::LateTick(_float fTimeDelta)
 		vCurDir.x = -1.f;
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
 	{
+		//Edit Hong
+		_float3 vTookeePos = { 0.f,0.f,0.f };
 		if (m_eCurDir == DIR_LEFT)
+		{
 			vPos.x += fCollisionDist;
+			vTookeePos.x = 1.f;
+		}
 		else if (m_eCurDir == DIR_RIGHT)
+		{
 			vPos.x -= fCollisionDist;
+			vTookeePos.x = -1.f;
+		}
 		else if (m_eCurDir == DIR_UP)
-		 	vPos.z -= fCollisionDist;
+		{
+			vPos.z -= fCollisionDist;
+			vTookeePos.z = -1.f;
+		}
 		else if (m_eCurDir == DIR_DOWN)
+		{
 			vPos.z += fCollisionDist;
+			vTookeePos.z = 1.f;
+		}
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+
+		//문제 심하다..
+		//지속적으로 실행됨
+		CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
+		m_bTookeeMove = false;
+
 	}
 #pragma endregion Collision_Obstacle	
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
@@ -398,7 +426,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			return;
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
 		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
-		TopdeeIsPushed(vOtherPos);//탑디가 밀려나는거.
+		TopdeeIsPushed(vOtherPos, fTimeDelta);//탑디가 밀려나는거.
 		if (vOtherPos.y != 0.5f)
 			return;
 		if (!m_bPushBox) {//MakseDelay
@@ -463,20 +491,38 @@ void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 	m_eCurState = STATE_IDLE;
 }
 
-void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos)
-{//Box Pushing Topdee
+void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos, _float fTimeDelta)
+{
+	//Box Pushing Topdee
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float fDist = D3DXVec3Length(&(vTopdeePos - _vOtherPos));
 	fDist *= 0.2f;
+	_float3 vPos = { 0.f,0.f,0.f };
+	
 	if (m_eCurDir == DIR_LEFT)
+	{
 		vTopdeePos.x += fDist;
+		vPos.x += fDist;
+	}
 	else if (m_eCurDir == DIR_RIGHT)
+	{
 		vTopdeePos.x -= fDist;
+		vPos.x -= fDist;
+	}
 	else if (m_eCurDir == DIR_UP)
+	{
 		vTopdeePos.z -= fDist;
+		vPos.z -= fDist;
+	}
 	else if (m_eCurDir == DIR_DOWN)
+	{
 		vTopdeePos.z += fDist;
+		vPos.z += fDist;
+	}
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeePos);
+	/* 나중에 이거 수정해라 */
+	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vPos);
+
 }
 
 void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)

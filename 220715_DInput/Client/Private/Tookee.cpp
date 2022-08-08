@@ -5,6 +5,7 @@
 #include "GameMgr.h"
 #include "ParticleMgr.h"
 #include "Hong.h"
+#include "Interaction_Block.h"
 CTookee::CTookee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -69,9 +70,14 @@ void CTookee::Tick(_float fTimeDelta)
 		/* 투키상태의 초기화 */
 		m_eCurState = TOOKEE_IDLE;
 		//점프의 초기화
+		m_bJump = false;
 	}
 
-
+	if (m_eCurState == CGameMgr::TOPDEE)
+	{
+		if (m_bPushBox)
+			m_fPushBoxDelayTimer += fTimeDelta;
+	}
 
 
 	
@@ -98,7 +104,12 @@ void CTookee::LateTick(_float fTimeDelta)
 	case CTookee::TOOKEE_JUMP:
 		break;
 	case CTookee::TOOKEE_IDLE:
-		m_fSpeed = 0.f;
+		if (m_eCurMode == CGameMgr::TOODEE)
+		{
+			m_fSpeed = 0.f;
+		}
+		else
+			m_fSpeed = 5.f;
 		break;
 	default:
 		break;
@@ -203,9 +214,88 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		}
 	}
 	/* TOPDEE */
-	else
+	else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Box"))
 	{
 		//To do TOPDEE
+		//이거 위치 비교로도 가능.
+		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
+
+		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
+			return;
+
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
+		TopdeeIsPushed(vOtherPos);//투키가 밀려나는거.
+
+		if (vOtherPos.y != 0.5f)
+			return;
+
+		if (!m_bPushBox) {//MakseDelay
+			m_fPushBoxDelayTimer += fTimeDelta;
+		}
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
+			return;
+		}
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
+			m_fPushBoxDelayTimer = 0.f;
+			m_bPushBox = false;
+		}
+
+		if (m_pBoxList == nullptr)
+		{
+			//if Collision We Must Check NextBox.
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
+			if (m_pBoxList == nullptr)
+				return;
+		}
+
+		_float3 vCurDir = { 0.f,0.f,0.f };
+
+		if (m_eCurState == TOOKEE_DOWN)
+			vCurDir.z = -1.0f;
+		else if (m_eCurState == TOOKEE_UP)
+			vCurDir.z = 1.f;
+		else if (m_eCurState == TOOKEE_RIGHT)
+			vCurDir.x = 1.f;
+		else if (m_eCurState == TOOKEE_LEFT)
+			vCurDir.x = -1.f;
+
+		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
+		
+		_uint iCount = 0;
+
+		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
+		if (pBlock == nullptr)//지금미는 블록이 벽이니?
+			return;
+
+		list<CGameObject*> PushList;
+		_bool bCanPush = true;
+
+		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
+		
+		if (!bCanPush)
+			return;
+		
+		_float fdist = 0.f;
+
+		vOtherPos -= vCurDir;
+
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, vCurDir, &fdist, true)) {
+			return;
+		}
+
+		vOtherPos += vCurDir;
+		pBlock->Box_Push_More(fTimeDelta, vOtherPos, true);//First
+														   //_uint iCount{ 0 };
+		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
+		{
+			CInteraction_Block* pBlock = (CInteraction_Block*)(*iter);
+			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
+			_float3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
+		}
+		m_bPushBox = true;
 	}
 }
 
@@ -395,4 +485,83 @@ void CTookee::Free()
 	Safe_Release(m_pRendererCom);
 }
 
+void CTookee::TopdeeIsPushed(const _float3 _vPos)
+{
+	_float3 vTookeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	
+	_float fDist = D3DXVec3Length(&(vTookeePos - _vPos));
+	
+	fDist *= 0.2f;
+	
+	if (m_eCurState == TOOKEE_LEFT)
+		vTookeePos.x += fDist;
+	else if (m_eCurState == TOOKEE_RIGHT)
+		vTookeePos.x -= fDist;
+	else if (m_eCurState == TOOKEE_UP)
+		vTookeePos.z -= fDist;
+	else if (m_eCurState == TOOKEE_DOWN)
+		vTookeePos.z += fDist;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTookeePos);
+
+}
+
+void CTookee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)
+{
+	//들어온값은 다음 박스에 해당. 리스트에 담겨야하는 사이즈는 2개이다.
+	if (!bCanPush)
+		return;
+	auto& iter = m_pBoxList->begin();
+	for (_uint i = 0; i < m_pBoxList->size(); ++i)
+	{
+		CTransform* pNextBlock = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+		_float3 vNextBlockPos = pNextBlock->Get_State(CTransform::STATE_POSITION);
+		if (vNextBlockPos.y < 0.f)
+		{
+			++iter;
+			continue;
+		}
+		if (vPushDir.x == 0.f)
+		{
+			//Up or Down
+			if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z)//찾으려는값임.
+			{
+				if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x) {
+					_vNextBoxPos += vPushDir;
+					++iCountReFunc;
+
+					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
+					_float fdist = 0.f;
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, vPushDir, &fdist, true)) {//WallCheck
+						bCanPush = false;
+						return;
+					}
+					PushList.push_back(*iter);
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
+					break;
+				}
+			}
+		}
+		else if (vPushDir.z == 0.f)
+		{
+			if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x)//찾으려는값임.
+			{
+				if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z) {
+					_vNextBoxPos += vPushDir;
+					++iCountReFunc;
+					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
+					_float fdist = 0.f;
+					if (CGameMgr::Get_Instance()->Check_Not_Go(vNextBoxPosFix, vPushDir, &fdist, true)) {
+						bCanPush = false;
+						return;
+					}
+					PushList.push_back(*iter);
+					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
+					break;
+				}
+			}
+		}
+		++iter;
+	}
+}
 
