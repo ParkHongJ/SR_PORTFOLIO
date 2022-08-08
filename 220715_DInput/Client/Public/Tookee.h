@@ -1,7 +1,6 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
-
 BEGIN(Engine)
 class CTexture;
 class CRenderer;
@@ -52,8 +51,8 @@ private:
 	_float m_fMaxJumpTime = 0.6f;
 	_float m_fDrop_Endline = 0.f;
 
-	/*CGameMgr::GAMEMODE m_ePreMod= CGameMgr::TOODEE;
-	CGameMgr::GAMEMODE m_eCurMod;*/
+	_uint m_ePreMode = 0;
+	_uint m_eCurMode = 0;
 	//투키의 현재상태, TOODE, TOPDEE 분리할까? 말까?
 	STATE m_eCurState;
 	_float3 m_fScale = {1.f,1.f,1.f};

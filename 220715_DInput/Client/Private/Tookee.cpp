@@ -44,52 +44,41 @@ HRESULT CTookee::Initialize(void * pArg)
 
 void CTookee::Tick(_float fTimeDelta)
 {
-	////현재모드
-	//m_eCurMod = CGameMgr::Get_Instance()->GetMode();
-	////현재모드와 이전모드를 비교해서 같냐
-	//if (m_eCurMod == m_ePreMod)
-	//{
-	//	//모드가 안바뀜
-	//}
-	//else
-	//{
-	//	//모드가 바뀐시점
-	//	if (m_eCurMod == CGameMgr::TOPDEE)
-	//	{
-	//		//현재 바뀐모드가 탑디면 보정
-	//		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//현재모드
+	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
+	//현재모드와 이전모드를 비교해서 같냐
+	if (m_eCurMode == m_ePreMode)
+	{
+		//모드가 안바뀜
+	}
+	else
+	{
+		//모드가 바뀐시점
+		if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			//현재 바뀐모드가 탑디면 보정
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-	//		vPos.x = _uint(vPos.x) + 0.5f;
-	//		vPos.z = _uint(vPos.z) + 0.5f;
+			vPos.x = _uint(vPos.x) + 0.5f;
+			vPos.z = _uint(vPos.z) + 0.5f;
 
-	//		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-	//	}
-	//	m_ePreMod = m_eCurMod;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
+		m_ePreMode = m_eCurMode;
 
-	//	/* 투키상태의 초기화 */
-	//	m_eCurState = TOOKEE_IDLE;
-	//	//점프의 초기화
-	//}
+		/* 투키상태의 초기화 */
+		m_eCurState = TOOKEE_IDLE;
+		//점프의 초기화
+	}
 
 
-	///* TOODEE */
-	//if (m_eCurMod == CGameMgr::TOODEE)
-	//{
-	//	//To do TOODEE
-	//}
-	///* TOPDEE */
-	//else
-	//{
-	//	//To do TOPDEE
-	//}
 
-	//벽에 막히는거 추가하기
+
 	
 }
 
 void CTookee::LateTick(_float fTimeDelta)
 {
-	Jump(fTimeDelta);
 	switch (m_eCurState)
 	{
 	case CTookee::TOOKEE_LEFT:
@@ -99,11 +88,12 @@ void CTookee::LateTick(_float fTimeDelta)
 	case CTookee::TOOKEE_RIGHT:
 		m_fSpeed = 5.f;
 		m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-
 		break;
 	case CTookee::TOOKEE_UP:
+		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_DOWN:
+		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_JUMP:
 		break;
@@ -113,8 +103,19 @@ void CTookee::LateTick(_float fTimeDelta)
 	default:
 		break;
 	}
-	m_pTransformCom->Set_TransformDesc_Speed(m_fSpeed);
-	m_pTransformCom->Go_Straight_2D(fTimeDelta);
+	/* TOODEE */
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		//To do TOODEE
+		Jump(fTimeDelta);
+		m_pTransformCom->Set_TransformDesc_Speed(m_fSpeed);
+		m_pTransformCom->Go_Straight_2D(fTimeDelta);
+	}
+	/* TOPDEE */
+	else
+	{
+		//To do TOPDEE
+	}
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -138,9 +139,6 @@ HRESULT CTookee::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	ImGui::Begin("TOOKEE");
-	ImGui::Checkbox("JUMP", &m_bJump);
-	ImGui::End();
 	//---------------------디버그일때 그리기-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -159,44 +157,55 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 {
 	_float fBoxSize = 1.f;
 	_float fMyLength = 1.5f;
-	if (other->CompareTag(L"Box")) {
-		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
-		Safe_AddRef(TargetBox);
 
-		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
 
-		if (CCollider::DIR_UP == eDireciton) {
-			if (0.2f < m_fJumpTime && m_bJump)
-				m_bJump = false;
-			m_fJumpTime = 0.f;
-			m_eCurState = TOOKEE_IDLE;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
-		}
-		else if (CCollider::DIR_DOWN == eDireciton) {
-			if (fMyLength > abs(vMyPos.z - vBoxPos.z))
-				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z) - 0.001f)));
-		}
-		else if (CCollider::DIR_LEFT == eDireciton) {
-			if (m_eCurState == TOOKEE_RIGHT)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//need fix
-			else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if (m_eCurState == TOOKEE_IDLE)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-		}
-		else if (CCollider::DIR_RIGHT == eDireciton) {
-			if (m_eCurState == TOOKEE_LEFT)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//need fix
-			else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			else if (m_eCurState == TOOKEE_IDLE)
-				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-		}
+	/* TOODEE */
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		if (other->CompareTag(L"Box")) {
+			CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
+			Safe_AddRef(TargetBox);
 
-		Safe_Release(TargetBox);
+			_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
+
+			if (CCollider::DIR_UP == eDireciton) {
+				if (0.2f < m_fJumpTime && m_bJump)
+					m_bJump = false;
+				m_fJumpTime = 0.f;
+				m_eCurState = TOOKEE_IDLE;
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
+			}
+			else if (CCollider::DIR_DOWN == eDireciton) {
+				if (fMyLength > abs(vMyPos.z - vBoxPos.z))
+					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z) - 0.001f)));
+			}
+			else if (CCollider::DIR_LEFT == eDireciton) {
+				if (m_eCurState == TOOKEE_RIGHT)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				//need fix
+				else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				else if (m_eCurState == TOOKEE_IDLE)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			}
+			else if (CCollider::DIR_RIGHT == eDireciton) {
+				if (m_eCurState == TOOKEE_LEFT)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				//need fix
+				else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				else if (m_eCurState == TOOKEE_IDLE)
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+			}
+
+			Safe_Release(TargetBox);
+		}
+	}
+	/* TOPDEE */
+	else
+	{
+		//To do TOPDEE
 	}
 }
 
@@ -206,69 +215,6 @@ void CTookee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 
 void CTookee::Move(STATE _eState, _float fTimeDelta)
 {
-	///* For.Toodee_Turn */
-	//if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
-	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
-	//		m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-	//		0.3f,
-	//		m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
-
-	//	if (m_bActive) {
-
-	//			if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-	//				m_eToodeeDir = TOODEE_LEFT;
-
-	//			m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
-	//			//Edit Hong
-	//			m_MoveSpeed = 5.f;
-	//			/*if (5.f > m_MoveSpeed)
-	//			m_MoveSpeed += 0.5f;*/
-	//			if (!m_bPortal) {
-	//				m_iMinFrame = 13;
-	//				m_iMaxFrame = 24;
-	//			}
-	//			else {
-	//				m_iMinFrame = 30;
-	//				m_iMaxFrame = 37;
-	//			}
-	//			if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-	//				m_eToodeeDir = TOODEE_RIGHT;
-
-	//			m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-	//			//Edit Hong
-	//			m_MoveSpeed = 5.f;
-	//			/*if (5.f > m_MoveSpeed)
-	//			m_MoveSpeed += 0.5f;*/
-	//			if (!m_bPortal) {
-	//				m_iMinFrame = 13;
-	//				m_iMaxFrame = 24;
-	//			}
-	//			else {
-	//				m_iMinFrame = 30;
-	//				m_iMaxFrame = 37;
-	//			}
-	//		else {
-	//			if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-	//				m_eToodeeDir = TOODEE_IDLE;
-	//		}
-	//	}
-	//	else if (!m_bActive) {
-	//		m_eToodeeDir = TOODEE_DEAD;
-	//	}
-
-	//	m_eCurruntDir = m_eToodeeDir;
-	//}
-	//else {
-	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
-	//		m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-	//		0.001f,
-	//		m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
-	//}
-
-
-
-
-
 	switch (_eState)
 	{
 	case CTookee::TOOKEE_LEFT:
@@ -320,6 +266,11 @@ void CTookee::Jump(_float fTimeDelta)
 void CTookee::SetScale(_float3 _vScale)
 {
 	m_pTransformCom->Set_Scale(_vScale);
+}
+
+void CTookee::SetPosition(_float fTimeDelta, _float3 vDir)
+{
+	m_pTransformCom->Translate(vDir * fTimeDelta * m_fSpeed);
 }
 
 void CTookee::CreateEffect()
@@ -444,8 +395,4 @@ void CTookee::Free()
 	Safe_Release(m_pRendererCom);
 }
 
-void CTookee::SetPosition(_float fTimeDelta, _float3 vDir)
-{
-	m_pTransformCom->Translate(vDir * fTimeDelta * m_fSpeed);
-}
 

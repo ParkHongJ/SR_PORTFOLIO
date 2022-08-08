@@ -82,6 +82,8 @@ void CTopdee::Tick(_float fTimeDelta)
 			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
+			//Edit Hong
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
 		{
@@ -90,14 +92,18 @@ void CTopdee::Tick(_float fTimeDelta)
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
+			//Edit Hong
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 		{
 			Move_Frame(DIR_LEFT);
 			m_vTargetDir = { -1.f, 0.f, 0.f };
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
+			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_bPress = true;
+			//Edit Hong
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 		{
@@ -106,6 +112,8 @@ void CTopdee::Tick(_float fTimeDelta)
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
+			//Edit Hong
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 		}
 		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
 		{//박스들기.
