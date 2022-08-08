@@ -53,7 +53,7 @@ _float3 CParticle_Spark::Point_Setting(_float3 vOriginPos)
 {
 	random_device rd;
 	default_random_engine eng(rd());
-	uniform_real_distribution<_int> distr(0, 360);
+	uniform_real_distribution<float> distr(0.f, 360.f);
 	_float x = m_fPos[0] * cosf(D3DXToRadian(distr(eng)))+vOriginPos.x;
 	_float y = m_fPos[1] * sinf(D3DXToRadian(distr(eng))) + vOriginPos.y;
 	return _float3(x, y, vOriginPos.z);

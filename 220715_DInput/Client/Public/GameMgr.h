@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Client_Defines.h"
+#include "Particle_Spark.h"
 #include "GameObject.h"
 #include "Base.h"
-
 BEGIN(Engine)
 class CGameObject;
 END
@@ -56,6 +56,7 @@ private:
 
 	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
 	CParticle_Spark* m_pParticle_Spark = nullptr;
+
 public:
 	virtual void Free() override;
 };

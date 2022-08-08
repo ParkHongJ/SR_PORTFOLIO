@@ -30,8 +30,8 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;*/
 	
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -62,12 +62,12 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_WarpBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;*/
 
-	_float4 vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
+	/*_float4 vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
 	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
-		return E_FAIL;
+		return E_FAIL;*/
 
-	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
+	//CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+	//CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
 	//CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);*/
 	return S_OK;
 
@@ -270,6 +270,7 @@ HRESULT CLevel_GyuH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), 
 		LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
+
 	_float3 vPos{ 10.0f,0.5f,10.f };
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
 		LEVEL_STAGE1, pLayerTag,vPos)))

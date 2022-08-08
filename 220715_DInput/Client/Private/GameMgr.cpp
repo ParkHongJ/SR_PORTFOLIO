@@ -2,7 +2,7 @@
 #include "..\Public\GameMgr.h"
 
 #include "GameInstance.h"
-#include "Particle_Spark.h"
+
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -21,7 +21,7 @@ HRESULT CGameMgr::Initialize()
 void CGameMgr::Tick(_float fTimeDelta)
 {
 	if (Key_Down(DIK_X)) {
-		Particle_To_Player();
+		//Particle_To_Player();
 		Player_Active();
 	}
 }
