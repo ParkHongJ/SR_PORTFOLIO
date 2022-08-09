@@ -82,14 +82,12 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_vTargetDir = { 0.f, 0.f, 1.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
-			{//final Wall and Block DropPos 
+			{
 				m_bTookeeMove = false;
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			//Edit Hong
-			
+			m_bPress = true;	
 			if (m_bTookeeMove) {
 				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
 				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
@@ -101,7 +99,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_vTargetDir = { 0.f, 0.f, -1.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
-			{//final Wall and Block DropPos 
+			{
 				m_bTookeeMove = false;
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
@@ -119,7 +117,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_vTargetDir = { -1.f, 0.f, 0.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
-			{//final Wall and Block DropPos 
+			{
 				m_bTookeeMove = false;
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
@@ -137,7 +135,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			m_vTargetDir = { 1.f, 0.f, 0.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
-			{//final Wall and Block DropPos 
+			{
 				m_bTookeeMove = false;
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
