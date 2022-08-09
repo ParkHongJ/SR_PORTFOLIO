@@ -72,6 +72,7 @@ void CTookee::Tick(_float fTimeDelta)
 		m_eCurState = TOOKEE_IDLE;
 		//점프의 초기화
 		m_bJump = false;
+		m_fJumpTime = 0.f;
 	}
 
 	
