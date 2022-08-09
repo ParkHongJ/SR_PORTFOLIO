@@ -346,7 +346,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 	_float fBoxSize = 1.f;
 	_float fMyLength = 1.5f;
-	if (other->CompareTag(L"Box")) {
+	//Edit Hong
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
 

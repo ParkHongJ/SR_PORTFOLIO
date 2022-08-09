@@ -109,6 +109,7 @@ void CTookee::LateTick(_float fTimeDelta)
 	default:
 		break;
 	}
+
 	/* TOODEE */
 	if (m_eCurMode == CGameMgr::TOODEE)
 	{
@@ -121,6 +122,44 @@ void CTookee::LateTick(_float fTimeDelta)
 	else
 	{
 		//To do TOPDEE
+		_float fCollisionDist;
+
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		_float3 vCurDir{ 0.f,0.f,0.f };
+		if (m_eCurState == TOOKEE_DOWN)
+			vCurDir.z = -1.0f;
+		else if (m_eCurState == TOOKEE_UP)
+			vCurDir.z = 1.f;
+		else if (m_eCurState == TOOKEE_RIGHT)
+			vCurDir.x = 1.f;
+		else if (m_eCurState == TOOKEE_LEFT)
+			vCurDir.x = -1.f;
+
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
+		{
+			//Edit Hong
+			if (fCollisionDist != 0.f)
+			{
+				if (m_eCurState == TOOKEE_LEFT)
+				{
+					vPos.x += fCollisionDist;
+				}
+				else if (m_eCurState == TOOKEE_RIGHT)
+				{
+					vPos.x -= fCollisionDist;
+				}
+				else if (m_eCurState == TOOKEE_UP)
+				{
+					vPos.z -= fCollisionDist;
+				}
+				else if (m_eCurState == TOOKEE_DOWN)
+				{
+					vPos.z += fCollisionDist;
+				}
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			}
+		}
 	}
 
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
@@ -168,7 +207,7 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	/* TOODEE */
 	if (m_eCurMode == CGameMgr::TOODEE)
 	{
-		if (other->CompareTag(L"Box")) {
+		if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 			CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 			Safe_AddRef(TargetBox);
 
@@ -250,7 +289,8 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		_uint iCount = 0;
 
 		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
-		if (pBlock == nullptr)//지금미는 블록이 벽이니?
+		//현재 충돌한 블럭이 벽이라면
+		if (pBlock == nullptr) 
 			return;
 
 		list<CGameObject*> PushList;

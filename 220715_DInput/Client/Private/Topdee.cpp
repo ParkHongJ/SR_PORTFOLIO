@@ -325,11 +325,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
 	{
 		//Edit Hong
-
-
-
-
-
 		if (fCollisionDist != 0.f)
 		{
 			_float3 vTookeePos = { 0.f,0.f,0.f };

@@ -49,7 +49,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	//	return E_FAIL;
 
 	ObjInfo objInfo;
-	objInfo.vPos = _float3(3.f,1.f,3.f);
+	//Y값 무조건 0.5 제일중요
+	objInfo.vPos = _float3(3.f,.5f,3.f);
 	objInfo.iNumLevel = LEVEL_STAGE1;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
 		return E_FAIL;
@@ -262,7 +263,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 
 void CLevel_GamePlay::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
