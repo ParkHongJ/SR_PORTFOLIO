@@ -87,7 +87,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;	
+			m_bPress = true;
 			if (m_bTookeeMove) {
 				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
 				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
@@ -210,7 +210,7 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	_float3 vFinalPosition;
 
 	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
-	if(CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 		vFinalPosition.y = m_MyTurnY;
 	else
 		vFinalPosition.y = m_NotMyTurnY;
@@ -223,30 +223,30 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 void CTopdee::Topdee_PreLoader_Pos_Mgr()
 {
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_int iPreLoaderPosX{_int(vCurPosition.x)}, iPreLoaderPosY{ _int(vCurPosition.y) }, iPreLoaderPosZ{ _int(vCurPosition.z) };
-	if (m_eCurDir == DIR_DOWN) 
+	_int iPreLoaderPosX{ _int(vCurPosition.x) }, iPreLoaderPosY{ _int(vCurPosition.y) }, iPreLoaderPosZ{ _int(vCurPosition.z) };
+	if (m_eCurDir == DIR_DOWN)
 		--iPreLoaderPosZ;
-	else if (m_eCurDir == DIR_UP) 
+	else if (m_eCurDir == DIR_UP)
 		++iPreLoaderPosZ;
-	else if (m_eCurDir == DIR_LEFT) 
+	else if (m_eCurDir == DIR_LEFT)
 		--iPreLoaderPosX;
 	else if (m_eCurDir == DIR_RIGHT)
 		++iPreLoaderPosX;
-	
+
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	//_float iPreLoaderPosY = m_OriPreLoaderY;
-	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(_float(iPreLoaderPosX)+ 0.5f, _float(iPreLoaderPosY), _float(iPreLoaderPosZ) + 0.5f));
+	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(_float(iPreLoaderPosX) + 0.5f, _float(iPreLoaderPosY), _float(iPreLoaderPosZ) + 0.5f));
 }
 
 void CTopdee::Not_My_Turn_Texture()
 {
 	if (m_eCurState == STATE_DEAD)
 		return;
-	if (m_eCurDir == DIR_DOWN) 
+	if (m_eCurDir == DIR_DOWN)
 		m_iFrame = 14;
-	else if (m_eCurDir == DIR_UP) 
+	else if (m_eCurDir == DIR_UP)
 		m_iFrame = 16;
-	else if (m_eCurDir == DIR_LEFT) 
+	else if (m_eCurDir == DIR_LEFT)
 		m_iFrame = 15;
 	else if (m_eCurDir == DIR_RIGHT)
 		m_iFrame = 13;
@@ -269,7 +269,7 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 
 void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 {
-	/*topdee ??? ?? 
+	/*topdee ??? ??
 	left
 	 0, 1 Topdee idle
 	 2, 3 Topdee Left
@@ -313,7 +313,7 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 		}
 	}
 
-	
+
 }
 
 void CTopdee::LateTick(_float fTimeDelta)
@@ -365,7 +365,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 			else if (m_eCurDir == DIR_RIGHT)
 			{
 				vPos.x -= fCollisionDist;
-				_float fPos{ fCollisionDist +1.f};
+				_float fPos{ fCollisionDist + 1.f };
 				vTookeePos.x = -fPos;
 			}
 			else if (m_eCurDir == DIR_UP)
@@ -405,7 +405,7 @@ HRESULT CTopdee::Render()
 	Reset_ColliderState();
 #pragma endregion Debug
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;	
+		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_Texture(m_iFrame)))
 		return E_FAIL;
@@ -437,7 +437,7 @@ HRESULT CTopdee::Render()
 }
 void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
-	
+
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
@@ -507,13 +507,13 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			return;
 		}
 		vOtherPos += vCurDir;
-		pBlock->Box_Push_More(fTimeDelta, vOtherPos,true);//First
+		pBlock->Box_Push_More(fTimeDelta, vOtherPos, true);//First
 		//_uint iCount{ 0 };
 		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
 		{
-			CInteraction_Block* pBlock= (CInteraction_Block*)(*iter);
+			CInteraction_Block* pBlock = (CInteraction_Block*)(*iter);
 			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
-			_float3 vPos{pTransform->Get_State(CTransform::STATE_POSITION)};
+			_float3 vPos{ pTransform->Get_State(CTransform::STATE_POSITION) };
 			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
 		}
 		m_bPushBox = true;
@@ -533,7 +533,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos, _float fTimeDelta)
 	_float fDist = D3DXVec3Length(&(vTopdeePos - _vOtherPos));
 	fDist *= 0.2f;
 	_float3 vPos = { 0.f,0.f,0.f };
-	
+
 	if (m_eCurDir == DIR_LEFT)
 	{
 		vTopdeePos.x += fDist;
@@ -623,7 +623,7 @@ HRESULT CTopdee::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);	
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -691,7 +691,7 @@ HRESULT CTopdee::SetUp_Components()
 	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Topdee_PreLoader"), TEXT("Com_Texture_PreLoader"), (CComponent**)&m_pTexture_PreLoader_Com, this)))
 		return E_FAIL;
 	//=================================================================
-	
+
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
@@ -724,8 +724,8 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	_float3 vTopdeePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vTopdeePos.y += 1.f;
 
-	auto& iter = (*KKK_m_pBoxList).begin(); 
-	bool bMove{false};
+	auto& iter = (*KKK_m_pBoxList).begin();
+	bool bMove{ false };
 	_float3 vPreLoaderPos = m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION);
 	for (_uint i = 0; i < (*KKK_m_pBoxList).size(); ++i)
 	{
@@ -752,7 +752,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		return;
 	if (_int(m_fRaising_Box_DelayTimer) < 1)
 		return;
-	
+
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		_float3 vDropPosCheck{ m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION) };
 		vDropPosCheck.y = 0.5f;
@@ -779,7 +779,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		m_vBoxDropPos = vDropPosCheck;
 		m_fRaising_Box_DelayTimer = 15000.f;
 	}
-	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta,false)) {
+	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta, false)) {
 		_uint iLayerHoleNum{ 0 };
 		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))//ask Can Box Drop?
 		{
@@ -791,7 +791,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			for (_uint i = 0; i < iLayerHoleNum; ++i)
 				++iter;
 			((CTransform*)(*iter)->Get_Component(L"Com_Transform"))->Set_State(CTransform::STATE_POSITION, _float3{ -100.f,-100.f,-100.f });	//it Makes Dont Make Bomb
-			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f,0.f,0.f), fTimeDelta, true);//it can Make Drop More.
+			m_pRaiseObject->KKK_Go_Lerp_Drop(_float3(0.f, 0.f, 0.f), fTimeDelta, true);//it can Make Drop More.
 		}
 #pragma region Particle
 		for (int i = 0; i < 10; i++)
@@ -822,7 +822,7 @@ CTopdee * CTopdee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		
+
 		(TEXT("Failed To Created : CTopdee"));
 		Safe_Release(pInstance);
 	}

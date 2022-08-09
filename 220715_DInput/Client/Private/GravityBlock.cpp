@@ -138,7 +138,7 @@ void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint 
 	if (m_bAbility)
 	{
 		//밀어내기
-		if (other->CompareTag(L"Box") && CCollider::DIR_UP == eDirection && m_bOnBlock == false)
+		if ((other->CompareTag(L"Wall") || (other->CompareTag(L"Box"))) && (CCollider::DIR_UP == eDirection) && (m_bOnBlock == false) )
 		{
 			_float fBoxSize = 1.f;
 

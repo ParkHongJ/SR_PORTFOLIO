@@ -84,10 +84,20 @@ void CTookee::LateTick(_float fTimeDelta)
 	case CTookee::TOOKEE_LEFT:
 		m_fSpeed = 5.f;
 		m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+		if (m_eCurMode == CGameMgr::TOODEE)
+		{
+			m_iMinFrame = 13;
+			m_iMaxFrame = 24;
+		}
 		break;
 	case CTookee::TOOKEE_RIGHT:
 		m_fSpeed = 5.f;
 		m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+		if (m_eCurMode == CGameMgr::TOODEE)
+		{
+			m_iMinFrame = 13;
+			m_iMaxFrame = 24;
+		}
 		break;
 	case CTookee::TOOKEE_UP:
 		m_fSpeed = 5.f;
@@ -96,11 +106,18 @@ void CTookee::LateTick(_float fTimeDelta)
 		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_JUMP:
+		if (m_eCurMode == CGameMgr::TOODEE)
+		{
+			m_iMinFrame = 25;
+			m_iMaxFrame = 29;
+		}
 		break;
 	case CTookee::TOOKEE_IDLE:
 		if (m_eCurMode == CGameMgr::TOODEE)
 		{
 			m_fSpeed = 0.f;
+			m_iMinFrame = 0;
+			m_iMaxFrame = 12;
 		}
 		else
 			m_fSpeed = 5.f;
@@ -108,6 +125,25 @@ void CTookee::LateTick(_float fTimeDelta)
 	default:
 		break;
 	}
+
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		if (m_bJump && m_iMaxFrame - 1 < m_iTexIndex)
+			m_iTexIndex = m_iMaxFrame;
+		else {
+			if (m_iMinFrame > m_iTexIndex || m_iMaxFrame - 1 < m_iTexIndex)
+				m_iTexIndex = m_iMinFrame;
+			else {
+				m_fFrame += m_iMaxFrame * fTimeDelta;
+
+				if (m_fFrame > (m_iMaxFrame / 8)) {
+					++m_iTexIndex;
+					m_fFrame = 0.f;
+				}
+			}
+		}
+	}
+	
 
 	/* TOODEE */
 	if (m_eCurMode == CGameMgr::TOODEE)
@@ -171,7 +207,7 @@ HRESULT CTookee::Render()
 		return E_FAIL;
 
 	if (m_bActive) {
-		if (FAILED(m_pTextureCom->Bind_Texture(0)))
+		if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
 			return E_FAIL;
 	}
 

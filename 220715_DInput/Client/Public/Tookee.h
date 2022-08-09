@@ -43,7 +43,10 @@ private:
 
 	_uint m_iTexIndex = 0;
 
+	_uint m_iMinFrame = 0;
+	_uint m_iMaxFrame = 0;
 
+	_float m_fFrame = 0.f;
 	_bool m_bJump = false;
 	_bool m_bDrop = false;
 	_float m_fJumpPower = 17.f;
