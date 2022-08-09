@@ -316,7 +316,7 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 				if (Pair.second.y < 0.f)
 					continue;
 			}
-			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			if (1 == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair.first, &Pair.second, &fU, &fV, &fDist))
 			{
 				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
 				if (bTurn_Topdee) {
@@ -326,7 +326,7 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 			}
 
 			/* ¿ÞÂÊ ÇÏ´Ü. */
-			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			if (1 == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair.first, &Pair.second, &fU, &fV, &fDist))
 			{
 				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
 				if (bTurn_Topdee) {
@@ -361,16 +361,11 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 		}
 	}
 	return true;
+
 }
 
 void CCollider::Clear_RayList()
 {
-
-	//for (auto& Pair : m_RayInfo)
-	//{
-	//	Safe_Release(Pair.first);
-	//	Safe_Release(Pair.second);
-	//}
 	m_RayList.clear();
 	
 	return;

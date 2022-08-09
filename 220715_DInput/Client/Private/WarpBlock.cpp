@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\WarpBlock.h"
 #include "GameInstance.h"
-
+#include "Hong.h"
 
 CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -22,16 +22,33 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 {// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-
-	SetTag(L"Box");
-	
+	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
-		_float4 vInitStruct;
-		memcpy(&vInitStruct, pArg, sizeof(_float4));
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vInitStruct.x, vInitStruct.y, vInitStruct.z));
-		m_iTextureNum = (_uint)vInitStruct.w;			// w means TextureNum 
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
 	}
+	if (FAILED(SetUp_Components()))
+		return E_FAIL;
+
+	SetTag(L"Box");
+	if (m_pTransformCom != nullptr && pArg != nullptr)
+	{
+		_float3 vPos;
+		vPos = ObjInfo.vPos;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		m_iTextureNum = ObjInfo.iTex;
+		m_eWarpDirection = (WARP_DIRECTION)ObjInfo.iTex;
+	}
+	else
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		m_iTextureNum = ObjInfo.iTex;
+		m_eWarpDirection = (WARP_DIRECTION)ObjInfo.iTex;
+	}
+	
 	return S_OK;
 }
 
@@ -48,7 +65,7 @@ void CWarpBlock::LateTick(_float fTimeDelta)
 		return;
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
+	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
 }
 
 HRESULT CWarpBlock::Render()
