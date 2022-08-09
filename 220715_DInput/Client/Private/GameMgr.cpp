@@ -87,6 +87,18 @@ _bool CGameMgr::Check_Not_Go(const _float3& vCurPos, const _float3& vObjectDir, 
 					continue;
 				}
 			}
+			else
+			{
+				if (*pOut_ObjectsDist == -5.f) {
+					if ((_int)vObject_DirVector.x == (_int)vObjectDir.x) {
+						if ((_int)vObject_DirVector.z == (_int)vObjectDir.z)
+							return true;
+					}
+					else
+						continue;
+				}
+				
+			}
 			*pOut_ObjectsDist = abs(fDistance - 1.0f);
 			return true;
 		}

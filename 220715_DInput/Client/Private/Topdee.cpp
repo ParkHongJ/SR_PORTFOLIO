@@ -75,49 +75,77 @@ void CTopdee::Tick(_float fTimeDelta)
 			return;
 		}
 		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 CheckTookeePos{ ((_int)vTargetPos.x + 0.5f),0.5f,((_int)vTargetPos.z + 0.5f) };
 		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
 		{
 			Move_Frame(DIR_UP);
 			m_vTargetDir = { 0.f, 0.f, 1.f };
+			_float fDist{ -5.f };
+			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			{
+				m_bTookeeMove = false;
+			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			//Edit Hong
-			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			m_bPress = true;	
+			if (m_bTookeeMove) {
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			}
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
 		{
 			Move_Frame(DIR_DOWN);
 			m_vTargetDir = { 0.f, 0.f, -1.f };
+			_float fDist{ -5.f };
+			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			{
+				m_bTookeeMove = false;
+			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
-			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			if (m_bTookeeMove) {
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			}
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 		{
 			Move_Frame(DIR_LEFT);
 			m_vTargetDir = { -1.f, 0.f, 0.f };
+			_float fDist{ -5.f };
+			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			{
+				m_bTookeeMove = false;
+			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
-			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			if (m_bTookeeMove) {
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			}
 		}
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 		{
 			Move_Frame(DIR_RIGHT);
 			m_vTargetDir = { 1.f, 0.f, 0.f };
+			_float fDist{ -5.f };
+			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			{
+				m_bTookeeMove = false;
+			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
 			m_bPress = true;
 			//Edit Hong
-			CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			if (m_bTookeeMove) {
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			}
 		}
 		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
 		{//박스들기.
@@ -136,6 +164,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		//Edit Hong 
 		//키를뗏으면 투키를 보정시켜라
 	}
+	m_bTookeeMove = true;
 	Safe_Release(pGameInstance);
 }
 
@@ -311,7 +340,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion BillBoard
 #pragma region Collision_Obstacle
 	_float fCollisionDist;
-
 	_float3 vCurDir{ 0.f,0.f,0.f };
 	if (m_eCurDir == DIR_DOWN)
 		vCurDir.z = -1.0f;
@@ -321,7 +349,6 @@ void CTopdee::LateTick(_float fTimeDelta)
 		vCurDir.x = 1.f;
 	else if (m_eCurDir == DIR_LEFT)
 		vCurDir.x = -1.f;
-
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
 	{
 		//Edit Hong
@@ -331,29 +358,36 @@ void CTopdee::LateTick(_float fTimeDelta)
 			if (m_eCurDir == DIR_LEFT)
 			{
 				vPos.x += fCollisionDist;
-				vTookeePos.x = 1.f;
+				_float fPos{ fCollisionDist + 1.f };
+				vTookeePos.x = fPos;
+				//vTookeePos.x = 1.f;
 			}
 			else if (m_eCurDir == DIR_RIGHT)
 			{
 				vPos.x -= fCollisionDist;
-				vTookeePos.x = -1.f;
+				_float fPos{ fCollisionDist +1.f};
+				vTookeePos.x = -fPos;
 			}
 			else if (m_eCurDir == DIR_UP)
 			{
 				vPos.z -= fCollisionDist;
-				vTookeePos.z = -1.f;
+				_float fPos{ fCollisionDist + 1.f };
+				vTookeePos.z = -fPos;
+				//vTookeePos.z = -1.f;
 			}
 			else if (m_eCurDir == DIR_DOWN)
 			{
 				vPos.z += fCollisionDist;
-				vTookeePos.z = 1.f;
+				_float fPos{ fCollisionDist + 1.f };
+				vTookeePos.z = +fPos;
+				//vTookeePos.z = 1.f;
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
-			//m_bTookeeMove = false;
+			//CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
 		}
 	}
+
 #pragma endregion Collision_Obstacle	
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
 
