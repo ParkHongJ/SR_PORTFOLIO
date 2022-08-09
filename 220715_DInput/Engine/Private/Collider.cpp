@@ -280,10 +280,10 @@ void CCollider::AddRayList(const _float3 & _vRayPos, const _float3 & _vRayDir)
 }
 
 bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
-{	//First : BoxCollider
-	//Second : Transform
+{	
+	list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
 	for (auto& pDest : m_pCollisionObjects[eDestGroup])
-	{
+	{			//First : BoxCollider //Second : Transform
 		if (m_pCollisionObjects[eDestGroup].empty()||m_RayList.empty())
 			return false;
 		CBoxCollider::BOXDESC pBoxDesc =pDest.first->GetBoxDesc();
@@ -316,23 +316,48 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 			}
 			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair.first, &Pair.second, &fU, &fV, &fDist))
 			{
-				pDest.first->GetOwner()->Set_bRayCasted(true);
-				return true;
+				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
+				if (bTurn_Topdee) {
+					pDest.first->GetOwner()->Set_bRayCasted(true);
+					return true;
+				}
 			}
 
 			/* 왼쪽 하단. */
 			if (true == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair.first, &Pair.second, &fU, &fV, &fDist))
 			{
-				pDest.first->GetOwner()->Set_bRayCasted(true);
-				return true;
+				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
+				if (bTurn_Topdee) {
+					pDest.first->GetOwner()->Set_bRayCasted(true);
+					return true;
+				}
 			}
 
 			pDest.first->GetOwner()->Set_bRayCasted(false);
 		}
-
 	}
-	
 
+	
+	if(bTurn_Topdee)
+		return false;
+	else
+	{
+		if (RayCastedList.empty())
+			return false;
+		_float fBestPosZ{ 0.f };
+		for (auto& Pair : RayCastedList)
+		{//소팅을해서
+			if( fBestPosZ < Pair.second)
+				fBestPosZ = Pair.second;
+		}
+		for (auto&Pair : RayCastedList)
+		{//제일큰놈
+			if (Pair.second == fBestPosZ) {
+				Pair.first->Set_bRayCasted(true);
+				return true;
+			}
+		}
+	}
 	return false;
 }
 

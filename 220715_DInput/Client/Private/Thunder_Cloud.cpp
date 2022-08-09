@@ -38,7 +38,12 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vTopdeePos.y, vCloudPos.z)		, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 -z방향
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x - 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));
+	//----------------------------TopdeeRay End
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	//m_pColliderCom->AddRayList(_float3(vCloudPos.x - 0.5f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	//m_pColliderCom->AddRayList(_float3(vCloudPos.x + 0.5f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
 	return S_OK;
 }
 
@@ -71,7 +76,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
-				_float3(m_vTopdeePos.x, m_vTopdeePos.y - 3.f, m_vTopdeePos.z),
+				_float3(m_vTopdeePos.x, m_vTopdeePos.y - 6.f, m_vTopdeePos.z),
 				fTimeDelta * 5.f));
 		//이게 어디에 천둥이치고있는지가 정확하게 보이지않음
 		m_bEnabled = false;
@@ -87,7 +92,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
-				_float3(m_vToodeePos.x, m_vToodeePos.y, m_vToodeePos.z - 2.f),
+				_float3(m_vToodeePos.x, m_vToodeePos.y, m_vToodeePos.z - 5.f),
 				fTimeDelta * 5.f));
 
 		m_bEnabled = true;
@@ -201,7 +206,7 @@ HRESULT CThunder_Cloud::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 3.0f, 3.f, 0.f };
+	RectDesc.vSize = { 3.0f, 9.f, 0.f };
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rain"), (CComponent**)&m_pVIBufferCom_Rain, this, &RectDesc)))
@@ -223,7 +228,7 @@ HRESULT CThunder_Cloud::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
 		return E_FAIL;
-//==================================================================Cloud End
+//==================================================================Rain End
 	
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"), TEXT("Com_Texture_Cloud"), (CComponent**)&m_pTextureCom_Cloud, this)))
@@ -288,6 +293,7 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pRendererCom_Cloud);
 	Safe_Release(m_pTransformCom_Cloud);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pBoxCom);
 	//====================================CloudEnd
 	Safe_Release(m_pTextureCom_Rain);
 	Safe_Release(m_pTransformCom_Rain);

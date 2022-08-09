@@ -17,22 +17,22 @@ HRESULT CLevel_GyuH::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
-	//LoadGameObject();
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+	LoadGameObject();
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
-	Info.vPos = _float3(25.f, 1.f, 3.f);
+	Info.vPos = _float3(3.f, 1.f, 10.f);
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), &Info)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+	/*if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
 		return E_FAIL;
-	
+	*/
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -66,9 +66,9 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
 		return E_FAIL;*/
 
-	//CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	//CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
-	//CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);*/
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 	return S_OK;
 
 }
@@ -157,7 +157,7 @@ HRESULT CLevel_GyuH::Ready_Layer_Toodee(const _tchar * pLayerTag)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
-	Info.vPos = _float3(3.f, 1.f, 14.f);
+	Info.vPos = _float3(25.f, 1.f, 1.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
@@ -181,34 +181,81 @@ HRESULT CLevel_GyuH::Ready_Layer_Particle_Spark(const _tchar * pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GyuH::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
 void CLevel_GyuH::LoadGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/data/Map.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	DWORD dwByte = 0;
+	DWORD dwStrByte = 0; //String length
 
+	OBJ_INFO m_OBJInfo = {};
+	/*	Map<<Prototype, Layer>, vPosition> */
 	while (true)
 	{
-		_float3 vBlockPos = {};
-		ReadFile(hFile, vBlockPos, sizeof(_float3), &dwByte, nullptr);
+		// Key 값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pFirst = nullptr;
+		pFirst = new _tchar[dwStrByte];
+		ReadFile(hFile, pFirst, dwStrByte, &dwByte, nullptr);
+		pFirst[dwByte / sizeof(_tchar)] = 0;
+
+		//Key값 로드
+		ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		_tchar*	pSecond = nullptr;
+		pSecond = new _tchar[dwStrByte];
+		ReadFile(hFile, pSecond, dwStrByte, &dwByte, nullptr);
+		pSecond[dwByte / sizeof(_tchar)] = 0;
+
+		TagInfo* tagInfo = new TagInfo;
+		tagInfo->pPrototypeTag = pFirst;
+		Safe_Delete_Array(pFirst);
+		tagInfo->pLayerTag = pSecond;
+		Safe_Delete_Array(pSecond);
+
+		ReadFile(hFile, &m_OBJInfo.vPos, sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iNumLevel, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iDirection, sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &m_OBJInfo.iTex, sizeof(_uint), &dwByte, nullptr);
 
 		if (0 == dwByte)
 		{
+			Safe_Delete(tagInfo);
+			Safe_Delete_Array(pFirst);
+			Safe_Delete_Array(pSecond);
 			break;
 		}
-		m_list.push_back(vBlockPos);
+
+		ObjInfo* objInfo = new ObjInfo;
+		objInfo->vPos = m_OBJInfo.vPos;
+		objInfo->iNumLevel = m_OBJInfo.iNumLevel;
+		objInfo->iDirection = m_OBJInfo.iDirection;
+		objInfo->iTex = m_OBJInfo.iTex;
+
+		m_pObjects.insert({ tagInfo, objInfo });
 	}
+	auto iter = m_pObjects.begin();
 
-	CloseHandle(hFile);
-
-	for (auto& iter : m_list)
+	while (iter != m_pObjects.end())
 	{
-		m_vPosition = iter;
-		Ready_Layer_Wall(L"Layer_Wall", m_vPosition);
+		Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
+		++iter;
 	}
+	CloseHandle(hFile);
 }
 
 HRESULT CLevel_GyuH::Render()
@@ -271,7 +318,7 @@ HRESULT CLevel_GyuH::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		LEVEL_STAGE1, pLayerTag)))
 		return E_FAIL;
 
-	_float3 vPos{ 10.0f,0.5f,10.f };
+	_float3 vPos{ 14.5f,0.5f,11.f };
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
 		LEVEL_STAGE1, pLayerTag,vPos)))
 		return E_FAIL;
