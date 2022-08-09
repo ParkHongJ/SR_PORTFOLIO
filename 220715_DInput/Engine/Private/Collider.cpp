@@ -354,11 +354,11 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 		{//제일큰놈
 			if (Pair.second == fBestPosZ) {
 				Pair.first->Set_bRayCasted(true);
-				return true;
+				continue;
 			}
 		}
 	}
-	return false;
+	return false;//오류방지용
 }
 
 void CCollider::Clear_RayList()

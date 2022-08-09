@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Hong.h"
-
+#include "ParticleMgr.h"
 
 CBlock::CBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -61,6 +61,25 @@ void CBlock::LateTick(_float fTimeDelta)
 	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
 		return;
+	if (m_bRayCasted)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-1.5f, 1.5f);
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::PARTICLE);
+		}
+		m_bActive = false;
+	}
+
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);

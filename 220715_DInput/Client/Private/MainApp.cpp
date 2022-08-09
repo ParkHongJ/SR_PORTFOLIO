@@ -70,6 +70,15 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
+	_bool bTopdeeTurn{ false };
+	if (CGameMgr::GAMEMODE::TOPDEE == CGameMgr::Get_Instance()->GetMode())
+		bTopdeeTurn = true;
+	else
+		bTopdeeTurn = false;
+	if (!m_pCollider->Collision_Ray_Top(CCollider::INTEREACTION, bTopdeeTurn))	//만약 블록에서 레이를 검출당하지 않았다면 플레이어도 체크
+		m_pCollider->Collision_Ray_Top(CCollider::PLAYER, bTopdeeTurn);
+
+
 	//구충돌로 비교하면서 Stay 호출
 	//사각충돌 비교하면서 Stay 방향 호출
 	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
@@ -101,14 +110,6 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	//구충돌로 비교하면서 OnTrigger호출
 	m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
-	_bool bTopdeeTurn{ false };
-	if (CGameMgr::GAMEMODE::TOPDEE == CGameMgr::Get_Instance()->GetMode())
-		bTopdeeTurn = true;
-	else
-		bTopdeeTurn = false;
-	if(!m_pCollider->Collision_Ray_Top(CCollider::BLOCK, bTopdeeTurn))	//만약 블록에서 레이를 검출당하지 않았다면 플레이어도 체크
-		m_pCollider->Collision_Ray_Top(CCollider::PLAYER, bTopdeeTurn);
-
 	m_pCollider->EndEx();
 }
 

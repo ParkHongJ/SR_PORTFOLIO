@@ -70,7 +70,7 @@ void CElectricBlock::LateTick(_float fTimeDelta)
 		m_iTextureNum = 0;
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);
+	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
 }
 
 HRESULT CElectricBlock::Render()
