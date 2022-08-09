@@ -28,6 +28,8 @@ public:
 public:
 	void Make_Bazier(const _float3& vStartPoint, const _float3& vEndPoint);
 	_float3 Point_Setting(_float3 vOriginPos);
+	void Go_To_Player_Bazier();
+	void Reset_Bazier();
 
 private:
 	HRESULT Set_RenderState();

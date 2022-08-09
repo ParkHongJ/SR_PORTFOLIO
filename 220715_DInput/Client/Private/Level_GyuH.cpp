@@ -30,8 +30,8 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;

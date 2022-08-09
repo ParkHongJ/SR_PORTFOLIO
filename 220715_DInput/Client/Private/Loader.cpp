@@ -895,7 +895,7 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	/* ??¢©???¢¬? ¢§?????¢¥?. */
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_1.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Topdee */

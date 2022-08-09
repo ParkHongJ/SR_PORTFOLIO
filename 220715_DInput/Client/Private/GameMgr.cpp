@@ -71,7 +71,7 @@ _bool CGameMgr::Check_Not_Go(const _float3& vCurPos, const _float3& vObjectDir, 
 		}
 		_float3 vObject_DirVector = ((*iter) - vCurPos);
 		_float fDistance = D3DXVec3Length(&vObject_DirVector);
-		if (fDistance <= 1.f) {//Objects Position Compare
+		if (fDistance < 1.f) {//Objects Position Compare
 			if (bPushCheck) {
 				if (*pOut_ObjectsDist == -1.f)
 				{
@@ -204,9 +204,11 @@ void CGameMgr::Particle_To_Player()
 	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Toodee")->front();
 	if (pTopdee == nullptr || pToodee == nullptr)
 		return;
-	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Tranform"));
+	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Transform"));
+	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Transform"));
+	if (pTopdeeTrans == nullptr || pToodeeTrans == nullptr)
+		return;
 	_float3 vTopdeePos{ pTopdeeTrans->Get_State(CTransform::STATE_POSITION) };
-	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Tranform"));
 	_float3 vToodeePos{ pToodeeTrans->Get_State(CTransform::STATE_POSITION) };
 
 	if (m_eGameMode == TOODEE)//투디에서 탑디로.

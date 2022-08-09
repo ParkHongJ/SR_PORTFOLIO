@@ -295,7 +295,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 	//vPos.y = 0.5f;
 #pragma endregion BillBoard
 #pragma region Collision_Obstacle
-	_float fCollisionDist;
+	_float fCollisionDist{ 0.f };
 	_float3 vCurDir{ 0.f,0.f,0.f };
 	if (m_eCurDir == DIR_DOWN)
 		vCurDir.z = -1.0f;
@@ -307,15 +307,17 @@ void CTopdee::LateTick(_float fTimeDelta)
 		vCurDir.x = -1.f;
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
 	{
-		if (m_eCurDir == DIR_LEFT)
-			vPos.x += fCollisionDist;
-		else if (m_eCurDir == DIR_RIGHT)
-			vPos.x -= fCollisionDist;
-		else if (m_eCurDir == DIR_UP)
-		 	vPos.z -= fCollisionDist;
-		else if (m_eCurDir == DIR_DOWN)
-			vPos.z += fCollisionDist;
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		if (fCollisionDist != 0.f) {
+			if (m_eCurDir == DIR_LEFT)
+				vPos.x += fCollisionDist;
+			else if (m_eCurDir == DIR_RIGHT)
+				vPos.x -= fCollisionDist;
+			else if (m_eCurDir == DIR_UP)
+				vPos.z -= fCollisionDist;
+			else if (m_eCurDir == DIR_DOWN)
+				vPos.z += fCollisionDist;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
 	}
 #pragma endregion Collision_Obstacle	
 	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);

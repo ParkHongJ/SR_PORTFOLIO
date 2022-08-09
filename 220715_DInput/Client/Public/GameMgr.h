@@ -28,6 +28,7 @@ public:
 	void LateTick(_float fTimeDelta);
 	GAMEMODE GetMode() { return m_eGameMode; }
 
+#pragma region about Hole
 public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanNotGo Spot.
 	void Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag,_bool bHole);//Caution!! Obstacle Cannot change Pos.
 	_bool Check_Not_Go(const _float3& vCurPos, const _float3& vObjectDir, _float* pOut_ObjectsDist, _bool bPushCheck);// This func Manage Can Go or Not.		
@@ -38,6 +39,7 @@ public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanN
 	list<_float3> m_Obstaclelist;
 	LEVEL m_eHoleLevel{ LEVEL_END };// Remember Input Level.
 	_uint m_iHoleFinishNum{0};// Remember Input FinalHoleNumber.
+#pragma endregion about Hole
 
 public:
 	void Set_Object_Data(const _tchar* pTag, _bool* bData);
@@ -101,7 +103,8 @@ private:
 	_bool m_bKeyState[256] = { false };
 
 	GAMEMODE m_eGameMode = TOODEE/*MODE_END*/;
-	CParticle_Spark* m_pParticle_Spark = nullptr;
+
+	class CParticle_Spark* m_pParticle_Spark = nullptr;
 
 
 	_uint m_iNumLevel;
