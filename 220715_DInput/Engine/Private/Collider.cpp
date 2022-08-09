@@ -281,10 +281,12 @@ void CCollider::AddRayList(const _float3 & _vRayPos, const _float3 & _vRayDir)
 
 bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 {	
+	if (m_RayList.empty())
+		return false;
 	list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
 	for (auto& pDest : m_pCollisionObjects[eDestGroup])
 	{			//First : BoxCollider //Second : Transform
-		if (m_pCollisionObjects[eDestGroup].empty()||m_RayList.empty())
+		if (m_pCollisionObjects[eDestGroup].empty())
 			return false;
 		CBoxCollider::BOXDESC pBoxDesc =pDest.first->GetBoxDesc();
 		_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
@@ -358,7 +360,7 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 			}
 		}
 	}
-	return false;//오류방지용
+	return true;
 }
 
 void CCollider::Clear_RayList()
