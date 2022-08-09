@@ -61,6 +61,7 @@ void CTookee::Tick(_float fTimeDelta)
 			//현재 바뀐모드가 탑디면 보정
 			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
+			//수정 필요함. 투디에서 탑디로 바뀔때 너무 딱바뀜
 			vPos.x = _uint(vPos.x) + 0.5f;
 			vPos.z = _uint(vPos.z) + 0.5f;
 
@@ -74,9 +75,6 @@ void CTookee::Tick(_float fTimeDelta)
 		m_bJump = false;
 		m_fJumpTime = 0.f;
 	}
-
-	
-
 }
 
 void CTookee::LateTick(_float fTimeDelta)

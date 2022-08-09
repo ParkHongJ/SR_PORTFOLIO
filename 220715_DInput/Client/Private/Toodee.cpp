@@ -180,6 +180,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_PORTAL:
 				if (!(CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 					&& !(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))) {
+					//Edit Hong
 					/*if (0.f < m_MoveSpeed)
 						m_MoveSpeed -= 0.1f;
 					else*/
