@@ -47,6 +47,7 @@ void CTookee::Tick(_float fTimeDelta)
 {
 	//현재모드
 	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
+
 	//현재모드와 이전모드를 비교해서 같냐
 	if (m_eCurMode == m_ePreMode)
 	{
@@ -73,14 +74,8 @@ void CTookee::Tick(_float fTimeDelta)
 		m_bJump = false;
 	}
 
-	if (m_eCurState == CGameMgr::TOPDEE)
-	{
-		if (m_bPushBox)
-			m_fPushBoxDelayTimer += fTimeDelta;
-	}
-
-
 	
+
 }
 
 void CTookee::LateTick(_float fTimeDelta)
@@ -220,7 +215,7 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		//이거 위치 비교로도 가능.
 		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
 
-		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
+		if (pInteraction_Block == nullptr)
 			return;
 
 		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
@@ -229,18 +224,7 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 		if (vOtherPos.y != 0.5f)
 			return;
-
-		if (!m_bPushBox) {//MakseDelay
-			m_fPushBoxDelayTimer += fTimeDelta;
-		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
-			return;
-		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
-			m_fPushBoxDelayTimer = 0.f;
-			m_bPushBox = false;
-		}
-
+		
 		if (m_pBoxList == nullptr)
 		{
 			//if Collision We Must Check NextBox.
@@ -515,6 +499,8 @@ void CTookee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 	for (_uint i = 0; i < m_pBoxList->size(); ++i)
 	{
 		CTransform* pNextBlock = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
+		if (pNextBlock == nullptr)
+			return;
 		_float3 vNextBlockPos = pNextBlock->Get_State(CTransform::STATE_POSITION);
 		if (vNextBlockPos.y < 0.f)
 		{

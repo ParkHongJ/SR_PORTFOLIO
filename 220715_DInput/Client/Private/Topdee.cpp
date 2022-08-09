@@ -311,6 +311,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 #pragma endregion BillBoard
 #pragma region Collision_Obstacle
 	_float fCollisionDist;
+
 	_float3 vCurDir{ 0.f,0.f,0.f };
 	if (m_eCurDir == DIR_DOWN)
 		vCurDir.z = -1.0f;
@@ -320,41 +321,46 @@ void CTopdee::LateTick(_float fTimeDelta)
 		vCurDir.x = 1.f;
 	else if (m_eCurDir == DIR_LEFT)
 		vCurDir.x = -1.f;
+
 	if (CGameMgr::Get_Instance()->Check_Not_Go(vPos, vCurDir, &fCollisionDist, false))
 	{
 		//Edit Hong
-		_float3 vTookeePos = { 0.f,0.f,0.f };
-		if (m_eCurDir == DIR_LEFT)
-		{
-			vPos.x += fCollisionDist;
-			vTookeePos.x = 1.f;
-		}
-		else if (m_eCurDir == DIR_RIGHT)
-		{
-			vPos.x -= fCollisionDist;
-			vTookeePos.x = -1.f;
-		}
-		else if (m_eCurDir == DIR_UP)
-		{
-			vPos.z -= fCollisionDist;
-			vTookeePos.z = -1.f;
-		}
-		else if (m_eCurDir == DIR_DOWN)
-		{
-			vPos.z += fCollisionDist;
-			vTookeePos.z = 1.f;
-		}
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 
-		//문제 심하다..
-		//지속적으로 실행됨
-		CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
-		m_bTookeeMove = false;
 
+
+
+		if (fCollisionDist != 0.f)
+		{
+			_float3 vTookeePos = { 0.f,0.f,0.f };
+			if (m_eCurDir == DIR_LEFT)
+			{
+				vPos.x += fCollisionDist;
+				vTookeePos.x = 1.f;
+			}
+			else if (m_eCurDir == DIR_RIGHT)
+			{
+				vPos.x -= fCollisionDist;
+				vTookeePos.x = -1.f;
+			}
+			else if (m_eCurDir == DIR_UP)
+			{
+				vPos.z -= fCollisionDist;
+				vTookeePos.z = -1.f;
+			}
+			else if (m_eCurDir == DIR_DOWN)
+			{
+				vPos.z += fCollisionDist;
+				vTookeePos.z = 1.f;
+			}
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
+			//m_bTookeeMove = false;
+		}
 	}
 #pragma endregion Collision_Obstacle	
-	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER,m_pBoxCom, m_pTransformCom);
+	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
 
 }
 

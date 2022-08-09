@@ -180,9 +180,9 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_PORTAL:
 				if (!(CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 					&& !(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))) {
-					if (0.f < m_MoveSpeed)
+					/*if (0.f < m_MoveSpeed)
 						m_MoveSpeed -= 0.1f;
-					else
+					else*/
 						m_MoveSpeed = 0.f;
 				}
 				if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
