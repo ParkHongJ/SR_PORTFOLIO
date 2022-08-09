@@ -552,7 +552,6 @@ void CTookee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 			if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z)//찾으려는값임.
 			{
 				if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x) {
-					_vNextBoxPos += vPushDir;
 					++iCountReFunc;
 
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
@@ -561,6 +560,7 @@ void CTookee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 						bCanPush = false;
 						return;
 					}
+					_vNextBoxPos += vPushDir;
 					PushList.push_back(*iter);
 					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
