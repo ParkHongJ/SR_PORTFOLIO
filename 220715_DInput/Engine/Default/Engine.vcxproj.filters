@@ -97,6 +97,9 @@
     <Filter Include="06.Picking">
       <UniqueIdentifier>{e3fa045f-0cd3-4d0c-b3c7-48dd823d0fe8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Device\Sound\FMOD">
+      <UniqueIdentifier>{8680fb75-0477-404c-9bb5-9febc2f30b0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="..\public\LandObject.h">
       <Filter>03.GameObjects\LandObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\C_FMOD.h">
+      <Filter>01.Device\Sound\FMOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Picking.cpp">
       <Filter>06.Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\C_FMOD.cpp">
+      <Filter>01.Device\Sound\FMOD</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

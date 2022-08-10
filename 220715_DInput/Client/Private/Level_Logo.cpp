@@ -5,7 +5,6 @@
 #include "BackGround.h"
 #include "Level_Loading.h"
 
-
 CLevel_Logo::CLevel_Logo(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
 {
@@ -16,9 +15,18 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Play(TEXT("babbling_brook.wav"), true, C_FMOD::CHANNELID::BGM, SOUND_MAX))) {
+		MSG_BOX(TEXT("Search_Sound_Error"));
+	}
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

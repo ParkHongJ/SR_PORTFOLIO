@@ -23,7 +23,7 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	SetTag(L"Box");
+	SetTag(L"WarpBlock");
 	
 	if (pArg != nullptr)
 	{

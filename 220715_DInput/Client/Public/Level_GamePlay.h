@@ -32,6 +32,7 @@ private:
 	HRESULT Ready_Layer_Wall(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_KeyBox(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
+
 private:
 	void	LoadGameObject();
 	typedef struct TagInfo

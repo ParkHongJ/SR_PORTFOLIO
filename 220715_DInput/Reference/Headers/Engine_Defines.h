@@ -25,10 +25,6 @@
 #include "Engine_Functor.h"
 #include "Engine_Function.h"
 
-
-
-
-
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC
@@ -46,5 +42,3 @@
 
 using namespace std;
 using namespace Engine;
-
-

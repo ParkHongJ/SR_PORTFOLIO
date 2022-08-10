@@ -3,6 +3,7 @@
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
 #include "Input_Device.h"
+#include "C_FMOD.h"
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Component_Manager.h"
@@ -57,6 +58,10 @@ public: /* For.Input_Device */
 	_char Get_DIMKeyState(DIMK eMouseKeyID);
 	_long Get_DIMMoveState(DIMM eMouseMoveID);
 
+public: /* for.FMOD */
+	HRESULT Play(const _tchar* pSoundTag, _bool bLoop, _uint iChannelID, _float fVolum);
+	void Tick_Play(_float fTimeDelta);
+
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;
 	CInput_Device*					m_pInput_Device = nullptr;
@@ -66,6 +71,7 @@ private:
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CPicking*						m_pPicking = nullptr;
 
+	C_FMOD* m_pFMOD = nullptr;
 
 public:
 	static void Release_Engine();
