@@ -6,6 +6,7 @@
 #include "Base.h"
 #include "Transform.h"
 #include "Tookee.h"
+
 BEGIN(Engine)
 class CGameObject;
 END
@@ -44,6 +45,7 @@ public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanN
 public:
 	void Set_Object_Data(const _tchar* pTag, _bool* bData);
 	_bool Get_Object_Data(const _tchar* pTag);
+	
 	void Particle_To_Player();
 	void Player_Active();
 

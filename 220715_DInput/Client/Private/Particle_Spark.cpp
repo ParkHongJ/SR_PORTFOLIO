@@ -30,62 +30,33 @@ void CParticle_Spark::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
-	if (m_bBazier) {
-		if (m_fTimer > 1.0f)
-		{//초기화.
-			Reset_Bazier();
-		}
-		m_fTimer += fTimeDelta;
-		Go_To_Player_Bazier();
+	if (m_bLineStart) {
+		Go_To_Player(fTimeDelta);
 	}
 }
 
-void CParticle_Spark::Make_Bazier(const _float3 & vStartPoint, const _float3 & vEndPoint)
-{//매니저에서 호출시 네 점을 추출한다. 여기로 들어오는 값은 해당 플레이어의 pos값과 동일하다.
-	Reset_Bazier();
+void CParticle_Spark::Make_Line(const _float3 & vStartPoint, const _float3 & vEndPoint)
+{//매니저에서 호출시 여기로 들어오는 값은 해당 플레이어의 pos값과 동일하다.
+	Reset_State();
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vStartPoint.x, 1.f, vStartPoint.z));
 	m_vStartPoint = _float3(vStartPoint.x, 1.f, vStartPoint.z);
 	m_vEndPoint = _float3(vEndPoint.x, 1.f, vEndPoint.z);
-	m_vElsePoint[0] = Point_Setting(m_vStartPoint);
-	m_vElsePoint[1] = Point_Setting(m_vEndPoint);
-	m_bBazier = true;
+	m_bLineStart = true;
 }
 
-_float3 CParticle_Spark::Point_Setting(_float3 vOriginPos)
-{
-	random_device rd;
-	default_random_engine eng(rd());
-	uniform_real_distribution<float> distr(0.f, 360.f);
-	_float x = m_fPos[0] * cosf(D3DXToRadian(distr(eng))) +vOriginPos.x;
-	_float z = m_fPos[1] * sinf(D3DXToRadian(distr(eng))) + vOriginPos.z;
-	return _float3(x, 1.f, z);
-}
-
-void CParticle_Spark::Go_To_Player_Bazier()
+void CParticle_Spark::Go_To_Player(_float fTimeDelta)
 {
 	_float3 vParticlePos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	vParticlePos.x = ((1 - m_fTimer), 3)* m_vStartPoint.x
-		+ pow((1 - m_fTimer), 2) * 3 * m_fTimer * m_vElsePoint[0].x
-		+ pow(m_fTimer, 2) * 3 * (1 - m_fTimer) * m_vElsePoint[1].x
-		+ pow(m_fTimer, 3) * m_vEndPoint.x;
-
-	vParticlePos.z = ((1 - m_fTimer), 3)* m_vStartPoint.z
-		+ pow((1 - m_fTimer), 2) * 3 * m_fTimer * m_vElsePoint[0].z
-		+ pow(m_fTimer, 2) * 3 * (1 - m_fTimer) * m_vElsePoint[1].z
-		+ pow(m_fTimer, 3) * m_vEndPoint.z;
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vParticlePos);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, Lerp(vParticlePos, m_vEndPoint, fTimeDelta * m_fSpeed));
+	if (abs((_int)vParticlePos.x - (_int)m_vEndPoint.x) <= 1)
+		Reset_State();
 }
-
-void CParticle_Spark::Reset_Bazier()
+//초기화함수
+void CParticle_Spark::Reset_State()
 {
-	m_bBazier = false;
-	m_fTimer = 0.f;
+	m_bLineStart = false;
 	m_vStartPoint = { 0.f,0.f,0.f };
 	m_vEndPoint = { 0.f,0.f,0.f };
-	m_vElsePoint[0] = {};
-	m_vElsePoint[1] = {};
 }
 
 void CParticle_Spark::LateTick(_float fTimeDelta)
@@ -110,11 +81,18 @@ void CParticle_Spark::LateTick(_float fTimeDelta)
 
 }
 
+_float3 CParticle_Spark::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
+{
+	return vPos + (vTargetPos - vPos) * fTimeDelta;
+}
+
 HRESULT CParticle_Spark::Render()
 {
+
 	if (!m_bActive)
 		return S_OK;
-
+	if (!m_bLineStart)
+		return S_OK;
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
@@ -160,7 +138,7 @@ HRESULT CParticle_Spark::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 3.f,3.f,0.f };
+	RectDesc.vSize = { 1.5f,1.5f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;

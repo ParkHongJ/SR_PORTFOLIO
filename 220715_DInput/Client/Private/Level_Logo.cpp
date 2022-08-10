@@ -81,6 +81,17 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+
+	if (GetKeyState(VK_F6) & 0x8000)
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, LEVEL_GYUTEST))))
+			return;
+
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CLevel_Logo::Render()

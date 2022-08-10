@@ -35,6 +35,7 @@ private:
 	virtual ~CTopdee() = default;
 private:
 	void DeadCheck(_float fTimeDelta);// GameOver
+	void RayCastedCheck();
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

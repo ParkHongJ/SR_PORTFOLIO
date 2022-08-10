@@ -169,6 +169,12 @@
     <Filter Include="02.GameObject\Tookee">
       <UniqueIdentifier>{7766fda1-2a0d-4a54-8b6b-1627170a34f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\GyuH\GyuH_Thunder">
+      <UniqueIdentifier>{8ad28863-8918-478a-8b01-98abb0c9b454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\GyuH\GyuH_Test">
+      <UniqueIdentifier>{452f5980-905b-4166-b2df-6d6c868600da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -228,9 +234,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Hong.h">
       <Filter>01.Level\Hong</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GyuH.h">
-      <Filter>01.Level\GyuH</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">
       <Filter>99.Default\ClientDefault</Filter>
@@ -358,6 +361,12 @@
     <ClInclude Include="..\public\Tookee.h">
       <Filter>02.GameObject\Tookee</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_GyuH.h">
+      <Filter>01.Level\GyuH\GyuH_Thunder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GyuTest.h">
+      <Filter>01.Level\GyuH\GyuH_Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -410,9 +419,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Hong.cpp">
       <Filter>01.Level\Hong</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_GyuH.cpp">
-      <Filter>01.Level\GyuH</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>99.Default\ClientDefault</Filter>
@@ -536,6 +542,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Tookee.cpp">
       <Filter>02.GameObject\Tookee</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GyuH.cpp">
+      <Filter>01.Level\GyuH\GyuH_Thunder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GyuTest.cpp">
+      <Filter>01.Level\GyuH\GyuH_Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

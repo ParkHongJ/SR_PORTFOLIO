@@ -4,7 +4,6 @@
 #pragma warning (disable : 4005)
 #pragma warning (disable : 4251)
 
-
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -16,7 +15,6 @@
 #include <map>
 #include <algorithm>
 #include <unordered_map>
-
 #include <process.h>
 
 #include "Engine_Macro.h"

@@ -321,7 +321,7 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
 				if (bTurn_Topdee) {
 					pDest.first->GetOwner()->Set_bRayCasted(true);
-					return true;
+					return false;
 				}
 			}
 
@@ -331,7 +331,7 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
 				if (bTurn_Topdee) {
 					pDest.first->GetOwner()->Set_bRayCasted(true);
-					return true;
+					return false;
 				}
 			}
 

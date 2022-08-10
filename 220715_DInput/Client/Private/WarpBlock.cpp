@@ -20,25 +20,25 @@ HRESULT CWarpBlock::Initialize_Prototype()
 
 HRESULT CWarpBlock::Initialize(void * pArg)
 {// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
-	if (FAILED(SetUp_Components()))
-		return E_FAIL;
 	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
 		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
 		m_iNumLevel = ObjInfo.iNumLevel;
+
+		
 	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	_tchar* pTag = (L"Box");
+	SetTag(pTag);
 
-	SetTag(L"Box");
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
 		vPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		m_iTextureNum = ObjInfo.iTex;
-		m_eWarpDirection = (WARP_DIRECTION)ObjInfo.iTex;
 	}
 	else
 	{
@@ -46,7 +46,6 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		m_iTextureNum = ObjInfo.iTex;
-		m_eWarpDirection = (WARP_DIRECTION)ObjInfo.iTex;
 	}
 	
 	return S_OK;

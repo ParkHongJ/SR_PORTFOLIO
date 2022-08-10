@@ -71,7 +71,7 @@ _bool CGameMgr::Check_Not_Go(const _float3& vCurPos, const _float3& vObjectDir, 
 		}
 		_float3 vObject_DirVector = ((*iter) - vCurPos);
 		_float fDistance = D3DXVec3Length(&vObject_DirVector);
-		if (fDistance < 1.f) {//Objects Position Compare
+		if (fDistance <= 1.f) {//Objects Position Compare
 			if (bPushCheck) {
 				if (*pOut_ObjectsDist == -1.f)
 				{
@@ -212,9 +212,9 @@ void CGameMgr::Particle_To_Player()
 	_float3 vToodeePos{ pToodeeTrans->Get_State(CTransform::STATE_POSITION) };
 
 	if (m_eGameMode == TOODEE)//투디에서 탑디로.
-		m_pParticle_Spark->Make_Bazier(vToodeePos, vTopdeePos);
+		m_pParticle_Spark->Make_Line(vToodeePos, vTopdeePos);
 	else if (m_eGameMode == TOPDEE)//탑디에서 투디로
-		m_pParticle_Spark->Make_Bazier(vTopdeePos, vToodeePos);
+		m_pParticle_Spark->Make_Line(vTopdeePos, vToodeePos);
 	
 }
 

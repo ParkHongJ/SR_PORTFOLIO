@@ -26,10 +26,10 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Make_Bazier(const _float3& vStartPoint, const _float3& vEndPoint);
-	_float3 Point_Setting(_float3 vOriginPos);
-	void Go_To_Player_Bazier();
-	void Reset_Bazier();
+	void Make_Line(const _float3& vStartPoint, const _float3& vEndPoint);
+	_float3 Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta);
+	void Go_To_Player(_float fTimeDelta);
+	void Reset_State();
 
 private:
 	HRESULT Set_RenderState();
@@ -50,15 +50,12 @@ public:
 	virtual void Free() override;
 
 private:
-	_float m_fSpeed = 2.5f;
-	_float m_fTimer = 0.f;
+	_float m_fSpeed = 8.f;
 
 	_float3 m_vStartPoint = { 0.f,0.f,0.f };
 	_float3 m_vEndPoint = { 0.f,0.f,0.f };
-	_float3 m_vElsePoint[2] = {};
-	
-	_float m_fPos[2] = { 0.55f,0.45f };
-	_bool m_bBazier = false;
+	_bool m_bLineStart = false;
+
 };
 END
 
