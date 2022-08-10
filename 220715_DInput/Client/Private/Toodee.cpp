@@ -102,6 +102,8 @@ void CToodee::Tick(_float fTimeDelta)
 				m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
 				if (5.f > m_MoveSpeed)
 					m_MoveSpeed += 0.1f;
+				else if (5.f < m_MoveSpeed)
+					m_MoveSpeed -= 1.f;
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -118,6 +120,8 @@ void CToodee::Tick(_float fTimeDelta)
 				m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 				if (5.f > m_MoveSpeed)
 					m_MoveSpeed += 0.1f;
+				else if (5.f < m_MoveSpeed)
+					m_MoveSpeed -= 1.f;
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -180,7 +184,7 @@ void CToodee::LateTick(_float fTimeDelta)
 
 			case TOODEE_IDLE:
 				if (0.f < m_MoveSpeed)
-					m_MoveSpeed -= 0.1f;
+					m_MoveSpeed -= 1.f;
 				else
 					m_MoveSpeed = 0.f;
 				m_iMinFrame = 0;
@@ -228,6 +232,10 @@ void CToodee::LateTick(_float fTimeDelta)
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 #pragma endregion
+
+			if (CGameMgr::Get_Instance()->Key_Down(DIK_P)) { /* Test WarpBox for Up to Left/Right */
+				m_MoveSpeed += 100.f * abs((m_fJumpPower * fTimeDelta) + vGravityPower);
+			}
 
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);

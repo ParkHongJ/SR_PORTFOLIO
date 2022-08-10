@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "..\Public\WarpBlock.h"
-#include "GameInstance.h"
 
+#include "GameInstance.h"
+#include "GameMgr.h"
+
+_uint CWarpBlock::m_iWBCount = 0;
 
 CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -32,13 +35,39 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vInitStruct.x, vInitStruct.y, vInitStruct.z));
 		m_iTextureNum = (_uint)vInitStruct.w;			// w means TextureNum 
 	}
+
+	switch (m_iTextureNum)
+	{
+	case 0:
+		m_eWarpDir = WD_UP;
+		break;
+
+	case 1:
+		m_eWarpDir = WD_RIGHT;
+		break;
+
+	case 2:
+		m_eWarpDir = WD_DOWN;
+		break;
+
+	case 3:
+		m_eWarpDir = WD_LEFT;
+		break;
+	}
+
+	m_iWBNum = m_iWBCount;
+	++m_iWBCount;
+
+	CGameMgr::Get_Instance()->Set_WB_Data_Dir(TEXT("WBDir%d", m_iWBNum), m_eWarpDir);
+
 	return S_OK;
 }
 
 void CWarpBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
+
+	CGameMgr::Get_Instance()->Set_WB_Data_Pos(TEXT("WBPos%d", m_iWBNum), m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 }
 
 void CWarpBlock::LateTick(_float fTimeDelta)

@@ -6,6 +6,12 @@
 BEGIN(Client)
 class CWarpBlock final : public CInteraction_Block
 {
+public:
+	enum WarpDir { WD_UP, WD_DOWN, WD_LEFT, WD_RIGHT, WD_END };
+	WarpDir Get_WD(void) { return m_eWarpDir; }
+
+	static _uint m_iWBCount;
+
 private:
 	CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CWarpBlock(const CWarpBlock& rhs);
@@ -24,7 +30,9 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
 
 private:
+	_uint m_iWBNum;
 	_uint m_iTextureNum =  0 ;
+	WarpDir m_eWarpDir = WD_END;
 
 private:
 	HRESULT Set_RenderState();

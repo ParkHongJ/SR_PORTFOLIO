@@ -43,6 +43,9 @@ public:
 	_bool Get_Object_Data(const _tchar* pTag);
 	void Player_Active();
 
+	void Set_WB_Data_Pos(const _tchar* pTag, _float3 vPos);
+	void Set_WB_Data_Dir(const _tchar* pTag, _uint iDir);
+
 	_bool Col_Obj(const _float3& vCurPos, _float* pOut_ObjectsDist, _uint* pPigDirOut, _bool bPushCheck);
 
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
@@ -51,6 +54,8 @@ public:
 private:
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
+
+	map<const _tchar*, _float3> m_WBData;
 
 	_bool m_bKeyState[256] = { false };
 
