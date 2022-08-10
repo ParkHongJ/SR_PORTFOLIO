@@ -1,5 +1,5 @@
 #include "..\Public\Texture.h"
-
+#include "Shader.h"
 CTexture::CTexture(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CComponent(pGraphic_Device)
 {
@@ -19,6 +19,11 @@ HRESULT CTexture::Bind_Texture(_uint iTextureIndex)
 		return E_FAIL;
 
 	return m_pGraphic_Device->SetTexture(0, m_Textures[iTextureIndex]);
+}
+
+HRESULT CTexture::Bind_Texture(CShader * pShader, D3DXHANDLE hParameter, _uint iTextureIndex)
+{
+	return pShader->Set_Texture(hParameter, m_Textures[iTextureIndex]);
 }
 
 HRESULT CTexture::Initialize_Prototype(TYPE eType, const _tchar * pTextureFilePath, _uint iNumTextures)

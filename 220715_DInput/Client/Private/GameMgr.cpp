@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "KeyBlock.h"
 #include "Tookee.h"
+#include "WarpBlock.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -212,12 +213,16 @@ void CGameMgr::Particle_To_Player()
 		if (m_pParticle_Spark == nullptr)
 			return;
 	}
+	
 	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Topdee")->front();
 	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Toodee")->front();
+	
 	if (pTopdee == nullptr || pToodee == nullptr)
 		return;
+	
 	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Tranform"));
 	_float3 vTopdeePos{ pTopdeeTrans->Get_State(CTransform::STATE_POSITION) };
+
 	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Tranform"));
 	_float3 vToodeePos{ pToodeeTrans->Get_State(CTransform::STATE_POSITION) };
 
@@ -321,18 +326,10 @@ _bool CGameMgr::Key_Down(_uchar KeyInput)
 	return false;
 }
 
-void CGameMgr::Free()
-{
-	if (m_Tookee != nullptr)
-	{
-		Safe_Release(m_Tookee);
-	}
-	m_Data.clear();
-}
-
 void CGameMgr::DeleteKey()
 {
 	m_iKey--;
+
 	if (m_iKey <= 0)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -349,10 +346,37 @@ void CGameMgr::DeleteKey()
 	}
 }
 
-void CGameMgr::ControlTooKee(CTookee::STATE _eState)
+HRESULT CGameMgr::RegisterWarpBlock(CWarpBlock * pWarpBlock)
 {
-	if (m_Tookee != nullptr)
+	//첫번째로 등록하는 워프 블록이 비어있다면
+	if (m_pFirstWarp == nullptr)
 	{
-
+		//등록하고 레.카 추가
+		m_pFirstWarp = pWarpBlock;
+		Safe_AddRef(pWarpBlock);
 	}
+	else
+	{
+		//첫번째 워프블록이 이미있다면
+		//두번째 워프블록 등록
+		m_pFirstWarp->SetPartner(pWarpBlock);
+		pWarpBlock->SetPartner(m_pFirstWarp);
+
+		//서로 파트너를 맺어주고 레.카 초기화
+		Safe_Release(m_pFirstWarp);
+	}
+	return S_OK;
+}
+
+void CGameMgr::Free()
+{
+
+	m_Data.clear();
+
+	if (m_Tookee != nullptr)
+		Safe_Release(m_Tookee);
+
+	//워프블럭을 안쓰는 라운드는 삭제하면안됨!
+	if (m_pFirstWarp != nullptr)
+		Safe_Release(m_pFirstWarp);
 }

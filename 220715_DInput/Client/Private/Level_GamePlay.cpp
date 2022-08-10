@@ -37,16 +37,23 @@ HRESULT CLevel_GamePlay::Initialize()
 	ObjInfo objInfo1;
 	objInfo1.vPos = _float3(3.5f, .5f, 4.5f);
 	objInfo1.iNumLevel = LEVEL_STAGE1;
+	objInfo1.iDirection = 0;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo1)))
 		return E_FAIL;
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(15.5f, .5f, 5.5f))))
+
+	ObjInfo objInfo2;
+	objInfo2.vPos = _float3(13.5f, .5f, 4.5f);
+	objInfo2.iNumLevel = LEVEL_STAGE1;
+	objInfo2.iDirection = 0;
+
+	ObjInfo objInfo3;
+	objInfo3.vPos = _float3(6.5f, .5f, 4.5f);
+	objInfo3.iNumLevel = LEVEL_STAGE1;
+	objInfo3.iDirection = 1;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_GravityBlock", L"Layer_Cube", _float3(13.5f, .5f, 5.5f))))
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Particle", L"Layer_Particle")))
-		return E_FAIL;*/
-	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
-	//	return E_FAIL;
 
 	ObjInfo objInfo;
 	//Y값 무조건 0.5 제일중요
@@ -55,7 +62,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
 		return E_FAIL;
 	//==================================================================================
-	LoadGameObject();
+	//LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);

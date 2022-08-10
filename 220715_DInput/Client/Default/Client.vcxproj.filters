@@ -551,4 +551,7 @@
       <Filter>99.Default\ClientDefault</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl" />
+  </ItemGroup>
 </Project>

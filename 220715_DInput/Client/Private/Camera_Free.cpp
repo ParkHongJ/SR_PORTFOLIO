@@ -69,12 +69,12 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	{
 		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 		{
-			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), MouseMove * fTimeDelta * 0.05f);
+			m_pTransformCom->Turn(_float3(0.f, 1.f, 0.f), (_float)MouseMove * fTimeDelta * 0.05f);
 		}
 
 		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 		{
-			m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), MouseMove * fTimeDelta * 0.05f);
+			m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), (_float)MouseMove * fTimeDelta * 0.05f);
 		}
 	}
 
@@ -84,7 +84,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		{
 			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-			vPos += _float3(1.0f, 0.0f, 0.0f) * MouseMove * fTimeDelta * 0.5f;
+			vPos += _float3(1.0f, 0.0f, 0.0f) * (_float)MouseMove * fTimeDelta * 0.5f;
 
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}
@@ -92,7 +92,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		{
 			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
-			vPos -= _float3(0.0f, 1.0f, 0.0f) * MouseMove * fTimeDelta * 0.5f;
+			vPos -= _float3(0.0f, 1.0f, 0.0f) * (_float)MouseMove * fTimeDelta * 0.5f;
 
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		}

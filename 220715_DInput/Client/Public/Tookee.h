@@ -60,6 +60,7 @@ private:
 	STATE m_ePreState;
 	_float3 m_fScale = {1.f,1.f,1.f};
 	_float m_fSpeed = 5.f;
+
 //TOODEE일 경우 : X축 이동과 점프, 중력이 필요함
 //TOPDEE일 경우 : X,Z축 이동이 필요함 홀과 충돌필요
 public:

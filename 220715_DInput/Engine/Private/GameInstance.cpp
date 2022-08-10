@@ -160,7 +160,7 @@ CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const _tchar * pP
 _float CGameInstance::Get_TimeDelta(const _tchar * pTimerTag)
 {
 	if (nullptr == m_pTimer_Manager)
-		return E_FAIL;
+		return 0.0f;
 
 	return m_pTimer_Manager->Get_TimeDelta(pTimerTag);
 }

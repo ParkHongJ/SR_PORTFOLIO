@@ -207,7 +207,8 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 
 void CTopdee::Go_Lerp(_float fTimeDelta)
 {
-	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	//Hong Edit
+	/*_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vFinalPosition;
 
 	vFinalPosition.x = _int(vCurPosition.x) + 0.5f;
@@ -218,7 +219,23 @@ void CTopdee::Go_Lerp(_float fTimeDelta)
 	vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
 
 	vCurPosition = vCurPosition + (vFinalPosition - vCurPosition) * (fTimeDelta * 5);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCurPosition);*/
+
+	if (CGameMgr::Get_Instance()->GetMode()==CGameMgr::TOPDEE)
+	{
+		//현재 바뀐모드가 탑디면 보정
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		//수정 했음 나름 부드러워짐
+		vPos.x = _uint(vPos.x) + 0.5f;
+		vPos.y = m_MyTurnY;
+		vPos.z = _uint(vPos.z) + 0.5f;
+
+		vPos = MoveTowards(vCurPos, vPos, fTimeDelta * 3.f);
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
 }
 
 void CTopdee::Topdee_PreLoader_Pos_Mgr()
