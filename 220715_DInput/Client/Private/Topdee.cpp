@@ -163,6 +163,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		Go_Lerp(fTimeDelta);
 		//Edit Hong 
 		//키를뗏으면 투키를 보정시켜라
+		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_IDLE);
 	}
 	m_bTookeeMove = true;
 	Safe_Release(pGameInstance);

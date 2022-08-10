@@ -45,6 +45,9 @@ HRESULT CTookee::Initialize(void * pArg)
 
 void CTookee::Tick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
+
 	//현재모드
 	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
 
@@ -55,54 +58,74 @@ void CTookee::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		//모드가 바뀐시점
+		//모드가 바뀐시점, 탑디로 바뀌었다면
 		if (m_eCurMode == CGameMgr::TOPDEE)
 		{
-			//현재 바뀐모드가 탑디면 보정
-			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-			//수정 필요함. 투디에서 탑디로 바뀔때 너무 딱바뀜
-			vPos.x = _uint(vPos.x) + 0.5f;
-			vPos.z = _uint(vPos.z) + 0.5f;
-
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			//애니메이션 초기화
+			m_iTexIndex = 31;
+		}
+		else if (m_eCurMode == CGameMgr::TOODEE)
+		{   
+			// 투디상태일 때
+			/* 투키상태의 초기화 */
+			m_eCurState = TOOKEE_IDLE;
+			//점프의 초기화
+			m_bJump = false;
+			m_fJumpTime = 0.f;
 		}
 		m_ePreMode = m_eCurMode;
-
-		/* 투키상태의 초기화 */
-		m_eCurState = TOOKEE_IDLE;
-		//점프의 초기화
-		m_bJump = false;
-		m_fJumpTime = 0.f;
 	}
 }
 
 void CTookee::LateTick(_float fTimeDelta)
 {
+	if (!m_bActive)
+		return;
+
 	switch (m_eCurState)
 	{
 	case CTookee::TOOKEE_LEFT:
-		m_fSpeed = 5.f;
-		m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
 		if (m_eCurMode == CGameMgr::TOODEE)
 		{
+			m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
 			m_iMinFrame = 13;
 			m_iMaxFrame = 24;
 		}
+		else if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			m_iMinFrame = 35;
+			m_iMaxFrame = 36;
+		}
+		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_RIGHT:
-		m_fSpeed = 5.f;
-		m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 		if (m_eCurMode == CGameMgr::TOODEE)
 		{
+			m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 			m_iMinFrame = 13;
 			m_iMaxFrame = 24;
 		}
+		else if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			m_iMinFrame = 41;
+			m_iMaxFrame = 42;
+		}
+		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_UP:
+		if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			m_iMinFrame = 38;
+			m_iMaxFrame = 39;
+		}
 		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_DOWN:
+		if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			m_iMinFrame = 32;
+			m_iMaxFrame = 33;
+		}
 		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_JUMP:
@@ -115,40 +138,39 @@ void CTookee::LateTick(_float fTimeDelta)
 	case CTookee::TOOKEE_IDLE:
 		if (m_eCurMode == CGameMgr::TOODEE)
 		{
-			m_fSpeed = 0.f;
 			m_iMinFrame = 0;
 			m_iMaxFrame = 12;
 		}
-		else
-			m_fSpeed = 5.f;
+		else if (m_eCurMode == CGameMgr::TOPDEE)
+		{
+			//이전 상태가 어느방향이냐에 따라서 조정해야함
+
+			//현재 바뀐모드가 탑디면 보정
+			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+			//수정 했음 나름 부드러워짐
+			vPos.x = _uint(vPos.x) + 0.5f;
+			vPos.z = _uint(vPos.z) + 0.5f;
+
+			vPos = MoveTowards(vCurPos, vPos, fTimeDelta * 3.f);
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			
+			m_iMinFrame = 31;
+			m_iMaxFrame = 31;
+		}
+		m_fSpeed = 0.f;
 		break;
 	default:
 		break;
 	}
 
-	if (m_eCurMode == CGameMgr::TOODEE)
-	{
-		if (m_bJump && m_iMaxFrame - 1 < m_iTexIndex)
-			m_iTexIndex = m_iMaxFrame;
-		else {
-			if (m_iMinFrame > m_iTexIndex || m_iMaxFrame - 1 < m_iTexIndex)
-				m_iTexIndex = m_iMinFrame;
-			else {
-				m_fFrame += m_iMaxFrame * fTimeDelta;
-
-				if (m_fFrame > (m_iMaxFrame / 8)) {
-					++m_iTexIndex;
-					m_fFrame = 0.f;
-				}
-			}
-		}
-	}
-	
-
 	/* TOODEE */
 	if (m_eCurMode == CGameMgr::TOODEE)
 	{
 		//To do TOODEE
+		MoveFrameToodee(fTimeDelta);
 		Jump(fTimeDelta);
 		m_pTransformCom->Set_TransformDesc_Speed(m_fSpeed);
 		m_pTransformCom->Go_Straight_2D(fTimeDelta);
@@ -156,6 +178,7 @@ void CTookee::LateTick(_float fTimeDelta)
 	/* TOPDEE */
 	else
 	{
+		MoveFrameTopdee(fTimeDelta);
 		//To do TOPDEE
 		_float fCollisionDist;
 
@@ -203,13 +226,14 @@ void CTookee::LateTick(_float fTimeDelta)
 
 HRESULT CTookee::Render()
 {
+	if (!m_bActive)
+		return S_OK;
+
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
-	if (m_bActive) {
-		if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
-			return E_FAIL;
-	}
+	if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
+		return E_FAIL;
 
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
@@ -238,7 +262,6 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	_float fBoxSize = 1.f;
 	_float fMyLength = 1.5f;
 
-
 	/* TOODEE */
 	if (m_eCurMode == CGameMgr::TOODEE)
 	{
@@ -262,21 +285,19 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			}
 			else if (CCollider::DIR_LEFT == eDireciton) {
 				if (m_eCurState == TOOKEE_RIGHT)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-				//need fix
+					m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 				else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 				else if (m_eCurState == TOOKEE_IDLE)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					m_pTransformCom->Translate(_float3(-1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 			}
 			else if (CCollider::DIR_RIGHT == eDireciton) {
 				if (m_eCurState == TOOKEE_LEFT)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-				//need fix
+					m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 				else if (m_fSpeed > 0.f && m_eCurState == TOOKEE_JUMP)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 				else if (m_eCurState == TOOKEE_IDLE)
-					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					m_pTransformCom->Translate(_float3(1.f, 0.f, 0.f)* fTimeDelta * m_fSpeed);
 			}
 
 			Safe_Release(TargetBox);
@@ -623,6 +644,36 @@ void CTookee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 			}
 		}
 		++iter;
+	}
+}
+
+void CTookee::MoveFrameToodee(_float fTimeDelta)
+{
+	if (m_bJump && m_iMaxFrame - 1 < m_iTexIndex)
+		m_iTexIndex = m_iMaxFrame;
+	else {
+		if (m_iMinFrame > m_iTexIndex || m_iMaxFrame - 1 < m_iTexIndex)
+			m_iTexIndex = m_iMinFrame;
+		else {
+			m_fFrame += m_iMaxFrame * fTimeDelta;
+
+			if (m_fFrame > (m_iMaxFrame / 8)) {
+				++m_iTexIndex;
+				m_fFrame = 0.f;
+			}
+		}
+	}
+}
+
+void CTookee::MoveFrameTopdee(_float fTimeDelta)
+{
+	_uint iCurFrame = m_iMaxFrame - m_iMinFrame;
+	m_fFrame += ((_float)iCurFrame * fTimeDelta);
+	//m_iTexIndex += (_uint)((_float)iCurFrame * fTimeDelta);
+	m_iTexIndex = (_uint)m_fFrame;
+	if (m_fFrame > (_float)iCurFrame)
+	{
+		m_fFrame = (_float)m_iMinFrame;
 	}
 }
 

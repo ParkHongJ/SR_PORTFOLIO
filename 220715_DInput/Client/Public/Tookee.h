@@ -38,7 +38,6 @@ private:
 	CCollider* m_pColliderCom = nullptr;
 	CBoxCollider* m_pBoxCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
-
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
 	_uint m_iTexIndex = 0;
@@ -58,6 +57,7 @@ private:
 	_uint m_eCurMode = 0;
 	//투키의 현재상태, TOODE, TOPDEE 분리할까? 말까?
 	STATE m_eCurState;
+	STATE m_ePreState;
 	_float3 m_fScale = {1.f,1.f,1.f};
 	_float m_fSpeed = 5.f;
 //TOODEE일 경우 : X축 이동과 점프, 중력이 필요함
@@ -74,11 +74,24 @@ public:
 	void SetSpeed(_float _fSpeed) { m_fSpeed = _fSpeed; }
 	void SetScale(_float3 _vScale);
 	void SetPosition(_float fTimeDelta, _float3 vDir);
+
+	void MoveFrameToodee(_float fTimeDelta);
+	void MoveFrameTopdee(_float fTimeDelta);
 public:
 	/* For Topdee*/
 	void	TopdeeIsPushed(const _float3 _vPos);
 	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush);//박스앞에박스있는지 밀때체크
-
+public:
+	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
+	{
+		_float3 a = target - current;
+		float magnitude = D3DXVec3Length(&a);
+		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
+		{
+			return target;
+		}
+		return current + a / magnitude * maxDistanceDelta;
+	}
 private:
 	//For Topdee
 	list<class CGameObject*>* m_pBoxList = nullptr;
