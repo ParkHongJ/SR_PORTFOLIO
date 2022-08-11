@@ -47,8 +47,16 @@ HRESULT CCollider::Collision_RectEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP eD
 
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])
 	{
+		if (pSour.first == nullptr)
+		{
+			continue;
+		}
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == nullptr)
+			{
+				continue;
+			}
 			if (pDest.first == pSour.first)
 			{
 				continue;
@@ -114,8 +122,16 @@ HRESULT CCollider::Collision_SphereEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP 
 
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])
 	{
+		if (pSour.first ==nullptr)
+		{
+			continue;
+		}
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == nullptr)
+			{
+				continue;
+			}
 			if (pDest.first == pSour.first)
 			{
 				continue;
@@ -151,8 +167,16 @@ HRESULT CCollider::Collision_TriggerXXX(COLLISIONGROUP eSourGroup, COLLISIONGROU
 
 	for (auto& pSour : m_pCollisionObjects[eSourGroup])
 	{
+		if (pSour.first == nullptr)
+		{
+			continue;
+		}
 		for (auto& pDest : m_pCollisionObjects[eDestGroup])
 		{
+			if (pDest.first == nullptr)
+			{
+				continue;
+			}
 			if (pDest.first == pSour.first)
 			{
 				continue;
@@ -211,10 +235,18 @@ HRESULT CCollider::EndEx()
 {
 	for (auto& List : m_pCollisionObjects)
 	{
+		if (List.empty())
+			continue;
 		for (auto& Pair : List)
 		{
-			Safe_Release(Pair.first);
-			Safe_Release(Pair.second);
+			if (Pair.first != nullptr)
+			{
+				Safe_Release(Pair.first);
+			}
+			if (Pair.second != nullptr)
+			{
+				Safe_Release(Pair.second);
+			}
 		}
 		List.clear();
 	}
