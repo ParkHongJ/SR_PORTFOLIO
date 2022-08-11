@@ -21,7 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("test.wav"), SOUND_MAX);
+	//pGameInstance->PlayBGM(TEXT("test.wav"), SOUND_MAX);
 
 	Safe_Release(pGameInstance);
 

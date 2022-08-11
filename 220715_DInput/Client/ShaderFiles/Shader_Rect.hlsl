@@ -51,7 +51,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);	
-	//Out.vTexUV = In.vTexUV;	
+	Out.vTexUV = In.vTexUV;	
 	/*Out.vTexUV = In.vTexUV + float2(g_time * .25f, 0.f);*/
 	return Out;
 }
