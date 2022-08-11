@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Shader.h"
 #include "Texture.h"
 #include "Collider.h"
 #include "Renderer.h"

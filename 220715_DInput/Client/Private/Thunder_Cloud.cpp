@@ -241,7 +241,6 @@ HRESULT CThunder_Cloud::SetUp_Components()
 	CVIBuffer_Rect::RECTDESC RectDesc2;
 	RectDesc2.vSize = { 3.0f, 1.f, 0.f };
 	
-	
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Cloud"), (CComponent**)&m_pVIBufferCom_Cloud, this, &RectDesc2)))
 		return E_FAIL;

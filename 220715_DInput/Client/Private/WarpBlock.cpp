@@ -2,6 +2,8 @@
 #include "..\Public\WarpBlock.h"
 #include "GameInstance.h"
 #include "Hong.h"
+#include "GameMgr.h"
+
 
 CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -19,47 +21,104 @@ HRESULT CWarpBlock::Initialize_Prototype()
 }
 
 HRESULT CWarpBlock::Initialize(void * pArg)
-{// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
+{
+	// Warp Texture is 0: Up, 1: Right 2: Down, 3: Left    This GiJun is Warp Direction.
 	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
 		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
 		m_iNumLevel = ObjInfo.iNumLevel;
-
-		
 	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	_tchar* pTag = (L"Box");
 	SetTag(pTag);
 
+	SetTag(L"Box");
+
+
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
 		vPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-		m_iTextureNum = ObjInfo.iTex;
+		m_eDir = (DIRECTION)ObjInfo.iDirection;
+		m_iTextureNum = ObjInfo.iDirection;
 	}
 	else
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-		m_iTextureNum = ObjInfo.iTex;
 	}
+
+	//텔레포트될 위치까지의 거리. 0.5로 주니까 딱붙는경우가 생겨서 매직넘버 붙임
+	m_fWarpDistance = .9f;
 	
+	//초기 텔레포트 위치 설정
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	switch (m_eDir)
+	{
+	case CWarpBlock::DIR_UP:
+		vPos.z += m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_RIGHT:
+		vPos.x += m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_DOWN:
+		vPos.z -= m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_LEFT:
+		vPos.x -= m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	default:
+		break;
+	}
+
+	//게임매니저 등록
+	if (FAILED(CGameMgr::Get_Instance()->RegisterWarpBlock(this)))
+		E_FAIL;
+
 	return S_OK;
 }
 
 void CWarpBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
+
+	//포탈을 들거나 미는중에도 텔레포트가 가능해야하기 때문에 틱마다 텔포의 위치를 조정해준다.
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	switch (m_eDir)
+	{
+	case CWarpBlock::DIR_UP:
+		vPos.z += m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_RIGHT:
+		vPos.x += m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_DOWN:
+		vPos.z -= m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	case CWarpBlock::DIR_LEFT:
+		vPos.x -= m_fWarpDistance;
+		m_vTeleportPos = vPos;
+		break;
+	default:
+		break;
+	}
 }
 
 void CWarpBlock::LateTick(_float fTimeDelta)
 {
 	__super::LateTick(fTimeDelta);
+
 	if (!m_bActive)
 		return;
 
@@ -71,9 +130,10 @@ HRESULT CWarpBlock::Render()
 {
 	if (!m_bActive)
 		S_OK;
+
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
-	
+
 	if (FAILED(m_pTextureCom->Bind_Texture(m_iTextureNum)))
 		return E_FAIL;
 
@@ -85,27 +145,25 @@ HRESULT CWarpBlock::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	//---------------------디버그일때 그리기-------------------------
-	/*_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCollider->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
-	//--------------------------------------------------------------
-
-	
 	return S_OK;
 }
 
-void CWarpBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
+void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-}
+	//나 혹은 내 파트너의 능력이 비활성화 되어있다면
+	if (!m_pPartner->m_bAbility || !m_bAbility || m_pPartner == nullptr)
+		return;
 
-void CWarpBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
-{
-}
+	//워프 방향으로 충돌했다면
+	//이 부분은 한번만 호출됨!
+	if (eDirection == m_eDir)
+	{
+		CTransform* otherTransform = (CTransform*)other->Get_Component(L"Com_Transform");
+		_float3 vPos = m_pPartner->GetTeleportPos();
 
-void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
-{
+		//이때 방향도 같이 주고싶다.
+		otherTransform->Set_State(CTransform::STATE_POSITION, vPos);
+	}
 }
 
 HRESULT CWarpBlock::Set_RenderState()
@@ -136,7 +194,7 @@ HRESULT CWarpBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_WarpBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_WarpBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */
@@ -194,6 +252,5 @@ CGameObject * CWarpBlock::Clone(void* pArg)
 void CWarpBlock::Free()
 {
 	__super::Free();
-	
 }
 

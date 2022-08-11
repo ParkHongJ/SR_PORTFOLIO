@@ -121,6 +121,7 @@ HRESULT CLevel_SENI::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		return E_FAIL;
 	
 	Safe_Release(pGameInstance);
+	return S_OK;
 }
 
 HRESULT CLevel_SENI::Ready_Layer_Button(const _tchar * pLayerTag)

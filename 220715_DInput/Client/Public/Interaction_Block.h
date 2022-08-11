@@ -40,7 +40,17 @@ public:
 public:
 	_bool Get_bTopdeeRaise() { return m_bTopdeeRaise; }
 	void Set_bTopdeeRaise(_bool _bTopdeeRaise) { m_bTopdeeRaise = _bTopdeeRaise; }
-
+public:
+	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
+	{
+		_float3 a = target - current;
+		float magnitude = D3DXVec3Length(&a);
+		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
+		{
+			return target;
+		}
+		return current + a / magnitude * maxDistanceDelta;
+	}
 protected:
 	_bool m_bDropBox{ false };	
 	_bool m_bTopdeePush{ false };
@@ -56,18 +66,6 @@ protected:
 	CVIBuffer_Terrain_Cube*	m_pVIBufferCom = nullptr;
 	CCollider*				m_pCollCom = nullptr;
 	CBoxCollider*			m_pBoxCollider = nullptr;
-
-public:
-	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
-	{
-		_float3 a = target - current;
-		float magnitude = D3DXVec3Length(&a);
-		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
-		{
-			return target;
-		}
-		return current + a / magnitude * maxDistanceDelta;
-	}
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

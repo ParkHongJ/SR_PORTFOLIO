@@ -109,7 +109,7 @@ HRESULT CLoading_BackGround::Render()
 	m_pVIBuffer_InsideCom->Render();
 
 	D3DXMatrixIdentity(&Matrix);
-	if (FAILED(m_pTexture_CloudCom->Bind_Texture(m_fCloudFrame)))
+	if (FAILED(m_pTexture_CloudCom->Bind_Texture((_uint)m_fCloudFrame)))
 		return E_FAIL;
 	m_pTransform_CloudCom->Bind_WorldMatrix();
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &Matrix);

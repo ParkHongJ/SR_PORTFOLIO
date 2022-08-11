@@ -180,9 +180,10 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_PORTAL:
 				if (!(CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 					&& !(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))) {
-					if (0.f < m_MoveSpeed)
+					//Edit Hong
+					/*if (0.f < m_MoveSpeed)
 						m_MoveSpeed -= 0.1f;
-					else
+					else*/
 						m_MoveSpeed = 0.f;
 				}
 				if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
@@ -346,7 +347,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 	_float fBoxSize = 1.f;
 	_float fMyLength = 1.5f;
-	if (other->CompareTag(L"Box")) {
+	//Edit Hong
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
 

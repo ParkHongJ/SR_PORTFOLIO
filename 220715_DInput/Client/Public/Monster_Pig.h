@@ -63,7 +63,7 @@ private:
 	_bool	m_bTurn;
 	PIG_DIRECTION m_eCurDir = DIR_END;
 	//이전모드
-	CGameMgr::GAMEMODE m_ePreMode = CGameMgr::TOODEE;
+	CGameMgr::GAMEMODE m_ePreMode = CGameMgr::GAMEMODE::TOODEE;
 	CGameMgr::GAMEMODE m_eCurMode;
 private:
 	HRESULT Set_RenderState();

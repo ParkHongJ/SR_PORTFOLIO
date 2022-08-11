@@ -43,7 +43,7 @@ public:
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
 
 public:
-	//Edit Hong. 기존 이펙트생성 함수로 변경
+	//Edit Hong. 기존 이펙트생성 함수로 변경 및 투키 조종함수 추가
 	void CreateEffect();
 	void SetStateTookee();
 private:

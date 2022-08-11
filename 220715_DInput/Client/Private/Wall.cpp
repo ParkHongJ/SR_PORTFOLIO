@@ -49,7 +49,7 @@ HRESULT CWall::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	//======================
-	m_Tag = L"Box";
+	m_Tag = L"Wall";
 	//======================
 
 

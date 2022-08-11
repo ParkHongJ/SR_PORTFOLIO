@@ -57,7 +57,6 @@ public:
 
 	//현재 매커니즘
 	//투디 or 탑디 이동명령 -> 게임매니저 -> 투키
-	void ControlTooKee(CTookee::STATE _eState);
 	void SetTookee(CTookee* _TooKee) { 
 		m_Tookee = _TooKee;
 		Safe_AddRef(m_Tookee);
@@ -87,18 +86,21 @@ public:
 			m_Tookee->SetJump();
 		}
 	}
-	/* Key 전용 */
-	void AddKey() { m_iKey++; }
-	void DeleteKey();
 	void SetPosition(_float fTimeDelta, _float3 vDir) {
 		if (m_Tookee != nullptr)
 		{
 			m_Tookee->SetPosition(fTimeDelta, vDir);
 		}
 	}
+
 	//===Key===
+	/* Key 전용 */
+	void AddKey() { m_iKey++; }
+	void DeleteKey();
+
+	//=====WarpBlock=====
+	HRESULT RegisterWarpBlock(class CWarpBlock* pWarpBlock);
 private:
-	CTransform* tempTransform = nullptr;//홍준 테스트용
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
 
@@ -113,6 +115,9 @@ private:
 	_uint m_iKey = 0;
 
 	class CTookee* m_Tookee = nullptr;
+	
+	class CWarpBlock* m_pFirstWarp = nullptr;
+
 public:
 	virtual void Free() override;
 };

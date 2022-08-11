@@ -15,6 +15,7 @@ private:
 
 public:
 	HRESULT Bind_Texture(_uint iTextureIndex);
+	HRESULT Bind_Texture(class CShader* pShader, D3DXHANDLE hParameter, _uint iTextureIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures);

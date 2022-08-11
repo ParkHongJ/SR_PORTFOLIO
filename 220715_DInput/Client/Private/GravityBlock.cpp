@@ -74,23 +74,7 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 		}
 		else
 		{
-			//현재위치
-			_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			_float3 vFinalPosition; //도착위치
-
-			//z값만 보정 (중력이니까)
-			vFinalPosition.x = vCurPosition.x;
-			vFinalPosition.y = vCurPosition.y;
-			vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
-
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPosition);
-
-			//탑디면 땅에 꺼질수있는지 체크
-			if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
-			{
-				//떨어져야 할때.
-				m_bDropBox = true;
-			}
+			
 		}
 		m_ePreMode = eCurMode;
 	}
@@ -101,6 +85,27 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 		if (m_bAbility)
 		{
 			UpdateGravitiy(fTimeDelta);
+		}
+	}
+	else if (eCurMode == CGameMgr::TOPDEE)
+	{
+		//현재위치
+		_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vFinalPosition; //도착위치
+
+								//z값만 보정 (중력이니까)
+		vFinalPosition.x = vCurPosition.x;
+		vFinalPosition.y = vCurPosition.y;
+		vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
+
+		vFinalPosition = MoveTowards(vCurPosition, vFinalPosition, fTimeDelta* 3.f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPosition);
+
+		//탑디면 땅에 꺼질수있는지 체크
+		if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+		{
+			//떨어져야 할때.
+			m_bDropBox = true;
 		}
 	}
 	
@@ -138,7 +143,7 @@ void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint 
 	if (m_bAbility)
 	{
 		//밀어내기
-		if (other->CompareTag(L"Box") && CCollider::DIR_UP == eDirection && m_bOnBlock == false)
+		if ((other->CompareTag(L"Wall") || (other->CompareTag(L"Box"))) && (CCollider::DIR_UP == eDirection) && (m_bOnBlock == false) )
 		{
 			_float fBoxSize = 1.f;
 
@@ -149,7 +154,7 @@ void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint 
 			_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
 
-			m_bOnBlock = true;
+			//m_bOnBlock = true;
 			Safe_Release(TargetBox);
 		}
 	}

@@ -43,13 +43,6 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-	//if (pArg != nullptr)
-	//{
-	//   _float4 vInitStruct;
-	//   memcpy(&vInitStruct, pArg, sizeof(_float4));
-	//   m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vInitStruct.x, vInitStruct.y, vInitStruct.z));
-	//   m_iTextureNum = (_uint)vInitStruct.w;         // w means TextureNum 
-	//}
 	return S_OK;
 }
 
@@ -151,7 +144,7 @@ HRESULT CElectricBlock::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_ElectricBlock"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Collider */

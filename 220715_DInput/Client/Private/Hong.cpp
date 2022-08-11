@@ -109,7 +109,10 @@ HRESULT CHong::Render()
 		"Layer_Key",
 		"Layer_Cube",
 		"Layer_ButtonBlock",
-		"Layer_Button"
+		"Layer_Button",
+		"Thunder_Cloud",
+		"Layer_Cube",
+		"Layer_Cube"
 	};
 	const char* Prototypes[] =
 	{
@@ -127,7 +130,10 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Key",
 		"Prototype_GameObject_GravityBlock",
 		"Prototype_GameObject_ButtonBlock",
-		"Prototype_GameObject_Button"
+		"Prototype_GameObject_Button",
+		"Prototype_GameObject_Thunder_Cloud",
+		"Prototype_GameObject_ElectricBlock",
+		"Prototype_GameObject_WarpBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
@@ -140,7 +146,7 @@ HRESULT CHong::Render()
 	};
 	if (ImGui::BeginListBox("Layers"))
 	{
-		for (int n = 0; n < IM_ARRAYSIZE(Layers); n++)
+		for (int n = 0; n < IM_ARRAYSIZE(Prototypes); n++)
 		{
 			const bool is_selected = (item_current == n);
 			if (ImGui::Selectable(Layers[n], is_selected))
@@ -364,7 +370,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
