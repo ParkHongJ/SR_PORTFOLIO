@@ -72,8 +72,6 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->LateTick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
-
-	m_pFMOD->Tick(fTimeDelta);
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -210,20 +208,76 @@ _long CGameInstance::Get_DIMMoveState(DIMM eMouseMoveID)
 	return m_pInput_Device->Get_DIMMoveState(eMouseMoveID);
 }
 
-HRESULT CGameInstance::Play(const _tchar* pSoundTag, _bool bLoop, _uint iChannelID, _float fVolum)
+int CGameInstance::VolumeUp(C_FMOD::CHANNELID eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
-		return E_FAIL;
+		return 0;
 
-	return m_pFMOD->Play(pSoundTag, bLoop, iChannelID, fVolum);
+	return m_pFMOD->VolumeUp(eID, _vol);
 }
 
-void CGameInstance::Tick_Play(_float fTimeDelta)
+int CGameInstance::VolumeDown(C_FMOD::CHANNELID eID, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->VolumeDown(eID, _vol);
+}
+
+int CGameInstance::BGMVolumeUp(_float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->BGMVolumeUp(_vol);
+}
+
+int CGameInstance::BGMVolumeDown(_float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->BGMVolumeDown(_vol);
+}
+
+int CGameInstance::Pause(C_FMOD::CHANNELID eID)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->Pause(eID);
+}
+
+void CGameInstance::PlaySound(_tchar * pSoundKey, C_FMOD::CHANNELID eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
 		return;
 
-	return m_pFMOD->Tick(fTimeDelta);
+	return m_pFMOD->PlaySound(pSoundKey, eID, _vol);
+}
+
+void CGameInstance::PlayBGM(_tchar * pSoundKey, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->PlayBGM(pSoundKey, _vol);
+}
+
+void CGameInstance::StopSound(C_FMOD::CHANNELID eID)
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->StopAll();
 }
 
 void CGameInstance::Release_Engine()

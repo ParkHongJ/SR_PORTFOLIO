@@ -21,9 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Play(TEXT("babbling_brook.wav"), true, C_FMOD::CHANNELID::BGM, SOUND_MAX))) {
-		MSG_BOX(TEXT("Search_Sound_Error"));
-	}
+	pGameInstance->PlayBGM(TEXT("test.wav"), SOUND_MAX);
 
 	Safe_Release(pGameInstance);
 

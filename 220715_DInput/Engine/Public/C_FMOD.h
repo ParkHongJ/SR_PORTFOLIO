@@ -56,10 +56,10 @@ typedef string tstring;
 #define T_FIND_NEXT _tfindnext64
 #endif
 
-#define SOUND_MAX 1.0f
+#define SOUND_MAX 10.0f
 #define SOUND_MIN 0.0f
-#define SOUND_DEFAULT 0.5f
-#define SOUND_WEIGHT 0.1f
+#define SOUND_DEFAULT 5.f
+#define SOUND_WEIGHT 1.f
 #pragma endregion
 
 class C_FMOD final : public CBase
@@ -74,22 +74,38 @@ private:
 	virtual ~C_FMOD() = default;
 
 public:
-	FMOD::System* Get_System() { return m_pSystem; }
-	FMOD::Channel* Get_Channel(_uint ChannelID) { return m_pChannel[ChannelID]; }
+	//FMOD::System* Get_System() { return m_pSystem; }
+	//FMOD::Channel* Get_Channel(_uint ChannelID) { return m_pChannel[ChannelID]; }
 
 public:
 	HRESULT Initialize();
 	HRESULT LoadSoundFile();
 	HRESULT CheackPlaying(_uint Channel_ID);
-	HRESULT Play(const _tchar* pSoundTag, _bool bLoop, _uint iChannelID, _float fVolum);
-	void Tick(_float fTimeDelta);
+	//void Tick(_float fTimeDelta);
+
+public:
+	int  VolumeUp(CHANNELID eID, _float _vol);
+	int  VolumeDown(CHANNELID eID, _float _vol);
+	int  BGMVolumeUp(_float _vol);
+	int  BGMVolumeDown(_float _vol);
+	int  Pause(CHANNELID eID);
+	void PlaySound(_tchar* pSoundKey, CHANNELID eID, _float _vol);
+	void PlayBGM(_tchar* pSoundKey, _float _vol);
+	void StopSound(CHANNELID eID);
+	void StopAll();
 
 private:
 	FMOD_RESULT m_Result;
 	FMOD::System* m_pSystem = nullptr;
-	void* extradriverdata = nullptr;
 	FMOD::Channel* m_pChannel[MAXCHANNEL];
+	FMOD::ChannelGroup* m_pChannelGroupA = nullptr;
 	map<const _tchar*, FMOD::Sound*> m_mapSound;
+	void* extradriverdata = nullptr;
+
+private:
+	float m_volume = SOUND_DEFAULT;
+	float m_BGMvolume = SOUND_DEFAULT;
+	_bool m_bPause = false;
 
 public:
 	virtual void Free() override;

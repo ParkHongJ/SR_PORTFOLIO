@@ -45,6 +45,7 @@ public:
 
 	void Set_WB_Data_Pos(const _tchar* pTag, _float3 vPos);
 	void Set_WB_Data_Dir(const _tchar* pTag, _uint iDir);
+	_float3 Get_WB_Data_Dir(const _tchar* pTag);
 
 	_bool Col_Obj(const _float3& vCurPos, _float* pOut_ObjectsDist, _uint* pPigDirOut, _bool bPushCheck);
 

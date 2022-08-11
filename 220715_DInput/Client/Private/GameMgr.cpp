@@ -218,6 +218,16 @@ void CGameMgr::Set_WB_Data_Dir(const _tchar * pTag, _uint iDir)
 	return;
 }
 
+_float3 CGameMgr::Get_WB_Data_Dir(const _tchar * pTag)
+{
+	for (auto& pair : m_WBData)
+		if (pair.first == pTag) {
+			return pair.second;
+		}
+
+	return _float3(0.f, 0.f, 0.f);
+}
+
 _bool CGameMgr::Col_Obj(const _float3 & vCurPos, _float * pOut_ObjectsDist, _uint * pPigDirOut, _bool bPushCheck)
 {
 	if (m_Obstaclelist.empty())

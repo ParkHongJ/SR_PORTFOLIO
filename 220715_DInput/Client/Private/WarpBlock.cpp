@@ -58,16 +58,12 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 	m_iWBNum = m_iWBCount;
 	++m_iWBCount;
 
-	CGameMgr::Get_Instance()->Set_WB_Data_Dir(TEXT("WBDir%d", m_iWBNum), m_eWarpDir);
-
 	return S_OK;
 }
 
 void CWarpBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	CGameMgr::Get_Instance()->Set_WB_Data_Pos(TEXT("WBPos%d", m_iWBNum), m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 }
 
 void CWarpBlock::LateTick(_float fTimeDelta)

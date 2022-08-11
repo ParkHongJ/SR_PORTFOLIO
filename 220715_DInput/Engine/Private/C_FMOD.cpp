@@ -9,10 +9,22 @@ C_FMOD::C_FMOD()
 HRESULT C_FMOD::Initialize()
 {
 	m_Result = FMOD::System_Create(&m_pSystem);
-	if (m_Result != FMOD_OK) return E_FAIL;
+	if (m_Result != FMOD_OK) {
+		MSG_BOX(L"FMOD_System_Create_Failed");
+		return E_FAIL;
+	}
 
 	m_Result = m_pSystem->init(32, FMOD_INIT_NORMAL, extradriverdata);
-	if (m_Result != FMOD_OK) return E_FAIL;
+	if (m_Result != FMOD_OK) {
+		MSG_BOX(L"FMOD_System_Init_Failed");
+		return E_FAIL;
+	}
+
+	/*m_Result = m_pSystem->createChannelGroup(NULL, &m_pChannelGroupA);
+	if (m_Result != FMOD_OK) {
+		MSG_BOX(L"FMOD_Create_ChannelGroup_Failed");
+		return E_FAIL;
+	}*/
 
 	if (FAILED(LoadSoundFile()))
 		return E_FAIL;
@@ -39,7 +51,7 @@ HRESULT C_FMOD::LoadSoundFile()
 		strcat_s(szFullPath, szFilename);
 		FMOD::Sound* pSound = nullptr;
 
-		m_Result = m_pSystem->createSound(szFullPath, FMOD_LOOP_NORMAL, nullptr, &pSound);
+		m_Result = m_pSystem->createSound(szFullPath, FMOD_LOOP_OFF/*FMOD_LOOP_NORMAL*/, nullptr, &pSound);
 		if (m_Result == FMOD_OK)
 		{
 			int iLength = static_cast<int>(strlen(szFilename) + 1);
@@ -68,60 +80,123 @@ HRESULT C_FMOD::CheackPlaying(_uint Channel_ID)
 {
 	if (m_pChannel[Channel_ID])
 	{
-		bool playing = false;
+		_bool playing = false;
 
 		m_pChannel[Channel_ID]->isPlaying(&playing);
 
-		if (playing) {
-			m_Result = m_pSystem->update();
-			if (m_Result != FMOD_OK) {
-				MSG_BOX(L"FMOD_Update_Failed");
-				return E_FAIL;
-			}
-
+		if (playing) {		
 			return S_OK;
 		}
-
-		if (!playing) {
-			MSG_BOX(TEXT("Stop_Playing_Error"));
-			return E_FAIL;
+		else if (!playing) {
+			MSG_BOX(TEXT("Stop_Playing_Sound"));
+			return S_OK;
 		}
 	}
 
 	return S_OK;
 }
 
-HRESULT C_FMOD::Play(const _tchar* pSoundTag, _bool bLoop, _uint iChannelID, _float fVolum)
+int C_FMOD::VolumeUp(CHANNELID eID, _float _vol)
 {
-	auto iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundTag));
-
-	if (iter == m_mapSound.end()) {
-		MSG_BOX(TEXT("Search_Tag_Error"));
-		return E_FAIL;
+	if (m_volume < SOUND_MAX) {
+		m_volume += _vol;
 	}
+	m_pChannel[eID]->setVolume(m_volume);
 
-	m_Result = m_pSystem->playSound(iter->second, nullptr, bLoop, &m_pChannel[iChannelID]);
-
-	m_pChannel[iChannelID]->setVolume(fVolum);
-
-	m_Result = m_pSystem->update();
-	if (m_Result != FMOD_OK) {
-		MSG_BOX(L"FMOD_Update_Failed");
-		return E_FAIL;
-	}
-
-	CheackPlaying(iChannelID);
-
-	return S_OK;
+	return 0;
 }
 
-void C_FMOD::Tick(_float fTimeDelta)
+int C_FMOD::VolumeDown(CHANNELID eID, _float _vol)
 {
-	m_Result = m_pSystem->update();
-	if (m_Result != FMOD_OK) {
-		MSG_BOX(L"FMOD_Update_Failed");
+	if (m_volume > SOUND_MIN) {
+		m_volume -= _vol;
+	}
+
+	m_pChannel[eID]->setVolume(m_volume);
+
+	return 0;
+}
+
+int C_FMOD::BGMVolumeUp(_float _vol)
+{
+	if (m_BGMvolume < SOUND_MAX) {
+		m_BGMvolume += _vol;
+	}
+
+	m_pChannel[BGM]->setVolume(m_volume);
+
+	return 0;
+}
+
+int C_FMOD::BGMVolumeDown(_float _vol)
+{
+	if (m_BGMvolume > SOUND_MIN) {
+		m_BGMvolume -= _vol;
+	}
+
+	m_pChannel[BGM]->setVolume(m_volume);
+
+	return 0;
+}
+
+int C_FMOD::Pause(CHANNELID eID)
+{
+	m_bPause = !m_bPause;
+
+	m_pChannel[eID]->setPaused(m_bPause);
+
+	return 0;
+}
+
+void C_FMOD::PlaySound(_tchar * pSoundKey, CHANNELID eID, _float _vol)
+{
+	auto iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
+
+	if (iter == m_mapSound.end()) {
+		MSG_BOX(TEXT("SoundKey_Search_Failed"));
 		return;
 	}
+	
+	_bool bPlay = FALSE;
+	if (m_pChannel[eID]->isPlaying(&bPlay))
+	{
+		m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[eID]);
+
+		if (_vol >= SOUND_MAX)
+			_vol = 1.f;
+		else if (_vol <= SOUND_MIN)
+			_vol = 0.f;
+
+		m_pChannel[eID]->setVolume(_vol);
+	}
+
+	m_pSystem->update();
+}
+
+void C_FMOD::PlayBGM(_tchar * pSoundKey, _float _vol)
+{
+	auto iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
+
+	if (iter == m_mapSound.end()) {
+		MSG_BOX(TEXT("SoundKey_Search_Failed"));
+		return;
+	}
+
+	m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[BGM]);
+	m_pChannel[BGM]->setMode(FMOD_LOOP_NORMAL);
+	m_pChannel[BGM]->setVolume(_vol);
+	m_pSystem->update();
+}
+
+void C_FMOD::StopSound(CHANNELID eID)
+{
+	m_pChannel[eID]->stop();
+}
+
+void C_FMOD::StopAll()
+{
+	for (int i = 0; i < MAXCHANNEL; ++i)
+		m_pChannel[i]->stop();
 }
 
 void C_FMOD::Free()
