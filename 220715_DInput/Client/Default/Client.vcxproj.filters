@@ -552,6 +552,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Rect.hlsl" />
   </ItemGroup>
 </Project>
