@@ -263,7 +263,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_VIBuffer_Terrain_Cube*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"), CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
 	/* For.Prototype_Component_VIBuffer_Topdee*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Topdee"), CVIBuffer_Topdee::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -312,11 +311,20 @@ HRESULT CMainApp::Ready_LoadingLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_BackGround"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/LoadingBackground.png")))))
 		return E_FAIL;
-	Safe_Release(pGameInstance);
 
-	
-	
-	
+	/* For.Prototype_GameObject_Particle_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Spark"),
+		CParticle_Spark::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC , TEXT("Prototype_Component_Texture_Particle_Spark"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
+		return E_FAIL;
+
+
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

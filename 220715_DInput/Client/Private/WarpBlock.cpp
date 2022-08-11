@@ -31,8 +31,6 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	_tchar* pTag = (L"Box");
-	SetTag(pTag);
 
 	SetTag(L"Box");
 
@@ -178,6 +176,7 @@ HRESULT CWarpBlock::Set_RenderState()
 
 HRESULT CWarpBlock::Reset_RenderState()
 {
+
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	return S_OK;

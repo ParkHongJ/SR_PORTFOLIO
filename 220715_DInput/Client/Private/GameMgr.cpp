@@ -29,7 +29,7 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 void CGameMgr::Tick(_float fTimeDelta)
 {
 	if (Key_Down(DIK_X)) {
-		//Particle_To_Player();
+		Particle_To_Player();
 		Player_Active();
 	}
 }
@@ -209,21 +209,22 @@ void CGameMgr::Particle_To_Player()
 {
 	if (m_pParticle_Spark == nullptr)
 	{
-		m_pParticle_Spark = (CParticle_Spark*)CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Particle_Spark")->front();
-		if (m_pParticle_Spark == nullptr)
+		list<CGameObject*>* pList = CGameInstance::Get_Instance()->GetLayer(LEVEL_STATIC, L"Layer_Particle_Spark");
+		if (pList == nullptr||pList ->empty())
 			return;
+		m_pParticle_Spark = (CParticle_Spark*)(pList->front());
 	}
 	
-	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Topdee")->front();
-	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(LEVEL_STAGE1, L"Layer_Toodee")->front();
+	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Topdee")->front();
+	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Toodee")->front();
 	
 	if (pTopdee == nullptr || pToodee == nullptr)
 		return;
 	
-	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Tranform"));
+	CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Transform"));
 	_float3 vTopdeePos{ pTopdeeTrans->Get_State(CTransform::STATE_POSITION) };
 
-	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Tranform"));
+	CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Transform"));
 	_float3 vToodeePos{ pToodeeTrans->Get_State(CTransform::STATE_POSITION) };
 
 	if (m_eGameMode == TOODEE)//투디에서 탑디로.

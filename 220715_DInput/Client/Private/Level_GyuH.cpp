@@ -30,9 +30,9 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
-		return E_FAIL;
-	*/
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+	return E_FAIL;
+	
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -173,7 +173,7 @@ HRESULT CLevel_GyuH::Ready_Layer_Particle_Spark(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
-		LEVEL_STAGE1, pLayerTag)))
+		LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

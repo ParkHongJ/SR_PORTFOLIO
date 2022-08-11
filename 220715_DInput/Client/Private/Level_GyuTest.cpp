@@ -105,7 +105,7 @@ HRESULT CLevel_GyuTest::Ready_Layer_Particle_Spark(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
-		LEVEL_STAGE1, pLayerTag)))
+		LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
