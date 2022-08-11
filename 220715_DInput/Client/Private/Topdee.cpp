@@ -212,10 +212,10 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 			_float3 vPos2 = vPos;
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+			/*CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
-				CParticleMgr::PARTICLE);
+				CParticleMgr::PARTICLE);*/
 		}
 
 	}
@@ -926,10 +926,10 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 			_float3 vPos2 = vPos;
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+			/*CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
-				CParticleMgr::PARTICLE);
+				CParticleMgr::PARTICLE);*/
 		}
 #pragma endregion Particle
 		((CInteraction_Block*)m_pRaiseObject)->Set_bTopdeeRaise(false);

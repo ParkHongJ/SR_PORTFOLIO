@@ -38,8 +38,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	objInfo1.vPos = _float3(3.5f, .5f, 4.5f);
 	objInfo1.iNumLevel = LEVEL_STAGE1;
 	objInfo1.iDirection = 0;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo1)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo1)))
+		return E_FAIL;*/
 
 	ObjInfo objInfo2;
 	objInfo2.vPos = _float3(13.5f, .5f, 4.5f);
@@ -59,12 +59,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	//Y값 무조건 0.5 제일중요
 	objInfo.vPos = _float3(3.f,.5f,3.f);
 	objInfo.iNumLevel = LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
+		return E_FAIL;*/
 	//==================================================================================
 	LoadGameObject();
 
-	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+	//CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
@@ -419,7 +419,7 @@ void CLevel_GamePlay::Free()
 	}
 	m_pObjects.clear();
 
-	CParticleMgr::Get_Instance()->Destroy_Instance();
+	//CParticleMgr::Get_Instance()->Destroy_Instance();
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg /*= nullptr*/)
