@@ -205,7 +205,11 @@ void CParticle_Button::Free()
 
 void CParticle_Button::SetDirection(const _float3& vDir)
 {
-	m_vDir = vDir;
+	random_device random;
+	default_random_engine eng(random());
+	uniform_int_distribution<int> nothing(0, 45);
+
+	m_vDir = vDir + nothing(eng);
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
