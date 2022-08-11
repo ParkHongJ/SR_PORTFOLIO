@@ -291,6 +291,12 @@ void CToodee::LateTick(_float fTimeDelta)
 		}
 	}
 	else { m_MoveSpeed = 0.f; }
+	_float test = fTimeDelta;
+
+	tick = GetTickCount64();
+	tick = tick / 1000.0f;
+	m_fTimedelta = fTimeDelta;
+	m_pShaderCom->Set_RawValue("g_time", &tick, sizeof(_float));
 
 	if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -298,17 +304,40 @@ void CToodee::LateTick(_float fTimeDelta)
 
 HRESULT CToodee::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;
+	/*if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
+		return E_FAIL;*/
 
 	if (m_bActive) {
-		if (FAILED(m_pTextureCom->Bind_Texture(m_iTexIndex)))
+		if (FAILED(m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", m_iTexIndex)))
 			return E_FAIL;
 	}
 	else if (!m_bActive) {
-		if (FAILED(m_pTextureCom_Died->Bind_Texture(m_iTexIndexDied)))
+		if (FAILED(m_pTextureCom_Died->Bind_Texture(m_pShaderCom, "g_Texture", m_iTexIndexDied)))
 			return E_FAIL;
 	}
+	//월드던질때 전치
+	_float4x4 matWorld;
+	matWorld = m_pTransformCom->Get_WorldMatrix();
+	D3DXMatrixTranspose(&matWorld, &matWorld);
+
+	_float4x4 matView;
+	if (FAILED(m_pGraphic_Device->GetTransform(D3DTS_VIEW, &matView)))
+		MSG_BOX(L"실패");
+	D3DXMatrixTranspose(&matView, &matView);
+
+	_float4x4 matProj;
+	if (FAILED(m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &matProj)))
+		MSG_BOX(L"씰퍠");
+	D3DXMatrixTranspose(&matProj, &matProj);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix",&matWorld, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", &matView, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", &matProj, sizeof(_float4x4));
+
+	if (m_bPortal)
+		m_pShaderCom->Begin(1);
+	else
+		m_pShaderCom->Begin(0);
 
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
@@ -318,12 +347,14 @@ HRESULT CToodee::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCom->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//--------------------------------------------------------------
+	m_pShaderCom->End();
+
+	////---------------------디버그일때 그리기-------------------------
+	//_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	//m_pBoxCom->Render(Matrix);
+	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	////--------------------------------------------------------------
 
 	return S_OK;
 }
@@ -498,6 +529,12 @@ HRESULT CToodee::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
+
+	//m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	//m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	//m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 120);
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
@@ -560,6 +597,9 @@ HRESULT CToodee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Rect"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom, this)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -600,6 +640,7 @@ void CToodee::Free()
 	Safe_Release(m_pTextureCom_Died);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pShaderCom);
 }
 
 

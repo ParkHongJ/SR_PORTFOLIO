@@ -69,16 +69,23 @@ HRESULT CBackGround::Render()
 	_float4x4		Matrix;
 	D3DXMatrixIdentity(&Matrix);
 
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
+	if (FAILED(m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
 	//m_pGraphic_Device->SetTransform(D3DTS_WORLD, &Matrix);
-	m_pTransformCom->Bind_WorldMatrix();
+	/*m_pTransformCom->Bind_WorldMatrix();
 	m_pGraphic_Device->SetTransform(D3DTS_VIEW, &Matrix);
 	m_pGraphic_Device->SetTransform(D3DTS_PROJECTION, &m_ProjMatrix);
+	*/
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_WorldMatrix(), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", &Matrix, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4));
+
+	m_pShaderCom->Begin(0);
 
 	m_pVIBufferCom->Render();
 
+	m_pShaderCom->End();
 	return S_OK;
 }
 
@@ -130,6 +137,9 @@ HRESULT CBackGround::SetUp_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
 		return E_FAIL;
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Rect"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom, this)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -164,7 +174,7 @@ void CBackGround::Free()
 {
 	int i = 10;
 	__super::Free();
-
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pVIBufferCom);

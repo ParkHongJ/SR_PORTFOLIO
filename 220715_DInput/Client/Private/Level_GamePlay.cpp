@@ -50,10 +50,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	objInfo3.vPos = _float3(6.5f, .5f, 4.5f);
 	objInfo3.iNumLevel = LEVEL_STAGE1;
 	objInfo3.iDirection = 1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	ObjInfo objInfo;
 	//Y값 무조건 0.5 제일중요
@@ -62,7 +62,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
 		return E_FAIL;
 	//==================================================================================
-	//LoadGameObject();
+	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
@@ -270,7 +270,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 
 void CLevel_GamePlay::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

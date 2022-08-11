@@ -6,6 +6,7 @@
 #include "GameMgr.h"
 
 BEGIN(Engine)
+class CShader;
 class CTexture;
 class CRenderer;
 class CCollider;
@@ -47,6 +48,7 @@ public:
 	void CreateEffect();
 	void SetStateTookee();
 private:
+	CShader* m_pShaderCom = nullptr;
 	CTexture* m_pTextureCom = nullptr;
 	CTexture* m_pTextureCom_Died = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
@@ -77,6 +79,8 @@ private:
 
 	_bool m_bPortal = false;
 	_bool m_bDiedEff = false;
+
+	_float m_fTimedelta; _float tick;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

@@ -1,7 +1,7 @@
 
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
-
+float g_time;
 sampler DefaultSampler = sampler_state 
 {
 	Texture = g_Texture;
@@ -51,8 +51,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);	
-	Out.vTexUV = In.vTexUV;	
-
+	//Out.vTexUV = In.vTexUV;	
+	/*Out.vTexUV = In.vTexUV + float2(g_time * .25f, 0.f);*/
 	return Out;
 }
 
@@ -78,7 +78,18 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out;
 
 	Out.vColor = tex2D(DefaultSampler, In.vTexUV);
-	Out.vColor.rgb += 0.3f;
+
+	return Out;
+}
+
+
+PS_OUT PS_PORTAL(PS_IN In)
+{
+	PS_OUT		Out;
+
+	Out.vColor = tex2D(DefaultSampler, In.vTexUV);
+	Out.vColor.rgb += 0.4f;
+	//Out.vColor.a = 1.f;
 	//Out.vColor.gb = Out.vColor.r;
 	//Out.vColor.a = 0.5f;
 
@@ -95,9 +106,9 @@ technique DefaultTecnique
 		PixelShader = compile ps_3_0 PS_MAIN();
 	}
 
-	/*pass Blending
+	pass Portal
 	{
 		VertexShader = compile vs_3_0 VS_MAIN();
-		PixelShader = compile ps_3_0 PS_MAIN_BLENDING();
-	}*/
+		PixelShader = compile ps_3_0 PS_PORTAL();
+	}
 }
