@@ -292,8 +292,9 @@ void CToodee::LateTick(_float fTimeDelta)
 	else { m_MoveSpeed = 0.f; }
 	_float test = fTimeDelta;
 
-	_float tick = GetTickCount64();
-	tick += tick / 1000.0f;
+	tick = GetTickCount64();
+	tick = tick / 1000.0f;
+	m_fTimedelta = fTimeDelta;
 	m_pShaderCom->Set_RawValue("g_time", &tick, sizeof(_float));
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

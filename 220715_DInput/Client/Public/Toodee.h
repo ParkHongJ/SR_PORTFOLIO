@@ -79,6 +79,8 @@ private:
 
 	_bool m_bPortal = false;
 	_bool m_bDiedEff = false;
+
+	_float m_fTimedelta; _float tick;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
