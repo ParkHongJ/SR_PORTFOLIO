@@ -5,6 +5,7 @@
 #include "ParticleMgr.h"
 #include "Interaction_Block.h"
 #include "ElectricBlock.h"
+#include "WarpBlock.h"
 
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -500,7 +501,7 @@ void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
-{// 여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+{
 	if (other->CompareTag(L"Portal"))
 	{
 		m_bPortal = true;
@@ -510,70 +511,6 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 		m_bActive = false;
 	}
-	else if (other->CompareTag(L"WarpBox"))
-	{//아직 box랑 같은코드임
-		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
-		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
-			return;
-		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
-		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
-		TopdeeIsPushed(vOtherPos, fTimeDelta);//탑디가 밀려나는거.
-		if (vOtherPos.y != 0.5f)
-			return;
-		if (!m_bPushBox) {//MakseDelay
-			m_fPushBoxDelayTimer += fTimeDelta;
-		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
-			return;
-		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
-			m_fPushBoxDelayTimer = 0.f;
-			m_bPushBox = false;
-		}
-
-		if (KKK_m_pBoxList == nullptr)
-		{//if Collision We Must Check NextBox.
-			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-			KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
-			if (KKK_m_pBoxList == nullptr)
-				return;
-		}
-		_float3 vCurDir{ 0.f,0.f,0.f };
-		if (m_eCurDir == DIR_DOWN)
-			vCurDir.z = -1.0f;
-		else if (m_eCurDir == DIR_UP)
-			vCurDir.z = 1.f;
-		else if (m_eCurDir == DIR_RIGHT)
-			vCurDir.x = 1.f;
-		else if (m_eCurDir == DIR_LEFT)
-			vCurDir.x = -1.f;
-		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
-		_uint iCount = 0;
-		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
-		if (pBlock == nullptr)//지금미는 블록이 벽이니?
-			return;
-		list<CGameObject*> PushList;
-		_bool bCanPush{ true };
-		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
-		if (!bCanPush)
-			return;
-		_float fdist{ 0.f };
-		vOtherPos -= vCurDir;
-		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, vCurDir, &fdist, true)) {
-			return;
-		}
-		vOtherPos += vCurDir;
-		pBlock->Box_Push_More(fTimeDelta, vOtherPos, true);//First
-														   //_uint iCount{ 0 };
-		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
-		{
-			CInteraction_Block* pBlock = (CInteraction_Block*)(*iter);
-			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
-			_float3 vPos{ pTransform->Get_State(CTransform::STATE_POSITION) };
-			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
-		}
-		m_bPushBox = true;
-	} 
 	else if (other->CompareTag(L"Box"))
 	{
 		//이거 위치 비교로도 가능.
@@ -619,6 +556,14 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
 		if (pBlock == nullptr)//지금미는 블록이 벽이니?
 			return;
+		CWarpBlock* pBlockWarp = dynamic_cast<CWarpBlock*>(other);
+		if (pBlockWarp != nullptr)
+		{//만약 워프블럭이라면.
+			//여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+			if (pBlockWarp->Get_Dir() == eDirection)
+				return;
+
+		}
 		list<CGameObject*> PushList;
 		_bool bCanPush{ true };
 		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back

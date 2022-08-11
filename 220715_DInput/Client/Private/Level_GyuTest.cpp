@@ -41,11 +41,29 @@ HRESULT CLevel_GyuTest::Initialize()
 	if (FAILED(Ready_Layer_ElectricBlock(TEXT("Layer_Cube"))))
 		return E_FAIL;
 
+
+
 	CHong::OBJ_INFO ObjInfo2;
 	ObjInfo2.vPos = { 12.f,1.f,10.f };
 	ObjInfo2.iNumLevel = (_uint)LEVEL_STAGE1;
 	if (FAILED(Ready_Layer_GravityBlock(TEXT("Layer_Cube"), &ObjInfo2)))
 		return E_FAIL;
+	ObjInfo objInfo3;
+	objInfo3.vPos = _float3(13.5f, .5f, 4.5f);
+	objInfo3.iNumLevel = LEVEL_STAGE1;
+	objInfo3.iDirection = 0;
+
+	ObjInfo objInfo4;
+	objInfo4.vPos = _float3(6.5f, .5f, 4.5f);
+	objInfo4.iNumLevel = LEVEL_STAGE1;
+	objInfo4.iDirection = 1;
+
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
+	return E_FAIL;
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo4)))
+	return E_FAIL;
+	
+	
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 
 	return S_OK;
@@ -314,4 +332,5 @@ CLevel_GyuTest * CLevel_GyuTest::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GyuTest::Free()
 {
 	__super::Free();
+	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
