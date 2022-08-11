@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CShader;
 class CTexture;
 class CRenderer;
 class CTransform;
@@ -39,6 +40,7 @@ private:
 	_uint m_iPreTime{ 0 };
 
 private:
+	CShader*				m_pShaderCom = nullptr;
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;

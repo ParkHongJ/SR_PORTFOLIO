@@ -281,6 +281,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CBoxCollider::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Rect"),
+		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Rect.hlsl")))))
+		return E_FAIL;
+
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
