@@ -93,8 +93,8 @@ void CTookee::LateTick(_float fTimeDelta)
 		}
 		else if (m_eCurMode == CGameMgr::TOPDEE)
 		{
-			m_iMinFrame = 35;
-			m_iMaxFrame = 36;
+			m_iMinFrame = 34;
+			m_iMaxFrame = 35;
 		}
 		m_fSpeed = 5.f;
 		break;
@@ -107,24 +107,24 @@ void CTookee::LateTick(_float fTimeDelta)
 		}
 		else if (m_eCurMode == CGameMgr::TOPDEE)
 		{
-			m_iMinFrame = 41;
-			m_iMaxFrame = 42;
+			m_iMinFrame = 40;
+			m_iMaxFrame = 41;
 		}
 		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_UP:
 		if (m_eCurMode == CGameMgr::TOPDEE)
 		{
-			m_iMinFrame = 38;
-			m_iMaxFrame = 39;
+			m_iMinFrame = 37;
+			m_iMaxFrame = 38;
 		}
 		m_fSpeed = 5.f;
 		break;
 	case CTookee::TOOKEE_DOWN:
 		if (m_eCurMode == CGameMgr::TOPDEE)
 		{
-			m_iMinFrame = 32;
-			m_iMaxFrame = 33;
+			m_iMinFrame = 31;
+			m_iMaxFrame = 32;
 		}
 		m_fSpeed = 5.f;
 		break;
@@ -176,7 +176,7 @@ void CTookee::LateTick(_float fTimeDelta)
 		m_pTransformCom->Go_Straight_2D(fTimeDelta);
 	}
 	/* TOPDEE */
-	else
+	else if (m_eCurMode == CGameMgr::TOPDEE)
 	{
 		MoveFrameTopdee(fTimeDelta);
 		//To do TOPDEE
@@ -667,13 +667,12 @@ void CTookee::MoveFrameToodee(_float fTimeDelta)
 
 void CTookee::MoveFrameTopdee(_float fTimeDelta)
 {
-	_uint iCurFrame = m_iMaxFrame - m_iMinFrame;
-	m_fFrame += ((_float)iCurFrame * fTimeDelta);
-	//m_iTexIndex += (_uint)((_float)iCurFrame * fTimeDelta);
-	m_iTexIndex = (_uint)m_fFrame;
-	if (m_fFrame > (_float)iCurFrame)
-	{
-		m_fFrame = (_float)m_iMinFrame;
+	m_fFrame += ((_float)m_iMaxFrame - (_float)m_iMinFrame + 1.f) * fTimeDelta;
+	m_iTexIndex = (_uint)m_fFrame + m_iMinFrame;
+
+	if (m_iTexIndex > (_float)m_iMaxFrame) {
+		m_fFrame = 0.f;
+		m_iTexIndex = m_iMinFrame;
 	}
 }
 

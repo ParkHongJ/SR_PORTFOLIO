@@ -71,13 +71,14 @@ public:
 	void Jump(_float fTimeDelta);
 	void CreateEffect();
 	void SetState(STATE _eState) { m_eCurState = _eState; }
-	void SetJump() { m_bJump = true; }
+	void SetJump() { m_bJump = true; CreateEffect(); }
 	void SetSpeed(_float _fSpeed) { m_fSpeed = _fSpeed; }
 	void SetScale(_float3 _vScale);
 	void SetPosition(_float fTimeDelta, _float3 vDir);
 
 	void MoveFrameToodee(_float fTimeDelta);
 	void MoveFrameTopdee(_float fTimeDelta);
+
 public:
 	/* For Topdee*/
 	void	TopdeeIsPushed(const _float3 _vPos);
