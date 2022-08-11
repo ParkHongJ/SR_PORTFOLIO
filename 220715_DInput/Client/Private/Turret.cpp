@@ -118,15 +118,19 @@ void CTurret::Fire(_float fTimeDelta)
 		switch (m_eDir)
 		{
 		case DIRECTION::UP:
+			vPos.z -= 0.2f;
 			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(0.f, 0.f, 1.f), CParticleMgr::BULLET);
 			break;
 		case DIRECTION::DOWN:
+			vPos.z += 0.2f;
 			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(0.f, 0.f, -1.f), CParticleMgr::BULLET);
 			break;
 		case DIRECTION::LEFT:
+			vPos.x -= 0.2f;
 			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(-1.f, 0.f, 0.f), CParticleMgr::BULLET);
 			break;
 		case DIRECTION::RIGHT:
+			vPos.x += 0.2f;
 			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
 			break;
 		default:

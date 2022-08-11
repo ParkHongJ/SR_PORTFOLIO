@@ -8,6 +8,7 @@
 #include <winnt.h>
 #include "Wall.h"
 #include "ParticleMgr.h"
+#include "Topdee.h"
 int CHong::iDir_Select = 0;
 int CHong::iLevel_Select = 0;
 int CHong::iTexNum = 0;
@@ -21,17 +22,25 @@ HRESULT CHong::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
+	CTopdee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	//Info.vPos = _float3(26.f, 1.f, 2.f);
+	Info.vPos = _float3(26.f, 1.f, 7.f);
+	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
+		return E_FAIL;
+
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
 		return E_FAIL;*/
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
 	
@@ -39,9 +48,10 @@ HRESULT CHong::Initialize()
 	
 	
 	
-	Safe_Release(pGameInstance);
+	Safe_Release(pGameInstance);*/
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 
+	LoadGameObject();
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
@@ -112,6 +122,7 @@ HRESULT CHong::Render()
 		"Layer_Button",
 		"Thunder_Cloud",
 		"Layer_Cube",
+		"Layer_Cube",
 		"Layer_Cube"
 	};
 	const char* Prototypes[] =
@@ -133,7 +144,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Button",
 		"Prototype_GameObject_Thunder_Cloud",
 		"Prototype_GameObject_ElectricBlock",
-		"Prototype_GameObject_WarpBlock"
+		"Prototype_GameObject_WarpBlock",
+		"Prototype_GameObject_MetalBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
@@ -165,7 +177,7 @@ HRESULT CHong::Render()
 				TagInfo* pTaginfo = new TagInfo;
 				pTaginfo->pLayerTag = szTemp;
 
-				delete szTemp;
+				Safe_Delete_Array(szTemp);
 
 				//Prototypes
 				strSize = MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], -1, NULL, NULL);
@@ -174,7 +186,7 @@ HRESULT CHong::Render()
 				MultiByteToWideChar(CP_ACP, 0, Prototypes[item_current], (_uint)strlen(Prototypes[item_current]) + 1, (LPWSTR)szTemp, strSize);
 				pTaginfo->pPrototypeTag = szTemp;
 
-				delete szTemp;
+				Safe_Delete_Array(szTemp);
 
 				OBJ_INFO* tObjInfo = new OBJ_INFO;
 				tObjInfo->vPos = m_vPosition;
@@ -222,7 +234,7 @@ HRESULT CHong::Render()
 	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
 	ImGui::Combo("Direction", &iDir_Select, Directions, IM_ARRAYSIZE(Directions));
 	
-	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5", "LEVEL_STAGE6" };
+	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5", "LEVEL_STAGE6", "LEVEL_STAGE7" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
 	ImGui::Checkbox("Wall?", &m_bIsCube); ImGui::SameLine();
@@ -370,7 +382,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -403,7 +415,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

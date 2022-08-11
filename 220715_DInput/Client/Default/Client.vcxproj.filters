@@ -175,6 +175,9 @@
     <Filter Include="01.Level\GyuH\GyuH_Test">
       <UniqueIdentifier>{452f5980-905b-4166-b2df-6d6c868600da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_6">
+      <UniqueIdentifier>{3f1dbcc0-5bea-4cf0-900f-c9469ff6d71c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -367,6 +370,9 @@
     <ClInclude Include="..\Public\Level_GyuTest.h">
       <Filter>01.Level\GyuH\GyuH_Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Stage6.h">
+      <Filter>01.Level\STAGES\STAGE_6</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -548,6 +554,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_GyuTest.cpp">
       <Filter>01.Level\GyuH\GyuH_Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage6.cpp">
+      <Filter>01.Level\STAGES\STAGE_6</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

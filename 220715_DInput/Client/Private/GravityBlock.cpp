@@ -154,7 +154,7 @@ void CGravityBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint 
 			_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + fBoxSize));
 
-			//m_bOnBlock = true;
+			m_bOnBlock = true;
 			Safe_Release(TargetBox);
 		}
 	}

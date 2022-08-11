@@ -34,6 +34,7 @@
 #include "Hole.h"
 #include "Sky.h"
 #include "Key.h"
+#include "MetalBlock.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -570,16 +571,22 @@ HRESULT CLoader::Loading_ForHongLevel()
 		CThunder_Cloud::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_Rain */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Rain_Thunder/Rain_Thunder_%d.png"), 13))))
+	/* For.Prototype_GameObject_MetalBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MetalBlock"),
+		CMetalBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
 	-----텍스쳐 생성-----
 	------------------*/
+
+	/* For.Prototype_Component_Texture_Rain */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Rain_Thunder/Rain_Thunder_%d.png"), 13))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Topdee"),
@@ -710,6 +717,10 @@ HRESULT CLoader::Loading_ForHongLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/ElectricBlock/Electric_Block_%d.dds"), 2))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_MetalBlock */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_MetalBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/MetalBlock/MetalBox.dds")))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
@@ -718,10 +729,6 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pGraphic_Device, 30, 16))))//, TEXT("../Bin/Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
-
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_HONG, TEXT("Prototype_Component_VIBuffer_Cube"),
-	CVIBuffer_Cube::Create(m_pGraphic_Device))))
-	return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain_Cube"),
 		CVIBuffer_Terrain_Cube::Create(m_pGraphic_Device))))

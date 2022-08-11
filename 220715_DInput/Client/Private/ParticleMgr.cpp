@@ -51,7 +51,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	/*=============
 	====Bullets====
 	=============*/
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		//ÃÑ¾Ë »ý¼º
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
