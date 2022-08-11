@@ -8,6 +8,7 @@ class CWarpBlock final : public CInteraction_Block
 {
 public:
 	enum DIRECTION { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT, DIR_END };
+	
 private:
 	CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CWarpBlock(const CWarpBlock& rhs);
@@ -31,6 +32,7 @@ public:
 	}
 	_float3 GetTeleportPos() { return m_vTeleportPos; }
 private:
+	_uint m_iWBNum;
 	_uint m_iTextureNum =  0 ;
 	DIRECTION m_eDir = DIR_END;
 	

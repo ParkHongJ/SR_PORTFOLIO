@@ -5,6 +5,7 @@ IMPLEMENT_SINGLETON(CGameInstance)
 CGameInstance::CGameInstance()
 	: m_pGraphic_Device(CGraphic_Device::Get_Instance())
 	, m_pInput_Device(CInput_Device::Get_Instance())
+	, m_pFMOD(C_FMOD::Get_Instance())
 	, m_pLevel_Manager(CLevel_Manager::Get_Instance())
 	, m_pObject_Manager(CObject_Manager::Get_Instance())
 	, m_pComponent_Manager(CComponent_Manager::Get_Instance())
@@ -16,6 +17,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
+	Safe_AddRef(m_pFMOD);
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pGraphic_Device);
 }
@@ -27,14 +29,16 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, HINSTANCE hInst, cons
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
-
-
 	/* 그래픽디바이스 초기화. */
 	if (FAILED(m_pGraphic_Device->InitDevice(GraphicDesc.hWnd, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, GraphicDesc.eWinMode, ppOut)))
 		return E_FAIL;
 
 	/* 입력 초기화. */
 	if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
+		return E_FAIL;
+
+	/* 사운드 초기화 */
+	if (FAILED(m_pFMOD->Initialize()))
 		return E_FAIL;
 
 	/* 피킹 초기화*/
@@ -204,6 +208,78 @@ _long CGameInstance::Get_DIMMoveState(DIMM eMouseMoveID)
 	return m_pInput_Device->Get_DIMMoveState(eMouseMoveID);
 }
 
+int CGameInstance::VolumeUp(C_FMOD::CHANNELID eID, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->VolumeUp(eID, _vol);
+}
+
+int CGameInstance::VolumeDown(C_FMOD::CHANNELID eID, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->VolumeDown(eID, _vol);
+}
+
+int CGameInstance::BGMVolumeUp(_float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->BGMVolumeUp(_vol);
+}
+
+int CGameInstance::BGMVolumeDown(_float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->BGMVolumeDown(_vol);
+}
+
+int CGameInstance::Pause(C_FMOD::CHANNELID eID)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->Pause(eID);
+}
+
+void CGameInstance::PlaySound(_tchar * pSoundKey, C_FMOD::CHANNELID eID, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->PlaySound(pSoundKey, eID, _vol);
+}
+
+void CGameInstance::PlayBGM(_tchar * pSoundKey, _float _vol)
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->PlayBGM(pSoundKey, _vol);
+}
+
+void CGameInstance::StopSound(C_FMOD::CHANNELID eID)
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	if (nullptr == m_pFMOD)
+		return;
+
+	return m_pFMOD->StopAll();
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::Get_Instance()->Destroy_Instance();
@@ -218,6 +294,8 @@ void CGameInstance::Release_Engine()
 
 	CPicking::Get_Instance()->Destroy_Instance();
 
+	C_FMOD::Get_Instance()->Destroy_Instance();
+
 	CInput_Device::Get_Instance()->Destroy_Instance();
 	
 	CGraphic_Device::Get_Instance()->Destroy_Instance();
@@ -230,6 +308,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pLevel_Manager);
+	Safe_Release(m_pFMOD);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
 }

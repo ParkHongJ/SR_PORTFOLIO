@@ -4,7 +4,6 @@
 #include "Hong.h"
 #include "GameMgr.h"
 
-
 CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
 {

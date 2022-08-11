@@ -100,6 +100,9 @@
     <Filter Include="04.Components\Shader">
       <UniqueIdentifier>{002bb6ba-599c-4e63-8fe1-c21a76a6485f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Device\Sound\FMOD">
+      <UniqueIdentifier>{8680fb75-0477-404c-9bb5-9febc2f30b0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -210,6 +213,9 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>04.Components\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\C_FMOD.h">
+      <Filter>01.Device\Sound\FMOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>04.Components\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\C_FMOD.cpp">
+      <Filter>01.Device\Sound\FMOD</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

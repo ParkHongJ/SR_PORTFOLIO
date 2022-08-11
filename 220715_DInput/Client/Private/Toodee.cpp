@@ -153,7 +153,7 @@ void CToodee::Tick(_float fTimeDelta)
 		//GameMode : Topdee pos
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
 			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-			0.001f, 
+			0.01f, 
 			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 	}
 
@@ -186,11 +186,7 @@ void CToodee::LateTick(_float fTimeDelta)
 					else*/
 						m_MoveSpeed = 0.f;
 				}
-				if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
-					m_iMinFrame = 30;
-					m_iMaxFrame = 37;
-				}
-				else {
+				if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
 					m_iMinFrame = 30;
 					m_iMaxFrame = 37;
 				}
@@ -248,6 +244,11 @@ void CToodee::LateTick(_float fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 #pragma endregion
 			SetStateTookee();
+
+			if (CGameMgr::Get_Instance()->Key_Down(DIK_P)) { /* Test WarpBox for Up to Left/Right */
+				m_MoveSpeed += 100.f * abs((m_fJumpPower * fTimeDelta) + vGravityPower);
+			}
+
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);
 			//Edit Hong
@@ -291,7 +292,8 @@ void CToodee::LateTick(_float fTimeDelta)
 	}
 	else { m_MoveSpeed = 0.f; }
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CToodee::Render()
@@ -413,6 +415,10 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
 			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
 			//}
+		}
+
+		if (other->CompareTag(L"WarpBlock")) {
+			_uint i = 0;
 		}
 
 		Safe_Release(TargetBox);

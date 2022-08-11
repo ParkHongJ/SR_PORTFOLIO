@@ -239,6 +239,63 @@ void CGameMgr::Player_Active()
 	m_eGameMode == TOODEE ? m_eGameMode = TOPDEE : m_eGameMode = TOODEE;
 }
 
+void CGameMgr::Set_WB_Data_Pos(const _tchar * pTag, _float3 vPos)
+{
+	for (auto& pair : m_WBData)
+		if (pair.first == pTag) {
+			pair.second = vPos;
+			return;
+		}
+
+	m_WBData.emplace(pTag, vPos);
+
+	return;
+}
+
+void CGameMgr::Set_WB_Data_Dir(const _tchar * pTag, _uint iDir)
+{
+	_float3 vDir = { 0.f, 0.f, 0.f };
+
+	switch (iDir)
+	{
+	case 0:
+		vDir = { 0.f, 0.f, 1.f };
+		break;
+
+	case 1:
+		vDir = { 0.f, 0.f, -1.f };
+		break;
+
+	case 2:
+		vDir = { -1.f, 0.f, 0.f };
+		break;
+
+	case 3:
+		vDir = { 1.f, 0.f, 0.f };
+		break;
+	}
+
+	for (auto& pair : m_WBData)
+		if (pair.first == pTag) {
+			pair.second = vDir;
+			return;
+		}
+
+	m_WBData.emplace(pTag, vDir);
+
+	return;
+}
+
+_float3 CGameMgr::Get_WB_Data_Dir(const _tchar * pTag)
+{
+	for (auto& pair : m_WBData)
+		if (pair.first == pTag) {
+			return pair.second;
+		}
+
+	return _float3(0.f, 0.f, 0.f);
+}
+
 _bool CGameMgr::Col_Obj(const _float3 & vCurPos, _float * pOut_ObjectsDist, _uint * pPigDirOut, _bool bPushCheck)
 {
 	if (m_Obstaclelist.empty())
