@@ -164,7 +164,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 0.5f,0.8f,0.f };
+	RectDesc.vSize = { 1.f,0.8f,0.f };
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
@@ -268,4 +268,25 @@ void CBullet::SetUp(void* pArg)
 		m_vDir = BulletDesc.vDir;
 	}
 	
+}
+
+void CBullet::SetDirection(_float3 _vDir)
+{
+	m_vDir = _vDir;
+	if ((_uint)_vDir.x > 0)
+	{
+		m_eDir = DIRECTION::RIGHT;
+	}
+	else if ((_uint)_vDir.x < 0)
+	{
+		m_eDir = DIRECTION::LEFT;
+	}
+	else if ((_uint)_vDir.z > 0)
+	{
+		m_eDir = DIRECTION::UP;
+	}
+	else if ((_uint)_vDir.z < 0)
+	{
+		m_eDir = DIRECTION::DOWN;
+	}
 }

@@ -48,7 +48,7 @@ private:
 private:
 	DIRECTION m_eDir = UP;
 	_float m_fCurrentTimer;
-
+	_float m_fDistance = 0.4f;
 public:
 	static CTurret* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

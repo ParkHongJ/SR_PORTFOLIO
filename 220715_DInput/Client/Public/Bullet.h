@@ -59,10 +59,14 @@ private:
 	_float m_fSpeed = 6.5f;
 	_float m_fFrame;
 	_float3 m_vDir;
+
 public:
 	void SetUp(void* pArg);
+	void SetDirection(_float3 _vDir);
+
 public:
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
+
 public:
 	static CBullet* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

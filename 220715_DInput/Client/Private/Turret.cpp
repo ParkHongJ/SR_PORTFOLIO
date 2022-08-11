@@ -37,7 +37,28 @@ HRESULT CTurret::Initialize(void * pArg)
 	
 	
 	m_eDir = (DIRECTION)ObjInfo.iDirection;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, ObjInfo.vPos);
+
+	_float3 vPos = ObjInfo.vPos;
+	switch (m_eDir)
+	{
+	case DIRECTION::UP:
+		vPos.z -= m_fDistance;
+		break;
+	case DIRECTION::DOWN:
+		vPos.z += m_fDistance;
+		break;
+	case DIRECTION::LEFT:
+		vPos.x += m_fDistance;
+		break;
+	case DIRECTION::RIGHT:
+		vPos.x -= m_fDistance;
+		break;
+	default:
+		break;
+	}
+	vPos.y += 0.6f;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	//======================
 	SetTag(L"Turret");
 	//======================
@@ -93,7 +114,25 @@ void CTurret::Fire(_float fTimeDelta)
 		m_fCurrentTimer = 0.f;
 		
 		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
+
+		switch (m_eDir)
+		{
+		case DIRECTION::UP:
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(0.f, 0.f, 1.f), CParticleMgr::BULLET);
+			break;
+		case DIRECTION::DOWN:
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(0.f, 0.f, -1.f), CParticleMgr::BULLET);
+			break;
+		case DIRECTION::LEFT:
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(-1.f, 0.f, 0.f), CParticleMgr::BULLET);
+			break;
+		case DIRECTION::RIGHT:
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel, vPos, _float3(1.f, 0.f, 0.f), CParticleMgr::BULLET);
+			break;
+		default:
+			break;
+		}
+
 		for (int i = 0; i < 3; i++)
 		{
 			random_device rd;
