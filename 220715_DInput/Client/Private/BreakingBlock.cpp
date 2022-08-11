@@ -85,10 +85,10 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 	m_fOnBlock += fTimeDelta;
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig"))
 	{
-		if (1.f <= m_fOnBlock)
+		if (3.f <= m_fOnBlock)
 		{
 			m_bActive = false;
-
+			int a = 10;
 			for (int i = 0; i < 7; i++)
 			{
 				random_device rd;
@@ -100,7 +100,7 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 				vPos.x += distr(eng);
 				vPos.z += distr(eng);
-				CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 					vPos,
 					vPos - vPos2,
 					CParticleMgr::PARTICLE);

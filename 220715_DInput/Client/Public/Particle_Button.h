@@ -42,6 +42,8 @@ public:
 
 public:
 	void SetDirection(const _float3& vDir);
+	void ButtonDead();
+
 private:
 	_float m_fFrame = 0.f;
 	_float3 m_vDir;

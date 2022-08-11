@@ -96,7 +96,7 @@ void CButtonBlock::SetDead()
 	m_bActive = false;
 
 	//Particle Effect
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		random_device rd;
 		default_random_engine eng(rd());

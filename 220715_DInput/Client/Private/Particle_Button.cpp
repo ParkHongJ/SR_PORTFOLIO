@@ -59,10 +59,10 @@ void CParticle_Button::Tick(_float fTimeDelta)
 
 		random_device random;
 		mt19937 rd(random());
-		uniform_real_distribution<float> range(.2f, .8f);
+		uniform_real_distribution<float> range(.45f, .8f);
 
 		vScale = vScale * range(rd);
-		m_pTransformCom->Set_Scaled(vScale);
+		m_pTransformCom->Set_Scale(vScale);
 		
 		//Render Random
 		default_random_engine eng(random());
@@ -205,6 +205,16 @@ void CParticle_Button::Free()
 
 void CParticle_Button::SetDirection(const _float3& vDir)
 {
-	m_vDir = vDir;
+	random_device random;
+	default_random_engine eng(random());
+	uniform_int_distribution<int> nothing(0, 45);
+
+	m_vDir = vDir + nothing(eng);
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
+}
+
+void CParticle_Button::ButtonDead()
+{
+	m_bActive = false;
+	m_bCheck = false;
 }

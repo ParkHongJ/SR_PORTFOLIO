@@ -856,7 +856,7 @@ HRESULT CLoader::Loading_ForSENILevel(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Bullet */
@@ -1766,7 +1766,7 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Bullet */
@@ -1957,7 +1957,7 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Sky */
@@ -2153,7 +2153,7 @@ HRESULT CLoader::Loading_ForLEVEL4(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Portal */
@@ -2441,7 +2441,7 @@ HRESULT CLoader::Loading_ForLEVEL5(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Sky */

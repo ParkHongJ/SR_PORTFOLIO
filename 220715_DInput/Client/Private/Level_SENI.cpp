@@ -23,21 +23,9 @@ HRESULT CLevel_SENI::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig")))
-	//	return E_FAIL;
-
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Button(TEXT("Layer_Button"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_ButtonBlock(TEXT("Layer_ButtonBlock"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_BreakingBlock(TEXT("Layer_BreakingBlock"))))
-		return E_FAIL;
-*/
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -50,6 +38,11 @@ HRESULT CLevel_SENI::Initialize()
 	if (FAILED(Ready_Layer_BreakingBlock(TEXT("Layer_BreakingBlock"))))
 		return E_FAIL;
 
+	ObjInfo objInfo;
+	objInfo.vPos = _float3(3.f, 1.f, 3.f);
+	objInfo.iNumLevel = LEVEL_SENI;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig", &objInfo)))
+		return E_FAIL;*/
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_SENI);
 
@@ -131,7 +124,7 @@ HRESULT CLevel_SENI::Ready_Layer_Button(const _tchar * pLayerTag)
 
 	CHong::OBJ_INFO Info;
 	Info.iNumLevel = LEVEL_SENI;
-	Info.vPos = _float3(15.5f, 0.5f, 10.5f);
+	Info.vPos = _float3(15.5f, 0.f, 10.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Button"),
 		LEVEL_SENI, pLayerTag, &Info)))
 		return E_FAIL;
@@ -165,7 +158,7 @@ HRESULT CLevel_SENI::Ready_Layer_BreakingBlock(const _tchar * pLayerTag)
 
 	CHong::OBJ_INFO Info;
 	Info.iNumLevel = LEVEL_SENI;
-	Info.vPos = _float3(23.5f, 0.5f, 10.5f);
+	Info.vPos = _float3(3.f, 0.5f, 2.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_BreakingBlock"),
 		LEVEL_SENI, pLayerTag, &Info)))
 		return E_FAIL;
@@ -197,7 +190,7 @@ HRESULT CLevel_SENI::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tch
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_SENI, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
