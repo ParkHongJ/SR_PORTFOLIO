@@ -85,12 +85,15 @@ private:
 
 	_float m_MyTurnY{ 0.5f };
 	_float m_NotMyTurnY{ 0.1f };
-	_float m_OriPreLoaderY{ 0.7f };
 
+	_uint m_iMoveFrameAdd{ 0 };
+	_bool m_bMoveFrameAdd{ false };
+	
 	list<class CGameObject*>* KKK_m_pBoxList = nullptr;
 	CGameObject* m_pRaiseObject = nullptr;
 	_float m_fPushBoxDelayTimer{ 0.f };
 	_bool	m_bPushBox{ false };
+	
 #pragma endregion Variable
 
 #pragma region RenderState

@@ -206,7 +206,6 @@ void CTopdee::Topdee_PreLoader_Pos_Mgr()
 		++iPreLoaderPosX;
 	
 	m_pTransform_PreLoader_Com->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
-	//_float iPreLoaderPosY = m_OriPreLoaderY;
 	m_pTransform_PreLoader_Com->Set_State(CTransform::STATE_POSITION, _float3(_float(iPreLoaderPosX)+ 0.5f, _float(iPreLoaderPosY), _float(iPreLoaderPosZ) + 0.5f));
 }
 
@@ -244,21 +243,47 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 	/*topdee ??? ?? 
 	left
 	 0, 1 Topdee idle
-	 2, 3 Topdee Left
-	 4, 5 Topdee Up
-	 6, 7 Topdee Right
-	 8~12 Jump
-	 17 ~ 33 Clear
+	 2, 3, 4 Topdee Left
+	 5, 6 Topdee Up
+	 7, 8, 9 Topdee Right
+	 10 ~ 12 Jump
+	 17 ~ 21 Dead
 	 */
 	if (m_eCurState == STATE_IDLE) {
 		if (m_eCurDir == _eInputDirection) {
 			if (!m_bMoveFrame) {
+				if (m_iMoveFrameAdd < 20) {
+					++m_iMoveFrameAdd;
+					return;
+				}
 				++m_iFrame;
 				m_bMoveFrame = true;
+				m_iMoveFrameAdd = 0;
 			}
 			else {
-				m_iFrame = m_iFirstFrame;
-				m_bMoveFrame = false;
+				if (m_eCurDir == DIR_UP || m_eCurDir == DIR_DOWN) {
+					m_iFrame = m_iFirstFrame;
+					m_bMoveFrame = false;
+				}
+				else
+				{
+					if (!m_bMoveFrameAdd) {
+						if (m_iMoveFrameAdd < 20) {
+							++m_iMoveFrameAdd;
+							return;
+						}
+						++m_iFrame;
+						m_bMoveFrameAdd = true;
+						m_iMoveFrameAdd = 0;
+					}
+					else
+					{//ÃÊ±âÈ­
+						m_iFrame = m_iFirstFrame;
+						m_bMoveFrame = false;
+						m_bMoveFrameAdd = false;
+						m_iMoveFrameAdd = 0;
+					}
+				}
 			}
 		}
 		else
@@ -269,7 +294,7 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 			}
 
 			else if (m_eCurDir == DIR_UP) {
-				m_iFirstFrame = 4;
+				m_iFirstFrame = 5;
 			}
 
 			else if (m_eCurDir == DIR_LEFT) {
@@ -278,7 +303,7 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 
 			else if (m_eCurDir == DIR_RIGHT)
 			{
-				m_iFirstFrame = 6;
+				m_iFirstFrame = 7;
 			}
 			m_iFrame = m_iFirstFrame;
 			m_bMoveFrame = false;
