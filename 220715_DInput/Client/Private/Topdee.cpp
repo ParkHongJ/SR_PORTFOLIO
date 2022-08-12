@@ -289,6 +289,17 @@ void CTopdee::KKK_IsRaise(_float fTimeDelta, _char KKK_NotOverride)
 {
 	if (m_pRaiseObject == nullptr)
 		return;
+	else
+	{
+		if (((CInteraction_Block*)m_pRaiseObject)->Get_bDropFinish())
+		{
+			m_bDropBox = false;
+			m_pRaiseObject = nullptr;
+			m_fRaising_Box_DelayTimer = 0.f;
+			m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
+			return;
+		}
+	}
 	if (m_fRaising_Box_DelayTimer == 15000.f) {
 		//falling
 		KKK_DropBox(fTimeDelta);
@@ -703,7 +714,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 			if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z)//찾으려는값임.
 			{
 				if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x) {
-					_vNextBoxPos += vPushDir;
+					/*_vNextBoxPos += vPushDir;*/
 					++iCountReFunc;
 
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
@@ -712,6 +723,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 						bCanPush = false;
 						return;
 					}
+					_vNextBoxPos += vPushDir;
 					PushList.push_back(*iter);
 					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
@@ -723,7 +735,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 			if ((_int)_vNextBoxPos.x == (_int)vNextBlockPos.x)//찾으려는값임.
 			{
 				if ((_int)_vNextBoxPos.z == (_int)vNextBlockPos.z) {
-					_vNextBoxPos += vPushDir;
+					//_vNextBoxPos += vPushDir;
 					++iCountReFunc;
 					_float3 vNextBoxPosFix{ ((_uint)_vNextBoxPos.x + 0.5f),((_uint)_vNextBoxPos.y + 0.5f) ,((_uint)_vNextBoxPos.z + 0.5f) };
 					_float fdist{ 0.f };
@@ -731,6 +743,7 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 						bCanPush = false;
 						return;
 					}
+					_vNextBoxPos += vPushDir;
 					PushList.push_back(*iter);
 					FindCanPushBoxes(_vNextBoxPos, vPushDir, iCountReFunc, PushList, bCanPush);
 					break;
@@ -836,8 +849,10 @@ HRESULT CTopdee::SetUp_Components()
 #pragma endregion SetRender & Components
 void CTopdee::KKK_FindBox(_float fTimeDelta)
 {
-	if (m_pRaiseObject != nullptr)
-		return;
+	if (m_pRaiseObject != nullptr|| m_bDropBox)
+			return;
+	
+	
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (KKK_m_pBoxList == nullptr) {
 		KKK_m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
@@ -875,7 +890,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		return;
 	if (_int(m_fRaising_Box_DelayTimer) < 1)
 		return;
-
+	m_bDropBox = true;
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		_float3 vDropPosCheck{ m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION) };
 		vDropPosCheck.y = 0.5f;
@@ -896,7 +911,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		for (auto& iter = KKK_m_pBoxList->begin(); iter != KKK_m_pBoxList->end(); ++iter)
 		{
 			CTransform* pTransform = (CTransform*)(*iter)->Get_Component(L"Com_Transform");
-			if (pTransform->Get_State(CTransform::STATE_POSITION) == vDropPosCheck)
+			if (pTransform->Get_State(CTransform::STATE_POSITION) == vDropPosCheck)//이미 그자리에 박스가 있는 상황이라면
 				return;
 		}
 		m_vBoxDropPos = vDropPosCheck;
@@ -904,6 +919,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 	}
 	if (m_pRaiseObject->KKK_Go_Lerp_Drop(m_vBoxDropPos, fTimeDelta, false)) {
 		_uint iLayerHoleNum{ 0 };
+		m_bDropBox = false;
 		if (CGameMgr::Get_Instance()->Check_Box_Down(m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION), &iLayerHoleNum, &m_eHoleLevel))//ask Can Box Drop?
 		{
 			//Rigid Hole

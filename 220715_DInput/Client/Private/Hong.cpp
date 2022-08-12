@@ -415,7 +415,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
