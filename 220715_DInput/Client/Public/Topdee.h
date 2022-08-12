@@ -93,6 +93,7 @@ private:
 	CGameObject* m_pRaiseObject = nullptr;
 	_float m_fPushBoxDelayTimer{ 0.f };
 	_bool	m_bPushBox{ false };
+	_bool	m_bDropBox{ false };
 
 	//Edit Hong
 	_bool m_bTookeeMove = true;

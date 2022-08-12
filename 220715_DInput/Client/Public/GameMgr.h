@@ -58,7 +58,7 @@ public:
 	_bool Key_Pressing(_uchar KeyInput); // 누르는 동안 실행
 	_bool Key_Down(_uchar KeyInput); // 누르는 동안 한번만 실행
 
-
+	_bool m_bLoadFinish{ false };
 	//현재 매커니즘
 	//투디 or 탑디 이동명령 -> 게임매니저 -> 투키
 	void SetTookee(CTookee* _TooKee) { 

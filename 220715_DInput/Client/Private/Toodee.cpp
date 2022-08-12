@@ -374,7 +374,6 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		m_bActive = false;
 		m_iTexIndexDied = 0;
 	}
-
 	if (other->CompareTag(L"Portal"))
 		m_bPortal = true;
 

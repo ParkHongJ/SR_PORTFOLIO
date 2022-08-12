@@ -38,12 +38,11 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		Safe_AddRef(pGameInstance);
 				
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, 
-			LEVEL_STAGE7))))
+			LEVEL_GYUH))))
 			return;
 			
 		Safe_Release(pGameInstance);
 	}
-
 	if (GetKeyState(VK_F1) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();

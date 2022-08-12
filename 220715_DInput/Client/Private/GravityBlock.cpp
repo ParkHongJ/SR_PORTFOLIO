@@ -54,6 +54,7 @@ void CGravityBlock::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 	if (!m_bActive)
 		return;
+	
 }
 
 void CGravityBlock::LateTick(_float fTimeDelta)
@@ -61,59 +62,68 @@ void CGravityBlock::LateTick(_float fTimeDelta)
 	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
 		return;
-	//현재모드
-	CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
-	//현재모드와 이전모드를 비교해서 같냐
-	if (eCurMode != m_ePreMode)
-	{
-		//모드가 바뀐시점
+	if (!m_bDropFinish) {
+		//현재모드
+		CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
+		//현재모드와 이전모드를 비교해서 같냐
+		if (eCurMode != m_ePreMode)
+		{
+			//모드가 바뀐시점
+			if (eCurMode == CGameMgr::TOODEE)
+			{
+				//현재 바뀐모드가 투디면 중력
+				m_bOnBlock = false;
+			}
+			else
+			{
+
+			}
+			m_ePreMode = eCurMode;
+		}
+
 		if (eCurMode == CGameMgr::TOODEE)
 		{
-			//현재 바뀐모드가 투디면 중력
-			m_bOnBlock = false;
+			//현재 투디모드고 능력이 활성화라면 중력활성화
+			if (m_bAbility)
+			{
+				if (!m_bStageFirstTick)
+					UpdateGravitiy(fTimeDelta);
+			}
 		}
-		else
+		else if (eCurMode == CGameMgr::TOPDEE)
 		{
-			
+			//현재위치
+			_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vFinalPosition; //도착위치
+
+									//z값만 보정 (중력이니까)
+			vFinalPosition.x = vCurPosition.x;
+			vFinalPosition.y = vCurPosition.y;
+			vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
+
+			vFinalPosition = MoveTowards(vCurPosition, vFinalPosition, fTimeDelta* 3.f);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPosition);
+
+			//탑디면 땅에 꺼질수있는지 체크
+			if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+			{
+				//떨어져야 할때.
+				m_bDropBox = true;
+			}
+
 		}
-		m_ePreMode = eCurMode;
 	}
-
-	if (eCurMode == CGameMgr::TOODEE)
+	else
 	{
-		//현재 투디모드고 능력이 활성화라면 중력활성화
-		if (m_bAbility)
-		{
-			UpdateGravitiy(fTimeDelta);
-		}
-	}
-	else if (eCurMode == CGameMgr::TOPDEE)
-	{
-		//현재위치
-		_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vFinalPosition; //도착위치
-
-								//z값만 보정 (중력이니까)
-		vFinalPosition.x = vCurPosition.x;
-		vFinalPosition.y = vCurPosition.y;
-		vFinalPosition.z = _int(vCurPosition.z) + 0.5f;
-
-		vFinalPosition = MoveTowards(vCurPosition, vFinalPosition, fTimeDelta* 3.f);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPosition);
-
-		//탑디면 땅에 꺼질수있는지 체크
-		if (CGameMgr::Get_Instance()->Check_PushBox_Exactly(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
-		{
-			//떨어져야 할때.
-			m_bDropBox = true;
-		}
+		_float3 vPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, -0.45f, vPos.z));
 	}
 	
 	//생각해보자
 	m_pCollCom->Add_CollisionGroup(CCollider::INTEREACTION, m_pBoxCollider, m_pTransformCom);
 	
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-
+	m_bStageFirstTick = false;
 }
 
 HRESULT CGravityBlock::Render()

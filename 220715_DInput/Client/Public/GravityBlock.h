@@ -42,6 +42,7 @@ private:
 	CGameMgr::GAMEMODE m_ePreMode;
 	LEVEL m_eHoleLevel;
 
+	_bool m_bStageFirstTick{ true };
 public:
 	static CGravityBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual CGameObject* Clone(void* pArg);

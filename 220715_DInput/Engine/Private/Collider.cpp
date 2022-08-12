@@ -317,13 +317,16 @@ bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
 		return false;
 	list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
 	for (auto& pDest : m_pCollisionObjects[eDestGroup])
-	{			//First : BoxCollider //Second : Transform
+	{	
+		//First : BoxCollider //Second : Transform
 		if (m_pCollisionObjects[eDestGroup].empty())
 			return false;
-		CBoxCollider::BOXDESC pBoxDesc =pDest.first->GetBoxDesc();
+
+		CBoxCollider::BOXDESC pBoxDesc = pDest.first->GetBoxDesc();
 		_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
 		_float3 pDestPos{ pDest.second->Get_State(CTransform::STATE_POSITION) };
 		_float3 pBox_Top_VB[4];
+
 		if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
 			pBox_Top_VB[0] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
 			pBox_Top_VB[1] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);

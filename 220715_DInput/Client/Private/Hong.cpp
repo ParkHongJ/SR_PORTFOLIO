@@ -9,6 +9,7 @@
 #include "Wall.h"
 #include "ParticleMgr.h"
 #include "Topdee.h"
+#include "Toodee.h"
 int CHong::iDir_Select = 0;
 int CHong::iLevel_Select = 0;
 int CHong::iTexNum = 0;
@@ -31,10 +32,15 @@ HRESULT CHong::Initialize()
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
 	//Info.vPos = _float3(26.f, 1.f, 2.f);
-	Info.vPos = _float3(26.f, 1.f, 7.f);
+	Info.vPos = _float3(8.f, 1.f, 13.5f);
 	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
 		return E_FAIL;
 
+	CToodee::PLAYER_INFO Info2;
+	Info2.iNumLevel = LEVEL_STAGE1;
+	Info2.vPos = _float3(26.f, 1.f, 2.f);
+	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Toodee"), L"Layer_Toodee", &Info2)))
+		return E_FAIL;
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
@@ -77,7 +83,30 @@ void CHong::Tick(_float fTimeDelta)
 	{
 		m_vPosition.z -= m_fMoveSize;
 	}
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel"))
+	{
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_GYUH))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F4))
+	{
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_GYUH))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CHong::Render()
@@ -415,7 +444,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
