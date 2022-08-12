@@ -4,11 +4,11 @@
 #include "Level.h"
 
 BEGIN(Client)
-class CLevel_Stage6 final : public CLevel
+class CLevel_Stage7 final : public CLevel
 {
 private:
-	CLevel_Stage6(LPDIRECT3DDEVICE9 pGraphic_Device);
-	virtual ~CLevel_Stage6() = default;
+	CLevel_Stage7(LPDIRECT3DDEVICE9 pGraphic_Device);
+	virtual ~CLevel_Stage7() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -21,6 +21,9 @@ private:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);//toodee
+
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
 	typedef struct TagInfo
@@ -39,7 +42,7 @@ private:
 	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
 
 public:
-	static CLevel_Stage6* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CLevel_Stage7* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
 };
 

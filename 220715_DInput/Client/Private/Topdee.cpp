@@ -438,12 +438,12 @@ void CTopdee::LateTick(_float fTimeDelta)
 			{
 				vPos.z += fCollisionDist;
 				_float fPos{ fCollisionDist + 1.f };
-				vTookeePos.z = +fPos;
+				vTookeePos.z += fPos;
 				//vTookeePos.z = 1.f;
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
-			//CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
+			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vTookeePos);
 		}
 	}
 

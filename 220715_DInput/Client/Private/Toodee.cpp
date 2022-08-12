@@ -279,10 +279,10 @@ void CToodee::LateTick(_float fTimeDelta)
 
 						vPos.x += distr(eng);
 						vPos.z += distr(eng);
-						/*CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+						CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 							vPos,
 							vPos - vPos2,
-							CParticleMgr::PARTICLE);*/
+							CParticleMgr::PARTICLE);
 					}
 					m_bDiedEff = true;
 				}
@@ -516,10 +516,10 @@ void CToodee::CreateEffect()
 		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 		vPos.x += distr(eng);
 		vPos.z += distr(eng);
-		/*CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 			vPos,
 			vPos - vPos2,
-			CParticleMgr::PARTICLE);*/
+			CParticleMgr::PARTICLE);
 	}
 }
 

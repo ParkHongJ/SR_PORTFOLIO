@@ -206,7 +206,7 @@
     <ClInclude Include="..\public\Level_Stage3.h" />
     <ClInclude Include="..\public\Level_Stage4.h" />
     <ClInclude Include="..\public\Level_Stage5.h" />
-    <ClInclude Include="..\public\Level_Stage6.h" />
+    <ClInclude Include="..\public\Level_Stage7.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\Public\Loading_BackGround.h" />
     <ClInclude Include="..\Public\MainApp.h" />
@@ -271,7 +271,7 @@
     <ClCompile Include="..\private\Level_Stage3.cpp" />
     <ClCompile Include="..\private\Level_Stage4.cpp" />
     <ClCompile Include="..\private\Level_Stage5.cpp" />
-    <ClCompile Include="..\private\Level_Stage6.cpp" />
+    <ClCompile Include="..\private\Level_Stage7.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\Private\Loading_BackGround.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />

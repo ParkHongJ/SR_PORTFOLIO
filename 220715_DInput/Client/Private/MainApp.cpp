@@ -108,6 +108,9 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
 	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::INTEREACTION, fTimeDelta);
 
+	m_pCollider->Collision_SphereEx(CCollider::INTEREACTION, CCollider::PORTAL, fTimeDelta);
+
+
 	//구충돌로 비교하면서 OnTrigger호출
 	m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
 	m_pCollider->EndEx();
