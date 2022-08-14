@@ -344,4 +344,5 @@ CLevel_GyuH * CLevel_GyuH::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GyuH::Free()
 {
 	__super::Free();
+	CParticleMgr::Get_Instance()->Destroy_Instance();
 }

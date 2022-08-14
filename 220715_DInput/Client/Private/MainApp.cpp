@@ -78,39 +78,41 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (!m_pCollider->Collision_Ray_Top(CCollider::INTEREACTION, bTopdeeTurn))	//만약 블록에서 레이를 검출당하지 않았다면 플레이어도 체크
 		m_pCollider->Collision_Ray_Top(CCollider::PLAYER, bTopdeeTurn);
 
+	if (CGameMgr::Get_Instance()->m_bLoadFinish) {
+		//구충돌로 비교하면서 Stay 호출
+		//사각충돌 비교하면서 Stay 방향 호출
+		m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
+		m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::INTEREACTION, fTimeDelta);
+		m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::BLOCK, fTimeDelta);
+		m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::INTEREACTION, fTimeDelta);
 
-	//구충돌로 비교하면서 Stay 호출
-	//사각충돌 비교하면서 Stay 방향 호출
-	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_RectEx(CCollider::PLAYER, CCollider::INTEREACTION, fTimeDelta);
-	m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_RectEx(CCollider::MONSTER, CCollider::INTEREACTION, fTimeDelta);
+		//사각충돌 비교하면서 상호작용블럭
+		m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::BLOCK, fTimeDelta);
+		m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::INTEREACTION, fTimeDelta);
 
-	//사각충돌 비교하면서 상호작용블럭
-	m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_RectEx(CCollider::INTEREACTION, CCollider::INTEREACTION, fTimeDelta);
-							  
-	//Object Collision		   
-	m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::INTEREACTION, fTimeDelta);
+		//Object Collision		   
+		m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::BLOCK, fTimeDelta);
+		m_pCollider->Collision_RectEx(CCollider::OBJECT, CCollider::INTEREACTION, fTimeDelta);
 
-	//구충돌로 비교하면서 Stay 호출
-	//Player Collision
-	m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
-	m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);
-	m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::MONSTER, fTimeDelta);
-								
-	//Monster Collision			
-	m_pCollider->Collision_SphereEx(CCollider::MONSTER, CCollider::OBJECT, fTimeDelta);
-	m_pCollider->Collision_SphereEx(CCollider::MONSTER, CCollider::BULLET, fTimeDelta);
-								
-	//Bullet Collision		
-	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
-	m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::INTEREACTION, fTimeDelta);
+		//구충돌로 비교하면서 Stay 호출
+		//Player Collision
+		m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::BULLET, fTimeDelta);
+		m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::OBJECT, fTimeDelta);
+		m_pCollider->Collision_SphereEx(CCollider::PLAYER, CCollider::MONSTER, fTimeDelta);
 
-	//구충돌로 비교하면서 OnTrigger호출
-	m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
+		//Monster Collision			
+		m_pCollider->Collision_SphereEx(CCollider::MONSTER, CCollider::OBJECT, fTimeDelta);
+		m_pCollider->Collision_SphereEx(CCollider::MONSTER, CCollider::BULLET, fTimeDelta);
+
+		//Bullet Collision		
+		m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::BLOCK, fTimeDelta);
+		m_pCollider->Collision_SphereEx(CCollider::BULLET, CCollider::INTEREACTION, fTimeDelta);
+
+		//구충돌로 비교하면서 OnTrigger호출
+		m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
+	}
 	m_pCollider->EndEx();
+
 }
 
 HRESULT CMainApp::Render()
@@ -243,6 +245,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Renderer */
+
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		m_pRenderer = CRenderer::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -283,6 +286,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Rect"),
 		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Rect.hlsl")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"),
+		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Sky.hlsl")))))
 		return E_FAIL;
 
 	Safe_AddRef(m_pRenderer);
@@ -327,6 +335,7 @@ HRESULT CMainApp::Ready_LoadingLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
 		return E_FAIL;
 
+	
 
 
 	Safe_Release(pGameInstance);

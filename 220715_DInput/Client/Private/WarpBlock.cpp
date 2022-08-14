@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Hong.h"
 #include "GameMgr.h"
+#include "ParticleMgr.h"
 
 CWarpBlock::CWarpBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -31,7 +32,7 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	SetTag(L"Box");
+	SetTag(L"WarpBlock");
 
 
 	if (m_pTransformCom != nullptr && pArg != nullptr)
@@ -86,7 +87,11 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 void CWarpBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
+	if (m_fShaderTimer > 0.4f)
+	{//쉐이더리셋
+		m_fShaderTimer = 0.f;
+		m_iShaderSelect = 0;
+	}
 	//포탈을 들거나 미는중에도 텔레포트가 가능해야하기 때문에 틱마다 텔포의 위치를 조정해준다.
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	switch (m_eDir)
@@ -110,6 +115,9 @@ void CWarpBlock::Tick(_float fTimeDelta)
 	default:
 		break;
 	}
+	if (m_iShaderSelect == 1)
+		m_fShaderTimer += fTimeDelta;
+	
 }
 
 void CWarpBlock::LateTick(_float fTimeDelta)
@@ -128,7 +136,7 @@ HRESULT CWarpBlock::Render()
 	if (!m_bActive)
 		S_OK;
 
-	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
+	/*if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_Texture(m_iTextureNum)))
@@ -142,19 +150,55 @@ HRESULT CWarpBlock::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
+	return S_OK;*/
+	_float4x4			WorldMatrix, ViewMatrix, ProjMatrix;
+
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", D3DXMatrixTranspose(&WorldMatrix, &WorldMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+
+	m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", m_iTextureNum);
+
+
+	m_pShaderCom->Begin(m_iShaderSelect);//0 default, 1 WarpOn
+
+	m_pVIBufferCom->Render();
+
+	m_pShaderCom->End();
+
 	return S_OK;
 }
 
 void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
 	//나 혹은 내 파트너의 능력이 비활성화 되어있다면
-	if (!m_pPartner->m_bAbility || !m_bAbility || m_pPartner == nullptr)
+	if (!m_pPartner->m_bAbility || !m_bAbility || m_bTopdeeRaise ||m_pPartner == nullptr)
 		return;
 
 	//워프 방향으로 충돌했다면
 	//이 부분은 한번만 호출됨!
 	if (eDirection == m_eDir)
 	{
+		m_iShaderSelect = 1;
+		for (int i = 0; i < 5; i++)
+		{
+			random_device rd;
+			default_random_engine eng(rd());
+			uniform_real_distribution<float> distr(-.5f, .5f);
+			_float3 vPos = m_vTeleportPos;
+			_float3 vPos2 = vPos;
+			vPos.x += distr(eng);
+			vPos.z += distr(eng);
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+				vPos,
+				vPos - vPos2,
+				CParticleMgr::WARP);
+		}
+
 		CTransform* otherTransform = (CTransform*)other->Get_Component(L"Com_Transform");
 		_float3 vPos = m_pPartner->GetTeleportPos();
 
@@ -163,23 +207,16 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 	}
 }
 
-HRESULT CWarpBlock::Set_RenderState()
+void CWarpBlock::Rotate_WarpBlock()
 {
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	return S_OK;
+	_uint iDir = (_uint)m_eDir;
+	++iDir;
+	if (iDir == 4)
+		iDir = 0;
+	m_iTextureNum = iDir;
+	m_eDir = (CWarpBlock::DIRECTION)iDir;
 }
 
-HRESULT CWarpBlock::Reset_RenderState()
-{
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	return S_OK;
-}
 
 HRESULT CWarpBlock::SetUp_Components()
 {
@@ -216,6 +253,10 @@ HRESULT CWarpBlock::SetUp_Components()
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom, this)))
 		return E_FAIL;
 
 	return S_OK;

@@ -114,6 +114,7 @@ private:
 	void	KKK_DropBox(_float fTimeDelta);//박스를 던진
 	void	TopdeeIsPushed(const _float3 _vOtherPos, _float fTimeDelta);//박스가 탑디를 조금 밀쳐내는
 	void	FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList,_bool& bCanPush);//박스앞에박스있는지 밀때체크
+	void	Rotate_WarpBlock();
 #pragma endregion About_Box
 
 private:

@@ -2,6 +2,7 @@
 #include "..\Public\Level_Loading.h"
 #include "GameInstance.h"
 
+#include "GameMgr.h"
 #include "Loading_BackGround.h"
 #include "Level_GamePlay.h"
 #include "Level_Logo.h"
@@ -46,6 +47,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 	{
 		if (GetKeyState(VK_RETURN) & 0x8000)
 		{
+			CGameMgr::Get_Instance()->m_bLoadFinish = true;
 			CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 			Safe_AddRef(pGameInstance);
 

@@ -5,6 +5,7 @@
 #include "Particle_Button.h"
 #include "Particle_Spark.h"
 #include "BreakingBlock.h"
+#include "Particle_Warp.h"
 #include "Thunder_Cloud.h"
 #include "ElectricBlock.h"
 #include "GameInstance.h"
@@ -1070,7 +1071,7 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 
 	/* For.Prototype_Component_Texture_Toodee_Died */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Toodee_Died"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeDiedSpr/toodeeDiedSpr_%d.png"), 5))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeDiedSpr/toodeeDiedSpr_%d.png"), 6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle */
@@ -1233,6 +1234,11 @@ HRESULT CLoader::Loading_ForGyuTestLevel()
 		CParticle_Spark::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
+		CParticle_Warp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Thunder_Cloud */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Thunder_Cloud"),
 		CThunder_Cloud::Create(m_pGraphic_Device))))
@@ -1292,6 +1298,11 @@ HRESULT CLoader::Loading_ForGyuTestLevel()
 	/* For.Prototype_Component_Texture_WarpBlock */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_WarpBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Warp_Block/Warp_Block_%d.dds"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_ElectricBlock */

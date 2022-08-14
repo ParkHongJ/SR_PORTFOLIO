@@ -5,6 +5,7 @@
 #include "ParticleMgr.h"
 #include "Interaction_Block.h"
 #include "ElectricBlock.h"
+#include "WarpBlock.h"
 
 CTopdee::CTopdee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLandObject(pGraphic_Device)
@@ -154,6 +155,10 @@ void CTopdee::Tick(_float fTimeDelta)
 			KKK_DropBox(fTimeDelta);
 			KKK_FindBox(fTimeDelta);
 			m_bPress = true;
+		}
+		else if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
+		{
+			Rotate_WarpBlock();
 		}
 		else
 			m_bPress = false;
@@ -500,7 +505,7 @@ void CTopdee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 }
 
 void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
-{// 여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+{
 	if (other->CompareTag(L"Portal"))
 	{
 		m_bPortal = true;
@@ -510,8 +515,8 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 		m_bActive = false;
 	}
-	else if (other->CompareTag(L"WarpBox"))
-	{//아직 box랑 같은코드임
+	else if (other->CompareTag(L"WarpBlock"))
+	{
 		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
 		if (pInteraction_Block == nullptr || pInteraction_Block->Get_bTopdeeRaise())
 			return;
@@ -552,6 +557,14 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
 		if (pBlock == nullptr)//지금미는 블록이 벽이니?
 			return;
+		CWarpBlock* pBlockWarp = dynamic_cast<CWarpBlock*>(other);
+		if (pBlockWarp != nullptr)
+		{//만약 워프블럭이라면.
+		 //여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+			if (pBlockWarp->Get_Dir() == eDirection)
+				return;
+
+		}
 		list<CGameObject*> PushList;
 		_bool bCanPush{ true };
 		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
@@ -573,7 +586,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
 		}
 		m_bPushBox = true;
-	} 
+	}
 	else if (other->CompareTag(L"Box"))
 	{
 		//이거 위치 비교로도 가능.
@@ -740,6 +753,17 @@ void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iC
 		++iter;
 	}
 }
+
+void CTopdee::Rotate_WarpBlock()
+{
+	if (m_pRaiseObject == nullptr)
+		return;
+	CWarpBlock* pWarpBlock = dynamic_cast<CWarpBlock*>(m_pRaiseObject);
+	if (pWarpBlock == nullptr)
+		return;
+	pWarpBlock->Rotate_WarpBlock();
+}
+
 #pragma region SetRender & Components
 HRESULT CTopdee::Set_RenderState()
 {

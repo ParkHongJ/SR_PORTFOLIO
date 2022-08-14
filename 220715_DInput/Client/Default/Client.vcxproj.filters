@@ -175,6 +175,9 @@
     <Filter Include="01.Level\GyuH\GyuH_Test">
       <UniqueIdentifier>{452f5980-905b-4166-b2df-6d6c868600da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Particle\Particle_Warp">
+      <UniqueIdentifier>{9e445673-3298-4fe7-8ef6-9dcb013d008e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -313,9 +316,6 @@
     <ClInclude Include="..\public\Block.h">
       <Filter>02.GameObject\Block\Interaction_Block\NormalBlock</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\WarpBlock.h">
-      <Filter>02.GameObject\Block\Interaction_Block\WarpBlock</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ElectricBlock.h">
       <Filter>02.GameObject\Block\Interaction_Block\ElectricBlock</Filter>
     </ClInclude>
@@ -366,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_GyuTest.h">
       <Filter>01.Level\GyuH\GyuH_Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Warp.h">
+      <Filter>02.GameObject\Particle\Particle_Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WarpBlock.h">
+      <Filter>02.GameObject\Block\Interaction_Block\WarpBlock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -549,6 +555,9 @@
     <ClCompile Include="..\Private\Level_GyuTest.cpp">
       <Filter>01.Level\GyuH\GyuH_Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Particle_Warp.cpp">
+      <Filter>02.GameObject\Particle\Particle_Warp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -565,5 +574,6 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_Rect.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Sky.hlsl" />
   </ItemGroup>
 </Project>
