@@ -31,6 +31,9 @@ public:
 		m_pPartner = pPartner; 
 	}
 	_float3 GetTeleportPos() { return m_vTeleportPos; }
+	DIRECTION GetDir() { return m_eDir; }
+	DIRECTION GetPartnerDir() { return m_pPartner->GetDir(); }
+
 private:
 	_uint m_iWBNum;
 	_uint m_iTextureNum =  0 ;

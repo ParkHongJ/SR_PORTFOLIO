@@ -40,6 +40,25 @@ HRESULT CLevel_Stage2::Initialize()
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE2, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE2, L"Layer_Wall", false);
 
+#pragma region BGM
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayBGM(TEXT("classicToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("classicTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, (SOUND_MAX / 10));
+
+	m_iMod = CGameMgr::Get_Instance()->GetMode();
+
+	pGameInstance->InitMute();
+
+	if (CGameMgr::TOODEE == CGameMgr::Get_Instance()->GetMode())
+		pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+	else if (CGameMgr::TOPDEE == CGameMgr::Get_Instance()->GetMode())
+		pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+
+	Safe_Release(pGameInstance);
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -55,6 +74,8 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE3))))
 			MSG_BOX(L"레벨 오픈 실패");
@@ -66,12 +87,33 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE3))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		Safe_Release(pGameInstance);
 	}
+#pragma region BGM
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (m_iMod != CGameMgr::Get_Instance()->GetMode()) {
+		if (CGameMgr::TOODEE == CGameMgr::Get_Instance()->GetMode()) {
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+		}
+		else if (CGameMgr::TOPDEE == CGameMgr::Get_Instance()->GetMode()) {
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+		}
+
+		m_iMod = CGameMgr::Get_Instance()->GetMode();
+	}
+
+	Safe_Release(pGameInstance);
+#pragma endregion
 }
 
 HRESULT CLevel_Stage2::Render()

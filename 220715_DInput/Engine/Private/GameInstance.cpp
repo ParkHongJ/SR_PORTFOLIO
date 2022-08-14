@@ -72,6 +72,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->LateTick(fTimeDelta);
 
 	m_pLevel_Manager->Tick(fTimeDelta);
+
+	m_pFMOD->Tick(fTimeDelta);
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -208,7 +210,7 @@ _long CGameInstance::Get_DIMMoveState(DIMM eMouseMoveID)
 	return m_pInput_Device->Get_DIMMoveState(eMouseMoveID);
 }
 
-int CGameInstance::VolumeUp(C_FMOD::CHANNELID eID, _float _vol)
+int CGameInstance::VolumeUp(_uint eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
 		return 0;
@@ -216,7 +218,7 @@ int CGameInstance::VolumeUp(C_FMOD::CHANNELID eID, _float _vol)
 	return m_pFMOD->VolumeUp(eID, _vol);
 }
 
-int CGameInstance::VolumeDown(C_FMOD::CHANNELID eID, _float _vol)
+int CGameInstance::VolumeDown(_uint eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
 		return 0;
@@ -224,23 +226,23 @@ int CGameInstance::VolumeDown(C_FMOD::CHANNELID eID, _float _vol)
 	return m_pFMOD->VolumeDown(eID, _vol);
 }
 
-int CGameInstance::BGMVolumeUp(_float _vol)
+int CGameInstance::BGMVolumeUp(_float _vol, _uint eID)
 {
 	if (nullptr == m_pFMOD)
 		return 0;
 
-	return m_pFMOD->BGMVolumeUp(_vol);
+	return m_pFMOD->BGMVolumeUp(_vol, eID);
 }
 
-int CGameInstance::BGMVolumeDown(_float _vol)
+int CGameInstance::BGMVolumeDown(_float _vol, _uint eID)
 {
 	if (nullptr == m_pFMOD)
 		return 0;
 
-	return m_pFMOD->BGMVolumeDown(_vol);
+	return m_pFMOD->BGMVolumeDown(_vol, eID);
 }
 
-int CGameInstance::Pause(C_FMOD::CHANNELID eID)
+int CGameInstance::Pause(_uint eID)
 {
 	if (nullptr == m_pFMOD)
 		return 0;
@@ -248,23 +250,31 @@ int CGameInstance::Pause(C_FMOD::CHANNELID eID)
 	return m_pFMOD->Pause(eID);
 }
 
-void CGameInstance::PlaySound(_tchar * pSoundKey, C_FMOD::CHANNELID eID, _float _vol)
+int CGameInstance::Mute(_uint eID)
+{
+	if (nullptr == m_pFMOD)
+		return 0;
+
+	return m_pFMOD->Mute(eID);
+}
+
+void CGameInstance::PlayEffect(_tchar * pSoundKey, _uint eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
 		return;
 
-	return m_pFMOD->PlaySound(pSoundKey, eID, _vol);
+	return m_pFMOD->PlayEffect(pSoundKey, eID, _vol);
 }
 
-void CGameInstance::PlayBGM(_tchar * pSoundKey, _float _vol)
+void CGameInstance::PlayBGM(_tchar * pSoundKey, _uint eID, _float _vol)
 {
 	if (nullptr == m_pFMOD)
 		return;
 
-	return m_pFMOD->PlayBGM(pSoundKey, _vol);
+	return m_pFMOD->PlayBGM(pSoundKey, eID, _vol);
 }
 
-void CGameInstance::StopSound(C_FMOD::CHANNELID eID)
+void CGameInstance::StopSound(_uint eID)
 {
 	if (nullptr == m_pFMOD)
 		return;

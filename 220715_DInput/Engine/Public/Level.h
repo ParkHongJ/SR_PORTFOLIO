@@ -17,8 +17,8 @@ public:
 	virtual HRESULT Render();
 
 protected:
-	LPDIRECT3DDEVICE9		m_pGraphic_Device = nullptr;
-
+	LPDIRECT3DDEVICE9 m_pGraphic_Device = nullptr;
+	_uint m_iMod = 0;
 
 public:
 	virtual void Free() override;

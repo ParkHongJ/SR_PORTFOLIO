@@ -24,6 +24,7 @@ public:
 		_float3 vPos;
 		_uint iNumLevel;
 	}PLAYER_INFO;
+
 private:
 	enum DIR { TOODEE_LEFT, TOODEE_RIGHT, TOODEE_JUMP, TOODEE_PORTAL, TOODEE_DEAD, TOODEE_IDLE, TOODEE_END };
 
@@ -47,6 +48,7 @@ public:
 	//Edit Hong. 기존 이펙트생성 함수로 변경 및 투키 조종함수 추가
 	void CreateEffect();
 	void SetStateTookee();
+
 private:
 	CShader* m_pShaderCom = nullptr;
 	CTexture* m_pTextureCom = nullptr;
@@ -70,6 +72,7 @@ private:
 
 	_bool m_bJump = false;
 	_bool m_bDrop = false;
+	_float m_vGravityPower = 0.f;
 	_float m_fJumpPower = 17.f;
 	_float m_fJumpTime = 0.f;
 	_float m_fMaxJumpTime = 0.6f;
@@ -79,14 +82,19 @@ private:
 
 	_bool m_bPortal = false;
 	_bool m_bDiedEff = false;
+	_bool m_bDiedSnd = false;
 
-	_float m_fTimedelta; _float tick;
+	_float m_fTimedelta;
+	_float tick;
+
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
 
 private:
 	HRESULT SetUp_Components();
+
+	void MakeSound(_tchar* pTag, _uint ID, _uint Volum);
 	
 public:
 	static CToodee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

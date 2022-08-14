@@ -21,7 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	//pGameInstance->PlayBGM(TEXT("test.wav"), SOUND_MAX);
+	pGameInstance->PlayBGM(TEXT("menuMusicSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
 
 	Safe_Release(pGameInstance);
 
@@ -36,7 +36,9 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
-				
+
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, 
 			LEVEL_STAGE1))))
 			return;
