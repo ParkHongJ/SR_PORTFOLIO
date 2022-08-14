@@ -35,11 +35,13 @@ private:
 
 private:
 	void	LoadGameObject();
+
 	typedef struct TagInfo
 	{
 		wstring pPrototypeTag;
 		wstring pLayerTag;
 	}TAG_INFO;
+
 	typedef struct ObjInfo
 	{
 		_float3 vPos;
@@ -49,6 +51,7 @@ private:
 	}OBJ_INFO;
 
 	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
+
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;

@@ -126,6 +126,12 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 	m_pRendererCom_Cloud->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 	//m_pRendererCom_Cloud->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CThunder_Cloud::Render()

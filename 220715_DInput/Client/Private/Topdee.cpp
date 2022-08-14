@@ -581,7 +581,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (pBlockWarp != nullptr)
 		{//만약 워프블럭이라면.
 		 //여기사 나오는 디렉션은 밀려 나가는 디렉션임.
-			if (pBlockWarp->Get_Dir() == eDirection)
+			if (pBlockWarp->GetDir() == eDirection)
 				return;
 
 		}

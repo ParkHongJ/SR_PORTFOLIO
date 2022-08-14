@@ -51,7 +51,7 @@ HRESULT C_FMOD::LoadSoundFile()
 		strcat_s(szFullPath, szFilename);
 		FMOD::Sound* pSound = nullptr;
 
-		m_Result = m_pSystem->createSound(szFullPath, FMOD_LOOP_OFF/*FMOD_LOOP_NORMAL*/, nullptr, &pSound);
+		m_Result = m_pSystem->createSound(szFullPath, FMOD_LOOP_OFF, nullptr, &pSound);
 		if (m_Result == FMOD_OK)
 		{
 			int iLength = static_cast<int>(strlen(szFilename) + 1);
@@ -96,7 +96,12 @@ HRESULT C_FMOD::CheackPlaying(_uint Channel_ID)
 	return S_OK;
 }
 
-int C_FMOD::VolumeUp(CHANNELID eID, _float _vol)
+void C_FMOD::Tick(_float fTimeDelta)
+{
+	m_pSystem->update();
+}
+
+int C_FMOD::VolumeUp(_uint eID, _float _vol)
 {
 	if (m_volume < SOUND_MAX) {
 		m_volume += _vol;
@@ -106,7 +111,7 @@ int C_FMOD::VolumeUp(CHANNELID eID, _float _vol)
 	return 0;
 }
 
-int C_FMOD::VolumeDown(CHANNELID eID, _float _vol)
+int C_FMOD::VolumeDown(_uint eID, _float _vol)
 {
 	if (m_volume > SOUND_MIN) {
 		m_volume -= _vol;
@@ -117,29 +122,29 @@ int C_FMOD::VolumeDown(CHANNELID eID, _float _vol)
 	return 0;
 }
 
-int C_FMOD::BGMVolumeUp(_float _vol)
+int C_FMOD::BGMVolumeUp(_float _vol, _uint eID)
 {
 	if (m_BGMvolume < SOUND_MAX) {
 		m_BGMvolume += _vol;
 	}
-
-	m_pChannel[BGM]->setVolume(m_volume);
+	
+	m_pChannel[eID]->setVolume(m_volume);
 
 	return 0;
 }
 
-int C_FMOD::BGMVolumeDown(_float _vol)
+int C_FMOD::BGMVolumeDown(_float _vol, _uint eID)
 {
 	if (m_BGMvolume > SOUND_MIN) {
 		m_BGMvolume -= _vol;
 	}
 
-	m_pChannel[BGM]->setVolume(m_volume);
+	m_pChannel[eID]->setVolume(m_volume);
 
 	return 0;
 }
 
-int C_FMOD::Pause(CHANNELID eID)
+int C_FMOD::Pause(_uint eID)
 {
 	m_bPause = !m_bPause;
 
@@ -148,7 +153,16 @@ int C_FMOD::Pause(CHANNELID eID)
 	return 0;
 }
 
-void C_FMOD::PlaySound(_tchar * pSoundKey, CHANNELID eID, _float _vol)
+int C_FMOD::Mute(_uint eID)
+{
+	m_bMute = !m_bMute;
+
+	m_pChannel[eID]->setMute(m_bMute);
+
+	return 0;
+}
+
+void C_FMOD::PlayEffect(_tchar * pSoundKey, _uint eID, _float _vol)
 {
 	auto iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
 
@@ -157,23 +171,19 @@ void C_FMOD::PlaySound(_tchar * pSoundKey, CHANNELID eID, _float _vol)
 		return;
 	}
 	
-	_bool bPlay = FALSE;
-	if (m_pChannel[eID]->isPlaying(&bPlay))
-	{
-		m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[eID]);
+	m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[eID]);
 
-		if (_vol >= SOUND_MAX)
-			_vol = 1.f;
-		else if (_vol <= SOUND_MIN)
-			_vol = 0.f;
+	if (_vol >= SOUND_MAX)
+		_vol = 1.f;
+	else if (_vol <= SOUND_MIN)
+		_vol = 0.f;
 
-		m_pChannel[eID]->setVolume(_vol);
-	}
+	m_pChannel[eID]->setVolume(_vol);
 
 	m_pSystem->update();
 }
 
-void C_FMOD::PlayBGM(_tchar * pSoundKey, _float _vol)
+void C_FMOD::PlayBGM(_tchar * pSoundKey, _uint eID, _float _vol)
 {
 	auto iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
 
@@ -182,13 +192,13 @@ void C_FMOD::PlayBGM(_tchar * pSoundKey, _float _vol)
 		return;
 	}
 
-	m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[BGM]);
-	m_pChannel[BGM]->setMode(FMOD_LOOP_NORMAL);
-	m_pChannel[BGM]->setVolume(_vol);
+	m_pSystem->playSound(iter->second, m_pChannelGroupA, FALSE, &m_pChannel[eID]);
+	m_pChannel[eID]->setMode(FMOD_LOOP_NORMAL);
+	m_pChannel[eID]->setVolume(_vol);
 	m_pSystem->update();
 }
 
-void C_FMOD::StopSound(CHANNELID eID)
+void C_FMOD::StopSound(_uint eID)
 {
 	m_pChannel[eID]->stop();
 }

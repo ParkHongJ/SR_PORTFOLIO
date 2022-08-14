@@ -62,37 +62,35 @@ typedef string tstring;
 #define SOUND_WEIGHT 1.f
 #pragma endregion
 
-class C_FMOD final : public CBase
+class ENGINE_DLL C_FMOD final : public CBase
 {
 	DECLARE_SINGLETON(C_FMOD)
 
 public:
-	enum CHANNELID { BGM, PLAYER, EFFECT, UI, SYSTEM_EFFECT, SYSTEM_EFFECT2, SYSTEM_EFFECT3, MAXCHANNEL };
+	enum CHANNELID { BGM1, BGM2, PLAYER, EFFECT, UI, SYSTEM_EFFECT, SYSTEM_EFFECT2, SYSTEM_EFFECT3, MAXCHANNEL };
 
 private:
 	C_FMOD();
 	virtual ~C_FMOD() = default;
 
 public:
-	//FMOD::System* Get_System() { return m_pSystem; }
-	//FMOD::Channel* Get_Channel(_uint ChannelID) { return m_pChannel[ChannelID]; }
-
-public:
 	HRESULT Initialize();
 	HRESULT LoadSoundFile();
 	HRESULT CheackPlaying(_uint Channel_ID);
-	//void Tick(_float fTimeDelta);
+	void Tick(_float fTimeDelta);
 
 public:
-	int  VolumeUp(CHANNELID eID, _float _vol);
-	int  VolumeDown(CHANNELID eID, _float _vol);
-	int  BGMVolumeUp(_float _vol);
-	int  BGMVolumeDown(_float _vol);
-	int  Pause(CHANNELID eID);
-	void PlaySound(_tchar* pSoundKey, CHANNELID eID, _float _vol);
-	void PlayBGM(_tchar* pSoundKey, _float _vol);
-	void StopSound(CHANNELID eID);
+	int  VolumeUp(_uint eID, _float _vol);
+	int  VolumeDown(_uint eID, _float _vol);
+	int  BGMVolumeUp(_float _vol, _uint eID);
+	int  BGMVolumeDown(_float _vol, _uint eID);
+	int  Pause(_uint eID);
+	int  Mute(_uint eID);
+	void PlayEffect(_tchar* pSoundKey, _uint eID, _float _vol);
+	void PlayBGM(_tchar* pSoundKey, _uint eID, _float _vol);
+	void StopSound(_uint eID);
 	void StopAll();
+	void InitMute() { m_bMute = false; }
 
 private:
 	FMOD_RESULT m_Result;
@@ -106,6 +104,7 @@ private:
 	float m_volume = SOUND_DEFAULT;
 	float m_BGMvolume = SOUND_DEFAULT;
 	_bool m_bPause = false;
+	_bool m_bMute = false;
 
 public:
 	virtual void Free() override;

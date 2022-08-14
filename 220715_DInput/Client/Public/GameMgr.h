@@ -103,6 +103,7 @@ public:
 
 	//=====WarpBlock=====
 	HRESULT RegisterWarpBlock(class CWarpBlock* pWarpBlock);
+
 private:
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;

@@ -51,10 +51,11 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 	}
 
 	//텔레포트될 위치까지의 거리. 0.5로 주니까 딱붙는경우가 생겨서 매직넘버 붙임
-	m_fWarpDistance = .9f;
+	m_fWarpDistance = 0.9f;
 	
 	//초기 텔레포트 위치 설정
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 	switch (m_eDir)
 	{
 	case CWarpBlock::DIR_UP:
@@ -73,6 +74,7 @@ HRESULT CWarpBlock::Initialize(void * pArg)
 		vPos.x -= m_fWarpDistance;
 		m_vTeleportPos = vPos;
 		break;
+
 	default:
 		break;
 	}
@@ -94,6 +96,7 @@ void CWarpBlock::Tick(_float fTimeDelta)
 	}
 	//포탈을 들거나 미는중에도 텔레포트가 가능해야하기 때문에 틱마다 텔포의 위치를 조정해준다.
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 	switch (m_eDir)
 	{
 	case CWarpBlock::DIR_UP:
@@ -112,6 +115,7 @@ void CWarpBlock::Tick(_float fTimeDelta)
 		vPos.x -= m_fWarpDistance;
 		m_vTeleportPos = vPos;
 		break;
+
 	default:
 		break;
 	}
@@ -203,7 +207,12 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 		_float3 vPos = m_pPartner->GetTeleportPos();
 
 		//이때 방향도 같이 주고싶다.
-		otherTransform->Set_State(CTransform::STATE_POSITION, vPos);
+		if (CWarpBlock::DIR_DOWN == m_pPartner->GetDir()) {
+			otherTransform->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y, vPos.z - 0.7f));
+		}
+		else {
+			otherTransform->Set_State(CTransform::STATE_POSITION, vPos);
+		}
 	}
 }
 

@@ -59,17 +59,17 @@ public: /* For.Input_Device */
 	_long Get_DIMMoveState(DIMM eMouseMoveID);
 
 public: /* for.FMOD */
-	//FMOD::System* Get_System() { return C_FMOD::Get_Instance()->Get_System(); }
-	//FMOD::Channel* Get_Channel(_uint ChannelID) { return C_FMOD::Get_Instance()->Get_Channel(ChannelID); }
-	int  VolumeUp(C_FMOD::CHANNELID eID, _float _vol);
-	int  VolumeDown(C_FMOD::CHANNELID eID, _float _vol);
-	int  BGMVolumeUp(_float _vol);
-	int  BGMVolumeDown(_float _vol);
-	int  Pause(C_FMOD::CHANNELID eID);
-	void PlaySound(_tchar* pSoundKey, C_FMOD::CHANNELID eID, _float _vol);
-	void PlayBGM(_tchar* pSoundKey, _float _vol);
-	void StopSound(C_FMOD::CHANNELID eID);
+	int  VolumeUp(_uint eID, _float _vol);
+	int  VolumeDown(_uint eID, _float _vol);
+	int  BGMVolumeUp(_float _vol, _uint eID);
+	int  BGMVolumeDown(_float _vol, _uint eID);
+	int  Pause(_uint eID);
+	int  Mute(_uint eID);
+	void PlayEffect(_tchar* pSoundKey, _uint eID, _float _vol);
+	void PlayBGM(_tchar* pSoundKey, _uint eID, _float _vol);
+	void StopSound(_uint eID);
 	void StopAll();
+	void InitMute() { return m_pFMOD->InitMute(); }
 
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;

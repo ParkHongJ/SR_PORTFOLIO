@@ -3,6 +3,9 @@
 
 #include "ParticleMgr.h"
 #include "GameInstance.h"
+#include "C_FMOD.h"
+
+#include "WarpBlock.h"
 
 CToodee::CToodee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -55,6 +58,7 @@ void CToodee::Tick(_float fTimeDelta)
 			m_fJumpTime = 0.f;
 			m_MoveSpeed = 0.f;
 			m_bDiedEff = false;
+			m_bDiedSnd = false;
 		}
 	}
 
@@ -87,8 +91,10 @@ void CToodee::Tick(_float fTimeDelta)
 					if (!m_bJump) {
 						//Hong Edit For Effect
 						CreateEffect();
+						MakeSound(TEXT("jumpSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
 					}
 				}
+
 				m_bJump = true;
 			}
 
@@ -97,11 +103,11 @@ void CToodee::Tick(_float fTimeDelta)
 					m_eToodeeDir = TOODEE_LEFT;
 
 				m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
-				//Edit Hong
 				CGameMgr::Get_Instance()->SetScaeTookee(_float3(-1.f, 1.f, 1.f));
-				m_MoveSpeed = 5.f;
-				/*if (5.f > m_MoveSpeed)
-				m_MoveSpeed += 0.5f;*/
+				if (5.f > m_MoveSpeed)
+				m_MoveSpeed += 0.5f;
+				else
+					m_MoveSpeed -= 1.f;
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -120,11 +126,11 @@ void CToodee::Tick(_float fTimeDelta)
 					m_eToodeeDir = TOODEE_RIGHT; //현재 상태를 이동으로 바꿈
 
 				m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-				//Edit Hong
 				CGameMgr::Get_Instance()->SetScaeTookee(_float3(1.f, 1.f, 1.f));
-				m_MoveSpeed = 5.f;
-				/*if (5.f > m_MoveSpeed)
-					m_MoveSpeed += 0.5f;*/
+				if (5.f > m_MoveSpeed)
+					m_MoveSpeed += 0.5f;
+				else
+					m_MoveSpeed -= 1.f;
 				if (!m_bPortal) {
 					m_iMinFrame = 13;
 					m_iMaxFrame = 24;
@@ -145,6 +151,10 @@ void CToodee::Tick(_float fTimeDelta)
 		}
 		else if (!m_bActive) {
 			m_eToodeeDir = TOODEE_DEAD;
+			if (!m_bDiedSnd) {
+				MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				m_bDiedSnd = true;
+			}
 		}
 
 		m_eCurruntDir = m_eToodeeDir;
@@ -180,10 +190,6 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_PORTAL:
 				if (!(CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 					&& !(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))) {
-					//Edit Hong
-					/*if (0.f < m_MoveSpeed)
-						m_MoveSpeed -= 0.1f;
-					else*/
 						m_MoveSpeed = 0.f;
 				}
 				if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
@@ -193,10 +199,6 @@ void CToodee::LateTick(_float fTimeDelta)
 				break;
 
 			case TOODEE_IDLE:
-				//Edit Hong
-				/*if (0.f < m_MoveSpeed)
-					m_MoveSpeed -= 0.1f;
-				else*/
 				m_MoveSpeed = 0.f;
 				m_iMinFrame = 0;
 				m_iMaxFrame = 12;
@@ -221,33 +223,31 @@ void CToodee::LateTick(_float fTimeDelta)
 
 #pragma region Toodee_Jump_and_Drop
 			_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			_float vGravityPower = -1.63f * m_fJumpTime * 0.5f;
+			m_vGravityPower = -1.63f * m_fJumpTime * 0.5f;
 
-			if (m_fDrop_Endline + abs(vGravityPower) <= fPos.z) {
+			if (m_fDrop_Endline + abs(m_vGravityPower) <= fPos.z) {
 				if (m_bJump)
 					fPos.z += m_fJumpPower * fTimeDelta;
 
-				fPos.z += vGravityPower;
+				fPos.z += m_vGravityPower;
 
 				if (m_fJumpTime > m_fMaxJumpTime)
 					m_fJumpTime = m_fMaxJumpTime;
 				else
 					m_fJumpTime += fTimeDelta;
 			}
-			if (m_fDrop_Endline + abs(vGravityPower) > fPos.z)
+			if (m_fDrop_Endline + abs(m_vGravityPower) > fPos.z)
 			{
 				m_bJump = false;
 				m_fJumpTime = 0.f;
+				m_fJumpPower = 17.f;
+				m_fMaxJumpTime = 0.6f;
 				fPos.z = m_fDrop_Endline;
 				m_eToodeeDir = TOODEE_IDLE;
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, fPos);
 #pragma endregion
 			SetStateTookee();
-
-			if (CGameMgr::Get_Instance()->Key_Down(DIK_P)) { /* Test WarpBox for Up to Left/Right */
-				m_MoveSpeed += 100.f * abs((m_fJumpPower * fTimeDelta) + vGravityPower);
-			}
 
 			m_pTransformCom->Set_TransformDesc_Speed(m_MoveSpeed);
 			m_pTransformCom->Go_Straight_2D(fTimeDelta);
@@ -282,8 +282,9 @@ void CToodee::LateTick(_float fTimeDelta)
 						CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 							vPos,
 							vPos - vPos2,
-							CParticleMgr::PARTICLE);
+							CParticleMgr::PARTICLE);	
 					}
+
 					m_bDiedEff = true;
 				}
 			}
@@ -291,6 +292,7 @@ void CToodee::LateTick(_float fTimeDelta)
 		}
 	}
 	else { m_MoveSpeed = 0.f; }
+
 	_float test = fTimeDelta;
 
 	tick = GetTickCount64();
@@ -315,6 +317,7 @@ HRESULT CToodee::Render()
 		if (FAILED(m_pTextureCom_Died->Bind_Texture(m_pShaderCom, "g_Texture", m_iTexIndexDied)))
 			return E_FAIL;
 	}
+
 	//월드던질때 전치
 	_float4x4 matWorld;
 	matWorld = m_pTransformCom->Get_WorldMatrix();
@@ -374,11 +377,17 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		m_bActive = false;
 		m_iTexIndexDied = 0;
 	}
-	if (other->CompareTag(L"Portal"))
-		m_bPortal = true;
+
+	if (other->CompareTag(L"Portal")) {
+		if (!m_bPortal) {
+			MakeSound(TEXT("potalInSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			m_bPortal = true;
+		}
+	}
 
 	_float fBoxSize = 1.f;
 	_float fMyLength = 1.5f;
+
 	//Edit Hong
 	if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
@@ -388,69 +397,192 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		_float3 vBoxPos = TargetBox->Get_State(CTransform::STATE_POSITION);
 
 		if (CCollider::DIR_UP == eDireciton) {
-			if(0.2f < m_fJumpTime && m_bJump)
+			if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
 				m_bJump = false;
+			}
 			m_fJumpTime = 0.f;
+			m_fJumpPower = 17.f;
+			m_fMaxJumpTime = 0.6f;
 			m_eToodeeDir = TOODEE_IDLE;
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
+			if ((fMyLength / 3) > abs(vMyPos.z - vBoxPos.z))
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBoxPos.z))));
+			else
+				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
 		}
 		else if (CCollider::DIR_DOWN == eDireciton) {
 			if (fMyLength > abs(vMyPos.z - vBoxPos.z))
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBoxPos.z) - 0.001f)));
 		}
 		else if (CCollider::DIR_LEFT == eDireciton) {
-			//Edit Hong
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
-			//if (m_eCurruntDir == TOODEE_RIGHT)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
-			//}
-			//else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurruntDir == TOODEE_JUMP)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
-			//}
-			//else if (m_eCurruntDir == TOODEE_IDLE)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
-			//}
+			if (m_eCurruntDir == TOODEE_RIGHT) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			}
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurruntDir == TOODEE_JUMP) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			}
+			else if (m_eCurruntDir == TOODEE_IDLE) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			}
 		}
 		else if (CCollider::DIR_RIGHT == eDireciton) {
-			//Edit Hong
-			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
-
-			//if (m_eCurruntDir == TOODEE_LEFT)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
-			//}
-			//else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurruntDir == TOODEE_JUMP)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
-			//}
-			//else if (m_eCurruntDir == TOODEE_IDLE)
-			//{
-			//	//Edit Hong
-			//	m_pTransformCom->Go_Straight_2D(-fTimeDelta);
-			//	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
-			//}
-		}
-
-		if (other->CompareTag(L"WarpBlock")) {
-			_uint i = 0;
+			if (m_eCurruntDir == TOODEE_LEFT) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			}
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurruntDir == TOODEE_JUMP) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			}
+			else if (m_eCurruntDir == TOODEE_IDLE) {
+				m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			}
 		}
 
 		Safe_Release(TargetBox);
+	}
+
+	if (other->CompareTag(L"WarpBlock")) {
+		CTransform* TargetBlock = (CTransform*)other->Get_Component(L"Com_Transform");
+		Safe_AddRef(TargetBlock);
+
+		_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vBlockPos = TargetBlock->Get_State(CTransform::STATE_POSITION);
+
+		if (CCollider::DIR_UP == eDireciton) {
+			if (CWarpBlock::DIR_UP != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+				if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
+					m_bJump = false;
+				}
+				m_fJumpTime = 0.f;
+				m_fJumpPower = 17.f;
+				m_fMaxJumpTime = 0.6f;
+				m_eToodeeDir = TOODEE_IDLE;
+				if ((fMyLength / 3) > abs(vMyPos.z - vBlockPos.z))
+					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBlockPos.z))));
+				else
+					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBlockPos.z + (fBoxSize * 0.5f)));
+			}
+			else {
+				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+				case CWarpBlock::DIR_UP:
+					if (m_bJump) {
+						m_MoveSpeed = 0.f;
+						m_fJumpTime = 0.f;
+						m_fJumpPower += 1.f;
+						m_fMaxJumpTime += 0.03f;
+					}
+					else if (!m_bJump) {
+						m_bJump = true;
+						m_MoveSpeed = 0.f;
+						m_fJumpTime = 0.f;
+						m_fJumpPower = 17.f;
+						m_fMaxJumpTime = 0.6f;
+					}
+					break;
+				case CWarpBlock::DIR_RIGHT:
+					m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+					m_MoveSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+					break;
+				case CWarpBlock::DIR_DOWN:
+					break;
+				case CWarpBlock::DIR_LEFT:
+					m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+					m_MoveSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+					break;
+				case CWarpBlock::DIR_END:
+					break;
+				}
+			}
+		}
+		else if (CCollider::DIR_DOWN == eDireciton) {
+			if (CWarpBlock::DIR_DOWN != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+				if (fMyLength > abs(vMyPos.z - vBlockPos.z))
+					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBlockPos.z) - 0.001f)));
+			}
+			else {
+				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+				case CWarpBlock::DIR_UP:
+					break;
+				case CWarpBlock::DIR_RIGHT:
+					m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+					m_MoveSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+					break;
+				case CWarpBlock::DIR_DOWN:
+					m_fJumpTime = 0.6f;
+					break;
+				case CWarpBlock::DIR_LEFT:
+					m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+					m_MoveSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+					break;
+				case CWarpBlock::DIR_END:
+					break;
+				}
+			}
+		}
+		else if (CCollider::DIR_LEFT == eDireciton) {
+			if (CWarpBlock::DIR_LEFT != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+				if (m_eCurruntDir == TOODEE_RIGHT) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				else if (m_eCurruntDir == TOODEE_IDLE) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurruntDir == TOODEE_JUMP) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+			}
+			else {
+				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+				case CWarpBlock::DIR_UP:
+					m_fJumpTime = 0.f;
+					break;
+				case CWarpBlock::DIR_RIGHT:
+					break;
+				case CWarpBlock::DIR_DOWN:
+					break;
+				case CWarpBlock::DIR_LEFT:
+					break;
+				case CWarpBlock::DIR_END:
+					break;
+				}
+			}
+		}
+		else if (CCollider::DIR_RIGHT == eDireciton) {
+			if (CWarpBlock::DIR_RIGHT != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+				if (m_eCurruntDir == TOODEE_LEFT) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				else if (m_eCurruntDir == TOODEE_IDLE) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurruntDir == TOODEE_JUMP) {
+					m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+				}
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+			}
+			else {
+				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+				case CWarpBlock::DIR_UP:
+					m_fJumpTime = 0.f;
+					break;
+				case CWarpBlock::DIR_RIGHT:
+					break;
+				case CWarpBlock::DIR_DOWN:
+					break;
+				case CWarpBlock::DIR_LEFT:
+					break;
+				case CWarpBlock::DIR_END:
+					break;
+				}
+			}
+		}
+
+		Safe_Release(TargetBlock);
 	}
 
 	/*
@@ -475,7 +607,10 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-	m_bPortal = false;
+	if (m_bPortal) {
+		MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+		m_bPortal = false;
+	}
 }
 
 void CToodee::SetStateTookee()
@@ -599,6 +734,16 @@ HRESULT CToodee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Rect"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom, this)))
 		return E_FAIL;
 	return S_OK;
+}
+
+void CToodee::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(pTag, ID, Volum);
+
+	Safe_Release(pGameInstance);
 }
 
 CToodee * CToodee::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
