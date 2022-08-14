@@ -291,5 +291,6 @@ CGameObject * CWarpBlock::Clone(void* pArg)
 void CWarpBlock::Free()
 {
 	__super::Free();
+	Safe_Release(m_pShaderCom);
 }
 
