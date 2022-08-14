@@ -31,6 +31,7 @@ private:
 		wstring pPrototypeTag;
 		wstring pLayerTag;
 	}TAG_INFO;
+
 	typedef struct ObjInfo
 	{
 		_float3 vPos;

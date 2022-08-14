@@ -33,14 +33,14 @@ HRESULT CHong::Initialize()
 	Info.iNumLevel = LEVEL_STAGE1;
 	//Info.vPos = _float3(26.f, 1.f, 2.f);
 	Info.vPos = _float3(8.f, 1.f, 13.5f);
-	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
+	/*if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
 		return E_FAIL;
 
 	CToodee::PLAYER_INFO Info2;
 	Info2.iNumLevel = LEVEL_STAGE1;
 	Info2.vPos = _float3(26.f, 1.f, 2.f);
 	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Toodee"), L"Layer_Toodee", &Info2)))
-		return E_FAIL;
+		return E_FAIL;*/
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
@@ -411,7 +411,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -444,7 +444,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

@@ -674,6 +674,14 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		}
 		m_bPushBox = true;
 	}
+	else if (other->CompareTag(L"Wall"))
+	{
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
+		TopdeeIsPushed(vOtherPos, fTimeDelta);//탑디가 밀려나는거.
+		if (vOtherPos.y != 0.5f)
+			return;
+	}
 }
 
 void CTopdee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
@@ -712,10 +720,7 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos, _float fTimeDelta)
 	}
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeePos);
 	
-	/* 나중에 이거 수정해라 */
-	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vPos);
-	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vPos);
-
+	CGameMgr::Get_Instance()->SetPosition(fTimeDelta * 1.7f, vPos);
 }
 
 void CTopdee::FindCanPushBoxes(_float3 _vNextBoxPos, _float3 vPushDir, _uint& iCountReFunc, list<CGameObject*>& PushList, _bool& bCanPush)

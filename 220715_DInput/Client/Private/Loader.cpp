@@ -465,6 +465,11 @@ HRESULT CLoader::Loading_ForHongLevel()
 	--프로토타입 생성--
 	----------------*/
 
+	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
+		CParticle_Warp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pGraphic_Device))))
@@ -600,6 +605,11 @@ HRESULT CLoader::Loading_ForHongLevel()
 	/*------------------
 	-----텍스쳐 생성-----
 	------------------*/
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Rain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"),
@@ -742,7 +752,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 
 	/* For.Prototype_Component_Texture_Particle_Button */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Button"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonparticle_%d.png"), 4))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
