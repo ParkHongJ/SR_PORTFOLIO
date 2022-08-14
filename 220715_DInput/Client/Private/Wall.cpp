@@ -98,7 +98,6 @@ void CWall::LateTick(_float fTimeDelta)
 
 HRESULT CWall::Render()
 {
-
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 	
