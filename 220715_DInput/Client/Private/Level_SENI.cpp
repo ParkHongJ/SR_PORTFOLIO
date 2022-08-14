@@ -41,8 +41,8 @@ HRESULT CLevel_SENI::Initialize()
 	ObjInfo objInfo;
 	objInfo.vPos = _float3(3.f, 1.f, 3.f);
 	objInfo.iNumLevel = LEVEL_SENI;
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig", &objInfo)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig", &objInfo)))
+		return E_FAIL;
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_SENI);
 
@@ -213,6 +213,14 @@ CLevel_SENI * CLevel_SENI::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_SENI::Free()
 {
 	__super::Free();
+	for (auto Pair : m_pObjects)
+	{
+		Pair.first->pPrototypeTag.clear();
+		Pair.first->pLayerTag.clear();
+		delete Pair.first;
+		delete Pair.second;
+	}
+	m_pObjects.clear();
 	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
 
