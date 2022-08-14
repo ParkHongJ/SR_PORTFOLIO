@@ -3,6 +3,10 @@
 #include "GameObject.h"
 #include "Interaction_Block.h"
 
+BEGIN(Engine)
+class CShader;
+END
+
 BEGIN(Client)
 class CWarpBlock final : public CInteraction_Block
 {
@@ -21,6 +25,9 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+private:
+	CShader* m_pShaderCom = nullptr;
+
 public:
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) {};
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) {};
@@ -32,9 +39,13 @@ public:
 	}
 	_float3 GetTeleportPos() { return m_vTeleportPos; }
 	_uint Get_Dir() { return m_eDir; }
+	void Rotate_WarpBlock();//탑디가 들고있을때 텍스쳐와함께 시계방향으로 돌릴거야.
+
 private:
 	_uint m_iWBNum;
 	_uint m_iTextureNum =  0 ;
+	_uint m_iShaderSelect = 0;
+	_float m_fShaderTimer = 0.f;
 	DIRECTION m_eDir = DIR_END;
 	
 	//텔레포트할 위치
@@ -45,9 +56,6 @@ private:
 
 	//깐부
 	CWarpBlock* m_pPartner = nullptr;
-private:
-	HRESULT Set_RenderState();
-	HRESULT Reset_RenderState();
 
 private:
 	HRESULT SetUp_Components();

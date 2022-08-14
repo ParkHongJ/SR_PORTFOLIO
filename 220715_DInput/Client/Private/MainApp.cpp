@@ -288,6 +288,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Rect.hlsl")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"),
+		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Sky.hlsl")))))
+		return E_FAIL;
+
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
@@ -330,6 +335,7 @@ HRESULT CMainApp::Ready_LoadingLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
 		return E_FAIL;
 
+	
 
 
 	Safe_Release(pGameInstance);

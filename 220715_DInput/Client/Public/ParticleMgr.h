@@ -19,6 +19,7 @@ public:
 		PARTICLE,
 		BULLET,
 		BUTTON,
+		WARP,
 		PARTICLE_END
 	};
 private:
@@ -27,15 +28,18 @@ private:
 		m_Particles = nullptr;
 		m_Bullets = nullptr;
 		m_Buttons = nullptr;
+		m_Warps = nullptr;
 	};
 
 public:
 	HRESULT Initialize(_uint iNumLevel);
 	HRESULT ReuseObj(_uint iNumLevel, const _float3& vPos, const _float3& vDir, PARTICLE_TYPE eType);
+
 private:
 	void CreateBullet(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 	void CreateParticle(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 	void CreateButton(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
+	void CreateWarps(_uint iNumLevel, const _float3& vPos, const _float3& vDir);
 
 public:
 	virtual void Free() override;
@@ -45,5 +49,6 @@ private:
 	list<class CGameObject*>* m_Particles = nullptr;
 	list<class CGameObject*>* m_Bullets = nullptr;
 	list<class CGameObject*>* m_Buttons = nullptr;
+	list<class CGameObject*>* m_Warps = nullptr;
 };
 END

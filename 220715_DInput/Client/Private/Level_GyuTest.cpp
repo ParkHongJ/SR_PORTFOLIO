@@ -51,12 +51,12 @@ HRESULT CLevel_GyuTest::Initialize()
 	ObjInfo objInfo3;
 	objInfo3.vPos = _float3(13.5f, .5f, 4.5f);
 	objInfo3.iNumLevel = LEVEL_STAGE1;
-	objInfo3.iDirection = 0;
+	objInfo3.iDirection = 2;
 
 	ObjInfo objInfo4;
 	objInfo4.vPos = _float3(6.5f, .5f, 4.5f);
 	objInfo4.iNumLevel = LEVEL_STAGE1;
-	objInfo4.iDirection = 1;
+	objInfo4.iDirection = 2;
 
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
 	return E_FAIL;
