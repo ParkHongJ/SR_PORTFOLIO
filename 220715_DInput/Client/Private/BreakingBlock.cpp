@@ -6,12 +6,14 @@
 CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 	, m_fOnBlock(0.f)
+	, m_bCheck(false)
 {
 }
 
 CBreakingBlock::CBreakingBlock(const CBreakingBlock & rhs)
 	: CGameObject(rhs)
 	, m_fOnBlock(0.f)
+	, m_bCheck(false)
 {
 }
 
@@ -44,6 +46,33 @@ void CBreakingBlock::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+
+	if (m_bCheck)
+	{
+		m_fOnBlock += fTimeDelta;
+
+		if (3.f <= m_fOnBlock)
+		{
+			m_bActive = false;
+			int a = 10;
+			for (int i = 0; i < 7; i++)
+			{
+				random_device rd;
+				default_random_engine eng(rd());
+				uniform_real_distribution<float> distr(-.8f, .8f);
+				//random float
+
+				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				vPos.x += distr(eng);
+				vPos.z += distr(eng);
+				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+					vPos,
+					vPos - vPos2,
+					CParticleMgr::PARTICLE);
+			}
+		}
+	}
 }
 
 void CBreakingBlock::LateTick(_float fTimeDelta)
@@ -82,36 +111,12 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 	if (!m_bActive)
 		return;
 
-	m_fOnBlock += fTimeDelta;
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig"))
+	// 닿은 시점을 알려줘야 할듯?
+	
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
 	{
-		if (3.f <= m_fOnBlock)
-		{
-			m_bActive = false;
-			int a = 10;
-			for (int i = 0; i < 7; i++)
-			{
-				random_device rd;
-				default_random_engine eng(rd());
-				uniform_real_distribution<float> distr(-.8f, .8f);
-				//random float
-
-				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-				vPos.x += distr(eng);
-				vPos.z += distr(eng);
-				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
-					vPos,
-					vPos - vPos2,
-					CParticleMgr::PARTICLE);
-			}
-		}
+		m_bCheck = true;
 	}
-}
-
-void CBreakingBlock::OnTriggerExit(CGameObject * other, _float fTimeDelta)
-{
-	m_fOnBlock = 0.f;
 }
 
 HRESULT CBreakingBlock::Set_RenderState()

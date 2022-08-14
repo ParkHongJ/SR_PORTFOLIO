@@ -28,7 +28,6 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
-	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
@@ -47,6 +46,7 @@ private:
 
 private:
 	_float m_fOnBlock;
+	_bool m_bCheck;
 
 public:
 	static CBreakingBlock* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
