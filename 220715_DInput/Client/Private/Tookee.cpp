@@ -36,6 +36,7 @@ HRESULT CTookee::Initialize(void * pArg)
 
 	_float3 vPos = ObjInfo.vPos;
 	vPos.z += 3.f;
+	vPos.y = 0.5f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
 	//Register Tookee
@@ -220,7 +221,36 @@ void CTookee::LateTick(_float fTimeDelta)
 		}
 	}
 
-	m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pBoxCom, m_pTransformCom);
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		//문제있다
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+		
+		_float4x4 matWorld;
+		D3DXMatrixIdentity(&matWorld);
+		m_pTransformCom->Set_WorldMatrix(matWorld);
+		
+		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, vRight);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+
+		m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pToodeeCom, m_pTransformCom);
+	}
+	else if (m_eCurMode == CGameMgr::TOPDEE)
+	{
+		
+		_float4x4		ViewMatrix;
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+
+		D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
+
+		m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
+		m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
+		m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
+		
+		m_pColliderCom->Add_CollisionGroup(CCollider::PLAYER, m_pTopdeeCom, m_pTransformCom);
+	}
+
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
@@ -238,7 +268,14 @@ HRESULT CTookee::Render()
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
-	m_pVIBufferCom->Render();
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		m_pVIBufferToodeeCom->Render();
+	}
+	else if (m_eCurMode == CGameMgr::TOPDEE)
+	{
+		m_pVIBufferTopdeeCom->Render();
+	}
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
@@ -246,7 +283,14 @@ HRESULT CTookee::Render()
 	//---------------------디버그일때 그리기-------------------------
 	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCom->Render(Matrix);
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
+		m_pToodeeCom->Render(Matrix);
+	}
+	else if (m_eCurMode == CGameMgr::TOPDEE)
+	{
+		m_pTopdeeCom->Render(Matrix);
+	}
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	//--------------------------------------------------------------
 
@@ -263,8 +307,8 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	_float fMyLength = 1.5f;
 
 	/* TOODEE */
-	/*if (m_eCurMode == CGameMgr::TOODEE)
-	{*/
+	if (m_eCurMode == CGameMgr::TOODEE)
+	{
 		if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 			CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 			Safe_AddRef(TargetBox);
@@ -302,108 +346,85 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 			Safe_Release(TargetBox);
 		}
-	///* TOPDEE */
-	//else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Box"))
-	//{
-	//	//To do TOPDEE
-	//	//이거 위치 비교로도 가능.
-	//	CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
+	}
+	/* TOPDEE */
+	else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Box"))
+	{
+		//To do TOPDEE
+		//이거 위치 비교로도 가능.
+		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
 
-	//	if (pInteraction_Block == nullptr)
-	//		return;
+		if (pInteraction_Block == nullptr)
+			return;
 
-	//	CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
-	//	_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
-	//	TopdeeIsPushed(vOtherPos);//투키가 밀려나는거.
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
+		TopdeeIsPushed(vOtherPos);//투키가 밀려나는거.
 
-	//	if (vOtherPos.y != 0.5f)
-	//		return;
-	//	
-	//	if (m_pBoxList == nullptr)
-	//	{
-	//		//if Collision We Must Check NextBox.
-	//		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	//		m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
-	//		if (m_pBoxList == nullptr)
-	//			return;
-	//	}
+		if (vOtherPos.y != 0.5f)
+			return;
+		
+		if (m_pBoxList == nullptr)
+		{
+			//if Collision We Must Check NextBox.
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			m_pBoxList = pGameInstance->Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Cube");
+			if (m_pBoxList == nullptr)
+				return;
+		}
 
-	//	_float3 vCurDir = { 0.f,0.f,0.f };
+		_float3 vCurDir = { 0.f,0.f,0.f };
 
-	//	if (m_eCurState == TOOKEE_DOWN)
-	//		vCurDir.z = -1.0f;
-	//	else if (m_eCurState == TOOKEE_UP)
-	//		vCurDir.z = 1.f;
-	//	else if (m_eCurState == TOOKEE_RIGHT)
-	//		vCurDir.x = 1.f;
-	//	else if (m_eCurState == TOOKEE_LEFT)
-	//		vCurDir.x = -1.f;
+		if (m_eCurState == TOOKEE_DOWN)
+			vCurDir.z = -1.0f;
+		else if (m_eCurState == TOOKEE_UP)
+			vCurDir.z = 1.f;
+		else if (m_eCurState == TOOKEE_RIGHT)
+			vCurDir.x = 1.f;
+		else if (m_eCurState == TOOKEE_LEFT)
+			vCurDir.x = -1.f;
 
-	//	vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
-	//	
-	//	_uint iCount = 0;
+		vOtherPos += vCurDir;//이게 민 박스의 다음 체크해야할 박스의 위치.
+		
+		_uint iCount = 0;
 
-	//	CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
-	//	//현재 충돌한 블럭이 벽이라면
-	//	if (pBlock == nullptr) 
-	//		return;
+		CInteraction_Block* pBlock = dynamic_cast<CInteraction_Block*>(other);
+		//현재 충돌한 블럭이 벽이라면
+		if (pBlock == nullptr) 
+			return;
 
-	//	list<CGameObject*> PushList;
-	//	_bool bCanPush = true;
+		list<CGameObject*> PushList;
+		_bool bCanPush = true;
 
-	//	FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
-	//	
-	//	if (!bCanPush)
-	//		return;
-	//	
-	//	_float fdist = 0.f;
+		FindCanPushBoxes(vOtherPos, vCurDir, iCount, PushList, bCanPush);//list push back
+		
+		if (!bCanPush)
+			return;
+		
+		_float fdist = 0.f;
 
-	//	vOtherPos -= vCurDir;
+		vOtherPos -= vCurDir;
 
-	//	if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, vCurDir, &fdist, true)) {
-	//		return;
-	//	}
+		if (CGameMgr::Get_Instance()->Check_Not_Go(vOtherPos, vCurDir, &fdist, true)) {
+			return;
+		}
 
-	//	vOtherPos += vCurDir;
-	//	pBlock->Box_Push_More(fTimeDelta, vOtherPos, true);//First
-	//													   //_uint iCount{ 0 };
-	//	for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
-	//	{
-	//		CInteraction_Block* pBlock = (CInteraction_Block*)(*iter);
-	//		CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
-	//		_float3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
-	//		pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
-	//	}
-	//	m_bPushBox = true;
-	//}
+		vOtherPos += vCurDir;
+		pBlock->Box_Push_More(fTimeDelta, vOtherPos, true);//First
+														   //_uint iCount{ 0 };
+		for (auto& iter = PushList.begin(); iter != PushList.end(); ++iter)
+		{
+			CInteraction_Block* pBlock = (CInteraction_Block*)(*iter);
+			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
+			_float3 vPos = pTransform->Get_State(CTransform::STATE_POSITION);
+			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
+		}
+		m_bPushBox = true;
+	}
 }
 
 void CTookee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
-}
-
-void CTookee::Move(STATE _eState, _float fTimeDelta)
-{
-	switch (_eState)
-	{
-	case CTookee::TOOKEE_LEFT:
-		break;
-	case CTookee::TOOKEE_RIGHT:
-		break;
-	case CTookee::TOOKEE_UP:
-		break;
-	case CTookee::TOOKEE_DOWN:
-		break;
-	case CTookee::TOOKEE_JUMP:
-		break;
-	case CTookee::TOOKEE_IDLE:
-		break;
-	case CTookee::TOOKEE_END:
-		break;
-	default:
-		MSG_BOX(L"잘못된 상태입니다 : TOOKEE");
-		break;
-	}
 }
 
 void CTookee::Jump(_float fTimeDelta)
@@ -489,8 +510,17 @@ HRESULT CTookee::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
+	CVIBuffer_Rect::RECTDESC tRectDesc;
+	tRectDesc.vSize.x = 1.5f;
+	tRectDesc.vSize.y = 1.5f;
+	tRectDesc.vSize.z = 0.f;
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferTopdeeCom, this, &tRectDesc)))
+		return E_FAIL;
+
 	/* For.Com_VIBuffer_Toodee_Rect */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Toodee_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Toodee_Rect"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferToodeeCom, this)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -520,7 +550,16 @@ HRESULT CTookee::SetUp_Components()
 	BoxColliderDesc.bIsTrigger = true;
 
 	/* For.Com_BoxCollider */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pToodeeCom, this, &BoxColliderDesc)))
+		return E_FAIL;
+
+	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
+
+	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
+	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 0.5f);
+	BoxColliderDesc.fRadius = 0.5f;
+	BoxColliderDesc.bIsTrigger = true;
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider2"), (CComponent**)&m_pTopdeeCom, this, &BoxColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -556,11 +595,13 @@ void CTookee::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pBoxCom);
+	Safe_Release(m_pTopdeeCom);
+	Safe_Release(m_pToodeeCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pVIBufferToodeeCom);
+	Safe_Release(m_pVIBufferTopdeeCom);
 	Safe_Release(m_pRendererCom);
 }
 

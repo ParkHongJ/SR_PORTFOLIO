@@ -86,6 +86,8 @@ void CTopdee::Tick(_float fTimeDelta)
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
 			{
 				m_bTookeeMove = false;
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
@@ -103,6 +105,8 @@ void CTopdee::Tick(_float fTimeDelta)
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
 			{
 				m_bTookeeMove = false;
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
@@ -121,6 +125,9 @@ void CTopdee::Tick(_float fTimeDelta)
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
 			{
 				m_bTookeeMove = false;
+
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
@@ -139,6 +146,8 @@ void CTopdee::Tick(_float fTimeDelta)
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
 			{
 				m_bTookeeMove = false;
+				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
+				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
 			}
 			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
 			m_pTransformCom->Translate(vTargetPos);
@@ -429,27 +438,27 @@ void CTopdee::LateTick(_float fTimeDelta)
 			{
 				vPos.x += fCollisionDist;
 				_float fPos{ fCollisionDist + 1.f };
-				vTookeePos.x = fPos;
+				vTookeePos.x = 1.f;
 				//vTookeePos.x = 1.f;
 			}
 			else if (m_eCurDir == DIR_RIGHT)
 			{
 				vPos.x -= fCollisionDist;
 				_float fPos{ fCollisionDist + 1.f };
-				vTookeePos.x = -fPos;
+				vTookeePos.x = -1.f;
 			}
 			else if (m_eCurDir == DIR_UP)
 			{
 				vPos.z -= fCollisionDist;
 				_float fPos{ fCollisionDist + 1.f };
-				vTookeePos.z = -fPos;
+				vTookeePos.z = -1.f;
 				//vTookeePos.z = -1.f;
 			}
 			else if (m_eCurDir == DIR_DOWN)
 			{
 				vPos.z += fCollisionDist;
 				_float fPos{ fCollisionDist + 1.f };
-				vTookeePos.z += fPos;
+				vTookeePos.z = 1.f;
 				//vTookeePos.z = 1.f;
 			}
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
@@ -671,25 +680,27 @@ void CTopdee::TopdeeIsPushed(const _float3 _vOtherPos, _float fTimeDelta)
 	if (m_eCurDir == DIR_LEFT)
 	{
 		vTopdeePos.x += fDist;
-		vPos.x += fDist;
+		vPos.x = 1.f;
 	}
 	else if (m_eCurDir == DIR_RIGHT)
 	{
 		vTopdeePos.x -= fDist;
-		vPos.x -= fDist;
+		vPos.x = -1.f;
 	}
 	else if (m_eCurDir == DIR_UP)
 	{
 		vTopdeePos.z -= fDist;
-		vPos.z -= fDist;
+		vPos.z = -1.f;
 	}
 	else if (m_eCurDir == DIR_DOWN)
 	{
 		vTopdeePos.z += fDist;
-		vPos.z += fDist;
+		vPos.z = 1.f;
 	}
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vTopdeePos);
+	
 	/* 나중에 이거 수정해라 */
+	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vPos);
 	CGameMgr::Get_Instance()->SetPosition(fTimeDelta, vPos);
 
 }

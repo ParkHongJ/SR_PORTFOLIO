@@ -20,10 +20,11 @@ public:
 protected:
 	LPDIRECT3DDEVICE9				m_pGraphic_Device = nullptr;
 	_bool							m_isCloned = false;
-
+	_bool							m_bEnabled = true;
 public:
 	virtual CComponent* Clone(void* pArg) = 0;
 	virtual void Free() override;
+	void SetEnabled(_bool _bEnabled) { m_bEnabled = _bEnabled; }
 	
 
 public:

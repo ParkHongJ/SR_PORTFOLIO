@@ -62,6 +62,7 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 			LEVEL_STAGE1))))
 			MSG_BOX(L"레벨 오픈 실패");
 
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
 }

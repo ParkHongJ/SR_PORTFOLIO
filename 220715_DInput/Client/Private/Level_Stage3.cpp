@@ -68,7 +68,7 @@ void CLevel_Stage3::Tick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE4))))
 			MSG_BOX(L"레벨 오픈 실패");
-
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
 }
