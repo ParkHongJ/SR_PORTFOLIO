@@ -157,7 +157,7 @@ HRESULT CLevel_GyuH::Ready_Layer_Toodee(const _tchar * pLayerTag)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
-	Info.vPos = _float3(25.f, 1.f, 1.5f);
+	Info.vPos = _float3(22.f, 1.f, 1.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;

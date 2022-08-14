@@ -178,6 +178,9 @@
     <Filter Include="02.GameObject\Particle\Particle_Warp">
       <UniqueIdentifier>{9e445673-3298-4fe7-8ef6-9dcb013d008e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_7">
+      <UniqueIdentifier>{3f1dbcc0-5bea-4cf0-900f-c9469ff6d71c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -373,6 +376,9 @@
     <ClInclude Include="..\Public\WarpBlock.h">
       <Filter>02.GameObject\Block\Interaction_Block\WarpBlock</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_Stage7.h">
+      <Filter>01.Level\STAGES\STAGE_7</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -557,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Warp.cpp">
       <Filter>02.GameObject\Particle\Particle_Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage7.cpp">
+      <Filter>01.Level\STAGES\STAGE_7</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

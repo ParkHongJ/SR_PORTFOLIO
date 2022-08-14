@@ -36,7 +36,8 @@ void CParticle_Spark::Tick(_float fTimeDelta)
 }
 
 void CParticle_Spark::Make_Line(const _float3 & vStartPoint, const _float3 & vEndPoint)
-{//매니저에서 호출시 여기로 들어오는 값은 해당 플레이어의 pos값과 동일하다.
+{
+	//매니저에서 호출시 여기로 들어오는 값은 해당 플레이어의 pos값과 동일하다.
 	Reset_State();
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vStartPoint.x, 1.f, vStartPoint.z));
 	m_vStartPoint = _float3(vStartPoint.x, 1.f, vStartPoint.z);

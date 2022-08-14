@@ -374,7 +374,6 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		m_bActive = false;
 		m_iTexIndexDied = 0;
 	}
-
 	if (other->CompareTag(L"Portal"))
 		m_bPortal = true;
 
@@ -403,7 +402,6 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			//Edit Hong
 			m_pTransformCom->Go_Straight_2D(-fTimeDelta);
 			CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
-
 			//if (m_eCurruntDir == TOODEE_RIGHT)
 			//{
 			//	//Edit Hong

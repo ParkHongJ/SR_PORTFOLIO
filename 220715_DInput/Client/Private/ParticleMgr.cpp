@@ -52,7 +52,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	/*=============
 	====Bullets====
 	=============*/
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		//총알 생성
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
@@ -199,7 +199,7 @@ void CParticleMgr::CreateBullet(_uint iNumLevel, const _float3& vPos, const _flo
 			pTransform->Set_Scale(_float3(1.f, 1.f, 1.f));
 			pTransform->Set_State(CTransform::STATE_POSITION, vPos);
 			//방향셋팅
-			//dynamic_cast<CBullet*>(*iter)->SetDirection(vDir);
+			dynamic_cast<CBullet*>(*iter)->SetDirection(vDir);
 			Safe_Release(pGameInstance);
 			return;
 		}

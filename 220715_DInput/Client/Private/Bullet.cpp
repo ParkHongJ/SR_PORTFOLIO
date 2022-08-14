@@ -83,13 +83,6 @@ void CBullet::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
-	// Default dir : DOWN
-	//RIGHT
-	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
-	//UP
-	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
-	//m_pTransformCom->Turn(m_pTransformCom->Get_State(CTransform::STATE_LOOK), 1.f);
-	
 	switch (m_eDir)
 	{
 	case DOWN:
@@ -136,10 +129,9 @@ HRESULT CBullet::Set_RenderState()
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 	
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphic_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	m_pGraphic_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphic_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAREF, 254);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	return S_OK;
@@ -147,8 +139,9 @@ HRESULT CBullet::Set_RenderState()
 
 HRESULT CBullet::Reset_RenderState()
 {
-	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DFILL_SOLID);
 
 	return S_OK;
 }
@@ -164,7 +157,7 @@ HRESULT CBullet::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 0.5f,0.8f,0.f };
+	RectDesc.vSize = { 1.f,0.8f,0.f };
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
@@ -195,7 +188,7 @@ HRESULT CBullet::SetUp_Components()
 
 void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee"))
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee") || other->CompareTag(L"Wall"))
 	{
 		m_bActive = false;
 		for (int i = 0; i < 3; i++)
@@ -268,4 +261,25 @@ void CBullet::SetUp(void* pArg)
 		m_vDir = BulletDesc.vDir;
 	}
 	
+}
+
+void CBullet::SetDirection(_float3 _vDir)
+{
+	m_vDir = _vDir;
+	if ((_uint)_vDir.x > 0)
+	{
+		m_eDir = DIRECTION::RIGHT;
+	}
+	else if ((_uint)_vDir.x < 0)
+	{
+		m_eDir = DIRECTION::LEFT;
+	}
+	else if ((_uint)_vDir.z > 0)
+	{
+		m_eDir = DIRECTION::UP;
+	}
+	else if ((_uint)_vDir.z < 0)
+	{
+		m_eDir = DIRECTION::DOWN;
+	}
 }

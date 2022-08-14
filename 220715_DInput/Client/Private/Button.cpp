@@ -51,7 +51,7 @@ HRESULT CButton::Initialize(void * pArg)
 	}
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos.y += 0.6f;
-	vPos.z -= 0.5f;
+	vPos.z -= 0.3f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
@@ -114,7 +114,7 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (!m_bActive)
 		return;
 
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee")|| other->CompareTag(L"Box"))
 	{
 		m_bPress = true;
 
@@ -199,7 +199,7 @@ HRESULT CButton::SetUp_Components()
 		return E_FAIL;
 	
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 0.5f,0.6f,0.f };
+	RectDesc.vSize = { 1.f,1.f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;

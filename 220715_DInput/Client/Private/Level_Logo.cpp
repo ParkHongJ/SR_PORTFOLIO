@@ -43,7 +43,6 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			
 		Safe_Release(pGameInstance);
 	}
-
 	if (GetKeyState(VK_F1) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();

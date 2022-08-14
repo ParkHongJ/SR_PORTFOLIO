@@ -30,6 +30,7 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
 
+	m_vLookPos = _float3(14.5f, -1.f, 8.0f);
 	return S_OK;
 }
 
@@ -38,7 +39,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if ((pGameInstance->Get_DIKState(DIK_W) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
+	/*if ((pGameInstance->Get_DIKState(DIK_W) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
@@ -61,7 +62,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	if ((pGameInstance->Get_DIKState(DIK_RETURN) & 0x80) && pGameInstance->Get_DIMKeyState(DIMK_RBUTTON))
 	{
 		m_pTransformCom->Turn(_float3(1.f, 0.f, 0.f), (fTimeDelta * 0.5f));
-	}
+	}*/
 
 	_long	MouseMove = 0;
 
@@ -102,20 +103,43 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	Safe_AddRef(pGameMgr);
 	if (pGameMgr->GetMode() == CGameMgr::TOPDEE)
 	{
+		_float3 vPos = m_vLookPos;
+		vPos.y = 16.7f;
+		vPos.z = 0.f;
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(14.5f, 16.7f, 0.f),
+				vPos,
 				fTimeDelta * m_fSpeed));
 	}
 	else
+	{
+		_float3 vPos = m_vLookPos;
+		vPos.y = 16.7f;
+		vPos.z = 7.9f;
 		m_pTransformCom->Set_State(
 			CTransform::STATE_POSITION,
 			Lerp(m_pTransformCom->Get_State(CTransform::STATE_POSITION),
-				_float3(14.5f, 16.7f, 7.9f),
+				vPos,
 				fTimeDelta * m_fSpeed));
+	}
+	if (pGameMgr->Key_Pressing(DIK_A))
+	{
+		m_vLookPos.x -= m_fSpeed * fTimeDelta;
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.x -= m_fSpeed * fTimeDelta;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
 
-	m_pTransformCom->LookAt(_float3(14.5f, -1.f, 8.0f));
+	if (pGameMgr->Key_Pressing(DIK_D))
+	{
+		m_vLookPos.x += m_fSpeed * fTimeDelta;
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.x += m_fSpeed * fTimeDelta;
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+
+	m_pTransformCom->LookAt(m_vLookPos);
 
 	Safe_Release(pGameMgr);
 	Safe_Release(pGameInstance);

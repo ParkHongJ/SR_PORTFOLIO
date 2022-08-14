@@ -4,6 +4,7 @@
 CComponent::CComponent(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
 	, m_isCloned(false)
+	, m_bEnabled(true)
 {
 	Safe_AddRef(m_pGraphic_Device);
 }
@@ -11,6 +12,7 @@ CComponent::CComponent(LPDIRECT3DDEVICE9 pGraphic_Device)
 CComponent::CComponent(const CComponent & rhs)
 	: m_pGraphic_Device(rhs.m_pGraphic_Device)
 	, m_isCloned(true)
+	, m_bEnabled(true)
 {
 	Safe_AddRef(m_pGraphic_Device);
 }

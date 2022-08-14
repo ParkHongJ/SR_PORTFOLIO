@@ -26,9 +26,12 @@ public:
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 
+	
 private:
 	bool m_bMove = false;
 	_float m_fSpeed = 5.f;
+	_float3 m_vLookPos;
+
 };
 
 END

@@ -38,8 +38,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iNumVerticesX, _uint iNumV
 			/* 루프가 하나씩 진행될때마다 1씩증가하는 인덱스를 얻어오기위한.  */
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = _float3(j, 0.0f, i);
-			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1) * 30.f, i / _float(m_iNumVerticesZ - 1) * 30.f);
+			pVertices[iIndex].vPosition = _float3((_float)j, 0.0f, (_float)i);
+			pVertices[iIndex].vTexture = _float2((_float)j / _float(m_iNumVerticesX - 1) * 30.f, i / _float(m_iNumVerticesZ - 1) * 30.f);
 
 		}
 	}
@@ -148,7 +148,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMap)
 
 			//	
 
-			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3(j, (pPixel[iIndex] & 0x000000ff) / 15.0f, i);
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, (pPixel[iIndex] & 0x000000ff) / 15.0f, (_float)i);
 			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1) * 30.f, i / _float(m_iNumVerticesZ - 1) * 30.f);
 		}
 	}

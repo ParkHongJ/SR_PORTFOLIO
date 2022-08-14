@@ -19,6 +19,7 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 	m_iNumLevel = iNumLevel;
 	m_iKey = 0;
 	m_Obstaclelist.clear();
+	m_bLoadFinish = true;
 	if (m_Tookee != nullptr)
 	{
 		Safe_Release(m_Tookee);

@@ -28,6 +28,8 @@ void CInteraction_Block::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+	if (m_bDropFinish)
+		return;
 	if (m_bDropBox)
 	{
 		m_bAbility = false;
@@ -78,10 +80,11 @@ _bool CInteraction_Block::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta,
 	_float3 vCurPosition{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };//Box Cur Pos.
 	if (!bHoleCall) {
 		_float3 vHaveToReturnPos{ vFinalPos };
-		vFinalPos = MoveTowards(vCurPosition, vFinalPos, fTimeDelta * fBoxSpeed);
+		vFinalPos = MoveTowards(vCurPosition, vFinalPos, fTimeDelta * fBoxSpeed*1.5f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vFinalPos);
-		if(vFinalPos == vHaveToReturnPos)
+		if (vFinalPos == vHaveToReturnPos) {
 			return true;
+		}
 		return false;
 	}
 	else {
@@ -99,11 +102,12 @@ void CInteraction_Block::Box_Drop_More(_float fTimeDelta)
 		vBoxCurPos.y = -0.45f;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vBoxCurPos));
 		m_bDropBox = false;
+		m_bDropFinish = true;
 		return;
 	}
 	_float3 vBoxDir = { 0.f,-1.f,0.f };
 	_float fBoxSpeed = m_pTransformCom->Get_Speed();
-	m_pTransformCom->Translate(vBoxDir *fTimeDelta* fBoxSpeed);
+	m_pTransformCom->Translate(vBoxDir *fTimeDelta* fBoxSpeed * 2.f);
 }
 
 void CInteraction_Block::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos, _bool bFirstCall)
