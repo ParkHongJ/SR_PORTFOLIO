@@ -39,8 +39,8 @@ HRESULT CToodee::Initialize(void * pArg)
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
 
-	_float3 vPos = ObjInfo.vPos;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	m_fStartPos = ObjInfo.vPos;
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_fStartPos);
 	return S_OK;
 }
 
@@ -52,7 +52,7 @@ void CToodee::Tick(_float fTimeDelta)
 			m_iTexIndexDied = 0;
 		}
 		else {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(2.f, 0.3f, 2.f));
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_fStartPos);
 			m_bActive = true;
 			m_bJump = false;
 			m_fJumpTime = 0.f;
@@ -177,9 +177,19 @@ void CToodee::LateTick(_float fTimeDelta)
 			switch (m_eCurruntDir)
 			{
 			case TOODEE_LEFT:
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.75f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+					m_fSoundTimeDelta = 0.f;
+				}
 				break;
 
 			case TOODEE_RIGHT:
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.75f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+					m_fSoundTimeDelta = 0.f;
+				}
 				break;
 
 			case TOODEE_JUMP:
@@ -380,7 +390,6 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 	if (other->CompareTag(L"Portal")) {
 		if (!m_bPortal) {
-			MakeSound(TEXT("potalInSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
 			m_bPortal = true;
 		}
 	}
@@ -472,8 +481,10 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 					if (m_bJump) {
 						m_MoveSpeed = 0.f;
 						m_fJumpTime = 0.f;
-						m_fJumpPower += 1.f;
-						m_fMaxJumpTime += 0.03f;
+						if (30 > m_fJumpPower) {
+							m_fJumpPower += 1.f;
+							m_fMaxJumpTime += 0.03f;
+						}
 					}
 					else if (!m_bJump) {
 						m_bJump = true;
@@ -608,7 +619,6 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 void CToodee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
 	if (m_bPortal) {
-		MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
 		m_bPortal = false;
 	}
 }

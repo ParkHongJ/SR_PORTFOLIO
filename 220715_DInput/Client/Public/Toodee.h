@@ -60,6 +60,7 @@ private:
 	CVIBuffer_Toodee_Rect* m_pVIBufferCom = nullptr;
 
 private:
+	_float3 m_fStartPos = { 0.f, 0.f, 0.f };
 	DIR m_eToodeeDir = TOODEE_END;
 	DIR m_eCurruntDir = TOODEE_END;
 	_uint m_iTexIndexDied = 0;
@@ -79,6 +80,8 @@ private:
 	_float m_fTimeD = 0.f;
 
 	_float m_fDrop_Endline = 0.f;
+
+	_float m_fSoundTimeDelta = 0.f;
 
 	_bool m_bPortal = false;
 	_bool m_bDiedEff = false;

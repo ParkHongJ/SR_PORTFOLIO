@@ -187,21 +187,8 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 	//이 부분은 한번만 호출됨!
 	if (eDirection == m_eDir)
 	{
-		m_iShaderSelect = 1;
-		for (int i = 0; i < 5; i++)
-		{
-			random_device rd;
-			default_random_engine eng(rd());
-			uniform_real_distribution<float> distr(-.5f, .5f);
-			_float3 vPos = m_vTeleportPos;
-			_float3 vPos2 = vPos;
-			vPos.x += distr(eng);
-			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
-				vPos,
-				vPos - vPos2,
-				CParticleMgr::WARP);
-		}
+		MakeSound(TEXT("potalInSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+		MakeEffect();
 
 		CTransform* otherTransform = (CTransform*)other->Get_Component(L"Com_Transform");
 		_float3 vPos = m_pPartner->GetTeleportPos();
@@ -209,9 +196,13 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 		//이때 방향도 같이 주고싶다.
 		if (CWarpBlock::DIR_DOWN == m_pPartner->GetDir()) {
 			otherTransform->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y, vPos.z - 0.7f));
+			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			m_pPartner->MakeEffect();
 		}
 		else {
 			otherTransform->Set_State(CTransform::STATE_POSITION, vPos);
+			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			m_pPartner->MakeEffect();
 		}
 	}
 }
@@ -226,6 +217,35 @@ void CWarpBlock::Rotate_WarpBlock()
 	m_eDir = (CWarpBlock::DIRECTION)iDir;
 }
 
+void CWarpBlock::MakeEffect(void)
+{
+	m_iShaderSelect = 1;
+
+	for (int i = 0; i < 5; i++)
+	{
+		random_device rd;
+		default_random_engine eng(rd());
+		uniform_real_distribution<float> distr(-.5f, .5f);
+		_float3 vPos = m_vTeleportPos;
+		_float3 vPos2 = vPos;
+		vPos.x += distr(eng);
+		vPos.z += distr(eng);
+		CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+			vPos,
+			vPos - vPos2,
+			CParticleMgr::WARP);
+	}
+}
+
+void CWarpBlock::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(pTag, ID, Volum);
+
+	Safe_Release(pGameInstance);
+}
 
 HRESULT CWarpBlock::SetUp_Components()
 {

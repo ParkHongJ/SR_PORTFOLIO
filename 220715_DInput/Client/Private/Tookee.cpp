@@ -6,6 +6,8 @@
 #include "ParticleMgr.h"
 #include "Hong.h"
 #include "Interaction_Block.h"
+#include "WarpBlock.h"
+
 CTookee::CTookee(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -320,6 +322,8 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 				if (0.2f < m_fJumpTime && m_bJump && m_eCurMode == CGameMgr::TOODEE)
 					m_bJump = false;
 				m_fJumpTime = 0.f;
+				m_fJumpPower = 17.f;
+				m_fMaxJumpTime = 0.6f;
 				m_eCurState = TOOKEE_IDLE;
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBoxPos.z + (fBoxSize * 0.5f)));
 			}
@@ -345,6 +349,148 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			}
 
 			Safe_Release(TargetBox);
+		}
+
+		if (other->CompareTag(L"WarpBlock")) {
+			CTransform* TargetBlock = (CTransform*)other->Get_Component(L"Com_Transform");
+			Safe_AddRef(TargetBlock);
+
+			_float3 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 vBlockPos = TargetBlock->Get_State(CTransform::STATE_POSITION);
+
+			if (CCollider::DIR_UP == eDireciton) {
+				if (CWarpBlock::DIR_UP != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+					if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
+						m_bJump = false;
+					}
+					m_fJumpTime = 0.f;
+					m_fJumpPower = 17.f;
+					m_fMaxJumpTime = 0.6f;
+					m_eCurState = TOOKEE_IDLE;
+					if ((fMyLength / 3) > abs(vMyPos.z - vBlockPos.z))
+						m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBlockPos.z))));
+					else
+						m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vBlockPos.z + (fBoxSize * 0.5f)));
+				}
+				else {
+					switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+					case CWarpBlock::DIR_UP:
+						if (m_bJump) {
+							m_fSpeed = 0.f;
+							m_fJumpTime = 0.f;
+							if (30 > m_fJumpPower) {
+								m_fJumpPower += 1.f;
+								m_fMaxJumpTime += 0.03f;
+							}
+						}
+						else if (!m_bJump) {
+							m_bJump = true;
+							m_fSpeed = 0.f;
+							m_fJumpTime = 0.f;
+							m_fJumpPower = 17.f;
+							m_fMaxJumpTime = 0.6f;
+						}
+						break;
+					case CWarpBlock::DIR_RIGHT:
+						m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+						m_fSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+						break;
+					case CWarpBlock::DIR_DOWN:
+						break;
+					case CWarpBlock::DIR_LEFT:
+						m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+						m_fSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+						break;
+					case CWarpBlock::DIR_END:
+						break;
+					}
+				}
+			}
+			else if (CCollider::DIR_DOWN == eDireciton) {
+				if (CWarpBlock::DIR_DOWN != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+					if (fMyLength > abs(vMyPos.z - vBlockPos.z))
+						m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z - (fMyLength - abs(vMyPos.z - vBlockPos.z) - 0.001f)));
+				}
+				else {
+					switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+					case CWarpBlock::DIR_UP:
+						break;
+					case CWarpBlock::DIR_RIGHT:
+						m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+						m_fSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+						break;
+					case CWarpBlock::DIR_DOWN:
+						m_fJumpTime = 0.6f;
+						break;
+					case CWarpBlock::DIR_LEFT:
+						m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+						m_fSpeed += 50.f * abs((m_fJumpPower * fTimeDelta) + m_vGravityPower);
+						break;
+					case CWarpBlock::DIR_END:
+						break;
+					}
+				}
+			}
+			else if (CCollider::DIR_LEFT == eDireciton) {
+				if (CWarpBlock::DIR_LEFT != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+					if (m_eCurState == TOOKEE_RIGHT) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					else if (m_eCurState == TOOKEE_IDLE) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT) && m_eCurState == TOOKEE_JUMP) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(-1.f, 0.f, 0.f));
+				}
+				else {
+					switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+					case CWarpBlock::DIR_UP:
+						m_fJumpTime = 0.f;
+						break;
+					case CWarpBlock::DIR_RIGHT:
+						break;
+					case CWarpBlock::DIR_DOWN:
+						break;
+					case CWarpBlock::DIR_LEFT:
+						break;
+					case CWarpBlock::DIR_END:
+						break;
+					}
+				}
+			}
+			else if (CCollider::DIR_RIGHT == eDireciton) {
+				if (CWarpBlock::DIR_RIGHT != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
+					if (m_eCurState == TOOKEE_LEFT) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					else if (m_eCurState == TOOKEE_IDLE) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT) && m_eCurState == TOOKEE_JUMP) {
+						m_pTransformCom->Go_Straight_2D(-fTimeDelta);
+					}
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, _float3(1.f, 0.f, 0.f));
+				}
+				else {
+					switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
+					case CWarpBlock::DIR_UP:
+						m_fJumpTime = 0.f;
+						break;
+					case CWarpBlock::DIR_RIGHT:
+						break;
+					case CWarpBlock::DIR_DOWN:
+						break;
+					case CWarpBlock::DIR_LEFT:
+						break;
+					case CWarpBlock::DIR_END:
+						break;
+					}
+				}
+			}
+
+			Safe_Release(TargetBlock);
 		}
 	}
 	/* TOPDEE */
@@ -430,23 +576,25 @@ void CTookee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 void CTookee::Jump(_float fTimeDelta)
 {
 	_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float vGravityPower = -1.63f * m_fJumpTime * 0.5f;
+	m_vGravityPower = -1.63f * m_fJumpTime * 0.5f;
 
-	if (m_fDrop_Endline + abs(vGravityPower) <= fPos.z) {
+	if (m_fDrop_Endline + abs(m_vGravityPower) <= fPos.z) {
 		if (m_bJump)
 			fPos.z += m_fJumpPower * fTimeDelta;
 
-		fPos.z += vGravityPower;
+		fPos.z += m_vGravityPower;
 
 		if (m_fJumpTime > m_fMaxJumpTime)
 			m_fJumpTime = m_fMaxJumpTime;
 		else
 			m_fJumpTime += fTimeDelta;
 	}
-	if (m_fDrop_Endline + abs(vGravityPower) > fPos.z)
+	if (m_fDrop_Endline + abs(m_vGravityPower) > fPos.z)
 	{
 		m_bJump = false;
 		m_fJumpTime = 0.f;
+		m_fJumpPower = 17.f;
+		m_fMaxJumpTime = 0.6f;
 		fPos.z = m_fDrop_Endline;
 		m_eCurState = TOOKEE_IDLE;
 	}

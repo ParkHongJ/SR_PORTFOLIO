@@ -1743,6 +1743,12 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_KeyBox"),
 		CKeyBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
+		CParticle_Warp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -1844,7 +1850,11 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Sky.dds")))))
 		return E_FAIL;
-	
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
@@ -2020,6 +2030,12 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_GravityBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */
@@ -2265,6 +2281,11 @@ HRESULT CLoader::Loading_ForLEVEL4(_uint iNumLevel)
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_%d.dds"), 1))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */
@@ -2507,6 +2528,11 @@ HRESULT CLoader::Loading_ForLEVEL5(_uint iNumLevel)
 	/* For.Prototype_Component_Texture_ButtonBlock */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_ButtonBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_%d.dds"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
@@ -2801,6 +2827,12 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Sky.dds")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */

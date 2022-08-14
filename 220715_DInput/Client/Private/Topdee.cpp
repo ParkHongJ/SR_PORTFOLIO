@@ -82,6 +82,11 @@ void CTopdee::Tick(_float fTimeDelta)
 		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
 		{
 			Move_Frame(DIR_UP);
+			m_fSoundTimeDelta += fTimeDelta;
+			if (m_fSoundTimeDelta > 0.2f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				m_fSoundTimeDelta = 0.f;
+			}
 			m_vTargetDir = { 0.f, 0.f, 1.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
@@ -101,6 +106,11 @@ void CTopdee::Tick(_float fTimeDelta)
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
 		{
 			Move_Frame(DIR_DOWN);
+			m_fSoundTimeDelta += fTimeDelta;
+			if (m_fSoundTimeDelta > 0.2f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				m_fSoundTimeDelta = 0.f;
+			}
 			m_vTargetDir = { 0.f, 0.f, -1.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
@@ -121,6 +131,11 @@ void CTopdee::Tick(_float fTimeDelta)
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 		{
 			Move_Frame(DIR_LEFT);
+			m_fSoundTimeDelta += fTimeDelta;
+			if (m_fSoundTimeDelta > 0.2f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				m_fSoundTimeDelta = 0.f;
+			}
 			m_vTargetDir = { -1.f, 0.f, 0.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
@@ -142,6 +157,11 @@ void CTopdee::Tick(_float fTimeDelta)
 		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 		{
 			Move_Frame(DIR_RIGHT);
+			m_fSoundTimeDelta += fTimeDelta;
+			if (m_fSoundTimeDelta > 0.2f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				m_fSoundTimeDelta = 0.f;
+			}
 			m_vTargetDir = { 1.f, 0.f, 0.f };
 			_float fDist{ -5.f };
 			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
@@ -822,6 +842,16 @@ HRESULT CTopdee::Reset_ColliderState()
 {
 	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	return S_OK;
+}
+
+void CTopdee::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(pTag, ID, Volum);
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CTopdee::SetUp_Components()
