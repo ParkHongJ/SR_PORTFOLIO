@@ -6,6 +6,7 @@
 #include "Level_Loading.h"
 #include "ParticleMgr.h"
 #include "Topdee.h"
+#include "Toodee.h"
 #include "Hong.h"
 #include "GameMgr.h"
 
@@ -26,6 +27,9 @@ HRESULT CLevel_SENI::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -41,8 +45,8 @@ HRESULT CLevel_SENI::Initialize()
 	ObjInfo objInfo;
 	objInfo.vPos = _float3(3.f, 1.f, 3.f);
 	objInfo.iNumLevel = LEVEL_SENI;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig", &objInfo)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Monster_Pig", L"Layer_Monster_Pig", &objInfo)))
+		return E_FAIL;*/
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_SENI);
 
@@ -177,6 +181,23 @@ HRESULT CLevel_SENI::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg)
 	Info.iNumLevel = LEVEL_SENI;
 	Info.vPos = _float3(15.5f, 0.5f, 11.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
+		LEVEL_SENI, pLayerTag, &Info)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_SENI::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CToodee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_SENI;
+	Info.vPos = _float3(3.f, 1.f, 3.f);
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_SENI, pLayerTag, &Info)))
 		return E_FAIL;
 

@@ -46,6 +46,7 @@ private:
 
 private:
 	_float m_fOnBlock;
+	_float m_fRemember;
 	_bool m_bCheck;
 
 public:

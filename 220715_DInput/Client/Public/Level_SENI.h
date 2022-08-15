@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_ButtonBlock(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BreakingBlock(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
 private:

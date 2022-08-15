@@ -3,9 +3,12 @@
 
 #include "GameInstance.h"
 #include "ParticleMgr.h"
+#include "GameMgr.h"
+
 CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 	, m_fOnBlock(0.f)
+	, m_fRemember(0.f)
 	, m_bCheck(false)
 {
 }
@@ -13,6 +16,7 @@ CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 CBreakingBlock::CBreakingBlock(const CBreakingBlock & rhs)
 	: CGameObject(rhs)
 	, m_fOnBlock(0.f)
+	, m_fRemember(0.f)
 	, m_bCheck(false)
 {
 }
@@ -47,29 +51,39 @@ void CBreakingBlock::Tick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	CGameMgr::GAMEMODE eCurMode = CGameMgr::Get_Instance()->GetMode();
+
 	if (m_bCheck)
 	{
 		m_fOnBlock += fTimeDelta;
+		m_fRemember = m_fOnBlock;
 
-		if (3.f <= m_fOnBlock)
+		if (eCurMode == CGameMgr::TOPDEE)
 		{
-			m_bActive = false;
-			int a = 10;
-			for (int i = 0; i < 7; i++)
+			m_fOnBlock = 0;
+		}
+		else
+		{
+			if (3.f <= m_fRemember)
 			{
-				random_device rd;
-				default_random_engine eng(rd());
-				uniform_real_distribution<float> distr(-.8f, .8f);
-				//random float
+				m_bActive = false;
+				int a = 10;
+				for (int i = 0; i < 7; i++)
+				{
+					random_device rd;
+					default_random_engine eng(rd());
+					uniform_real_distribution<float> distr(-.8f, .8f);
+					//random float
 
-				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-				vPos.x += distr(eng);
-				vPos.z += distr(eng);
-				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
-					vPos,
-					vPos - vPos2,
-					CParticleMgr::PARTICLE);
+					_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+					_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+					vPos.x += distr(eng);
+					vPos.z += distr(eng);
+					CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+						vPos,
+						vPos - vPos2,
+						CParticleMgr::PARTICLE);
+				}
 			}
 		}
 	}
@@ -111,11 +125,11 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 	if (!m_bActive)
 		return;
 
-	// 닿은 시점을 알려줘야 할듯?
-	
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
 	{
 		m_bCheck = true;
+
+		// 블럭 상하좌우 살펴서 같은 블럭 찾기
 	}
 }
 

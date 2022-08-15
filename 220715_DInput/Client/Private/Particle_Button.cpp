@@ -205,11 +205,13 @@ void CParticle_Button::Free()
 
 void CParticle_Button::SetDirection(const _float3& vDir)
 {
-	random_device random;
+	//안움직이는 애들도 있어서 그냥 뺄게요..
+	/*random_device random;
 	default_random_engine eng(random());
 	uniform_int_distribution<int> nothing(0, 45);
+	m_vDir = vDir + nothing(eng);*/
 
-	m_vDir = vDir + nothing(eng);
+	m_vDir = vDir;
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
