@@ -40,6 +40,7 @@ HRESULT CWave::Initialize(void * pArg)
 		_float3 vPos;
 		vPos = _float3(-15.f, 1.2f, 7.5f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		m_pTransformCom->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 	}
 	else
 	{
@@ -59,17 +60,6 @@ void CWave::Tick(_float fTimeDelta)
 
 void CWave::LateTick(_float fTimeDelta)
 {
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	/* 카메라의 월드행렬이다. */
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
 	m_pColliderCom->Add_CollisionGroup(CCollider::OBJECT, m_pBoxCom, m_pTransformCom);
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }

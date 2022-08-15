@@ -183,7 +183,7 @@ HRESULT CHong::Render()
 	{
 		"WallSpr_0","WallSpr_1","WallSpr_2","WallSpr_3","WallSpr_4","WallSpr_5",
 		"WallSpr_6","WallSpr_7","WallSpr_8","WallSpr_9","WallSpr_10","WallSpr_11",
-		"WallSpr_12","WallSpr_13","WallSpr_14","WallSpr_15"
+		"WallSpr_12","WallSpr_13","WallSpr_14","WallSpr_15","WallSpr_16"
 
 		/*,"WallSpr_20","WallSpr_21","WallSpr_22","WallSpr_23"
 		,"WallSpr_24","WallSpr_25"*/
@@ -266,7 +266,17 @@ HRESULT CHong::Render()
 	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
 	ImGui::Combo("Direction", &iDir_Select, Directions, IM_ARRAYSIZE(Directions));
 	
-	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5", "LEVEL_STAGE6", "LEVEL_STAGE7" };
+	const char* Levels[] = { 
+		"LEVEL_STAGE1",
+		"LEVEL_STAGE2", 
+		"LEVEL_STAGE3", 
+		"LEVEL_STAGE4",
+		"LEVEL_STAGE5",
+		"LEVEL_STAGE6", 
+		"LEVEL_STAGE7",
+		"LEVEL_STAGE8",
+		"LEVEL_STAGE9" 
+	};
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
 	ImGui::Checkbox("Wall?", &m_bIsCube); ImGui::SameLine();
@@ -348,7 +358,15 @@ HRESULT CHong::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag)))
+	_float3 vPos = { 15.f,0.f,8.f };
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag, vPos)))
+		return E_FAIL;
+	vPos.x += 29.f;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag, vPos)))
+		return E_FAIL;
+	vPos.x += 29.f;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_HONG, pLayerTag, vPos)))
 		return E_FAIL;
 	Safe_Release(pGameInstance);
 
@@ -414,7 +432,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST_MY_STAGE.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -447,7 +465,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST_MY_STAGE.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

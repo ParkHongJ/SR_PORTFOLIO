@@ -40,9 +40,9 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, 
-			LEVEL_STAGE1))))
+			LEVEL_STAGE4))))
 			return;
-			
+
 		Safe_Release(pGameInstance);
 	}
 	if (GetKeyState(VK_F1) & 0x8000)
