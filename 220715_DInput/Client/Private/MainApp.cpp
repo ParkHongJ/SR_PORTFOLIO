@@ -75,8 +75,8 @@ void CMainApp::Tick(_float fTimeDelta)
 		bTopdeeTurn = true;
 	else
 		bTopdeeTurn = false;
-	if (!m_pCollider->Collision_Ray_Top(CCollider::INTEREACTION, bTopdeeTurn))	//만약 블록에서 레이를 검출당하지 않았다면 플레이어도 체크
-		m_pCollider->Collision_Ray_Top(CCollider::PLAYER, bTopdeeTurn);
+	m_pCollider->Collision_Ray_Top(bTopdeeTurn);
+	
 
 	if (CGameMgr::Get_Instance()->m_bLoadFinish) {
 		//구충돌로 비교하면서 Stay 호출
@@ -291,6 +291,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Shader_Cube */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"),
 		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Sky.hlsl")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Shadow*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Shadow"),
+		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Rect_Shadow.hlsl")))))
 		return E_FAIL;
 
 	Safe_AddRef(m_pRenderer);

@@ -97,6 +97,7 @@ _bool CInteraction_Block::KKK_Go_Lerp_Drop(_float3 vFinalPos, _float fTimeDelta,
 void CInteraction_Block::Box_Drop_More(_float fTimeDelta)
 {
 	m_bEnabled = false;
+	m_eShaderSelect = SHADER_INHOLE;
 	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
 	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
 		vBoxCurPos.y = -0.45f;
@@ -144,5 +145,6 @@ void CInteraction_Block::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pShaderCom);
 }
 

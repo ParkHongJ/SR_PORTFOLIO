@@ -147,6 +147,7 @@ HRESULT CCollider::Collision_SphereEx(COLLISIONGROUP eSourGroup, COLLISIONGROUP 
 	}
 	return S_OK;
 }
+
 bool CCollider::Check_SphereEx(CBoxCollider* pSourCol, CTransform* pSourTrans,  CBoxCollider* pDestCol, CTransform* pDestTrans)
 {
 	_float3 vDiff = pDestTrans->Get_State(CTransform::STATE_POSITION) - pSourTrans->Get_State(CTransform::STATE_POSITION);
@@ -311,92 +312,128 @@ void CCollider::AddRayList(const _float3 & _vRayPos, const _float3 & _vRayDir)
 	m_RayList.push_back(make_pair(_vRayPos, _vRayDir));
 }
 
-bool CCollider::Collision_Ray_Top(COLLISIONGROUP eDestGroup, _bool bTurn_Topdee)
-{	
+void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
+{
 	if (m_RayList.empty())
-		return false;
-	list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
-	for (auto& pDest : m_pCollisionObjects[eDestGroup])
-	{	
-		//First : BoxCollider //Second : Transform
-		if (m_pCollisionObjects[eDestGroup].empty())
-			return false;
-
-		CBoxCollider::BOXDESC pBoxDesc = pDest.first->GetBoxDesc();
-		_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
-		_float3 pDestPos{ pDest.second->Get_State(CTransform::STATE_POSITION) };
-		_float3 pBox_Top_VB[4];
-
-		if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
-			pBox_Top_VB[0] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-			pBox_Top_VB[1] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-			pBox_Top_VB[2] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z - pBoxHalfSize.z);
-			pBox_Top_VB[3] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z - pBoxHalfSize.z);
+		return;
+	for (auto& Pair_Ray : m_RayList)
+	{
+		list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
+		if (bTurn_Topdee)
+		{//탑디턴인데 dir이 - z이면 컨티뉴.
+			if (Pair_Ray.second.z < 0.f)
+				continue;
 		}
-		else {//투디턴일땐 x축기준 +된위치에 렉트를 잡아주어야한다.
-			pBox_Top_VB[0] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-			pBox_Top_VB[1] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y + pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-			pBox_Top_VB[2] = _float3(pDestPos.x + pBoxHalfSize.x, pDestPos.y - pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-			pBox_Top_VB[3] = _float3(pDestPos.x - pBoxHalfSize.x, pDestPos.y - pBoxHalfSize.y, pDestPos.z + pBoxHalfSize.z);
-		}
-		float		fU, fV, fDist;
-		for (auto& Pair : m_RayList) {//Pair first = Pos second Dir
-			if (bTurn_Topdee)
-			{//탑디턴인데 dir이 - z이면 컨티뉴.
-				if (Pair.second.z < 0.f)
-					continue;
+		else
+		{//투디턴인데 dir이 -y이면 컨티뉴
+			if (Pair_Ray.second.y < 0.f)
+				continue;
+		} 
+		for (auto& Pair_Box : m_pCollisionObjects[INTEREACTION])
+		{
+			if (m_pCollisionObjects[INTEREACTION].empty())
+				break;
+			_float3 pBoxPos{ Pair_Box.second->Get_State(CTransform::STATE_POSITION) };
+			_float3 vDist((pBoxPos.x - Pair_Ray.first.x), 0.f, (pBoxPos.z - Pair_Ray.first.z));
+			if (D3DXVec3Length(&vDist) > 1.5f)
+				continue;
+
+			CBoxCollider::BOXDESC pBoxDesc = Pair_Box.first->GetBoxDesc();
+			_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
+			_float3 pBox_Top_VB[4];
+			if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
+				pBox_Top_VB[0] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z - pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z - pBoxHalfSize.z);
 			}
-			else
-			{//투디턴인데 dir이 -y이면 컨티뉴
-				if (Pair.second.y < 0.f)
-					continue;
+			else {//투디턴일땐 z축기준 +된위치에 렉트를 잡아주어야한다.
+				pBox_Top_VB[0] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y - pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y - pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
 			}
-			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			float		fU, fV, fDist;
+			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			{//탑디턴일땐y값을 비교해야함.
+				if (!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));
+				else
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));
+			}
+			/* 왼쪽 하단. */
+			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
-				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
-				if (bTurn_Topdee) {
-					pDest.first->GetOwner()->Set_bRayCasted(true);
-					return false;
-				}
+				if (!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));
+				else
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));
+			}
+			Pair_Box.first->GetOwner()->Set_bRayCasted(false);
+		}
+		for (auto& Pair_Player : m_pCollisionObjects[PLAYER])
+		{
+			_float3 pPlayerPos{ Pair_Player.second->Get_State(CTransform::STATE_POSITION) };
+			if (D3DXVec3Length(&_float3((pPlayerPos.x - Pair_Ray.first.x), 0.f, (pPlayerPos.z - Pair_Ray.first.z))) > 1.5f)
+				continue;
+
+			CBoxCollider::BOXDESC pBoxDesc = Pair_Player.first->GetBoxDesc();
+			_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
+			_float3 pBox_Top_VB[4];
+			if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
+				pBox_Top_VB[0] = _float3(pPlayerPos.x - pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pPlayerPos.x + pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pPlayerPos.x + pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z - pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pPlayerPos.x - pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z - pBoxHalfSize.z);
+			}
+			else {//투디턴일땐 z축기준 +된위치에 렉트를 잡아주어야한다.
+				pBox_Top_VB[0] = _float3(pPlayerPos.x - pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pPlayerPos.x + pBoxHalfSize.x, pPlayerPos.y + pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pPlayerPos.x + pBoxHalfSize.x, pPlayerPos.y - pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pPlayerPos.x - pBoxHalfSize.x, pPlayerPos.y - pBoxHalfSize.y, pPlayerPos.z + pBoxHalfSize.z);
+			}
+			float		fU, fV, fDist;
+			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			{
+				if(!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));
+				else
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y));
 			}
 
 			/* 왼쪽 하단. */
-			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair.first, &Pair.second, &fU, &fV, &fDist))
+			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
-				RayCastedList.push_back(make_pair(pDest.first->GetOwner(), pDest.second->Get_State(CTransform::STATE_POSITION).z));
-				if (bTurn_Topdee) {
-					pDest.first->GetOwner()->Set_bRayCasted(true);
-					return false;
-				}
+				if (!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));
+				else
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y));
 			}
-
-			pDest.first->GetOwner()->Set_bRayCasted(false);
+			Pair_Player.first->GetOwner()->Set_bRayCasted(false);
 		}
-	}
-
-	
-	if(bTurn_Topdee)
-		return false;
-	else
-	{
 		if (RayCastedList.empty())
-			return false;
-		_float fBestPosZ{ 0.f };
+			continue;
+		else if (RayCastedList.size() == 1) {
+			RayCastedList.front().first->Set_bRayCasted(true);
+			return;
+		}
+		_float fBestPos{ 0.f };//
 		for (auto& Pair : RayCastedList)
 		{//소팅을해서
-			if( fBestPosZ < Pair.second)
-				fBestPosZ = Pair.second;
+			if (fBestPos < Pair.second)
+				fBestPos = Pair.second;
 		}
 		for (auto&Pair : RayCastedList)
 		{//제일큰놈
-			if (Pair.second == fBestPosZ) {
+			if (Pair.second == fBestPos) {
 				Pair.first->Set_bRayCasted(true);
-				continue;
+				break;
 			}
 		}
-	}
-	return true;
 
+	}
+		
+		
 }
 
 void CCollider::Clear_RayList()

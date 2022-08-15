@@ -3,9 +3,6 @@
 #include "GameObject.h"
 #include "Interaction_Block.h"
 
-BEGIN(Engine)
-class CShader;
-END
 
 BEGIN(Client)
 class CWarpBlock final : public CInteraction_Block
@@ -25,9 +22,6 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
-	CShader* m_pShaderCom = nullptr;
-
 public:
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) {};
 	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) {};
@@ -45,7 +39,6 @@ public:
 private:
 	_uint m_iWBNum;
 	_uint m_iTextureNum =  0 ;
-	_uint m_iShaderSelect = 0;
 	_float m_fShaderTimer = 0.f;
 	DIRECTION m_eDir = DIR_END;
 	

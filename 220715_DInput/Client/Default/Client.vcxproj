@@ -340,6 +340,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_Rect.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Rect_Shadow.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Sky.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

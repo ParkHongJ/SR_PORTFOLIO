@@ -10,6 +10,7 @@ class CVIBuffer_Rect;
 class CTransform;
 class CBoxCollider;
 class CCollider;
+class CShader;
 END
 
 
@@ -39,11 +40,26 @@ private:
 	CTexture*	m_pTextureCom_Rain = nullptr;
 	CTransform* m_pTransformCom_Rain = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_Rain = nullptr;
+//==================================================RainEnd
+	CTexture*	m_pTextureCom_Shadow = nullptr;
+	CTransform*	m_pTransformCom_Shadow = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom_Shadow = nullptr;
+	CShader* m_pShaderCom_Shadow = nullptr;
+//==================================================ShadowEnd
 	CBoxCollider* m_pBoxCom = nullptr;
 	CCollider* m_pColliderCom = nullptr;
 
-public:
-	_float3 Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta);
+private:
+	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
+	{
+		_float3 a = target - current;
+		float magnitude = D3DXVec3Length(&a);
+		if (magnitude <= maxDistanceDelta || magnitude == 0.f)
+		{
+			return target;
+		}
+		return current + a / magnitude * maxDistanceDelta;
+	}
 
 private:
 	HRESULT Set_RenderState();
@@ -63,5 +79,8 @@ private:
 
 	_float3 m_vToodeePos;
 	_float3 m_vTopdeePos;
+
+	_float3 m_vShadow_ToodeePos;
+	_float3 m_vShadow_TopdeePos;
 };
 END

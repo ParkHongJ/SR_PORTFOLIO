@@ -725,6 +725,11 @@ HRESULT CLoader::Loading_ForHongLevel()
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_%d.png"), 6))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Thunder_Cloud_Shadow */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_Shadow/Thunder_Cloud_Shadow_%d.png"), 6))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Particle_Spark */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Spark"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
@@ -920,7 +925,14 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-	
+	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
+		CParticle_Warp::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Warp"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
+		return E_FAIL;
 	/* For.Prototype_GameObject_GravityBlock */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GravityBlock"),
 		CGravityBlock::Create(m_pGraphic_Device))))
@@ -1102,6 +1114,11 @@ HRESULT CLoader::Loading_ForGyuHLevel()
 	/* For.Prototype_Component_Texture_Cloud */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_%d.png"), 6))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Thunder_Cloud_Shadow */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_Shadow/Thunder_Cloud_Shadow_%d.png"), 6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle_Spark */
@@ -1339,7 +1356,7 @@ HRESULT CLoader::Loading_ForGyuTestLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_WarpBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Warp_Block/Warp_Block_%d.dds"), 4))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_Component_Texture_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Warp"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
@@ -1358,6 +1375,11 @@ HRESULT CLoader::Loading_ForGyuTestLevel()
 	/* For.Prototype_Component_Texture_Cloud */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_%d.png"), 6))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Thunder_Cloud_Shadow */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Cloud/Thunder_Cloud/Thunder_Cloud_Shadow/Thunder_Cloud_Shadow_%d.png"), 6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle_Spark */

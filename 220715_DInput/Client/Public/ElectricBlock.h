@@ -29,10 +29,6 @@ private:
 	void TextureChange();
 
 private:
-	HRESULT Set_RenderState();
-	HRESULT Reset_RenderState();
-
-private:
 	HRESULT SetUp_Components();
 
 public:
