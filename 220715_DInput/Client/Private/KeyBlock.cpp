@@ -90,6 +90,14 @@ HRESULT CKeyBlock::Render()
 void CKeyBlock::SetDead()
 {
 	m_bActive = false;
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(TEXT("keySnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_DEFAULT);
+
+	Safe_Release(pGameInstance);
+
 	//Hong Edit For Effect
 	for (int i = 0; i < 7; i++)
 	{

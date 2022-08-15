@@ -41,8 +41,8 @@ HRESULT CLevel_Stage4::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
-	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 

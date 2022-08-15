@@ -83,8 +83,8 @@ void CTopdee::Tick(_float fTimeDelta)
 		{
 			Move_Frame(DIR_UP);
 			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.2f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			if (m_fSoundTimeDelta > 0.5f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 				m_fSoundTimeDelta = 0.f;
 			}
 			m_vTargetDir = { 0.f, 0.f, 1.f };
@@ -107,8 +107,8 @@ void CTopdee::Tick(_float fTimeDelta)
 		{
 			Move_Frame(DIR_DOWN);
 			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.2f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			if (m_fSoundTimeDelta > 0.5f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 				m_fSoundTimeDelta = 0.f;
 			}
 			m_vTargetDir = { 0.f, 0.f, -1.f };
@@ -132,8 +132,8 @@ void CTopdee::Tick(_float fTimeDelta)
 		{
 			Move_Frame(DIR_LEFT);
 			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.2f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			if (m_fSoundTimeDelta > 0.5f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 				m_fSoundTimeDelta = 0.f;
 			}
 			m_vTargetDir = { -1.f, 0.f, 0.f };
@@ -158,8 +158,8 @@ void CTopdee::Tick(_float fTimeDelta)
 		{
 			Move_Frame(DIR_RIGHT);
 			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.2f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			if (m_fSoundTimeDelta > 0.5f) {
+				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 				m_fSoundTimeDelta = 0.f;
 			}
 			m_vTargetDir = { 1.f, 0.f, 0.f };
@@ -223,12 +223,20 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 	RayCastedCheck();
 	if (m_bActive)
 		return;
-	if (m_eCurState == STATE_IDLE)
+
+	if (m_eCurState == STATE_IDLE) {
 		m_iFrame = 17;
+		if (!m_bDiedSnd) {
+			MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+			m_bDiedSnd = true;
+		}
+	}
 
 	m_eCurState = STATE_DEAD;
-	m_fDeadTimer += fTimeDelta;
-	if (m_fDeadTimer > 0.5f)
+
+	m_fDeadTimer += 5.f * fTimeDelta;
+
+	if (m_fDeadTimer > 0.8f)
 	{
 		m_fDeadTimer = 0.f;
 		++m_iFrame;
@@ -844,7 +852,7 @@ HRESULT CTopdee::Reset_ColliderState()
 	return S_OK;
 }
 
-void CTopdee::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+void CTopdee::MakeSound(_tchar * pTag, _uint ID, _float Volum)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);

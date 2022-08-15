@@ -116,6 +116,13 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee")|| other->CompareTag(L"Box"))
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->PlayEffect(TEXT("buttonPressSnd.wav"), C_FMOD::CHANNELID::EFFECT2, SOUND_DEFAULT);
+
+		Safe_Release(pGameInstance);
+
 		m_bPress = true;
 
 		if(!m_bCheck)
@@ -141,6 +148,13 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 
 void CButton::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(TEXT("buttonReleaseSnd.wav"), C_FMOD::CHANNELID::EFFECT2, SOUND_DEFAULT);
+
+	Safe_Release(pGameInstance);
+
 	m_bPress = false;
 	m_bCheck = false;
 

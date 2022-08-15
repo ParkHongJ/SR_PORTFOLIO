@@ -61,7 +61,7 @@ private:
 	CWarpBlock* m_pPartner = nullptr;
 
 private:
-	void MakeSound(_tchar* pTag, _uint ID, _uint Volum);
+	void MakeSound(_tchar* pTag, _uint ID, _float Volum);
 	HRESULT SetUp_Components();
 
 public:

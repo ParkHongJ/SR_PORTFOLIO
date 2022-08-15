@@ -57,7 +57,9 @@ private:
 	_float m_fFrame = 0.f;
 
 	_bool m_bClear = false;
-	_bool m_bNextLeel = false;
+	_bool m_bNextLevel = false;
+	_bool m_bNextLevelSound = false;
+	_float m_fFrame_Time = 0.f;
 	_float m_fFrame_For_TopToo = 0.f;
 };
 END

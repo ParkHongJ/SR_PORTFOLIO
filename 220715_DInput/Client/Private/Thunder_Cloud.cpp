@@ -129,7 +129,7 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 
 	Safe_Release(pGameInstance);
 }

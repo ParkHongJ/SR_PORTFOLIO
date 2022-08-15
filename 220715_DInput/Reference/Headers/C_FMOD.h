@@ -56,10 +56,10 @@ typedef string tstring;
 #define T_FIND_NEXT _tfindnext64
 #endif
 
-#define SOUND_MAX 10.0f
-#define SOUND_MIN 0.0f
-#define SOUND_DEFAULT 5.f
-#define SOUND_WEIGHT 1.f
+#define SOUND_MAX 1.f
+#define SOUND_MIN 0.f
+#define SOUND_DEFAULT 0.5f
+#define SOUND_WEIGHT 0.1f
 #pragma endregion
 
 class ENGINE_DLL C_FMOD final : public CBase
@@ -67,7 +67,14 @@ class ENGINE_DLL C_FMOD final : public CBase
 	DECLARE_SINGLETON(C_FMOD)
 
 public:
-	enum CHANNELID { BGM1, BGM2, PLAYER, EFFECT, UI, SYSTEM_EFFECT, SYSTEM_EFFECT2, SYSTEM_EFFECT3, MAXCHANNEL };
+	enum CHANNELID { 
+		BGM, BGM1, BGM2,
+		PLAYER,
+		EFFECT, EFFECT2, EFFECT3,
+		UI,
+		SYSTEM_EFFECT, SYSTEM_EFFECT2, SYSTEM_EFFECT3,
+		MAXCHANNEL
+	};
 
 private:
 	C_FMOD();

@@ -187,7 +187,7 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 	//이 부분은 한번만 호출됨!
 	if (eDirection == m_eDir)
 	{
-		MakeSound(TEXT("potalInSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+		MakeSound(TEXT("potalInSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 		MakeEffect();
 
 		CTransform* otherTransform = (CTransform*)other->Get_Component(L"Com_Transform");
@@ -196,12 +196,12 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 		//이때 방향도 같이 주고싶다.
 		if (CWarpBlock::DIR_DOWN == m_pPartner->GetDir()) {
 			otherTransform->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y, vPos.z - 0.7f));
-			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 			m_pPartner->MakeEffect();
 		}
 		else {
 			otherTransform->Set_State(CTransform::STATE_POSITION, vPos);
-			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+			MakeSound(TEXT("portalOutSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 			m_pPartner->MakeEffect();
 		}
 	}
@@ -237,7 +237,7 @@ void CWarpBlock::MakeEffect(void)
 	}
 }
 
-void CWarpBlock::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+void CWarpBlock::MakeSound(_tchar * pTag, _uint ID, _float Volum)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);

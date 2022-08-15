@@ -30,6 +30,15 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 void CGameMgr::Tick(_float fTimeDelta)
 {
 	if (Key_Down(DIK_X)) {
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if(TOODEE == m_eGameMode)
+			pGameInstance->PlayEffect(TEXT("transUpSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+		else if(TOPDEE == m_eGameMode)
+			pGameInstance->PlayEffect(TEXT("transDownSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+
+		Safe_Release(pGameInstance);
 		Particle_To_Player();
 		Player_Active();
 	}

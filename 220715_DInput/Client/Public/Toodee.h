@@ -97,7 +97,7 @@ private:
 private:
 	HRESULT SetUp_Components();
 
-	void MakeSound(_tchar* pTag, _uint ID, _uint Volum);
+	void MakeSound(_tchar* pTag, _uint ID, _float Volum);
 	
 public:
 	static CToodee* Create(LPDIRECT3DDEVICE9 pGraphic_Device);

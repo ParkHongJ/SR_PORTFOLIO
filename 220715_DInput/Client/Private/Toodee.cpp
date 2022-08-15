@@ -91,7 +91,7 @@ void CToodee::Tick(_float fTimeDelta)
 					if (!m_bJump) {
 						//Hong Edit For Effect
 						CreateEffect();
-						MakeSound(TEXT("jumpSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+						MakeSound(TEXT("jumpSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 					}
 				}
 
@@ -152,7 +152,7 @@ void CToodee::Tick(_float fTimeDelta)
 		else if (!m_bActive) {
 			m_eToodeeDir = TOODEE_DEAD;
 			if (!m_bDiedSnd) {
-				MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+				MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 				m_bDiedSnd = true;
 			}
 		}
@@ -179,7 +179,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_LEFT:
 				m_fSoundTimeDelta += fTimeDelta;
 				if (m_fSoundTimeDelta > 0.75f) {
-					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 					m_fSoundTimeDelta = 0.f;
 				}
 				break;
@@ -187,7 +187,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_RIGHT:
 				m_fSoundTimeDelta += fTimeDelta;
 				if (m_fSoundTimeDelta > 0.75f) {
-					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 					m_fSoundTimeDelta = 0.f;
 				}
 				break;
@@ -276,7 +276,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			else {
 				if (!m_bDiedEff) {
 					//Hong Edit For Effect
-					for (int i = 0; i < 8; i++) {
+					for (int i = 0; i < 50; i++) {
 						random_device rd;
 						default_random_engine eng(rd());
 						uniform_real_distribution<float> distr(-.5f, .5f);
@@ -485,6 +485,7 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 							m_fJumpPower += 1.f;
 							m_fMaxJumpTime += 0.03f;
 						}
+						m_eToodeeDir = TOODEE_IDLE;
 					}
 					else if (!m_bJump) {
 						m_bJump = true;
@@ -492,6 +493,7 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 						m_fJumpTime = 0.f;
 						m_fJumpPower = 17.f;
 						m_fMaxJumpTime = 0.6f;
+						m_eToodeeDir = TOODEE_IDLE;
 					}
 					break;
 				case CWarpBlock::DIR_RIGHT:
@@ -746,7 +748,7 @@ HRESULT CToodee::SetUp_Components()
 	return S_OK;
 }
 
-void CToodee::MakeSound(_tchar * pTag, _uint ID, _uint Volum)
+void CToodee::MakeSound(_tchar * pTag, _uint ID, _float Volum)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
