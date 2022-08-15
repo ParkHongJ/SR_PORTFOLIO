@@ -3,17 +3,20 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CShader;
 class CTexture;
 class CRenderer;
 class CCollider;
-class CBoxCollider;
 class CTransform;
+class CBoxCollider;
 class CVIBuffer_Terrain_Cube;
 END
 
 BEGIN(Client)//PURE
 class CInteraction_Block : public CGameObject
 {
+protected:
+	enum Shader { SHADER_DEFAULT, SHADER_INHOLE, SHADER_WARP };
 protected:
 	CInteraction_Block(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CInteraction_Block(const CInteraction_Block& rhs);
@@ -29,6 +32,8 @@ public:
 protected:
 	//박스의 능력활성화할지 말지
 	_bool m_bAbility = true;
+	Shader m_eShaderSelect = SHADER_DEFAULT;
+
 #pragma region About_Topdee
 public:
 	_bool KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos);//When Topdee Raise Start
@@ -69,6 +74,7 @@ protected:
 	CVIBuffer_Terrain_Cube*	m_pVIBufferCom = nullptr;
 	CCollider*				m_pCollCom = nullptr;
 	CBoxCollider*			m_pBoxCollider = nullptr;
+	CShader*				m_pShaderCom = nullptr;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

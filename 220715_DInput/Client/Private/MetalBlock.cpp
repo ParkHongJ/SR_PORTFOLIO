@@ -73,19 +73,24 @@ HRESULT CMetalBlock::Render()
 {
 	if (!m_bActive)
 		S_OK;
-	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;
+	_float4x4			WorldMatrix, ViewMatrix, ProjMatrix;
 
-	if (FAILED(m_pTextureCom->Bind_Texture(0)))
-		return E_FAIL;
+	WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
-	if (FAILED(Set_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", D3DXMatrixTranspose(&WorldMatrix, &WorldMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+
+	m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", 0);
+
+
+	m_pShaderCom->Begin(m_eShaderSelect);//0 default, 1 WarpOn
 
 	m_pVIBufferCom->Render();
 
-	if (FAILED(Reset_RenderState()))
-		return E_FAIL;
+	m_pShaderCom->End();
 	return S_OK;
 }
 
@@ -99,23 +104,6 @@ void CMetalBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CMetalBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
 {
-}
-
-HRESULT CMetalBlock::Set_RenderState()
-{
-	if (nullptr == m_pGraphic_Device)
-		return E_FAIL;
-
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	return S_OK;
-}
-
-HRESULT CMetalBlock::Reset_RenderState()
-{
-	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	return S_OK;
 }
 
 HRESULT CMetalBlock::SetUp_Components()
@@ -153,6 +141,10 @@ HRESULT CMetalBlock::SetUp_Components()
 	TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, this, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Cube"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom, this)))
 		return E_FAIL;
 
 	return S_OK;

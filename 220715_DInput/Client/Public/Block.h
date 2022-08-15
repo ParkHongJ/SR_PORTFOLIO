@@ -24,11 +24,7 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
 
 private:
-	_uint m_iTextureNum = 0 ;
-	
-private:
-	HRESULT Set_RenderState();
-	HRESULT Reset_RenderState();
+	_uint m_iTextureNum = 0;
 
 private:
 	HRESULT SetUp_Components();

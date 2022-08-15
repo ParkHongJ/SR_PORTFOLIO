@@ -1,6 +1,6 @@
 
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-textureCUBE		g_Texture;
+texture			g_Texture;
 
 sampler DefaultSampler = sampler_state 
 {
@@ -25,13 +25,13 @@ sampler DefaultSampler1 = sampler_state
 struct VS_IN
 {
 	float3		vPosition : POSITION;
-	float3		vTexUV : TEXCOORD0;
+	float2		vTexUV : TEXCOORD0;
 };
 
 struct VS_OUT
 {
 	float4		vPosition : POSITION;
-	float3		vTexUV : TEXCOORD0;	
+	float2		vTexUV : TEXCOORD0;	
 };
 
 /* πˆ≈ÿΩ∫ ºŒ¿Ã¥ı. */
@@ -52,7 +52,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);	
 	Out.vTexUV = In.vTexUV;	
-
+	/*Out.vTexUV = In.vTexUV + float2(g_time * .25f, 0.f);*/
 	return Out;
 }
 
@@ -63,7 +63,7 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
 	float4		vPosition : POSITION;
-	float3		vTexUV : TEXCOORD0;	
+	float2		vTexUV : TEXCOORD0;	
 };
 
 /* «»º– ºŒ¿Ã¥ı. */
@@ -77,57 +77,21 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out;
 
-	Out.vColor = texCUBE(DefaultSampler, In.vTexUV);
+	Out.vColor = tex2D(DefaultSampler, In.vTexUV);
 	//Out.vColor.rg = Out.vColor.b;
-	/*Out.vColor.b += 0.5f;*/
-	/*Out.vColor.a = 0.5f;*/
-
-	/*vector(1.f, 1.f, In.vTexUV.y, 1.f)*/;
-
-	return Out;
-}
-
-PS_OUT PS_InHole(PS_IN In)
-{
-	PS_OUT		Out;
-
-	Out.vColor = texCUBE(DefaultSampler, In.vTexUV);
-	Out.vColor.rgb -= 0.3f;
 	Out.vColor.a += 0.1f;
 	return Out;
 }
 
-PS_OUT PS_WarpWork(PS_IN In)
-{
-	PS_OUT		Out;
-
-	Out.vColor = texCUBE(DefaultSampler, In.vTexUV);
-	Out.vColor.rg += 0.3f;
-	Out.vColor.b += 0.5f;
-	Out.vColor.a += 0.1f;
-	return Out;
-}
 
 technique DefaultTecnique
 {
 	pass Default
 	{
-		CULLMODE = NONE;
-
+		ALPHABLENDENABLE = true;
+		//ZENABLE = FALSE;
+		//ZWRITEENABLE= FALSE;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
-	}
-	pass InHole
-	{
-		CULLMODE = NONE;
-		VertexShader = compile vs_3_0 VS_MAIN();
-		PixelShader = compile ps_3_0 PS_InHole();
-	}
-
-	pass WarpWork
-	{
-		CULLMODE = NONE;
-		VertexShader = compile vs_3_0 VS_MAIN();
-		PixelShader = compile ps_3_0 PS_WarpWork();
 	}
 }

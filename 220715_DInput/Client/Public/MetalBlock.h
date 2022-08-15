@@ -21,11 +21,8 @@ public:
 	virtual void OnTriggerStay(CGameObject*	other, _float fTimeDelta);
 
 private:
-	HRESULT Set_RenderState();
-	HRESULT Reset_RenderState();
-
-private:
 	HRESULT SetUp_Components();
+
 public:
 	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
 	{

@@ -109,9 +109,6 @@
     <Filter Include="02.GameObject\Block\Wall">
       <UniqueIdentifier>{18e28bcd-a9a4-428d-bd4a-e3ffd836757e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Block\GravityBlock">
-      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Block\KeyBlock">
       <UniqueIdentifier>{22cedf00-fad6-41d4-b8a4-f36f8f4f099f}</UniqueIdentifier>
     </Filter>
@@ -180,6 +177,9 @@
     </Filter>
     <Filter Include="01.Level\STAGES\STAGE_7">
       <UniqueIdentifier>{3f1dbcc0-5bea-4cf0-900f-c9469ff6d71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Block\Interaction_Block\GravityBlock">
+      <UniqueIdentifier>{635b9da7-79f2-4f90-9d6a-43229a543797}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -305,7 +305,7 @@
       <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GravityBlock.h">
-      <Filter>02.GameObject\Block\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\Interaction_Block\GravityBlock</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Particle.h">
       <Filter>02.GameObject\Particle</Filter>
@@ -493,7 +493,7 @@
       <Filter>02.GameObject\Block\KeyBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GravityBlock.cpp">
-      <Filter>02.GameObject\Block\GravityBlock</Filter>
+      <Filter>02.GameObject\Block\Interaction_Block\GravityBlock</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Particle.cpp">
       <Filter>02.GameObject\Particle</Filter>
@@ -584,5 +584,6 @@
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_Rect.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Sky.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Rect_Shadow.hlsl" />
   </ItemGroup>
 </Project>

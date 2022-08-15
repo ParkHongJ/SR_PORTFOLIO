@@ -92,7 +92,7 @@ void CWarpBlock::Tick(_float fTimeDelta)
 	if (m_fShaderTimer > 0.4f)
 	{//쉐이더리셋
 		m_fShaderTimer = 0.f;
-		m_iShaderSelect = 0;
+		m_eShaderSelect = SHADER_DEFAULT;
 	}
 	//포탈을 들거나 미는중에도 텔레포트가 가능해야하기 때문에 틱마다 텔포의 위치를 조정해준다.
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -119,7 +119,7 @@ void CWarpBlock::Tick(_float fTimeDelta)
 	default:
 		break;
 	}
-	if (m_iShaderSelect == 1)
+	if (m_eShaderSelect == SHADER_WARP)
 		m_fShaderTimer += fTimeDelta;
 	
 }
@@ -140,21 +140,6 @@ HRESULT CWarpBlock::Render()
 	if (!m_bActive)
 		S_OK;
 
-	/*if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_Texture(m_iTextureNum)))
-		return E_FAIL;
-
-	if (FAILED(Set_RenderState()))
-		return E_FAIL;
-
-	m_pVIBufferCom->Render();
-
-	if (FAILED(Reset_RenderState()))
-		return E_FAIL;
-
-	return S_OK;*/
 	_float4x4			WorldMatrix, ViewMatrix, ProjMatrix;
 
 	WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -168,7 +153,7 @@ HRESULT CWarpBlock::Render()
 	m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", m_iTextureNum);
 
 
-	m_pShaderCom->Begin(m_iShaderSelect);//0 default, 1 WarpOn
+	m_pShaderCom->Begin(m_eShaderSelect);//0 default, 1 InHole, 2 WarpOn
 
 	m_pVIBufferCom->Render();
 
@@ -187,7 +172,7 @@ void CWarpBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDi
 	//이 부분은 한번만 호출됨!
 	if (eDirection == m_eDir)
 	{
-		m_iShaderSelect = 1;
+		m_eShaderSelect = SHADER_WARP;
 		for (int i = 0; i < 5; i++)
 		{
 			random_device rd;
@@ -300,6 +285,5 @@ CGameObject * CWarpBlock::Clone(void* pArg)
 void CWarpBlock::Free()
 {
 	__super::Free();
-	Safe_Release(m_pShaderCom);
 }
 

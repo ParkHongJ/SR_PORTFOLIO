@@ -40,14 +40,14 @@ HRESULT CLevel_GyuTest::Initialize()
 	ObjInfo.vPos = { 10.f,1.f,10.f };*/
 	if (FAILED(Ready_Layer_ElectricBlock(TEXT("Layer_Cube"))))
 		return E_FAIL;
-
+	
 
 
 	CHong::OBJ_INFO ObjInfo2;
 	ObjInfo2.vPos = { 12.f,1.f,10.f };
 	ObjInfo2.iNumLevel = (_uint)LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_GravityBlock(TEXT("Layer_Cube"), &ObjInfo2)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_GravityBlock(TEXT("Layer_Cube"), &ObjInfo2)))
+	//	return E_FAIL;
 	ObjInfo objInfo3;
 	objInfo3.vPos = _float3(13.5f, .5f, 4.5f);
 	objInfo3.iNumLevel = LEVEL_STAGE1;
@@ -58,10 +58,15 @@ HRESULT CLevel_GyuTest::Initialize()
 	objInfo4.iNumLevel = LEVEL_STAGE1;
 	objInfo4.iDirection = 2;
 
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
-	return E_FAIL;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo4)))
-	return E_FAIL;
+	ObjInfo objInfo5;
+	objInfo5.vPos = _float3(8.5f, .5f, 4.5f);
+	objInfo5.iNumLevel = LEVEL_STAGE1;
+	
+
+	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
+	//return E_FAIL;
+	//if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo4)))
+	//return E_FAIL;
 	
 	
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
@@ -148,10 +153,15 @@ HRESULT CLevel_GyuTest::Ready_Layer_ElectricBlock(const _tchar * pLayerTag, void
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	CHong::OBJ_INFO ObjInfo;
-	ObjInfo.vPos = { 10.f,1.f,10.f };
+	ObjInfo.vPos = { 10.5f,0.5f,10.5f };
 	ObjInfo.iNumLevel = (_uint)LEVEL_STAGE1;
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_ElectricBlock"), LEVEL_STAGE1, pLayerTag, &ObjInfo)))
 		return E_FAIL;
+	//CHong::OBJ_INFO ObjInfo2;
+	//ObjInfo2.vPos = { 12.5f,.5f,10.5f };
+	//ObjInfo2.iNumLevel = (_uint)LEVEL_STAGE1;
+	//if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_ElectricBlock"), LEVEL_STAGE1, pLayerTag, &ObjInfo2)))
+	//	return E_FAIL;
 
 	Safe_Release(pGameInstance);
 	return S_OK;
@@ -309,6 +319,16 @@ HRESULT CLevel_GyuTest::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	_float3 vPos{ 14.5f,0.5f,11.f };
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
 		LEVEL_STAGE1, pLayerTag,vPos)))
+		return E_FAIL;
+
+	 vPos = { 8.5f,0.5f,11.f };
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
+		LEVEL_STAGE1, pLayerTag, vPos)))
+		return E_FAIL;
+	
+	 vPos = { 20.5f,0.5f,11.f };
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Thunder_Cloud"),
+		LEVEL_STAGE1, pLayerTag, vPos)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

@@ -28,34 +28,40 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z-0.01f));
+		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y/*+ 1.5f*/, vPos.z-0.01f));
+		m_pTransformCom_Shadow->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y-0.3f /*+ 1.5f*/, vPos.z - 0.01f));
+		m_pTransformCom_Shadow->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z - 2.f));
-		m_vToodeePos = vPos;
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
+		m_vToodeePos = _float3(vPos.x, vPos.y, vPos.z);
 		vPos.y += 5.f;
 		m_vTopdeePos = vPos;
-	}// 이니셜라이즈 할때 레이를 두방향으로쏠예정 
-	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vTopdeePos.y, vCloudPos.z)		, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 -z방향
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x - 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, m_vTopdeePos.y, vCloudPos.z)	, _float3(0.f, -1.f, 0.f));
-	//----------------------------TopdeeRay End
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	//m_pColliderCom->AddRayList(_float3(vCloudPos.x - 0.5f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	//m_pColliderCom->AddRayList(_float3(vCloudPos.x + 0.5f, m_vToodeePos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	return S_OK;
-}
+		m_vShadow_TopdeePos = _float3{ vPos.x ,0.1f, vPos.z - 3.f };//그림자 보정값.
+		m_vShadow_ToodeePos = _float3(m_vToodeePos.x - 0.1f, 0.1f, m_vToodeePos.z-0.1f);
+	}
 
-_float3 CThunder_Cloud::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
-{
-	return vPos + (vTargetPos - vPos) * fTimeDelta;
+#pragma region Ray
+	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };//이건 투디일때로 시작.
+	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x, 5.f, m_vShadow_TopdeePos.z)		, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 -z방향
+	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x - 1.f, 5.f, m_vShadow_TopdeePos.z)	, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 
+	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x + 1.f, 5.f, m_vShadow_TopdeePos.z)	, _float3(0.f, -1.f, 0.f));
+	//----------------------------TopdeeRay End
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+#pragma endregion Ray	
+	return S_OK;
 }
 
 void CThunder_Cloud::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4   CamWorldMatrix;
+	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
+	_float3 vCameraPos{ (*(_float3*)&CamWorldMatrix.m[3][0]) };
 	//애니메이션 돌리고
 	m_fFrame_Cloud += 6.f * fTimeDelta;
 	if (m_fFrame_Cloud >= 6.0f)
@@ -67,33 +73,47 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 
 	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 	{
+		_float fCam_CloudDist{ (m_vTopdeePos.x - vCameraPos.x) };
 		m_pTransformCom_Cloud->Set_State(
 			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
-				m_vTopdeePos,
-				fTimeDelta * 5.f));
+			MoveTowards(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
+				_float3((fCam_CloudDist*0.25f)+(m_vToodeePos.x),m_vTopdeePos.y,m_vTopdeePos.z),
+				fTimeDelta * 15.f));
 
+		m_pTransformCom_Shadow->Set_State(
+			CTransform::STATE_POSITION,
+			MoveTowards(m_pTransformCom_Shadow->Get_State(CTransform::STATE_POSITION),
+				m_vShadow_TopdeePos,
+				fTimeDelta * 15.f));
+		//탑디일때는 보정값을 줘야함.
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(0.f));
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
-				_float3(m_vTopdeePos.x, m_vTopdeePos.y - 6.f, m_vTopdeePos.z),
-				fTimeDelta * 5.f));
-		//이게 어디에 천둥이치고있는지가 정확하게 보이지않음
+			MoveTowards(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
+				_float3(m_vShadow_TopdeePos.x, m_vShadow_TopdeePos.y + 3.f, m_vShadow_TopdeePos.z+0.5f),
+				fTimeDelta * 15.f));
+	
 		m_bEnabled = false;
 	}
 	else
 	{
 		m_pTransformCom_Cloud->Set_State(
 			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
+			MoveTowards(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION),
 				m_vToodeePos,
-				fTimeDelta * 5.f));
+				fTimeDelta * 15.f));
 
+		m_pTransformCom_Shadow->Set_State(
+			CTransform::STATE_POSITION,
+			MoveTowards(m_pTransformCom_Shadow->Get_State(CTransform::STATE_POSITION),
+				m_vShadow_ToodeePos,
+				fTimeDelta * 15.f));
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
-			Lerp(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
+			MoveTowards(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
 				_float3(m_vToodeePos.x, m_vToodeePos.y, m_vToodeePos.z - 5.f),
-				fTimeDelta * 5.f));
+				fTimeDelta * 15.f));
 
 		m_bEnabled = true;
 	}
@@ -104,32 +124,19 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
-
-#pragma region billboard
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	/* 카메라의 월드행렬이다. */
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	m_pTransformCom_Cloud->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	m_pTransformCom_Cloud->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom_Cloud->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
-	m_pTransformCom_Rain->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	m_pTransformCom_Rain->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom_Rain->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
-#pragma endregion billboard
-
 	m_pRendererCom_Cloud->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-	//m_pRendererCom_Cloud->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
-	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4   CamWorldMatrix;
+	D3DXMatrixInverse(&CamWorldMatrix, nullptr, &ViewMatrix);
+	_float3 vCameraPos{ (*(_float3*)&CamWorldMatrix.m[3][0]) };
+	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
+	m_pTransformCom_Cloud->LookAt(_float3(vCloudPos.x,vCameraPos.y,vCameraPos.z));
+	
+	//pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
 
 	Safe_Release(pGameInstance);
 }
@@ -148,11 +155,35 @@ HRESULT CThunder_Cloud::Render()
 	if (FAILED(Set_RenderState()))
 		return E_FAIL;
 
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	m_pVIBufferCom_Rain->Render();
+	m_pGraphic_Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pGraphic_Device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 	//================================================================RainEnd
+	
+	_float4x4			WorldMatrix, ViewMatrix, ProjMatrix;
+
+	WorldMatrix = m_pTransformCom_Shadow->Get_WorldMatrix();
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+
+	m_pShaderCom_Shadow->Set_RawValue("g_WorldMatrix", D3DXMatrixTranspose(&WorldMatrix, &WorldMatrix), sizeof(_float4x4));
+	m_pShaderCom_Shadow->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom_Shadow->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
+
+	m_pTextureCom_Shadow->Bind_Texture(m_pShaderCom_Shadow, "g_Texture", (_uint)m_fFrame_Cloud);
+
+
+	m_pShaderCom_Shadow->Begin(0);
+
+	m_pVIBufferCom_Shadow->Render();
+
+	m_pShaderCom_Shadow->End();
+	//===========================================================================shadowend
 	if (FAILED(m_pTransformCom_Cloud->Bind_WorldMatrix()))
 		return E_FAIL;
 
@@ -166,14 +197,8 @@ HRESULT CThunder_Cloud::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom_Cloud->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCom->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//--------------------------------------------------------------
-	//문제상황은 탑디일때 어디가 비맞는 위치인지 분간하기가어렵다
 	return S_OK;
+	
 }
 
 void CThunder_Cloud::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
@@ -232,8 +257,6 @@ HRESULT CThunder_Cloud::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_Rain"), (CComponent**)&m_pTransformCom_Rain, this, &TransformDesc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
-		return E_FAIL;
 //==================================================================Rain End
 	
 	/* For.Com_Texture */
@@ -250,7 +273,30 @@ HRESULT CThunder_Cloud::SetUp_Components()
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Cloud"), (CComponent**)&m_pVIBufferCom_Cloud, this, &RectDesc2)))
 		return E_FAIL;
+	
+//=======================================================CloudEnd
 
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"), TEXT("Com_Texture_Shadow"), (CComponent**)&m_pTextureCom_Shadow, this)))
+	return E_FAIL;
+
+	/* For.Com_Transform */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform_Shadow"), (CComponent**)&m_pTransformCom_Shadow, this, &TransformDesc)))
+		return E_FAIL;
+
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Shadow"), (CComponent**)&m_pVIBufferCom_Shadow, this, &RectDesc2)))
+		return E_FAIL;
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Shadow"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom_Shadow, this)))
+		return E_FAIL;
+
+//=======================================================ShadowEnd
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, this)))
+		return E_FAIL;
 	CBoxCollider::BOXDESC BoxColliderDesc;
 	ZeroMemory(&BoxColliderDesc, sizeof(BoxColliderDesc));
 
@@ -303,4 +349,11 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pTextureCom_Rain);
 	Safe_Release(m_pTransformCom_Rain);
 	Safe_Release(m_pVIBufferCom_Rain);
+	//=====================================RainEnd
+
+	Safe_Release(m_pTextureCom_Shadow);
+	Safe_Release(m_pTransformCom_Shadow);
+	Safe_Release(m_pVIBufferCom_Shadow);
+	Safe_Release(m_pShaderCom_Shadow);
+
 }
