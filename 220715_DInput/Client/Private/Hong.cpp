@@ -184,9 +184,9 @@ HRESULT CHong::Render()
 		"WallSpr_0","WallSpr_1","WallSpr_2","WallSpr_3","WallSpr_4","WallSpr_5",
 		"WallSpr_6","WallSpr_7","WallSpr_8","WallSpr_9","WallSpr_10","WallSpr_11",
 		"WallSpr_12","WallSpr_13","WallSpr_14","WallSpr_15"
-
-		/*,"WallSpr_20","WallSpr_21","WallSpr_22","WallSpr_23"
-		,"WallSpr_24","WallSpr_25"*/
+		,"WallSpr_16","WallSpr_17","WallSpr_18","WallSpr_19"
+		,"WallSpr_20","WallSpr_21","WallSpr_22","WallSpr_23"
+		,"WallSpr_24","WallSpr_25"
 	};
 	if (ImGui::BeginListBox("Layers"))
 	{
@@ -414,7 +414,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/Stage2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;

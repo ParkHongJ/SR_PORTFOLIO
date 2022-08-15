@@ -40,6 +40,7 @@ HRESULT CButton::Initialize(void * pArg)
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
+
 		vPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
@@ -51,7 +52,7 @@ HRESULT CButton::Initialize(void * pArg)
 	}
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos.y += 0.6f;
-	vPos.z -= 0.3f;
+	vPos.z += 0.2f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
