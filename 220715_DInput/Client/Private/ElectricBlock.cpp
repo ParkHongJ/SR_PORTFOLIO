@@ -56,7 +56,22 @@ void CElectricBlock::LateTick(_float fTimeDelta)
 	__super::LateTick(fTimeDelta);
 	if (!m_bActive)
 		return;
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ProjMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
 
+	if (vPos.x + 0.1f < -1.f)
+	{
+		return;
+	}
+	else if (vPos.x - 0.1f > 1.f)
+	{
+		return;
+	}
 	if (m_bRayCasted)
 		TextureChange();
 	else

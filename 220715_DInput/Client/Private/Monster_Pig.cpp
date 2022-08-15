@@ -86,6 +86,23 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ProjMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
+
+	if (vPos.x + 0.1f < -1.f)
+	{
+		return;
+	}
+	else if (vPos.x - 0.1f > 1.f)
+	{
+		return;
+	}
+
 	//현재모드
 	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
 	//현재모드와 이전모드를 비교해서 같냐
@@ -171,10 +188,6 @@ void CMonster_Pig::LateTick(_float fTimeDelta)
 		m_bOnBlock = false;
 		m_fDrop_Endline = 0.f; 
 	}
-
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 
 	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
 

@@ -33,14 +33,14 @@ HRESULT CHong::Initialize()
 	Info.iNumLevel = LEVEL_STAGE1;
 	//Info.vPos = _float3(26.f, 1.f, 2.f);
 	Info.vPos = _float3(8.f, 1.f, 13.5f);
-	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
+	/*if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
 		return E_FAIL;
 
 	CToodee::PLAYER_INFO Info2;
 	Info2.iNumLevel = LEVEL_STAGE1;
 	Info2.vPos = _float3(26.f, 1.f, 2.f);
 	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Toodee"), L"Layer_Toodee", &Info2)))
-		return E_FAIL;
+		return E_FAIL;*/
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
@@ -57,7 +57,7 @@ HRESULT CHong::Initialize()
 	Safe_Release(pGameInstance);*/
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 
-	LoadGameObject();
+	//LoadGameObject();
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
@@ -152,6 +152,7 @@ HRESULT CHong::Render()
 		"Thunder_Cloud",
 		"Layer_Cube",
 		"Layer_Cube",
+		"Layer_Cube",
 		"Layer_Cube"
 	};
 	const char* Prototypes[] =
@@ -174,7 +175,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Thunder_Cloud",
 		"Prototype_GameObject_ElectricBlock",
 		"Prototype_GameObject_WarpBlock",
-		"Prototype_GameObject_MetalBlock"
+		"Prototype_GameObject_MetalBlock",
+		"Prototype_GameObject_BreakingBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
@@ -411,7 +413,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -444,7 +446,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

@@ -54,7 +54,6 @@ public:
 		else return FALSE; 
 	}
 	bool GetEnabled() { return m_bEnabled; }
-
 protected:
 	_bool m_bActive;
 	_bool m_bRayCasted = false;
