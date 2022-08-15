@@ -118,6 +118,13 @@ void CKey::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirectio
 
 	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->PlayEffect(TEXT("pickKeySnd.wav"), C_FMOD::CHANNELID::EFFECT2, SOUND_DEFAULT);
+
+		Safe_Release(pGameInstance);
+
 		//키는 사라지고
 		m_bActive = false;
 

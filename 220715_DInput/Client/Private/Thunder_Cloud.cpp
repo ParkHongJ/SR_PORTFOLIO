@@ -126,8 +126,6 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 		return;
 	m_pRendererCom_Cloud->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
 	_float4x4 ViewMatrix;
 	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
 	_float4x4   CamWorldMatrix;
@@ -135,8 +133,11 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 	_float3 vCameraPos{ (*(_float3*)&CamWorldMatrix.m[3][0]) };
 	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
 	m_pTransformCom_Cloud->LookAt(_float3(vCloudPos.x,vCameraPos.y,vCameraPos.z));
-	
-	//pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, (SOUND_MAX / 10));
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
 
 	Safe_Release(pGameInstance);
 }

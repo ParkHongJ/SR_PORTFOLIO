@@ -21,7 +21,7 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("menuMusicSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("menuMusicSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
 
 	Safe_Release(pGameInstance);
 

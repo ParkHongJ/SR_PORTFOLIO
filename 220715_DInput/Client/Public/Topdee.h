@@ -99,8 +99,14 @@ private:
 	_bool m_bTookeeMove = true;
 #pragma endregion Variable
 
+private:
+	_float m_fSoundTimeDelta = 0.f;
+	_bool m_bDiedSnd = false;
+
 #pragma region RenderState
 private:
+	void MakeSound(_tchar* pTag, _uint ID, _float Volum);
+	
 	HRESULT SetUp_Components();
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();

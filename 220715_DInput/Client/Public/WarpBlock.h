@@ -32,9 +32,11 @@ public:
 		m_pPartner = pPartner; 
 	}
 	_float3 GetTeleportPos() { return m_vTeleportPos; }
-	void Rotate_WarpBlock();//탑디가 들고있을때 텍스쳐와함께 시계방향으로 돌릴거야.
 	DIRECTION GetDir() { return m_eDir; }
 	DIRECTION GetPartnerDir() { return m_pPartner->GetDir(); }
+	void Rotate_WarpBlock();//탑디가 들고있을때 텍스쳐와함께 시계방향으로 돌릴거야.
+
+	void MakeEffect(void);
 
 private:
 	_uint m_iWBNum;
@@ -52,6 +54,7 @@ private:
 	CWarpBlock* m_pPartner = nullptr;
 
 private:
+	void MakeSound(_tchar* pTag, _uint ID, _float Volum);
 	HRESULT SetUp_Components();
 
 public:

@@ -261,7 +261,7 @@ void CMonster_Pig::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint e
 	}
 	_float fBoxSize = 1.f;
 	_float fMyLength = .5f;
-	if (other->CompareTag(L"Box")) {
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Wall")) {
 		CTransform* TargetBox = (CTransform*)other->Get_Component(L"Com_Transform");
 		Safe_AddRef(TargetBox);
 

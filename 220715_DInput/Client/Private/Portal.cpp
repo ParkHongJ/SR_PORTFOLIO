@@ -40,7 +40,7 @@ HRESULT CPortal::Initialize(void * pArg)
 
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_Clear", &m_bClear);
-	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_NextLevel", &m_bNextLeel);
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Portal_NextLevel", &m_bNextLevel);
 
 	return S_OK;
 }
@@ -55,10 +55,23 @@ void CPortal::Tick(_float fTimeDelta)
 #pragma region For.Toodee_Topdee_Portal_Spr
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
-		m_fFrame_For_TopToo += 17.0f * fTimeDelta;
+		if (!m_bNextLevelSound) {
+			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+			Safe_AddRef(pGameInstance);
+			pGameInstance->PlayEffect(TEXT("winSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+			Safe_Release(pGameInstance);
+			m_bNextLevelSound = true;
+		}
 
-		if (m_fFrame_For_TopToo >= 17.0f)
-			m_bNextLeel = true;
+		m_fFrame_Time += 5.f * fTimeDelta;
+
+		if (m_fFrame_Time > 0.5f) {
+			if (m_fFrame_For_TopToo > 17)
+				m_bNextLevel = true;
+
+			++m_fFrame_For_TopToo;
+			m_fFrame_Time = 0.f;
+		}
 	}
 	else { 
 		m_fFrame_For_TopToo = 0.f;

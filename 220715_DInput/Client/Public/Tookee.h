@@ -59,6 +59,8 @@ private:
 	_float m_fMaxJumpTime = 0.6f;
 	_float m_fDrop_Endline = 0.f;
 
+	_float m_vGravityPower = 0.f;
+
 	_uint m_ePreMode = 0;
 	_uint m_eCurMode = 0;
 	//투키의 현재상태, TOODE, TOPDEE 분리할까? 말까?

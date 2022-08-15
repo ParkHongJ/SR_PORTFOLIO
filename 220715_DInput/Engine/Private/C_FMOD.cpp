@@ -215,7 +215,6 @@ void C_FMOD::Free()
 		delete[] pair.first;
 		pair.second->release();
 	}
-
 	m_mapSound.clear();
 
 	m_pSystem->release();

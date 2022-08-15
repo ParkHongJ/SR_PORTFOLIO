@@ -41,8 +41,8 @@ HRESULT CLevel_Stage4::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
-	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 
@@ -240,7 +240,7 @@ HRESULT CLevel_Stage4::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE4;
-	Info.vPos = _float3(3.f, 1.f, 3.f);
+	Info.vPos = _float3(1.5f, 1.f, 1.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE4, pLayerTag, &Info)))
 		return E_FAIL;
