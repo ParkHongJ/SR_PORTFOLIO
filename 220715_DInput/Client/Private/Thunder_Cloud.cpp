@@ -28,16 +28,16 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	{
 		_float3 vPos;
 		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z-0.01f));
+		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y/*+ 1.5f*/, vPos.z-0.01f));
 		m_pTransformCom_Shadow->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y-0.3f /*+ 1.5f*/, vPos.z - 0.01f));
 		m_pTransformCom_Shadow->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z - 2.f));
 		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
-		m_vToodeePos = vPos;
+		m_vToodeePos = _float3(vPos.x, vPos.y, vPos.z);
 		vPos.y += 5.f;
 		m_vTopdeePos = vPos;
 		m_vShadow_TopdeePos = _float3{ vPos.x ,0.1f, vPos.z - 3.f };//그림자 보정값.
-		m_vShadow_ToodeePos = _float3(m_vToodeePos.x - 0.1f, m_vToodeePos.y-0.03f, m_vToodeePos.z-0.1f);
+		m_vShadow_ToodeePos = _float3(m_vToodeePos.x - 0.1f, 0.1f, m_vToodeePos.z-0.1f);
 	}
 
 #pragma region Ray
