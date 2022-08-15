@@ -104,7 +104,10 @@ public:
 	//=====WarpBlock=====
 	HRESULT RegisterWarpBlock(class CWarpBlock* pWarpBlock);
 
+	void SetGameMode(_bool _bRunMode) { m_bRunMode = _bRunMode; }
+	_bool GetGameMode() { return m_bRunMode; }
 private:
+	_bool m_bRunMode;
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
 

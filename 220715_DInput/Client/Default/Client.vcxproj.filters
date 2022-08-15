@@ -181,6 +181,12 @@
     <Filter Include="01.Level\STAGES\STAGE_7">
       <UniqueIdentifier>{3f1dbcc0-5bea-4cf0-900f-c9469ff6d71c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_RETURN1">
+      <UniqueIdentifier>{d301ea3a-6f5e-4cc3-bcf3-02a47df5e0b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Wave">
+      <UniqueIdentifier>{30a73361-bcfb-49c9-b173-83f2d41ed707}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -379,6 +385,12 @@
     <ClInclude Include="..\public\Level_Stage7.h">
       <Filter>01.Level\STAGES\STAGE_7</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\STAGE_RETURN1.h">
+      <Filter>01.Level\STAGES\STAGE_RETURN1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Wave.h">
+      <Filter>02.GameObject\Wave</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -566,6 +578,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage7.cpp">
       <Filter>01.Level\STAGES\STAGE_7</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\STAGE_RETURN1.cpp">
+      <Filter>01.Level\STAGES\STAGE_RETURN1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Wave.cpp">
+      <Filter>02.GameObject\Wave</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

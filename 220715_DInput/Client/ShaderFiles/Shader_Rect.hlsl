@@ -97,7 +97,17 @@ PS_OUT PS_PORTAL(PS_IN In)
 
 	return Out;
 }
+PS_OUT PS_WAVE(PS_IN In)
+{
+	PS_OUT		Out;
+	float2 Trans = In.vTexUV + g_time * 0.3f;
+	float4 Noise = tex2D(DefaultSampler1, Trans);
 
+	float2 UV = In.vTexUV + Noise.xy * 0.05f;
+	float4 OutColor = tex2D(DefaultSampler, UV);
+	Out.vColor = OutColor;
+	return Out;
+}
 technique DefaultTecnique
 {
 	pass Default
@@ -110,5 +120,11 @@ technique DefaultTecnique
 	{
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_PORTAL();
+	}
+
+	pass Wave
+	{
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_WAVE();
 	}
 }

@@ -57,7 +57,7 @@ HRESULT CHong::Initialize()
 	Safe_Release(pGameInstance);*/
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 
-	LoadGameObject();
+	//LoadGameObject();
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
@@ -152,6 +152,7 @@ HRESULT CHong::Render()
 		"Thunder_Cloud",
 		"Layer_Cube",
 		"Layer_Cube",
+		"Layer_Cube",
 		"Layer_Cube"
 	};
 	const char* Prototypes[] =
@@ -174,7 +175,8 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_Thunder_Cloud",
 		"Prototype_GameObject_ElectricBlock",
 		"Prototype_GameObject_WarpBlock",
-		"Prototype_GameObject_MetalBlock"
+		"Prototype_GameObject_MetalBlock",
+		"Prototype_GameObject_BreakingBlock"
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =

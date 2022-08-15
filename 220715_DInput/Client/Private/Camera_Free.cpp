@@ -29,7 +29,7 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 	//m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
-
+	m_iNumLevel = LEVEL_STAGE1;
 	m_vLookPos = _float3(14.5f, -1.f, 8.0f);
 	return S_OK;
 }
@@ -114,6 +114,62 @@ void CCamera_Free::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
 
+	//런모드라면
+	if (CGameMgr::Get_Instance()->GetGameMode())
+	{
+		CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_topdee")->front();
+		CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Toodee")->front();
+
+		if (pTopdee == nullptr || pToodee == nullptr)
+			return;
+
+		CTransform* pTopdeeTrans = (CTransform*)(pTopdee->Get_Component(L"Com_Transform"));
+		_float3 vTopdeePos = pTopdeeTrans->Get_State(CTransform::STATE_POSITION);
+
+		CTransform* pToodeeTrans = (CTransform*)(pToodee->Get_Component(L"Com_Transform"));
+		_float3 vToodeePos = pToodeeTrans->Get_State(CTransform::STATE_POSITION);
+
+
+		_float3 vTarget;
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		vTarget = vPos;
+
+		_float4x4 ViewMatrix;
+		_float4x4 ProjMatrix;
+		m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+
+		m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+		_float3 vTopdeeProjPos = vTopdeePos;
+		_float3 vToodeeProjPos = vToodeePos;
+		D3DXVec3TransformCoord(&vTopdeeProjPos, &vTopdeeProjPos, &ViewMatrix);
+		D3DXVec3TransformCoord(&vTopdeeProjPos, &vTopdeeProjPos, &ProjMatrix);
+
+		D3DXVec3TransformCoord(&vToodeeProjPos, &vToodeeProjPos, &ViewMatrix);
+		D3DXVec3TransformCoord(&vToodeeProjPos, &vToodeeProjPos, &ProjMatrix);
+
+		_float vMiddleOffset = abs((vTopdeePos.x - vToodeePos.x) * 0.5f);
+		//만약 탑디가 투디보다 앞에있냐
+		if (vTopdeePos.x > vToodeePos.x)
+		{
+			vToodeePos.x += vMiddleOffset;
+			vTarget.x = vToodeePos.x;
+		}
+		else
+		{
+			//투디가 탑디보다 앞에있냐
+			vTopdeePos.x += vMiddleOffset;
+			vTarget.x = vTopdeePos.x;
+		}
+
+		if (vTarget.x <= LeftOffset || vTarget.x >= RightOffset)
+		{
+			//offset이동
+			_float3 vPosition = Lerp(vPos, vTarget, fTimeDelta * m_fSpeed);
+			m_vLookPos.x += vPosition.x - vPos.x;
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPosition);
+		}
+	}
 	m_pTransformCom->LookAt(m_vLookPos);
 
 	Safe_Release(pGameMgr);
@@ -123,7 +179,7 @@ void CCamera_Free::Tick(_float fTimeDelta)
 
 void CCamera_Free::LateTick(_float fTimeDelta)
 {
-
+	
 }
 
 HRESULT CCamera_Free::Render()
@@ -162,6 +218,12 @@ _float3 CCamera_Free::Lerp(_float3 vPos, _float3 vTargetPos, _float fTimeDelta)
 {
 	//a + (b - a) * t.
 	return vPos + (vTargetPos - vPos) * fTimeDelta;
+}
+
+_float CCamera_Free::Lerp(_float fPos, _float fTargetPos, _float fTimeDelta)
+{
+
+	return fPos + (fTargetPos - fPos) * fTimeDelta;
 }
 
 void CCamera_Free::Free()

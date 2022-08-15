@@ -351,14 +351,6 @@ HRESULT CToodee::Render()
 		return E_FAIL;
 
 	m_pShaderCom->End();
-
-	////---------------------디버그일때 그리기-------------------------
-	//_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	//m_pBoxCom->Render(Matrix);
-	//m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	////--------------------------------------------------------------
-
 	return S_OK;
 }
 
@@ -368,6 +360,11 @@ void CToodee::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 
 void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDireciton)
 {
+	if (other->CompareTag(L"Wave"))
+	{
+		m_bActive = false;
+		m_iTexIndexDied = 0;
+	}
 	if (other->CompareTag(L"Pig")) {
 		m_bActive = false;
 		m_iTexIndexDied = 0;

@@ -222,6 +222,7 @@
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\Sky.h" />
     <ClInclude Include="..\Public\Spike.h" />
+    <ClInclude Include="..\public\STAGE_RETURN1.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Thunder_Cloud.h" />
     <ClInclude Include="..\public\Tookee.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="..\public\Turret.h" />
     <ClInclude Include="..\Public\Wall.h" />
     <ClInclude Include="..\Public\WarpBlock.h" />
+    <ClInclude Include="..\public\Wave.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
@@ -244,6 +246,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Wave.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Block.cpp" />
     <ClCompile Include="..\Private\BreakingBlock.cpp" />
@@ -288,6 +291,7 @@
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
     <ClCompile Include="..\Private\Spike.cpp" />
+    <ClCompile Include="..\private\STAGE_RETURN1.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Thunder_Cloud.cpp" />
     <ClCompile Include="..\private\Tookee.cpp" />
