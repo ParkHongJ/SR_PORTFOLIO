@@ -344,5 +344,13 @@ CLevel_GyuH * CLevel_GyuH::Create(LPDIRECT3DDEVICE9 pGraphic_Device)
 void CLevel_GyuH::Free()
 {
 	__super::Free();
+	for (auto Pair : m_pObjects)
+	{
+		Pair.first->pPrototypeTag.clear();
+		Pair.first->pLayerTag.clear();
+		delete Pair.first;
+		delete Pair.second;
+	}
+	m_pObjects.clear();
 	CParticleMgr::Get_Instance()->Destroy_Instance();
 }
