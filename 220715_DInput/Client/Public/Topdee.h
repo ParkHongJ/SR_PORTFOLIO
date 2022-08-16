@@ -97,6 +97,7 @@ private:
 
 	//Edit Hong
 	_bool m_bTookeeMove = true;
+	_bool m_bInput = true;
 #pragma endregion Variable
 
 private:

@@ -23,14 +23,15 @@ HRESULT CCamera_Free::Initialize_Prototype()
 
 HRESULT CCamera_Free::Initialize(void * pArg)
 {
+
+	m_vLookPos = _float3(14.5f, -1.f, 8.0f);
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	//m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
 	m_iNumLevel = LEVEL_STAGE1;
-	m_vLookPos = _float3(14.5f, -1.f, 8.0f);
 	return S_OK;
 }
 

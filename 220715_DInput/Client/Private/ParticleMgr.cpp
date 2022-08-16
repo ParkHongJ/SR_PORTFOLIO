@@ -25,10 +25,11 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	{
 		MSG_BOX(L"총알 이미 있음");
 	}
+	_uint iLevel = iNumLevel;
+	
 	/*=============
 	===Particles===
 	=============*/
-	_uint iLevel = iNumLevel;
 	for (int i = 0; i < 200; i++)
 	{
 		if (FAILED(pGameInstance->Add_GameObjectToLayer(
@@ -43,12 +44,15 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	{
 		int a = 10;
 	}
+	if (m_Particles->empty())
+	{
+		int a = 10;
+	}
 	//파티클 비활성화 상태로 놓기
 	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
 	{
 		(*iter)->SetActive(FALSE);
 	}
-
 	/*=============
 	====Bullets====
 	=============*/
@@ -64,6 +68,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	//총알 받아오기
 	m_Bullets = pGameInstance->GetLayer(iNumLevel, L"Layer_Bullet");
 
+
 	if (m_Bullets == nullptr)
 	{
 		int a = 1;
@@ -73,6 +78,7 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 	{
 		(*iter)->SetActive(FALSE);
 	}
+	
 
 	/*=============
 	====Buttons====
@@ -216,6 +222,8 @@ void CParticleMgr::CreateParticle(_uint iNumLevel, const _float3& vPos, const _f
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	if (m_Particles == nullptr)
+		return;
 	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
 	{
 		//오브젝트가 죽었다면 

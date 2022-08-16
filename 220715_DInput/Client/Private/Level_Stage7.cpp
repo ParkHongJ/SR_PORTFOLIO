@@ -180,7 +180,7 @@ HRESULT CLevel_Stage7::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;

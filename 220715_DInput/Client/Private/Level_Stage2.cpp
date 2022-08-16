@@ -77,11 +77,29 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE3))))
+			LEVEL_STAGE4))))
 			MSG_BOX(L"∑π∫ß ø¿«¬ Ω«∆–");
 
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
+
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F5))
+	{
+		//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE2))))
+			MSG_BOX(L"∑π∫ß ø¿«¬ Ω«∆–");
+
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
+
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
 		//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -198,7 +216,7 @@ HRESULT CLevel_Stage2::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;

@@ -205,7 +205,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 2.f,2.f,0.f };
+	RectDesc.vSize = { 2.5f,2.5f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this,&RectDesc)))
 		return E_FAIL;
