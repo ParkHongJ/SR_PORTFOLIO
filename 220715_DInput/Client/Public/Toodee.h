@@ -77,8 +77,11 @@ private:
 	_float m_fJumpPower = 17.f;
 	_float m_fJumpTime = 0.f;
 	_float m_fMaxJumpTime = 0.6f;
+	_float m_fForWarpPower = 0.f;
+	_float m_fForWarpTime = 0.f;
+	_float m_fWarpTimer = 0.f;
+	_float m_fTempTimer = 0.f;
 	_float m_fTimeD = 0.f;
-
 	_float m_fDrop_Endline = 0.f;
 
 	_float m_fSoundTimeDelta = 0.f;

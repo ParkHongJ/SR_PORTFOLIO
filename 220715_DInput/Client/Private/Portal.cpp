@@ -151,29 +151,19 @@ HRESULT CPortal::Render()
 	}
 #pragma endregion
 
-	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCom->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//--------------------------------------------------------------
-
 	return S_OK;
 }
 
 void CPortal::OnTriggerExit(CGameObject * other, float fTimeDelta)
 {
-	int a = 10;
 }
 
 void CPortal::OnTriggerEnter(CGameObject * other, float fTimeDelta)
 {
-	int a = 10;
 }
 
 void CPortal::OnTriggerStay(CGameObject * other, float fTimeDelta, _uint eDireciton)
 {
-	int a = 10;
 }
 
 HRESULT CPortal::Set_RenderState()
@@ -205,7 +195,7 @@ HRESULT CPortal::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 2.5f,2.5f,0.f };
+	RectDesc.vSize = { 2.f,2.f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this,&RectDesc)))
 		return E_FAIL;

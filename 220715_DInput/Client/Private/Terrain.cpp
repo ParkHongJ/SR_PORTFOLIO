@@ -20,7 +20,7 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
-	//m_iNumLevel = LEVEL_STAGE1;
+	m_iNumLevel = LEVEL_STAGE1;
 
 	_float3 vPos; 
 	if (pArg != nullptr)

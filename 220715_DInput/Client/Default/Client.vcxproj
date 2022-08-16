@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Cloud.h" />
     <ClInclude Include="..\Public\ElectricBlock.h" />
+    <ClInclude Include="..\public\FadeObject.h" />
     <ClInclude Include="..\public\GravityBlock.h" />
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\FadeObject.cpp" />
     <ClCompile Include="..\Private\Level_Stage6.cpp" />
     <ClCompile Include="..\Wave.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
