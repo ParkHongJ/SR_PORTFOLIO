@@ -38,7 +38,7 @@ HRESULT CToodee::Initialize(void * pArg)
 
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
-
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Dead", &m_bDiedEff);
 	m_fStartPos = ObjInfo.vPos;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_fStartPos);
 	return S_OK;
@@ -271,6 +271,7 @@ void CToodee::LateTick(_float fTimeDelta)
 				if (m_fFrame > 0.8f) {
 					++m_iTexIndexDied;
 					m_fFrame = 0.f;
+					
 				}
 			}
 			else {

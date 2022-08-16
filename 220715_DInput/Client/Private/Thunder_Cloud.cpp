@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
-
+#include "Hong.h"
 CThunder_Cloud::CThunder_Cloud(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -21,15 +21,17 @@ HRESULT CThunder_Cloud::Initialize_Prototype()
 
 HRESULT CThunder_Cloud::Initialize(void * pArg)
 {
-	if (FAILED(SetUp_Components()))
-		return E_FAIL;
-
+	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
-	{
+	{//z위치가 4.5일때부터 이상해짐.
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
 		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
-		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION,  _float3(vPos.x, vPos.y/*+ 1.5f*/, vPos.z-0.01f));
-		m_pTransformCom_Shadow->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y-0.3f /*+ 1.5f*/, vPos.z - 0.01f));
+		vPos = ObjInfo.vPos;
+		if (FAILED(SetUp_Components()))
+			return E_FAIL;
+		m_pTransformCom_Cloud->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y/*+ 1.5f*/, vPos.z - 0.01f));
+		m_pTransformCom_Shadow->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y - 0.3f /*+ 1.5f*/, vPos.z - 0.01f));
 		m_pTransformCom_Shadow->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(CTransform::STATE_POSITION, _float3(vPos.x, vPos.y /*+ 1.5f*/, vPos.z - 2.f));
 		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
@@ -37,9 +39,10 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 		vPos.y += 5.f;
 		m_vTopdeePos = vPos;
 		m_vShadow_TopdeePos = _float3{ vPos.x ,0.1f, vPos.z - 3.f };//그림자 보정값.
-		m_vShadow_ToodeePos = _float3(m_vToodeePos.x - 0.1f, 0.1f, m_vToodeePos.z-0.1f);
+		m_vShadow_ToodeePos = _float3(m_vToodeePos.x - 0.1f, 0.1f, m_vToodeePos.z - 0.1f);
 	}
 
+	
 #pragma region Ray
 	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };//이건 투디일때로 시작.
 	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x, 5.f, m_vShadow_TopdeePos.z)		, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 -z방향
@@ -133,7 +136,10 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 	_float3 vCameraPos{ (*(_float3*)&CamWorldMatrix.m[3][0]) };
 	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
 	m_pTransformCom_Cloud->LookAt(_float3(vCloudPos.x,vCameraPos.y,vCameraPos.z));
-
+	
+	_float3 vScale{ m_pTransformCom_Cloud->Get_Scaled() };
+	if (vCameraPos.z > vCloudPos.z)
+		m_pTransformCom_Cloud->Set_Scaled(_float3(vScale.x, -vScale.y, vScale.z));
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -245,7 +251,7 @@ HRESULT CThunder_Cloud::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Rain"), TEXT("Com_Texture_Rain"), (CComponent**)&m_pTextureCom_Rain, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Rain"), TEXT("Com_Texture_Rain"), (CComponent**)&m_pTextureCom_Rain, this)))
 		return E_FAIL;
 
 
@@ -344,6 +350,7 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pVIBufferCom_Cloud);
 	Safe_Release(m_pRendererCom_Cloud);
 	Safe_Release(m_pTransformCom_Cloud);
+	//===========================================
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pBoxCom);
 	//====================================CloudEnd
@@ -356,5 +363,5 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pTransformCom_Shadow);
 	Safe_Release(m_pVIBufferCom_Shadow);
 	Safe_Release(m_pShaderCom_Shadow);
-
+		
 }

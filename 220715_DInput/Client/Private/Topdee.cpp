@@ -55,6 +55,7 @@ HRESULT CTopdee::Initialize(void * pArg)
 	}
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Topdee_Portal", &m_bPortal);
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Topdee_Dead", &m_bActive);
 	return S_OK;
 }
 
@@ -240,6 +241,7 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 	{
 		m_fDeadTimer = 0.f;
 		++m_iFrame;
+		m_bActive = false;
 	}
 	if (m_iFrame > 21) {
 		m_iFrame = 17;

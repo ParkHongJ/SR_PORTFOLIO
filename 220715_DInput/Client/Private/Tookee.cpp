@@ -35,7 +35,7 @@ HRESULT CTookee::Initialize(void * pArg)
 
 	/* For.Toodee_Col */
 	SetTag(L"Tookee");
-
+	CGameMgr::Get_Instance()->Set_Object_Data(L"Tookee_Dead", &m_bActive);
 	_float3 vPos = ObjInfo.vPos;
 	vPos.z += 3.f;
 	vPos.y = 0.5f;

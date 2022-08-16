@@ -206,6 +206,7 @@
     <ClInclude Include="..\public\Level_Stage3.h" />
     <ClInclude Include="..\public\Level_Stage4.h" />
     <ClInclude Include="..\public\Level_Stage5.h" />
+    <ClInclude Include="..\Public\Level_Stage6.h" />
     <ClInclude Include="..\public\Level_Stage7.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\Public\Loading_BackGround.h" />
@@ -246,6 +247,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Level_Stage6.cpp" />
     <ClCompile Include="..\Wave.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Block.cpp" />

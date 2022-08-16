@@ -154,6 +154,7 @@ HRESULT CHong::Render()
 		"Layer_Cube",
 		"Layer_Cube",
 		"Layer_Cube"
+
 	};
 	const char* Prototypes[] =
 	{
@@ -177,6 +178,7 @@ HRESULT CHong::Render()
 		"Prototype_GameObject_WarpBlock",
 		"Prototype_GameObject_MetalBlock",
 		"Prototype_GameObject_BreakingBlock"
+		
 	};
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
@@ -309,8 +311,8 @@ HRESULT CHong::Render()
 	//			bWorking = FindNextFile();
 	//		}*/
 	//	}
-	//	
-	//}
+	//	16
+	//}31 18
 
 	ImGui::End();
 
@@ -414,7 +416,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_7.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -447,7 +449,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_7.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

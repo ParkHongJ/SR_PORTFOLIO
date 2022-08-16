@@ -112,6 +112,8 @@ void CMainApp::Tick(_float fTimeDelta)
 		m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
 		m_pCollider->Collision_TriggerXXX(CCollider::MONSTER, CCollider::PORTAL, fTimeDelta);
 	}
+	else
+		m_pCollider->Clear_RayList();
 	m_pCollider->EndEx();
 
 }
