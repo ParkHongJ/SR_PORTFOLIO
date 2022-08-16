@@ -57,9 +57,9 @@ HRESULT CLevel_GamePlay::Initialize()
 //	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
 //		return E_FAIL;
 //
-//	objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
-//	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
-//		return E_FAIL;*/
+	objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
+		return E_FAIL;
 //
 //	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo2)))
 //		return E_FAIL;
