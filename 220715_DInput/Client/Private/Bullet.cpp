@@ -83,10 +83,12 @@ void CBullet::LateTick(_float fTimeDelta)
 
 	if (vPos.x + 0.1f < -1.f)
 	{
+		m_bActive = false;
 		return;
 	}
 	else if (vPos.x - 0.1f > 1.f)
 	{
+		m_bActive = false;
 		return;
 	}
 

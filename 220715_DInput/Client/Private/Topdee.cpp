@@ -65,135 +65,146 @@ void CTopdee::Tick(_float fTimeDelta)
 	if (m_bPushBox)
 		m_fPushBoxDelayTimer += fTimeDelta;
 
+	//Edit Hong;
+	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
+		m_bInput = false;
+	}
+
+
+
+
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	DeadCheck(fTimeDelta);
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
-	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
+	if (m_bInput)
 	{
-		if (!m_bActive) {
-			Safe_Release(pGameInstance);
-			return;
-		}
-		_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 CheckTookeePos{ ((_int)vTargetPos.x + 0.5f),0.5f,((_int)vTargetPos.z + 0.5f) };
-		if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
+		if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)
 		{
-			Move_Frame(DIR_UP);
-			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.5f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-				m_fSoundTimeDelta = 0.f;
+			if (!m_bActive) {
+				Safe_Release(pGameInstance);
+				return;
 			}
-			m_vTargetDir = { 0.f, 0.f, 1.f };
-			_float fDist{ -5.f };
-			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			_float3 vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float3 CheckTookeePos{ ((_int)vTargetPos.x + 0.5f),0.5f,((_int)vTargetPos.z + 0.5f) };
+			if (CGameMgr::Get_Instance()->Key_Pressing(DIK_UP))
 			{
-				m_bTookeeMove = false;
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				Move_Frame(DIR_UP);
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.5f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+					m_fSoundTimeDelta = 0.f;
+				}
+				m_vTargetDir = { 0.f, 0.f, 1.f };
+				_float fDist{ -5.f };
+				if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+				{
+					m_bTookeeMove = false;
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
+				vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+				if (m_bTookeeMove) {
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
 			}
-			vTargetPos = m_vTargetDir * TopdeeSpeed *fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			if (m_bTookeeMove) {
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_UP);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
-			}
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
-		{
-			Move_Frame(DIR_DOWN);
-			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.5f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-				m_fSoundTimeDelta = 0.f;
-			}
-			m_vTargetDir = { 0.f, 0.f, -1.f };
-			_float fDist{ -5.f };
-			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_DOWN))
 			{
-				m_bTookeeMove = false;
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				Move_Frame(DIR_DOWN);
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.5f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+					m_fSoundTimeDelta = 0.f;
+				}
+				m_vTargetDir = { 0.f, 0.f, -1.f };
+				_float fDist{ -5.f };
+				if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+				{
+					m_bTookeeMove = false;
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+				//Edit Hong
+				if (m_bTookeeMove) {
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
 			}
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			//Edit Hong
-			if (m_bTookeeMove) {
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_DOWN);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
-			}
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
-		{
-			Move_Frame(DIR_LEFT);
-			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.5f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-				m_fSoundTimeDelta = 0.f;
-			}
-			m_vTargetDir = { -1.f, 0.f, 0.f };
-			_float fDist{ -5.f };
-			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))
 			{
-				m_bTookeeMove = false;
+				Move_Frame(DIR_LEFT);
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.5f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+					m_fSoundTimeDelta = 0.f;
+				}
+				m_vTargetDir = { -1.f, 0.f, 0.f };
+				_float fDist{ -5.f };
+				if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+				{
+					m_bTookeeMove = false;
 
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+				//Edit Hong
+				if (m_bTookeeMove) {
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
 			}
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			//Edit Hong
-			if (m_bTookeeMove) {
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_LEFT);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
-			}
-		}
-		else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
-		{
-			Move_Frame(DIR_RIGHT);
-			m_fSoundTimeDelta += fTimeDelta;
-			if (m_fSoundTimeDelta > 0.5f) {
-				MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-				m_fSoundTimeDelta = 0.f;
-			}
-			m_vTargetDir = { 1.f, 0.f, 0.f };
-			_float fDist{ -5.f };
-			if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 			{
-				m_bTookeeMove = false;
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				Move_Frame(DIR_RIGHT);
+				m_fSoundTimeDelta += fTimeDelta;
+				if (m_fSoundTimeDelta > 0.5f) {
+					MakeSound(TEXT("footstepsSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+					m_fSoundTimeDelta = 0.f;
+				}
+				m_vTargetDir = { 1.f, 0.f, 0.f };
+				_float fDist{ -5.f };
+				if (CGameMgr::Get_Instance()->Check_Not_Go(CheckTookeePos, m_vTargetDir, &fDist, false))
+				{
+					m_bTookeeMove = false;
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
+				vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
+				m_pTransformCom->Translate(vTargetPos);
+				m_bPress = true;
+				//Edit Hong
+				if (m_bTookeeMove) {
+					CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
+					CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+				}
 			}
-			vTargetPos = m_vTargetDir * TopdeeSpeed * fTimeDelta;
-			m_pTransformCom->Translate(vTargetPos);
-			m_bPress = true;
-			//Edit Hong
-			if (m_bTookeeMove) {
-				CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_RIGHT);
-				CGameMgr::Get_Instance()->SetPosition(fTimeDelta, m_vTargetDir);
+			else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
+			{//박스들기.
+				KKK_DropBox(fTimeDelta);
+				KKK_FindBox(fTimeDelta);
+				m_bPress = true;
 			}
-		}
-		else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
-		{//박스들기.
-			KKK_DropBox(fTimeDelta);
-			KKK_FindBox(fTimeDelta);
-			m_bPress = true;
-		}
-		else if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
-		{
-			Rotate_WarpBlock();
+			else if (CGameMgr::Get_Instance()->Key_Down(DIK_SPACE))
+			{
+				Rotate_WarpBlock();
+			}
+			else
+				m_bPress = false;
 		}
 		else
-			m_bPress = false;
+			Not_My_Turn_Texture();
 	}
-	else
-		Not_My_Turn_Texture();
 	if (!m_bPress && m_bActive)
 	{
 		Go_Lerp(fTimeDelta);
@@ -201,6 +212,7 @@ void CTopdee::Tick(_float fTimeDelta)
 		//키를뗏으면 투키를 보정시켜라
 		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::TOOKEE_IDLE);
 	}
+
 	m_bTookeeMove = true;
 	Safe_Release(pGameInstance);
 }

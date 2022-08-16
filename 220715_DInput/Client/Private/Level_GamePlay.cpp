@@ -51,33 +51,35 @@ HRESULT CLevel_GamePlay::Initialize()
 	objInfo3.iNumLevel = LEVEL_STAGE1;
 	objInfo3.iDirection = 0;
 
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
-		return E_FAIL;
-
-	objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
-		return E_FAIL;
-
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo2)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo3)))
-		return E_FAIL;*/
-
-	objInfo3;
-	objInfo3.vPos = _float3(6.5f, .5f, 1.5f);
-	objInfo3.iNumLevel = LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Hole", L"Layer_Hole", &objInfo3)))
-		return E_FAIL;
-	ObjInfo objInfo;
-	//Y값 무조건 0.5 제일중요
-	objInfo.vPos = _float3(3.f,.5f,3.f);
-	objInfo.iNumLevel = LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
-		return E_FAIL;
+//	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
+//		return E_FAIL;
+//
+//	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
+//		return E_FAIL;
+//
+//	objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
+//	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
+//		return E_FAIL;*/
+//
+//	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo2)))
+//		return E_FAIL;
+//*/
+//
+//	objInfo3.vPos = _float3(3.5f, .5f, 5.5f);
+//	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_KeyBox", L"Layer_KeyBox", &objInfo3)))
+//		return E_FAIL;
+//
+//	objInfo3;
+//	objInfo3.vPos = _float3(6.5f, .5f, 1.5f);
+//	objInfo3.iNumLevel = LEVEL_STAGE1;
+//	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Hole", L"Layer_Hole", &objInfo3)))
+//		return E_FAIL;
+//	ObjInfo objInfo;
+//	//Y값 무조건 0.5 제일중요
+//	objInfo.vPos = _float3(3.f,.5f,3.f);
+//	objInfo.iNumLevel = LEVEL_STAGE1;
+//	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
+//		return E_FAIL;
 	//==================================================================================
 	LoadGameObject();
 
@@ -179,7 +181,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -202,12 +204,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag)))
+
+	_uint iNumLevel = LEVEL_STAGE1;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag, &iNumLevel)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))
+	/*if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
-
+*/
 	Safe_Release(pGameInstance);
 
 	return S_OK;

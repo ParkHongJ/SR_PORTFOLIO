@@ -499,7 +499,7 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		}
 	}
 	/* TOPDEE */
-	else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Box") || other->CompareTag(L"Wall"))
+	else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Box"))
 	{
 		//To do TOPDEE
 		//이거 위치 비교로도 가능.
@@ -637,6 +637,14 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		}
 		m_bPushBox = true;
 
+	}
+	else if (m_eCurMode == CGameMgr::TOPDEE && other->CompareTag(L"Wall"))
+	{
+		//To do TOPDEE
+		//이거 위치 비교로도 가능.
+		CTransform* pTransform = (CTransform*)(other->Get_Component(L"Com_Transform"));
+		_float3 vOtherPos = pTransform->Get_State(CTransform::STATE_POSITION);//부딪힌 상자.
+		TopdeeIsPushed(vOtherPos);//투키가 밀려나는거.
 	}
 }
 

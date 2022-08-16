@@ -89,7 +89,8 @@ private:
 
 	_float m_fTimedelta;
 	_float tick;
-
+	//Edit Hong
+	_bool m_bInput = true;
 private:
 	HRESULT Set_RenderState();
 	HRESULT Reset_RenderState();
