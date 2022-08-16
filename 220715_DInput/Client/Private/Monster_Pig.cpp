@@ -49,7 +49,7 @@ HRESULT CMonster_Pig::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-	m_fSpeed = 3.f;
+	m_fSpeed = 2.f;
 	return S_OK;
 }
 

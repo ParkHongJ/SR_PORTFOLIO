@@ -128,6 +128,23 @@ void CButtonBlock::SetDead()
 			vPos - vPos2,
 			CParticleMgr::BUTTON);
 	}
+
+	for (int i = 0; i < 7; i++)
+	{
+		random_device rd;
+		default_random_engine eng(rd());
+		uniform_real_distribution<float> distr(-.8f, .8f);
+		//random float
+
+		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		vPos.x += distr(eng);
+		vPos.z += distr(eng);
+		CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			vPos,
+			vPos - vPos2,
+			CParticleMgr::PARTICLE);
+	}
 }
 
 HRESULT CButtonBlock::SetUp_Components()
