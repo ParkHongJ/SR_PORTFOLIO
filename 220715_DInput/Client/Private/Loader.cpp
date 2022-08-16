@@ -634,7 +634,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_2.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_1.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Toodee */
@@ -1626,6 +1626,16 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 		CParticle_Button::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Button */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Button"),
+		CButton::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ButtonBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ButtonBlock"),
+		CButtonBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pGraphic_Device))))
@@ -1634,6 +1644,11 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	/* For.Prototype_GameObject_Bullet */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
 		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Monster_Pig */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster_Pig"),
+		CMonster_Pig::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Spike */
@@ -1669,7 +1684,7 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_1.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Toodee */
@@ -1695,7 +1710,17 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	/* 이거 수정해라 */
 	/* For.Prototype_Component_Texture_Stage1_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/DefaultWall_%d.dds"), 6))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 26))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Button */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Button"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Button/buttonSpr_0%d.png"), 2))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_ButtonBlock */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_ButtonBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Button/ButtonBox_%d.dds"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Portal */
@@ -1711,6 +1736,11 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	/* For.Prototype_Component_Texture_Hole */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Hole"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Hole/Hole_%d.png"), 2))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Monster_Pig */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Monster_Pig"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/MonsterPig/pigSpr_%d.png"), 9))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Cloud */

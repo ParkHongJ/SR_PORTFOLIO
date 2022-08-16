@@ -110,6 +110,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 		//구충돌로 비교하면서 OnTrigger호출
 		m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
+		m_pCollider->Collision_TriggerXXX(CCollider::MONSTER, CCollider::PORTAL, fTimeDelta);
 	}
 	m_pCollider->EndEx();
 

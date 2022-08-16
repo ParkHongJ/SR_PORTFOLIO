@@ -181,11 +181,12 @@ HRESULT CHong::Render()
 	ImGui::ListBox("Prototypes", &item_current, Prototypes, IM_ARRAYSIZE(Prototypes), 6);
 	const char* TexIndex[] =
 	{
-		"TEX_0","TEX_1","TEX_2","TEX_3","TEX_4","TEX_5",
-		"TEX_6","TEX_7","TEX_8","TEX_9","TEX_10","TEX_11",
-		"TEX_12","TEX_13","TEX_14","TEX_15","TEX_16","TEX_17"
-		,"TEX_18","TEX_19","TEX_20","TEX_21","TEX_22","TEX_23"
-		,"TEX_24","TEX_25"
+		"WallSpr_0","WallSpr_1","WallSpr_2","WallSpr_3","WallSpr_4","WallSpr_5",
+		"WallSpr_6","WallSpr_7","WallSpr_8","WallSpr_9","WallSpr_10","WallSpr_11",
+		"WallSpr_12","WallSpr_13","WallSpr_14","WallSpr_15"
+		,"WallSpr_16","WallSpr_17","WallSpr_18","WallSpr_19"
+		,"WallSpr_20","WallSpr_21","WallSpr_22","WallSpr_23"
+		,"WallSpr_24","WallSpr_25"
 	};
 	if (ImGui::BeginListBox("Layers"))
 	{
@@ -413,7 +414,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_2.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -446,7 +447,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST5.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

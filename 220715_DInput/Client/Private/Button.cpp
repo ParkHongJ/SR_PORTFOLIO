@@ -40,6 +40,7 @@ HRESULT CButton::Initialize(void * pArg)
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
+
 		vPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
@@ -51,7 +52,7 @@ HRESULT CButton::Initialize(void * pArg)
 	}
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos.y += 0.6f;
-	vPos.z -= 0.3f;
+	vPos.z += 0.2f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
@@ -255,7 +256,7 @@ HRESULT CButton::SetUp_Components()
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(1.8f, 0.5f, 1.f);
 	BoxColliderDesc.bIsTrigger = true;
-	BoxColliderDesc.fRadius = 0.2f;
+	BoxColliderDesc.fRadius = 1.f;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;
