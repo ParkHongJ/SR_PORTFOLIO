@@ -44,6 +44,7 @@ public:
 	HRESULT Loading_ForLEVEL3(_uint iNumLevel);
 	HRESULT Loading_ForLEVEL4(_uint iNumLevel);
 	HRESULT Loading_ForLEVEL5(_uint iNumLevel);
+	HRESULT Loading_ForLEVEL6(_uint iNumLevel);
 	HRESULT Loading_ForLEVEL7(_uint iNumLevel);
 private:
 	LPDIRECT3DDEVICE9	m_pGraphic_Device = nullptr;

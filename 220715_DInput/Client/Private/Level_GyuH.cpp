@@ -18,59 +18,24 @@ HRESULT CLevel_GyuH::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	LoadGameObject();
+
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-	CTopdee::PLAYER_INFO Info;
-	Info.iNumLevel = LEVEL_STAGE1;
-	Info.vPos = _float3(3.f, 1.f, 10.f);
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"), &Info)))
+
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
-	return E_FAIL;
-	
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
-	/* vInitPos= { 10.5f,0.26f,5.5f };
-	for (_uint i = 0; i < 3; ++i) {
-		vInitPos.x += 1.0f;
-		vInitPos.y = 0.26f;
-		if (FAILED(Ready_Layer_Hole(TEXT("Layer_Hole"), vInitPos)))
-			return E_FAIL;
-	}
-
-	vInitPos = { 7.f,0.5f,10.5f };
-	for (_uint i = 0; i < 3; ++i) {
-		vInitPos.z -= 1.0f;
-		if (FAILED(Ready_Layer_Spike(TEXT("Layer_Spike"), vInitPos)))
-			return E_FAIL;
-	}
-
-	vInitPos = { 12.5f,0.5f,11.5f };
-	for (_uint i = 0; i < 4; ++i) {
-		vInitPos.z -= 1.0f;
-		if (FAILED(Ready_Layer_Block((L"Layer_Cube"), vInitPos)))
-			return E_FAIL;
-	}
-
-	_float4 vec4Struct{ 4.5f,0.5f,10.5f, 1.f };
-	if (FAILED(Ready_Layer_WarpBlock((L"Layer_Cube"), vec4Struct)))
-		return E_FAIL;*/
-
-	/*_float4 vec4Struct = { 5.5f,0.5f,10.5f, 0.f };
-	if (FAILED(Ready_Layer_ElectricBlock((L"Layer_Cube"), vec4Struct)))
-		return E_FAIL;*/
-
+	
+	LoadGameObject();
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole",	true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
-	return S_OK;
-
 }
 
 void CLevel_GyuH::Tick(_float fTimeDelta)
@@ -195,7 +160,7 @@ HRESULT CLevel_GyuH::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tch
 
 void CLevel_GyuH::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/TEST2.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -299,9 +264,12 @@ HRESULT CLevel_GyuH::Ready_Layer_Topdee(const _tchar * pLayerTag,void* pArg)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
+	CTopdee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE1;
+	//Info.vPos = _float3(26.f, 1.f, 2.f);
+	Info.vPos = _float3(26.f, 1.f, 5.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"), 
-		LEVEL_STAGE1, pLayerTag, pArg)))
+		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

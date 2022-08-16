@@ -111,6 +111,8 @@ void CMainApp::Tick(_float fTimeDelta)
 		//구충돌로 비교하면서 OnTrigger호출
 		m_pCollider->Collision_TriggerXXX(CCollider::PLAYER, CCollider::PORTAL, fTimeDelta);
 	}
+	else
+		m_pCollider->Clear_RayList();
 	m_pCollider->EndEx();
 
 }
