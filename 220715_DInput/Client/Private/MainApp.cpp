@@ -301,6 +301,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Rect_Shadow.hlsl")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Leaf*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Leaf"),
+		CShader::Create(m_pGraphic_Device, TEXT("../ShaderFiles/Shader_Leaf.hlsl")))))
+		return E_FAIL;
+	
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;

@@ -37,6 +37,7 @@
 #include "Key.h"
 #include "MetalBlock.h"
 #include "Wave.h"
+#include "Leaf.h"
 
 CLoader::CLoader(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: m_pGraphic_Device(pGraphic_Device)
@@ -1675,9 +1676,20 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	--프로토타입 생성--
 	----------------*/
 	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Leaf"),
+		CLeaf::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Leaf */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Leaf/theme2LeafSpr_%d.png"), 3))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
 		CParticle_Warp::Create(m_pGraphic_Device))))
 		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Warp"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))

@@ -268,10 +268,10 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 			_float3 vPos2 = vPos;
 			vPos.x += distr(eng);
 			vPos.z += distr(eng);
-			/*CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
-				CParticleMgr::PARTICLE);*/
+				CParticleMgr::PARTICLE);
 		}
 
 	}
@@ -647,6 +647,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			_float3 vPos{ pTransform->Get_State(CTransform::STATE_POSITION) };
 			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
 		}
+		
 		m_bPushBox = true;
 	}
 	else if (other->CompareTag(L"Box"))
@@ -713,6 +714,10 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			CTransform* pTransform = (CTransform*)pBlock->Get_Component(L"Com_Transform");
 			_float3 vPos{ pTransform->Get_State(CTransform::STATE_POSITION) };
 			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
+		}
+		if (m_fSoundTimeDelta > 0.5f) {
+			MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
+			m_fSoundTimeDelta = 0.f;
 		}
 		m_bPushBox = true;
 	}

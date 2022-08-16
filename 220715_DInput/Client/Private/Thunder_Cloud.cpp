@@ -284,12 +284,6 @@ HRESULT CThunder_Cloud::Render()
 	if (!m_bActive)
 		return S_OK;
 	
-	ImGui::Begin("SelectFolder2");
-	ImGui::DragFloat3("Position", m_vTopdeeRainPos, 0.1f, 0.0f, 200.f);
-	ImGui::DragFloat3("cloud", m_vTopdeePos, 0.1f, 0.0f, 200.f);
-	ImGui::DragFloat3("cloudPosition2", m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION), 0.1f, 0.0f, 200.f);
-
-	ImGui::End();
 	if ((CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOPDEE)&&(m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION).y>4.5f))
 	{
 		if (FAILED(m_pTransformCom_RainTopdee->Bind_WorldMatrix()))
@@ -528,6 +522,10 @@ void CThunder_Cloud::Free()
 	Safe_Release(m_pTextureCom_Rain);
 	Safe_Release(m_pTransformCom_Rain);
 	Safe_Release(m_pVIBufferCom_Rain);
+
+	Safe_Release(m_pTextureCom_RainTopdee);
+	Safe_Release(m_pTransformCom_RainTopdee);
+	Safe_Release(m_pVIBufferCom_RainTopdee);
 	//=====================================RainEnd
 
 	Safe_Release(m_pTextureCom_Shadow);

@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "GameObject.h"
-
+#include "GameInstance.h"
 BEGIN(Engine)
 class CShader;
 class CTexture;
@@ -46,7 +46,15 @@ public:
 	_bool Get_bTopdeeRaise() { return m_bTopdeeRaise; }
 	void Set_bTopdeeRaise(_bool _bTopdeeRaise) { m_bTopdeeRaise = _bTopdeeRaise; }
 	_bool Get_bDropFinish(){ return m_bDropFinish; }
+	void MakeSound(_tchar * pTag, _uint ID, _float Volum)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		pGameInstance->PlayEffect(pTag, ID, Volum);
+
+		Safe_Release(pGameInstance);
+	}
 public:
 	_float3 MoveTowards(_float3 current, _float3 target, float maxDistanceDelta)
 	{
@@ -64,7 +72,7 @@ protected:
 	_bool m_bTopdeeRaise{ false };
 	_bool m_bDropFinish{ false };//완전히 떨어져서 쓸모없어진거
 	_float3 m_vPushFinishPos{ 0.f,0.f,0.f };
-	
+	_float m_fSoundTimeDelta{ 0.f };
 #pragma endregion About_Topdee
 
 protected:

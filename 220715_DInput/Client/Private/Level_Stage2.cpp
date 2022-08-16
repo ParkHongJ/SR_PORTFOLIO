@@ -33,7 +33,13 @@ HRESULT CLevel_Stage2::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
-	LoadGameObject();
+	//LoadGameObject();
+	ObjInfo ObjInfo;
+	ObjInfo.iNumLevel = LEVEL_STAGE2;
+
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
+		return E_FAIL;
+
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE2);
 

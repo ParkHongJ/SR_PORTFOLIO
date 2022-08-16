@@ -190,6 +190,9 @@
     <Filter Include="01.Level\STAGES\STAGE_6">
       <UniqueIdentifier>{0b74e2ea-3713-41f7-a7c1-3a2b607999f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Leaf">
+      <UniqueIdentifier>{40e9abdb-f5ec-47f6-a42b-eff3391a7d6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -397,6 +400,9 @@
     <ClInclude Include="..\Public\Level_Stage6.h">
       <Filter>01.Level\STAGES\STAGE_6</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Leaf.h">
+      <Filter>02.GameObject\Leaf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -594,6 +600,9 @@
     <ClCompile Include="..\Private\Level_Stage6.cpp">
       <Filter>01.Level\STAGES\STAGE_6</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Leaf.cpp">
+      <Filter>02.GameObject\Leaf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -612,5 +621,6 @@
     <FxCompile Include="..\ShaderFiles\Shader_Rect.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Sky.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Rect_Shadow.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Leaf.hlsl" />
   </ItemGroup>
 </Project>

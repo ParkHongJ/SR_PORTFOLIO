@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
-
+#include "C_FMOD.h"
 CInteraction_Block::CInteraction_Block(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -98,6 +98,11 @@ void CInteraction_Block::Box_Drop_More(_float fTimeDelta)
 {
 	m_bEnabled = false;
 	m_eShaderSelect = SHADER_INHOLE;
+	m_fSoundTimeDelta += fTimeDelta;
+	if (m_fSoundTimeDelta > 0.5f) {
+		MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
+		m_fSoundTimeDelta = 0.f;
+	}
 	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
 	if (vBoxCurPos.y <= -0.45f) {//final Position is -0.45
 		vBoxCurPos.y = -0.45f;
