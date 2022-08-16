@@ -634,7 +634,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_2.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_3.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Toodee */
@@ -665,7 +665,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 
 	/* For.Prototype_Component_Texture_Stage1_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 26))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_%d.dds"), 20))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_KeyBox */

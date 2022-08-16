@@ -187,6 +187,9 @@
     <Filter Include="02.GameObject\Wave">
       <UniqueIdentifier>{30a73361-bcfb-49c9-b173-83f2d41ed707}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_8">
+      <UniqueIdentifier>{c77594f2-618a-4f4e-bbec-4093a848a84a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -391,6 +394,9 @@
     <ClInclude Include="..\public\Wave.h">
       <Filter>02.GameObject\Wave</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Stage8.h">
+      <Filter>01.Level\STAGES\STAGE_8</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -584,6 +590,9 @@
     </ClCompile>
     <ClCompile Include="..\Wave.cpp">
       <Filter>02.GameObject\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Stage8.cpp">
+      <Filter>01.Level\STAGES\STAGE_8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
