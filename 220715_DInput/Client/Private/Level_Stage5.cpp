@@ -30,8 +30,12 @@ HRESULT CLevel_Stage5::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
+
 	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE5);
@@ -48,19 +52,44 @@ void CLevel_Stage5::Tick(_float fTimeDelta)
 
 	CGameMgr::Get_Instance()->Tick(fTimeDelta);
 
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
+	//if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
+	//	//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+	//	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	//	Safe_AddRef(pGameInstance);
+
+	//	if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+	//		LEVEL_STAGE7))))
+	//		MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+	//	CGameMgr::Get_Instance()->m_bLoadFinish = false;
+	//	Safe_Release(pGameInstance);
+	//}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F4)) {
 		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE1))))
+			LEVEL_STAGE6))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F5)) {
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE5))))
 			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
 }
+
 
 HRESULT CLevel_Stage5::Render()
 {
@@ -74,7 +103,7 @@ HRESULT CLevel_Stage5::Render()
 
 void CLevel_Stage5::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_TEST.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_5.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -143,7 +172,7 @@ HRESULT CLevel_Stage5::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -188,7 +217,7 @@ HRESULT CLevel_Stage5::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE5;
-	Info.vPos = _float3(27.f, 1.f, 5.f);
+	Info.vPos = _float3(27.f, 1.f, 1.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE5, pLayerTag, &Info)))
 		return E_FAIL;
@@ -205,7 +234,7 @@ HRESULT CLevel_Stage5::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE5;
-	Info.vPos = _float3(3.f, 1.f, 13.f);
+	Info.vPos = _float3(25.f, 1.f, 12.f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE5, pLayerTag, &Info)))
 		return E_FAIL;
@@ -214,6 +243,25 @@ HRESULT CLevel_Stage5::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	return S_OK;
 }
+
+HRESULT CLevel_Stage5::Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg /*= nullptr*/)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	OBJ_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE5;
+
+	Info.vPos = _float3(10.f, 1.f, 1.f);
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Tookee"),
+		LEVEL_STAGE5, pLayerTag, &Info)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 
 HRESULT CLevel_Stage5::Ready_Layer_Object(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void * pArg)
 {
@@ -256,4 +304,18 @@ void CLevel_Stage5::Free()
 	m_pObjects.clear();
 
 	CParticleMgr::Get_Instance()->Destroy_Instance();
+}
+
+HRESULT CLevel_Stage5::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }

@@ -30,7 +30,8 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
-
+	void TopdeeRainPosMgr(_float fCamX);
+	void TopdeeRain_CloudInitMgr();
 private:
 	CTexture* m_pTextureCom_Cloud = nullptr;
 	CRenderer* m_pRendererCom_Cloud = nullptr;
@@ -40,6 +41,10 @@ private:
 	CTexture*	m_pTextureCom_Rain = nullptr;
 	CTransform* m_pTransformCom_Rain = nullptr;
 	CVIBuffer_Rect* m_pVIBufferCom_Rain = nullptr;
+
+	CTexture*	m_pTextureCom_RainTopdee = nullptr;
+	CTransform* m_pTransformCom_RainTopdee = nullptr;
+	CVIBuffer_Rect* m_pVIBufferCom_RainTopdee = nullptr;
 //==================================================RainEnd
 	CTexture*	m_pTextureCom_Shadow = nullptr;
 	CTransform*	m_pTransformCom_Shadow = nullptr;
@@ -82,5 +87,10 @@ private:
 
 	_float3 m_vShadow_ToodeePos;
 	_float3 m_vShadow_TopdeePos;
+
+	_float3 m_vTopdeeRainPos;
+	_float m_fCam_CloudDist = -1000.f;
+	_float3 m_vCloudRealPos = {};
+		
 };
 END

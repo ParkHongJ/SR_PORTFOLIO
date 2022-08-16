@@ -28,7 +28,7 @@ public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	GAMEMODE GetMode() { return m_eGameMode; }
-	
+
 #pragma region about Hole
 public://Kyu. When We OpenLevel, We have to Call This Function. It can Make CanNotGo Spot.
 	void Open_Level_Append_ObstaclePos(LEVEL eLayerLevel, const _tchar* pLayerTag,_bool bHole);//Caution!! Obstacle Cannot change Pos.

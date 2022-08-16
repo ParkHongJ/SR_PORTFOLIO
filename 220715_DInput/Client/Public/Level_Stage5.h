@@ -21,6 +21,9 @@ private:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);//toodee
+
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
 	typedef struct TagInfo
@@ -28,6 +31,7 @@ private:
 		wstring pPrototypeTag;
 		wstring pLayerTag;
 	}TAG_INFO;
+
 	typedef struct ObjInfo
 	{
 		_float3 vPos;

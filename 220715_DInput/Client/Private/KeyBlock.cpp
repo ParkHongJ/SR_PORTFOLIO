@@ -2,6 +2,7 @@
 #include "..\Public\KeyBlock.h"
 
 #include "GameInstance.h"
+
 #include "ParticleMgr.h"
 #include "Hong.h"
 CKeyBlock::CKeyBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -29,7 +30,9 @@ HRESULT CKeyBlock::Initialize(void* pArg)
 	{
 		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
 		m_iNumLevel = ObjInfo.iNumLevel;
+		
 	}
+	
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 	//======================
