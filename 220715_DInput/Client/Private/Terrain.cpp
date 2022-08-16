@@ -20,24 +20,24 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
-	//m_iNumLevel = LEVEL_STAGE1;
+	m_iNumLevel = LEVEL_STAGE1;
 
-	_float3 vPos; 
+	_float3 vPos;
 	if (pArg != nullptr)
 	{
-	
+
 		//hong test
-		//memcpy(&vPos, pArg, sizeof(_float3));
+		memcpy(&vPos, pArg, sizeof(_float3));
 		//memcpy(&m_iNumLevel, pArg, sizeof(_uint));
-		m_iNumLevel = *(_uint*)pArg;
+		//m_iNumLevel = (_uint)pArg;
 	}
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
 	//15, 8
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fSizeX / 2.f,0.f, m_fSizeY / 2.f));
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fSizeX / 2.f,0.f, m_fSizeY / 2.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
 

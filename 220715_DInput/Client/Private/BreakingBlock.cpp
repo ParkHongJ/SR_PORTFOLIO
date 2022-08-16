@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "ParticleMgr.h"
 #include "GameMgr.h"
+#include "Hong.h"
 
 CBreakingBlock::CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
@@ -28,11 +29,19 @@ HRESULT CBreakingBlock::Initialize_Prototype()
 
 HRESULT CBreakingBlock::Initialize(void * pArg)
 {
+	CHong::OBJ_INFO ObjInfo;
+	if (pArg != nullptr)
+	{
+		memcpy(&ObjInfo, pArg, sizeof(CHong::OBJ_INFO));
+		m_iNumLevel = ObjInfo.iNumLevel;
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	//======================
+	m_Tag = L"Box";
+	//======================
 
-	SetTag(L"Box");
-	
+
 	if (pArg != nullptr)
 	{
 		_float3 vPos;
@@ -41,7 +50,11 @@ HRESULT CBreakingBlock::Initialize(void * pArg)
 	}
 
 	else
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(25.f, 1.f, 5.f));
+	{
+		_float3 vPos;
+		memcpy(&vPos, pArg, sizeof(_float3));
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
 
 	return S_OK;
 }
