@@ -120,7 +120,7 @@ HRESULT CLevel_Stage3::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("LEVEL_3"));
+	SetWindowText(g_hWnd, TEXT("Stage NULL"));
 
 	return S_OK;
 }

@@ -19,6 +19,7 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
@@ -33,55 +34,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
-	//=======================================Test=======================================
-	ObjInfo objInfo1;
-	objInfo1.vPos = _float3(3.5f, .5f, 4.5f);
-	objInfo1.iNumLevel = LEVEL_STAGE1;
-	objInfo1.iDirection = 0;
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo1)))
-		return E_FAIL;*/
-
-	ObjInfo objInfo2;
-	objInfo2.vPos = _float3(20.5f, .5f,2.5f);
-	objInfo2.iNumLevel = LEVEL_STAGE1;
-	objInfo2.iDirection = 0;
-
-	ObjInfo objInfo3;
-	objInfo3.vPos = _float3(6.5f, .5f, 2.5f);
-	objInfo3.iNumLevel = LEVEL_STAGE1;
-	objInfo3.iDirection = 0;
-
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo2)))
+	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
-		return E_FAIL;
-
-	/*objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
-		return E_FAIL;*/
-
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo2)))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo3)))
-		return E_FAIL;*/
-
-	objInfo3;
-	objInfo3.vPos = _float3(6.5f, .5f, 1.5f);
-	objInfo3.iNumLevel = LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Hole", L"Layer_Hole", &objInfo3)))
-		return E_FAIL;
-	ObjInfo objInfo;
-	//Y값 무조건 0.5 제일중요
-	objInfo.vPos = _float3(3.f,.5f,3.f);
-	objInfo.iNumLevel = LEVEL_STAGE1;
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
-		return E_FAIL;
-	//==================================================================================
-	//LoadGameObject();
+	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
+
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
 
@@ -127,6 +86,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel"))
 	{
 		//여기서 씬 넘겨줘야함
@@ -138,9 +98,11 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE2))))
 			MSG_BOX(L"레벨 오픈 실패");
+
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
+
 	/* Restart */
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_R)) {
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -151,9 +113,11 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE1))))
 			MSG_BOX(L"레벨 오픈 실패");
+
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
+
 #pragma region BGM
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
@@ -180,7 +144,7 @@ HRESULT CLevel_GamePlay::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
+	SetWindowText(g_hWnd, TEXT("Stage 2"));
 
 	return S_OK;
 }
@@ -215,8 +179,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
 	_uint iNumLevel = LEVEL_STAGE1;
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag, &iNumLevel)))
 		return E_FAIL;
 	
@@ -235,39 +199,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Toodee(const _tchar * pLayerTag, void* pArg
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
-	Info.vPos = _float3(1.5f, 1.f, 12.f);
+	Info.vPos = _float3(20.5f, 0.5f, 10.5f);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"), 
 		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Block(const _tchar* pLayerTag, void* pArg)
-{
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cube"), LEVEL_STAGE1, pLayerTag, pArg)))
-		return E_FAIL;
-	Safe_Release(pGameInstance);
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Monster_Pig(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Monster_Pig"), LEVEL_SENI, pLayerTag)))
-		return E_FAIL;
-
-
-	Safe_Release(pGameInstance);
-
 
 	return S_OK;
 }
@@ -279,8 +217,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
-	//Info.vPos = _float3(26.f, 1.f, 2.f);
-	Info.vPos = _float3(26.f, 1.f, 5.f);
+	Info.vPos = _float3(22.5f, 0.5f, 9.5f);
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE1, pLayerTag, &Info)))
 		return E_FAIL;
@@ -290,40 +228,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Topdee(const _tchar * pLayerTag, void* pArg
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Turret(const _tchar* pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Turret"),
-		LEVEL_STAGE1, pLayerTag)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Bullet(const _tchar * pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Bullet"),
-		LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
 HRESULT CLevel_GamePlay::Ready_Layer_Portal(const _tchar* pLayerTag)
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	OBJ_INFO objInfo;
+	objInfo.iDirection = NULL;
+	objInfo.iNumLevel = LEVEL_STAGE1;
+	objInfo.vPos = _float3(7.5f, 0.5f, 11.5f);
+	objInfo.iTex = NULL;
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Portal"),
-		LEVEL_GAMEPLAY, pLayerTag)))
+		LEVEL_STAGE1, pLayerTag, &objInfo)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -394,67 +311,6 @@ void CLevel_GamePlay::LoadGameObject()
 		++iter;
 	}
 	CloseHandle(hFile);
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Hole(const _tchar* pLayerTag, void* pArg )
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Hole"), LEVEL_STAGE1, pLayerTag, pArg)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Cloud(const _tchar* pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Cloud"), LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Key(const _tchar* pLayerTag, void* pArg)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Key"), LEVEL_GAMEPLAY, pLayerTag, pArg)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-	return S_OK;
-}
-
-
-HRESULT CLevel_GamePlay::Ready_Layer_Wall(const _tchar * pLayerTag, void * pArg)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Wall"), LEVEL_STAGE1, pLayerTag, pArg)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-HRESULT CLevel_GamePlay::Ready_Layer_KeyBox(const _tchar* pLayerTag)
-{
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_KeyBox"), LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-	return S_OK;
 }
 
 CLevel_GamePlay * CLevel_GamePlay::Create(LPDIRECT3DDEVICE9 pGraphic_Device)

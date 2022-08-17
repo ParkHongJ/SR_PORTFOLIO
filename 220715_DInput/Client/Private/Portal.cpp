@@ -22,7 +22,6 @@ HRESULT CPortal::Initialize_Prototype()
 
 HRESULT CPortal::Initialize(void * pArg)
 {
-
 	CHong::OBJ_INFO ObjInfo;
 	if (pArg != nullptr)
 	{
@@ -35,7 +34,6 @@ HRESULT CPortal::Initialize(void * pArg)
 	_float3 vPos;
 	vPos = ObjInfo.vPos;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(5.f, 0.5f, 2.f));
 	m_Tag = L"Portal";
 
 	/* For.Portal_Data */
@@ -127,7 +125,7 @@ HRESULT CPortal::Render()
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 			_float3(m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-				1.f,
+				1.5f,
 				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
 		if (FAILED(m_pTextureCom_for_Toodee->Bind_Texture((_uint)m_fFrame_For_TopToo)))

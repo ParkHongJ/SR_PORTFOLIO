@@ -199,6 +199,9 @@
     <Filter Include="02.GameObject\UI">
       <UniqueIdentifier>{273e8757-04b4-4c31-82f3-7a431342f11a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_10">
+      <UniqueIdentifier>{3986f705-6fa6-43a3-924f-23512ecbaa87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -415,6 +418,9 @@
     <ClInclude Include="..\public\FadeObject.h">
       <Filter>02.GameObject\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Stage10.h">
+      <Filter>01.Level\STAGES\STAGE_10</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -620,6 +626,9 @@
     </ClCompile>
     <ClCompile Include="..\private\FadeObject.cpp">
       <Filter>02.GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Stage10.cpp">
+      <Filter>01.Level\STAGES\STAGE_10</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

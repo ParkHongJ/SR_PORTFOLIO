@@ -101,7 +101,7 @@ void CSTAGE_RETURN1::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE2))))
+			LEVEL_STAGE8))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		Safe_Release(pGameInstance);
@@ -115,7 +115,7 @@ void CSTAGE_RETURN1::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE2))))
+			LEVEL_STAGE8))))
 			MSG_BOX(L"레벨 오픈 실패");
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
@@ -146,7 +146,7 @@ HRESULT CSTAGE_RETURN1::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨임"));
+	SetWindowText(g_hWnd, TEXT("Stage 8"));
 
 	return S_OK;
 }

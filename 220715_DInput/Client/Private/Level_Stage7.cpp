@@ -50,6 +50,25 @@ HRESULT CLevel_Stage7::Initialize()
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE7, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE7, L"Layer_Wall", false);
 
+#pragma region BGM
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayBGM(TEXT("cyberToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("cyberTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
+
+	m_iMod = CGameMgr::Get_Instance()->GetMode();
+
+	pGameInstance->InitMute();
+
+	if (CGameMgr::TOODEE == CGameMgr::Get_Instance()->GetMode())
+		pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+	else if (CGameMgr::TOPDEE == CGameMgr::Get_Instance()->GetMode())
+		pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+
+	Safe_Release(pGameInstance);
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -64,8 +83,10 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE1))))
+			LEVEL_STAGE9))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
@@ -75,9 +96,13 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE7))))
 			MSG_BOX(L"레벨 오픈 실패");
+
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
@@ -85,9 +110,13 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE7))))
 			MSG_BOX(L"레벨 오픈 실패");
+
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
@@ -96,14 +125,35 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE7))))
+			LEVEL_STAGE9))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
 
+#pragma region BGM
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (m_iMod != CGameMgr::Get_Instance()->GetMode()) {
+		if (CGameMgr::TOODEE == CGameMgr::Get_Instance()->GetMode()) {
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+		}
+		else if (CGameMgr::TOPDEE == CGameMgr::Get_Instance()->GetMode()) {
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM2);
+			pGameInstance->Mute(C_FMOD::CHANNELID::BGM1);
+		}
+
+		m_iMod = CGameMgr::Get_Instance()->GetMode();
+	}
+
+	Safe_Release(pGameInstance);
+#pragma endregion
 }
 
 HRESULT CLevel_Stage7::Render()
@@ -111,7 +161,7 @@ HRESULT CLevel_Stage7::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Level_7"));
+	SetWindowText(g_hWnd, TEXT("Stage 7"));
 
 	return S_OK;
 }

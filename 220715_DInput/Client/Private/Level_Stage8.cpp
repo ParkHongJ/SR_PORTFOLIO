@@ -44,8 +44,8 @@ HRESULT CLevel_Stage8::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("classicToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
-	pGameInstance->PlayBGM(TEXT("classicTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("scrollingMusicSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("scrollingMusicSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 
@@ -77,7 +77,7 @@ void CLevel_Stage8::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE9))))
+			LEVEL_LOGO))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
@@ -108,7 +108,7 @@ void CLevel_Stage8::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE9))))
+			LEVEL_LOGO))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = FALSE;
@@ -140,7 +140,7 @@ HRESULT CLevel_Stage8::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Level_8"));
+	SetWindowText(g_hWnd, TEXT("Run Fast! Go!"));
 
 	return S_OK;
 }

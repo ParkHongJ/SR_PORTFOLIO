@@ -53,8 +53,8 @@ HRESULT CLevel_Stage2::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("classicToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
-	pGameInstance->PlayBGM(TEXT("classicTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 
@@ -117,7 +117,7 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE3))))
+			LEVEL_STAGE4))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = FALSE;
@@ -149,7 +149,7 @@ HRESULT CLevel_Stage2::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Level_2"));
+	SetWindowText(g_hWnd, TEXT("Stage 3"));
 
 	return S_OK;
 }

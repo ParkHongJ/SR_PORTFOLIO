@@ -204,6 +204,7 @@
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\Public\Level_SENI.h" />
     <ClInclude Include="..\Public\Level_SJH.h" />
+    <ClInclude Include="..\Public\Level_Stage10.h" />
     <ClInclude Include="..\Public\Level_Stage2.h" />
     <ClInclude Include="..\public\Level_Stage3.h" />
     <ClInclude Include="..\public\Level_Stage4.h" />
@@ -252,6 +253,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Leaf.cpp" />
     <ClCompile Include="..\private\FadeObject.cpp" />
+    <ClCompile Include="..\Private\Level_Stage10.cpp" />
     <ClCompile Include="..\Private\Level_Stage6.cpp" />
     <ClCompile Include="..\Private\Level_Stage8.cpp" />
     <ClCompile Include="..\Wave.cpp" />

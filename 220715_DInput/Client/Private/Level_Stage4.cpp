@@ -41,8 +41,8 @@ HRESULT CLevel_Stage4::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("jungleToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
-	pGameInstance->PlayBGM(TEXT("jungleTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("templeToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, SOUND_DEFAULT);
+	pGameInstance->PlayBGM(TEXT("templeTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, SOUND_DEFAULT);
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 
@@ -84,6 +84,7 @@ void CLevel_Stage4::Tick(_float fTimeDelta)
 
 	Safe_Release(pGameInstance);
 #pragma endregion
+
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_F4))
 	{
 		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
@@ -93,7 +94,7 @@ void CLevel_Stage4::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE6))))
+			LEVEL_STAGE5))))
 			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
@@ -136,7 +137,7 @@ HRESULT CLevel_Stage4::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Level_4"));
+	SetWindowText(g_hWnd, TEXT("Stage 4"));
 
 	return S_OK;
 }
