@@ -186,6 +186,14 @@ void CThunder_Cloud::TopdeeRain_CloudInitMgr()
 		}
 
 	}
+	if (m_iNumLevel == 8)
+	{
+		if ((_uint)m_vTopdeeRainPos.z == 10)
+		{
+			//m_vTopdeeRainPos.x -= 0.5f;
+			m_vTopdeeRainPos.z -= 0.5f;
+		}
+	}
 }
 void CThunder_Cloud::Tick(_float fTimeDelta)
 {
@@ -250,7 +258,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 			MoveTowards(m_pTransformCom_Shadow->Get_State(CTransform::STATE_POSITION),
 				m_vShadow_ToodeePos,
 				fTimeDelta * 15.f));
-		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(60.f));
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
 			MoveTowards(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
