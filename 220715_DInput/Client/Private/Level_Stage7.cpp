@@ -170,7 +170,7 @@ HRESULT CLevel_Stage7::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage 7"));
+	SetWindowText(g_hWnd, TEXT("Stage 8"));
 
 	return S_OK;
 }

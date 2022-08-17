@@ -148,7 +148,7 @@ HRESULT CLevel_Stage4::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage 4"));
+	SetWindowText(g_hWnd, TEXT("Stage 5"));
 
 	return S_OK;
 }

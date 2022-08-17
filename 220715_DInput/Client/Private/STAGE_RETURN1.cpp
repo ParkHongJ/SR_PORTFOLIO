@@ -147,7 +147,7 @@ HRESULT CSTAGE_RETURN1::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage 8"));
+	SetWindowText(g_hWnd, TEXT("Stage 9"));
 
 	return S_OK;
 }

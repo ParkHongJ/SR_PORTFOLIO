@@ -128,7 +128,7 @@ HRESULT CLevel_Stage3::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage NULL"));
+	SetWindowText(g_hWnd, TEXT("Stage 4"));
 
 	return S_OK;
 }
@@ -252,7 +252,7 @@ HRESULT CLevel_Stage3::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(1.5f, 1.f, 1.f);
+	Info.vPos = _float3(27.5f, 1.f, 14.5f);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
@@ -270,7 +270,7 @@ HRESULT CLevel_Stage3::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(18.f, 1.f, 5.f);
+	Info.vPos = _float3(2.5f, 1.f, 13.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
