@@ -269,7 +269,7 @@ HRESULT CLevel_Stage8::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE8;
-	Info.vPos = _float3(7.5f, 1.f, 1.5f);
+	Info.vPos = _float3(7.5f, 0.5f, 1.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE8, pLayerTag, &Info)))
 		return E_FAIL;
@@ -286,7 +286,7 @@ HRESULT CLevel_Stage8::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE8;
-	Info.vPos = _float3(4.f, 1.f, 12.5f);
+	Info.vPos = _float3(4.f, 0.5f, 12.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE8, pLayerTag, &Info)))
 		return E_FAIL;
