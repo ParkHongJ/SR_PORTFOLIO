@@ -36,6 +36,7 @@ HRESULT CLevel_GyuH::Initialize()
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
+	return S_OK;
 }
 
 void CLevel_GyuH::Tick(_float fTimeDelta)

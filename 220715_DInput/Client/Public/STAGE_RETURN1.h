@@ -19,6 +19,8 @@ private:
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
 private:

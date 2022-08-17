@@ -161,7 +161,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <OptimizeReferences>false</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;fmod_vc.lib;Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Cloud.h" />
     <ClInclude Include="..\Public\ElectricBlock.h" />
+    <ClInclude Include="..\public\FadeObject.h" />
     <ClInclude Include="..\public\GravityBlock.h" />
     <ClInclude Include="..\Public\Hole.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
@@ -250,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Leaf.cpp" />
+    <ClCompile Include="..\private\FadeObject.cpp" />
     <ClCompile Include="..\Private\Level_Stage6.cpp" />
     <ClCompile Include="..\Private\Level_Stage8.cpp" />
     <ClCompile Include="..\Wave.cpp" />

@@ -51,6 +51,28 @@ void CTookee::Tick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ProjMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
+
+	if (vPos.x + 0.1f < -1.f)
+	{
+		m_bMove = false;
+		return;
+	}
+	else if (vPos.x - 0.1f > 1.f)
+	{
+		m_bMove = false;
+		return;
+	}
+	else
+		m_bMove = true;
+
+
 	//현재모드
 	m_eCurMode = CGameMgr::Get_Instance()->GetMode();
 
@@ -85,6 +107,26 @@ void CTookee::LateTick(_float fTimeDelta)
 	if (!m_bActive)
 		return;
 
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ProjMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
+
+	if (vPos.x + 0.1f < -1.f)
+	{
+		m_bMove = false;
+		return;
+	}
+	else if (vPos.x - 0.1f > 1.f)
+	{
+		m_bMove = false;
+		return;
+	}
+	else
+		m_bMove = true;
 	switch (m_eCurState)
 	{
 	case CTookee::TOOKEE_LEFT:
@@ -282,19 +324,6 @@ HRESULT CTookee::Render()
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
 
-	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	if (m_eCurMode == CGameMgr::TOODEE)
-	{
-		m_pToodeeCom->Render(Matrix);
-	}
-	else if (m_eCurMode == CGameMgr::TOPDEE)
-	{
-		m_pTopdeeCom->Render(Matrix);
-	}
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//--------------------------------------------------------------
 
 	return S_OK;
 }
@@ -654,6 +683,10 @@ void CTookee::OnTriggerExit(CGameObject * other, _float fTimeDelta)
 
 void CTookee::Jump(_float fTimeDelta)
 {
+	if (!m_bMove)
+	{
+		return;
+	}
 	_float3 fPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	m_vGravityPower = -1.63f * m_fJumpTime * 0.5f;
 
@@ -682,11 +715,15 @@ void CTookee::Jump(_float fTimeDelta)
 
 void CTookee::SetScale(_float3 _vScale)
 {
+	if (!m_bMove)
+		return;
 	m_pTransformCom->Set_Scale(_vScale);
 }
 
 void CTookee::SetPosition(_float fTimeDelta, _float3 vDir)
 {
+	if (!m_bMove)
+		return;
 	m_pTransformCom->Translate(vDir * fTimeDelta * m_fSpeed);
 }
 

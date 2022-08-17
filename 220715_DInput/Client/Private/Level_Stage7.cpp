@@ -91,16 +91,19 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
-	else if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Tookee_Dead"))
-	{
+	else if (CGameMgr::Get_Instance()->Key_Down(DIK_F4)) {
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE7))))
 			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
+
 }
 
 HRESULT CLevel_Stage7::Render()

@@ -68,7 +68,7 @@ private:
 	STATE m_ePreState;
 	_float3 m_fScale = {1.f,1.f,1.f};
 	_float m_fSpeed = 5.f;
-
+	_bool m_bMove = true;
 //TOODEE일 경우 : X축 이동과 점프, 중력이 필요함
 //TOPDEE일 경우 : X,Z축 이동이 필요함 홀과 충돌필요
 public:
@@ -77,9 +77,21 @@ public:
 	===============*/
 	void Jump(_float fTimeDelta);
 	void CreateEffect();
-	void SetState(STATE _eState) { m_eCurState = _eState; }
-	void SetJump() { m_bJump = true; CreateEffect(); }
-	void SetSpeed(_float _fSpeed) { m_fSpeed = _fSpeed; }
+	void SetState(STATE _eState) { 
+		if (!m_bMove)
+			return;
+		m_eCurState = _eState; 
+	}
+	void SetJump() { 
+		if (!m_bMove)
+			return;
+		m_bJump = true; CreateEffect(); 
+	}
+	void SetSpeed(_float _fSpeed) { 
+		if (!m_bMove)
+			return;
+		m_fSpeed = _fSpeed; 
+	}
 	void SetScale(_float3 _vScale);
 	void SetPosition(_float fTimeDelta, _float3 vDir);
 

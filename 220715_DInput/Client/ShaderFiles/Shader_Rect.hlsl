@@ -2,6 +2,10 @@
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
 float g_time;
+
+float2			g_fOffset;
+float			g_fRadian;
+
 sampler DefaultSampler = sampler_state 
 {
 	Texture = g_Texture;
@@ -97,6 +101,7 @@ PS_OUT PS_PORTAL(PS_IN In)
 
 	return Out;
 }
+
 PS_OUT PS_WAVE(PS_IN In)
 {
 	PS_OUT		Out;
@@ -108,6 +113,34 @@ PS_OUT PS_WAVE(PS_IN In)
 	Out.vColor = OutColor;
 	return Out;
 }
+
+PS_OUT PS_FADE(PS_IN In)
+{
+	PS_OUT Out;
+
+	float fDistance = length(g_fOffset - In.vTexUV.xy);
+	if (fDistance > g_fRadian)
+	{
+		Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+	}
+	else
+	{
+		clip(-1);
+		Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+	}
+	return Out;
+}
+
+PS_OUT PS_DEFAULT(PS_IN In)
+{
+	PS_OUT Out;
+
+	clip(-1);
+	Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+
+	return Out;
+}
+
 technique DefaultTecnique
 {
 	pass Default
@@ -128,4 +161,15 @@ technique DefaultTecnique
 		PixelShader = compile ps_3_0 PS_WAVE();
 	}
 
+	pass DefaultFade
+	{
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_DEFAULT();
+	}
+
+	pass Fade
+	{
+		VertexShader = compile vs_3_0 VS_MAIN();
+		PixelShader = compile ps_3_0 PS_FADE();
+	}
 }

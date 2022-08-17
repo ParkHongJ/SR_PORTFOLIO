@@ -82,7 +82,6 @@ private:
 	_float m_fTempTimer = 0.f;
 	_float m_fMaxJumpTime = 0.6f;
 	_float m_fTimeD = 0.f;
-
 	_float m_fDrop_Endline = 0.f;
 
 	_float m_fSoundTimeDelta = 0.f;

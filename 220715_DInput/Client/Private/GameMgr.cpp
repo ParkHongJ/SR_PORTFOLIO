@@ -5,6 +5,7 @@
 #include "KeyBlock.h"
 #include "Tookee.h"
 #include "WarpBlock.h"
+#include "FadeObject.h"
 IMPLEMENT_SINGLETON(CGameMgr)
 
 CGameMgr::CGameMgr()
@@ -20,11 +21,12 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 	m_iKey = 0;
 	m_Obstaclelist.clear();
 	m_bLoadFinish = true;
-	m_bRunMode = false;
 	if (m_Tookee != nullptr)
 	{
 		Safe_Release(m_Tookee);
 	}
+	m_pFadeObject = nullptr;
+
 	return S_OK;
 }
 
@@ -435,6 +437,16 @@ HRESULT CGameMgr::RegisterWarpBlock(CWarpBlock * pWarpBlock)
 		Safe_Release(m_pFirstWarp);
 	}
 	return S_OK;
+}
+
+void CGameMgr::SetDeadPos(_float3 _vPos)
+{
+	m_pFadeObject->SetOffset(_vPos);
+}
+
+void CGameMgr::SetFadeObj(_uint iNumLevel)
+{
+	m_pFadeObject = (CFadeObject*)CGameInstance::Get_Instance()->GetLayer(iNumLevel, L"Layer_Fade")->front();
 }
 
 void CGameMgr::Free()

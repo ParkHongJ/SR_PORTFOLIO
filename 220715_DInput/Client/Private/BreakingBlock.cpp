@@ -37,18 +37,16 @@ HRESULT CBreakingBlock::Initialize(void * pArg)
 	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
-	//======================
-	m_Tag = L"Box";
-	//======================
 
 
+	//SetTag(L"Box");
+	m_Tag = L"Wall";
+	
 	if (pArg != nullptr)
 	{
-		_float3 vPos;
-		memcpy(&vPos, pArg, sizeof(_float3));
+		_float3 vPos = ObjInfo.vPos;
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
-
 	else
 	{
 		_float3 vPos;
@@ -78,7 +76,7 @@ void CBreakingBlock::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			if (3.f <= m_fRemember)
+			if (1.5f <= m_fRemember)
 			{
 				m_bActive = false;
 				int a = 10;
@@ -107,6 +105,23 @@ void CBreakingBlock::LateTick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+
+	_float4x4 ViewMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	_float4x4 ProjMatrix;
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
+	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
+	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
+
+	if (vPos.x + 0.1f < -1.f)
+	{
+		return;
+	}
+	else if (vPos.x - 0.1f > 1.f)
+	{
+		return;
+	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider, m_pTransformCom);

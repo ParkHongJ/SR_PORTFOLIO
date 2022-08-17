@@ -203,7 +203,7 @@ void CToodee::LateTick(_float fTimeDelta)
 			case TOODEE_PORTAL:
 				if (!(CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT))
 					&& !(CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT))) {
-						m_MoveSpeed = 0.f;
+					m_MoveSpeed = 0.f;
 				}
 				if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear")) {
 					m_iMinFrame = 30;
@@ -295,6 +295,8 @@ void CToodee::LateTick(_float fTimeDelta)
 			}
 			else {
 				if (!m_bDiedEff) {
+
+					CGameMgr::Get_Instance()->SetDeadPos(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 					//Hong Edit For Effect
 					for (int i = 0; i < 50; i++) {
 						random_device rd;
@@ -312,13 +314,13 @@ void CToodee::LateTick(_float fTimeDelta)
 						CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 							vPos,
 							vPos - vPos2,
-							CParticleMgr::PARTICLE);	
+							CParticleMgr::PARTICLE);
 					}
 
 					m_bDiedEff = true;
 				}
 			}
-			
+
 		}
 	}
 	else { m_MoveSpeed = 0.f; }
@@ -337,7 +339,7 @@ void CToodee::LateTick(_float fTimeDelta)
 HRESULT CToodee::Render()
 {
 	/*if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;*/
+	return E_FAIL;*/
 
 	if (m_bActive) {
 		if (FAILED(m_pTextureCom->Bind_Texture(m_pShaderCom, "g_Texture", m_iTexIndex)))
@@ -363,7 +365,7 @@ HRESULT CToodee::Render()
 		MSG_BOX(L"¾Á»—");
 	D3DXMatrixTranspose(&matProj, &matProj);
 
-	m_pShaderCom->Set_RawValue("g_WorldMatrix",&matWorld, sizeof(_float4x4));
+	m_pShaderCom->Set_RawValue("g_WorldMatrix", &matWorld, sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ViewMatrix", &matView, sizeof(_float4x4));
 	m_pShaderCom->Set_RawValue("g_ProjMatrix", &matProj, sizeof(_float4x4));
 
@@ -623,12 +625,12 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	/*
 	Up-Up
 	if (m_bJump) {
-		m_fJumpPower += 1.f;
-		m_fMaxJumpTime += 0.03f;
+	m_fJumpPower += 1.f;
+	m_fMaxJumpTime += 0.03f;
 	}
 	else if (!m_bJump) {
-		m_fJumpPower = 17.f;
-		m_fMaxJumpTime = 0.6;
+	m_fJumpPower = 17.f;
+	m_fMaxJumpTime = 0.6;
 	}
 
 	Down-Down
@@ -660,7 +662,7 @@ void CToodee::SetStateTookee()
 		break;
 	case CToodee::TOODEE_JUMP:
 		CGameMgr::Get_Instance()->SetStateTooKee(CTookee::STATE::TOOKEE_JUMP);
-		
+
 		CGameMgr::Get_Instance()->SetMoveSpeedTookee(m_MoveSpeed);
 		break;
 	case CToodee::TOODEE_IDLE:

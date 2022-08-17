@@ -21,20 +21,55 @@ HRESULT CSTAGE_RETURN1::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	//==================================================================================
+
+	ObjInfo objInfo1;
+	objInfo1.iNumLevel = LEVEL_STAGE9;
+	objInfo1.iDirection = 0;
+	if (FAILED(Ready_Layer_Object(TEXT("Prototype_GameObject_FadeObject"), TEXT("Layer_Fade"), &objInfo1)))
+		return E_FAIL;
+
+	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE9);
+	CGameMgr::Get_Instance()->SetFadeObj(LEVEL_STAGE9);
 	LoadGameObject();
 
-	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
-	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
+	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+		return E_FAIL;
+
+	
+
+	CGameMgr::Get_Instance()->SetGameMode(true);
+
+	ObjInfo objInfo3;
+	objInfo3.iNumLevel = LEVEL_STAGE9;
+	objInfo3.iDirection = 0;
+	objInfo3.vPos = _float3(-15.f, .5f, 15.5f);
+
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
+	
+	objInfo3.vPos = _float3(56.5f, .5f, 8.5f);
+	if (FAILED(Ready_Layer_Tookee(TEXT("Layer_Tookee"))))
+		return E_FAIL;
+	//==================================================================================
+
+
+	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE9);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE9, L"Layer_Hole", true);
+	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE9, L"Layer_Wall", false);
 
 #pragma region BGM
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->PlayBGM(TEXT("classicToodeeSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
-	pGameInstance->PlayBGM(TEXT("classicTopdeeSnd.wav"), C_FMOD::CHANNELID::BGM2, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("scrollingMusicSnd.wav"), C_FMOD::CHANNELID::BGM1, (SOUND_MAX / 10));
+	pGameInstance->PlayBGM(TEXT("scrollingMusicSnd.wav"), C_FMOD::CHANNELID::BGM2, (SOUND_MAX / 10));
 
 	m_iMod = CGameMgr::Get_Instance()->GetMode();
 
@@ -123,7 +158,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -146,7 +181,8 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag)))
+	_uint iNumLevel = LEVEL_STAGE9;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE9, pLayerTag, &iNumLevel)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))
@@ -163,11 +199,45 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg
 	Safe_AddRef(pGameInstance);
 
 	CToodee::PLAYER_INFO Info;
-	Info.iNumLevel = LEVEL_STAGE1;
+	Info.iNumLevel = LEVEL_STAGE9;
 	Info.vPos = _float3(3.f, 1.f, 14.f);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
-		LEVEL_STAGE1, pLayerTag, &Info)))
+		LEVEL_STAGE9, pLayerTag, &Info)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CSTAGE_RETURN1::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	CTopdee::PLAYER_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE9;
+	Info.vPos = _float3(5.5f, 0.5f, 11.5f);
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
+		LEVEL_STAGE9, pLayerTag, &Info)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CSTAGE_RETURN1::Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg /*= nullptr*/)
+{
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+	//18.5 0.5 12.5
+	OBJ_INFO Info;
+	Info.iNumLevel = LEVEL_STAGE9;
+	Info.vPos = _float3(56.5f, 0.5f, 8.5f);
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Tookee"),
+		LEVEL_STAGE9, pLayerTag, &Info)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -180,7 +250,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Object(const _tchar * pPrototypeTag, const _
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE1, pLayerTag, pArg)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE9, pLayerTag, pArg)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -190,7 +260,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Object(const _tchar * pPrototypeTag, const _
 
 void CSTAGE_RETURN1::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_9.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -247,7 +317,13 @@ void CSTAGE_RETURN1::LoadGameObject()
 
 	while (iter != m_pObjects.end())
 	{
-		Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
+		//Very Importent
+		if (!wcscmp(iter->first->pPrototypeTag.c_str(), L"Prototype_GameObject_BreakingBlock"))
+		{
+			Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), L"Layer_Breaking", iter->second);
+		}
+		else
+			Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
 		++iter;
 	}
 	CloseHandle(hFile);

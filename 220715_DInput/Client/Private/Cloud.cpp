@@ -124,13 +124,6 @@ HRESULT CCloud::Render()
 	m_pVIBufferCom->Render();
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-	//---------------------디버그일때 그리기-------------------------
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCom->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//--------------------------------------------------------------
-
 	return S_OK;
 }
 

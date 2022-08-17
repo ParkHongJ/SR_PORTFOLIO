@@ -117,12 +117,7 @@ HRESULT CPlayer::Render()
 
 	if (FAILED(Reset_RenderState()))
 		return E_FAIL;
-
-	//---------------------디버그일때 그리기-------------------------
-	//m_pColliderCom->Render();
-	//--------------------------------------------------------------
-
-
+	
 	ImGui::Begin("DirectX9 Texture Test");
 	ImGui::Text("pointer = %p", my_texture);
 	ImGui::Text("size = %d x %d", my_image_width, my_image_height);

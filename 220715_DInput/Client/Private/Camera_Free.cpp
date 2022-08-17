@@ -31,7 +31,9 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 	//m_pTransformCom->Rotation(_float3(1.f, 0.f, 0.f), D3DXToRadian(90.f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.5f, 15.f, 8.7f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
-	m_iNumLevel = LEVEL_STAGE1;
+
+	//이거 수정해라
+	m_iNumLevel = LEVEL_STAGE9;
 	return S_OK;
 }
 
@@ -118,9 +120,21 @@ void CCamera_Free::Tick(_float fTimeDelta)
 	//런모드라면
 	if (CGameMgr::Get_Instance()->GetGameMode())
 	{
-		CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_topdee")->front();
-		CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Toodee")->front();
+		list<CGameObject*>* pListToodee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Toodee");
+		list<CGameObject*>* pListTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_topdee");
+		if (pListTopdee ==nullptr)
+		{
+			MSG_BOX(L"pListTopdee가 널입니다");
+			return;
+		}
+		if (pListToodee == nullptr)
+		{
+			MSG_BOX(L"pListToodee가 널입니다");
+			return;
+		}
 
+		CGameObject* pTopdee = pListTopdee->front();
+		CGameObject* pToodee = pListToodee->front();
 		if (pTopdee == nullptr || pToodee == nullptr)
 			return;
 

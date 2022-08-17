@@ -258,8 +258,7 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 	if (m_iFrame > 21) {
 		m_iFrame = 17;
 		m_fDeadTimer = 0.f;
-
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			random_device rd;
 			default_random_engine eng(rd());
@@ -524,12 +523,6 @@ HRESULT CTopdee::Render()
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
 		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal"))
 		return S_OK;
-#pragma region Debug_Collider
-	Set_ColliderState();
-	_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pBoxCom->Render(Matrix);
-	Reset_ColliderState();
-#pragma endregion Debug
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
@@ -590,10 +583,10 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (!m_bPushBox) {//MakseDelay
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.1f)) { //처음 실행되었고
 			return;
 		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.1f)) {
 			m_fPushBoxDelayTimer = 0.f;
 			m_bPushBox = false;
 		}
@@ -666,10 +659,10 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (!m_bPushBox) {//MakseDelay
 			m_fPushBoxDelayTimer += fTimeDelta;
 		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.5f)) { //처음 실행되었고
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer < 0.1f)) { //처음 실행되었고
 			return;
 		}
-		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.5f)) {
+		else if ((m_bPushBox) && (m_fPushBoxDelayTimer > 0.1f)) {
 			m_fPushBoxDelayTimer = 0.f;
 			m_bPushBox = false;
 		}

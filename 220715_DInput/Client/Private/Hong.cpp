@@ -33,13 +33,13 @@ HRESULT CHong::Initialize()
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
 	//Info.vPos = _float3(26.f, 1.f, 2.f);
-	Info.vPos = _float3(4.f, 1.f, 12.5f);
-	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
+	Info.vPos = _float3(6.5f, 1.f, 10.5f);
+	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee", &Info)))
 		return E_FAIL;
 
 	CToodee::PLAYER_INFO Info2;
 	Info2.iNumLevel = LEVEL_STAGE1;
-	Info2.vPos = _float3(7.5f, 1.f, 1.5f);
+	Info2.vPos = _float3(5.5f, 1.f, 2.5f);
 	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Toodee"), L"Layer_Toodee", &Info2)))
 		return E_FAIL;
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
@@ -154,7 +154,7 @@ HRESULT CHong::Render()
 		"Layer_Cube",
 		"Layer_Cube",
 		"Layer_Cube",
-		"Layer_Cube"
+		"Layer_Breaking"
 
 	};
 	const char* Prototypes[] =
@@ -526,7 +526,14 @@ void CHong::LoadGameObject()
 		tempObj.iDirection = iter->second->iDirection;
 		tempObj.iTex = iter->second->iTex;
 
-		Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), &tempObj);
+		//Very Importent
+		if (!wcscmp(iter->first->pPrototypeTag.c_str(),L"Prototype_GameObject_BreakingBlock"))
+		{
+			int a = 10;
+			Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), L"Layer_Breaking", &tempObj);
+		}
+		else
+			Ready_Layer_Block(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), &tempObj);
 		++iter;
 	}
 	CloseHandle(hFile);
