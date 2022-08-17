@@ -3288,6 +3288,11 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CThunder_Cloud::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Wave*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wave"),
+		CWave::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_ElectricBlock */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ElectricBlock"),
 		CElectricBlock::Create(m_pGraphic_Device))))
@@ -3376,11 +3381,6 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 	/* For.Prototype_GameObject_Portal */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Portal"),
 		CPortal::Create(m_pGraphic_Device))))
-		return E_FAIL;
-
-	/* For.Prototype_GameObject_Wave*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wave"),
-		CWave::Create(m_pGraphic_Device))))
 		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 

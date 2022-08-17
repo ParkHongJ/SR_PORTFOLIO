@@ -14,7 +14,7 @@ public:
 	{
 		_float3		vEye, vAt;
 		_float		fFovy, fAspect, fNear, fFar;
-
+		_uint iLevel;
 		CTransform::TRANSFORMDESC		TransformDesc;
 	}CAMERADESC;
 

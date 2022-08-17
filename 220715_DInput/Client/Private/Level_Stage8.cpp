@@ -43,15 +43,15 @@ HRESULT CLevel_Stage8::Initialize()
 		return E_FAIL;
 
 	LoadGameObject();
-	//CGameMgr::Get_Instance()->SetGameMode(true);
+	CGameMgr::Get_Instance()->SetGameMode(true);
 
 	ObjInfo objInfo3;
-	objInfo3.iNumLevel = LEVEL_STAGE9;
+	objInfo3.iNumLevel = LEVEL_STAGE8;
 	objInfo3.iDirection = 0;
 	objInfo3.vPos = _float3(-15.f, .5f, 15.5f);
 
-	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
+		return E_FAIL;
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE8);
 
@@ -246,7 +246,7 @@ HRESULT CLevel_Stage8::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
 	CameraDesc.fFar = 300.0f;
-
+	CameraDesc.iLevel = LEVEL_STAGE8;
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 

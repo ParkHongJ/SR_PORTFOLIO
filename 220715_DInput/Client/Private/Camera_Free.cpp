@@ -33,7 +33,6 @@ HRESULT CCamera_Free::Initialize(void * pArg)
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(14.5f, 16.7f, 7.9f));
 
 	//이거 수정해라
-	m_iNumLevel = LEVEL_STAGE9;
 	return S_OK;
 }
 

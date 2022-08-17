@@ -29,7 +29,7 @@ HRESULT CCamera::Initialize(void * pArg)
 
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	//m_pTransformCom->LookAt(vLook);
-
+	m_iNumLevel = m_CameraDesc.iLevel;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_CameraDesc.vEye);
 	m_pTransformCom->LookAt(m_CameraDesc.vAt);
 

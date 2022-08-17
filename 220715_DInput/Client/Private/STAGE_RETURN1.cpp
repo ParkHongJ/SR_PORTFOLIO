@@ -165,11 +165,11 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
 	CameraDesc.fFar = 300.0f;
-
+	CameraDesc.iLevel = LEVEL_STAGE10;
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_STAGE1, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Camera_Free"), LEVEL_STAGE10, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
