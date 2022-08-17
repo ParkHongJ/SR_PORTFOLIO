@@ -52,9 +52,9 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x - 1.f, 5.f, m_vShadow_TopdeePos.z)	, _float3(0.f, -1.f, 0.f));	//탑디일때의 레이는 
 	m_pColliderCom->AddRayList(_float3(m_vShadow_TopdeePos.x + 1.f, 5.f, m_vShadow_TopdeePos.z)	, _float3(0.f, -1.f, 0.f));
 	//----------------------------TopdeeRay End
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
-	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x, vCloudPos.y, vCloudPos.z+0.01f), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, vCloudPos.y, vCloudPos.z+0.01f), _float3(0.f, 0.f, -1.f));
+	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, vCloudPos.y, vCloudPos.z+0.01f), _float3(0.f, 0.f, -1.f));
 #pragma endregion Ray	
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -250,7 +250,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 			MoveTowards(m_pTransformCom_Shadow->Get_State(CTransform::STATE_POSITION),
 				m_vShadow_ToodeePos,
 				fTimeDelta * 15.f));
-		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(60.f));
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
 			MoveTowards(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),

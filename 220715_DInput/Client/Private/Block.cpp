@@ -79,21 +79,49 @@ void CBlock::LateTick(_float fTimeDelta)
 	}
 	if (m_bRayCasted)
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			random_device rd;
-			default_random_engine eng(rd());
-			uniform_real_distribution<float> distr(-1.5f, 1.5f);
-			_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-			_float3 vPos2 = vPos;
-			vPos.x += distr(eng);
-			vPos.z += distr(eng);
-			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
-				vPos,
-				vPos - vPos2,
-				CParticleMgr::PARTICLE);
+		_float3 vBoxPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+		if (m_iNumLevel == 5)
+		{//3.5 17 18 19
+			if (((_int)vBoxPos.z == 3) && (((_int)vBoxPos.x == 17) || ((_int)vBoxPos.x == 18) || (_int)vBoxPos.x == 19))
+			{
+			}
+			else
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					random_device rd;
+					default_random_engine eng(rd());
+					uniform_real_distribution<float> distr(-1.5f, 1.5f);
+					_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+					_float3 vPos2 = vPos;
+					vPos.x += distr(eng);
+					vPos.z += distr(eng);
+					CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+						vPos,
+						vPos - vPos2,
+						CParticleMgr::PARTICLE);
+				}
+				m_bActive = false;
+			}
+
 		}
-		m_bActive = false;
+		else {
+			for (int i = 0; i < 10; i++)
+			{
+				random_device rd;
+				default_random_engine eng(rd());
+				uniform_real_distribution<float> distr(-1.5f, 1.5f);
+				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				_float3 vPos2 = vPos;
+				vPos.x += distr(eng);
+				vPos.z += distr(eng);
+				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+					vPos,
+					vPos - vPos2,
+					CParticleMgr::PARTICLE);
+			}
+			m_bActive = false;
+		}
 	}
 
 

@@ -334,7 +334,7 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 			if (m_pCollisionObjects[INTEREACTION].empty())
 				break;
 			_float3 pBoxPos{ Pair_Box.second->Get_State(CTransform::STATE_POSITION) };
-			_float3 vDist((pBoxPos.x - Pair_Ray.first.x), 0.f, (pBoxPos.z - Pair_Ray.first.z));
+			_float3 vDist((pBoxPos.x - Pair_Ray.first.x), 0.f, 0.f);
 			if (D3DXVec3Length(&vDist) > 1.5f)
 				continue;
 
@@ -362,7 +362,7 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));
 			}
 			/* ¿ÞÂÊ ÇÏ´Ü. */
-			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			else if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
 				if (!bTurn_Topdee)
 					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));
@@ -402,7 +402,7 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 			}
 
 			/* ¿ÞÂÊ ÇÏ´Ü. */
-			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			else if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
 				if (!bTurn_Topdee)
 					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));
