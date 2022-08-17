@@ -14,7 +14,6 @@ BEGIN(Client)
 
 class CBreakingBlock final : public CGameObject
 {
-
 private:
 	CBreakingBlock(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CBreakingBlock(const CBreakingBlock& rhs);

@@ -267,7 +267,7 @@ HRESULT CThunder_Cloud::SetUp_Components()
 //==================================================================Rain End
 	
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud"), TEXT("Com_Texture_Cloud"), (CComponent**)&m_pTextureCom_Cloud, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Thunder_Cloud"), TEXT("Com_Texture_Cloud"), (CComponent**)&m_pTextureCom_Cloud, this)))
 		return E_FAIL;
 
 	/* For.Com_Transform */
@@ -285,7 +285,7 @@ HRESULT CThunder_Cloud::SetUp_Components()
 
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"), TEXT("Com_Texture_Shadow"), (CComponent**)&m_pTextureCom_Shadow, this)))
+	if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_Texture_Thunder_Cloud_Shadow"), TEXT("Com_Texture_Shadow"), (CComponent**)&m_pTextureCom_Shadow, this)))
 	return E_FAIL;
 
 	/* For.Com_Transform */

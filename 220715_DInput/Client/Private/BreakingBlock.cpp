@@ -138,11 +138,15 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 	if (!m_bActive)
 		return;
 
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee") || other->CompareTag(L"Box"))
 	{
-		m_bCheck = true;
+		if (CCollider::DIR_UP == eDirection) 
+		{
+			m_bCheck = true;
 
-		// 블럭 상하좌우 살펴서 같은 블럭 찾기
+			// 블럭 상하좌우 살펴서 같은 블럭 찾기
+		}
+		//m_bCheck = true;
 	}
 }
 

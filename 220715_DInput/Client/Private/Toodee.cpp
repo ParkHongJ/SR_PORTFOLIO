@@ -38,7 +38,7 @@ HRESULT CToodee::Initialize(void * pArg)
 
 	/* For.Portal_Data */
 	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Portal", &m_bPortal);
-	CGameMgr::Get_Instance()->Set_Object_Data(L"Toodee_Dead", &m_bDiedEff);
+
 	m_fStartPos = ObjInfo.vPos;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_fStartPos);
 	return S_OK;
@@ -46,13 +46,6 @@ HRESULT CToodee::Initialize(void * pArg)
 
 void CToodee::Tick(_float fTimeDelta)
 {
-	//Edit Hong;
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
-		m_bInput = false;
-		m_MoveSpeed = 0.f;
-		m_bJump = false;
-		m_fJumpTime = 0.f;
-	}
 	if (CGameMgr::Get_Instance()->Key_Down(DIK_T)) {
 		if (m_bActive) {
 			m_bActive = false;
@@ -70,112 +63,111 @@ void CToodee::Tick(_float fTimeDelta)
 	}
 
 	/* For.Toodee_Turn */
-	if (m_bInput)
-	{
-		if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
-				m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-				0.3f,
-				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
+	if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::TOODEE) {
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+			0.3f,
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
-			if (m_bActive) {
-				if (m_bPortal) {
-					m_eToodeeDir = TOODEE_PORTAL;
-					if ((CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))) {
-						m_eCurruntDir = m_eToodeeDir;
-						return;
-					}
+		if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))
+			return;
+
+		if (m_bActive) {
+			if (m_bPortal) {
+				m_eToodeeDir = TOODEE_PORTAL;
+				if ((CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))) {
 					m_eCurruntDir = m_eToodeeDir;
+					return;
+				}
+				m_eCurruntDir = m_eToodeeDir;
+			}
+
+			if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
+				if (m_eCurruntDir != TOODEE_JUMP)
+				{
+					//SetJump for Tookee
+					CGameMgr::Get_Instance()->SetJumpTookee();
+				}
+				if (TOODEE_PORTAL != m_eCurruntDir) {
+					m_eToodeeDir = TOODEE_JUMP;
+
+					if (!m_bJump) {
+						//Hong Edit For Effect
+						CreateEffect();
+						MakeSound(TEXT("jumpSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+					}
 				}
 
-				if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
-					if (m_eCurruntDir != TOODEE_JUMP)
-					{
-						//SetJump for Tookee
-						CGameMgr::Get_Instance()->SetJumpTookee();
-					}
-					if (TOODEE_PORTAL != m_eCurruntDir) {
-						m_eToodeeDir = TOODEE_JUMP;
+				m_bJump = true;
+			}
 
-						if (!m_bJump) {
-							//Hong Edit For Effect
-							CreateEffect();
-							MakeSound(TEXT("jumpSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-						}
-					}
+			if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT)) {
+				if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
+					m_eToodeeDir = TOODEE_LEFT;
 
-					m_bJump = true;
-				}
-
-				if (CGameMgr::Get_Instance()->Key_Pressing(DIK_LEFT)) {
-					if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-						m_eToodeeDir = TOODEE_LEFT;
-
-					m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
-					CGameMgr::Get_Instance()->SetScaeTookee(_float3(-1.f, 1.f, 1.f));
-					if (5.f > m_MoveSpeed)
-						m_MoveSpeed += 0.5f;
-					else
-						m_MoveSpeed -= 1.f;
-					if (!m_bPortal) {
-						m_iMinFrame = 13;
-						m_iMaxFrame = 24;
-					}
-					else {
-						m_iMinFrame = 30;
-						m_iMaxFrame = 37;
-					}
-
-					//Set State For Tookee
-					//SetStateTookee();
-				}
-				else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT)) {
-					//점프 상태가 아니고 이동을 했다면
-					if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-						m_eToodeeDir = TOODEE_RIGHT; //현재 상태를 이동으로 바꿈
-
-					m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
-					CGameMgr::Get_Instance()->SetScaeTookee(_float3(1.f, 1.f, 1.f));
-					if (5.f > m_MoveSpeed)
-						m_MoveSpeed += 0.5f;
-					else
-						m_MoveSpeed -= 1.f;
-					if (!m_bPortal) {
-						m_iMinFrame = 13;
-						m_iMaxFrame = 24;
-					}
-					else {
-						m_iMinFrame = 30;
-						m_iMaxFrame = 37;
-					}
-
-					//Set State For Tookee
-					//이때는 상태가 변하는게아니라 이동만 해야함..
-					//SetStateTookee();
+				m_pTransformCom->Set_Scale(_float3(-1.f, 1.f, 1.f));
+				CGameMgr::Get_Instance()->SetScaeTookee(_float3(-1.f, 1.f, 1.f));
+				if (5.f > m_MoveSpeed)
+				m_MoveSpeed += 0.5f;
+				else
+					m_MoveSpeed -= 1.f;
+				if (!m_bPortal) {
+					m_iMinFrame = 13;
+					m_iMaxFrame = 24;
 				}
 				else {
-					if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
-						m_eToodeeDir = TOODEE_IDLE;
+					m_iMinFrame = 30;
+					m_iMaxFrame = 37;
 				}
+
+				//Set State For Tookee
+				//SetStateTookee();
 			}
-			else if (!m_bActive) {
-				m_eToodeeDir = TOODEE_DEAD;
-				if (!m_bDiedSnd) {
-					MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-					m_bDiedSnd = true;
+			else if (CGameMgr::Get_Instance()->Key_Pressing(DIK_RIGHT)) {
+				//점프 상태가 아니고 이동을 했다면
+				if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
+					m_eToodeeDir = TOODEE_RIGHT; //현재 상태를 이동으로 바꿈
+
+				m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+				CGameMgr::Get_Instance()->SetScaeTookee(_float3(1.f, 1.f, 1.f));
+				if (5.f > m_MoveSpeed)
+					m_MoveSpeed += 0.5f;
+				else
+					m_MoveSpeed -= 1.f;
+				if (!m_bPortal) {
+					m_iMinFrame = 13;
+					m_iMaxFrame = 24;
 				}
+				else {
+					m_iMinFrame = 30;
+					m_iMaxFrame = 37;
+				}
+
+				//Set State For Tookee
+				//이때는 상태가 변하는게아니라 이동만 해야함..
+				//SetStateTookee();
 			}
-
-			m_eCurruntDir = m_eToodeeDir;
+			else {
+				if (TOODEE_PORTAL != m_eToodeeDir && TOODEE_JUMP != m_eToodeeDir)
+					m_eToodeeDir = TOODEE_IDLE;
+			}
 		}
-		else {
-			//GameMode : Topdee pos
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
-				m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
-				0.01f,
-				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
+		else if (!m_bActive) {
+			m_eToodeeDir = TOODEE_DEAD;
+			if (!m_bDiedSnd) {
+				MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+				m_bDiedSnd = true;
+			}
 		}
 
+		m_eCurruntDir = m_eToodeeDir;
+	}
+	else {
+		//GameMode : Topdee pos
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).x,
+			0.01f, 
+			m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 	}
 
 }
@@ -257,12 +249,29 @@ void CToodee::LateTick(_float fTimeDelta)
 				else
 					m_fJumpTime += fTimeDelta;
 			}
+
+			if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
+				if (1.f > m_fWarpTimer) {
+					if (m_bJump)
+						m_fWarpTimer += fTimeDelta * m_fTempTimer;
+					else
+						m_fWarpTimer += fTimeDelta * 4.f * m_fTempTimer;
+
+					m_fTempTimer += m_fTempTimer * 0.025f;
+
+					m_fForWarpPower = 13.f;
+					m_fForWarpTime = 0.39f;
+				}
+			}
+
 			if (m_fDrop_Endline + abs(m_vGravityPower) > fPos.z)
 			{
 				m_bJump = false;
 				m_fJumpTime = 0.f;
 				m_fJumpPower = 17.f;
 				m_fMaxJumpTime = 0.6f;
+				m_fWarpTimer = 0.f;
+				m_fTempTimer = 0.4f;
 				fPos.z = m_fDrop_Endline;
 				m_eToodeeDir = TOODEE_IDLE;
 			}
@@ -282,7 +291,6 @@ void CToodee::LateTick(_float fTimeDelta)
 				if (m_fFrame > 0.8f) {
 					++m_iTexIndexDied;
 					m_fFrame = 0.f;
-					
 				}
 			}
 			else {
@@ -421,6 +429,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			m_fJumpTime = 0.f;
 			m_fJumpPower = 17.f;
 			m_fMaxJumpTime = 0.6f;
+			m_fWarpTimer = 0.f;
+			m_fTempTimer = 0.4f;
 			m_eToodeeDir = TOODEE_IDLE;
 			if ((fMyLength / 3) > abs(vMyPos.z - vBoxPos.z))
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBoxPos.z))));
@@ -478,6 +488,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 				m_fJumpTime = 0.f;
 				m_fJumpPower = 17.f;
 				m_fMaxJumpTime = 0.6f;
+				m_fWarpTimer = 0.f;
+				m_fTempTimer = 0.4f;
 				m_eToodeeDir = TOODEE_IDLE;
 				if ((fMyLength / 3) > abs(vMyPos.z - vBlockPos.z))
 					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBlockPos.z))));
@@ -487,23 +499,24 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			else {
 				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
 				case CWarpBlock::DIR_UP:
-					if (m_bJump) {
-						m_MoveSpeed = 0.f;
-						m_fJumpTime = 0.f;
-						if (30 > m_fJumpPower) {
-							m_fJumpPower += 1.f;
-							m_fMaxJumpTime += 0.03f;
-						}
-						m_eToodeeDir = TOODEE_IDLE;
-					}
-					else if (!m_bJump) {
+					if (!m_bJump) {
 						m_bJump = true;
-						m_MoveSpeed = 0.f;
-						m_fJumpTime = 0.f;
 						m_fJumpPower = 17.f;
 						m_fMaxJumpTime = 0.6f;
-						m_eToodeeDir = TOODEE_IDLE;
 					}
+					if (30.f > m_fJumpPower) {
+						m_fJumpPower += (m_fForWarpPower * m_fWarpTimer);
+						m_fMaxJumpTime += (m_fForWarpTime * m_fWarpTimer);
+					}
+					if (30.f < m_fJumpPower) {
+						m_fJumpPower = 30.f;
+						m_fMaxJumpTime = 1.0f;
+					}
+					m_MoveSpeed = 0.f;
+					m_fJumpTime = 0.f;
+					m_fWarpTimer = 0.f;
+					m_fTempTimer = 0.4f;
+					m_eToodeeDir = TOODEE_IDLE;
 					break;
 				case CWarpBlock::DIR_RIGHT:
 					m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
