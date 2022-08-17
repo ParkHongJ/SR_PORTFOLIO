@@ -81,7 +81,7 @@ HRESULT CLevel_GamePlay::Initialize()
 //	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Tookee", L"Layer_Tookee", &objInfo)))
 //		return E_FAIL;
 	//==================================================================================
-	LoadGameObject();
+	//LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
@@ -208,10 +208,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	_uint iNumLevel = LEVEL_STAGE1;
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE1, pLayerTag, &iNumLevel)))
 		return E_FAIL;
-
-	/*if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))
+	
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
-*/
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

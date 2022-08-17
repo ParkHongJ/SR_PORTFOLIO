@@ -336,7 +336,7 @@ HRESULT CMainApp::Ready_LoadingLevel()
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Loading_Inside */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_Inside"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/InsideCloud/InsideCloud_%d.png"),2))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Loading/InsideCloud/InsideCloud_%d.png"),7))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Loading_BackGround */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOADING, TEXT("Prototype_Component_Texture_Loading_BackGround"),

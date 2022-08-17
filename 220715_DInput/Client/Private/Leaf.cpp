@@ -31,7 +31,7 @@ HRESULT CLeaf::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.3f, 10.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 1.5f, 10.f));
 	m_Tag = L"Leaf";
 	SetDirection();
 	return S_OK;
@@ -205,7 +205,7 @@ void CLeaf::SetDirection()
 	uniform_real_distribution<float> distDir(-1.0f, -0.1f);
 
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(distX(engX), 0.3f, distZ(engZ)));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(distX(engX), 1.5f, distZ(engZ)));
 	
 	m_vDir = { distDir(engDir) ,0.f ,distDir(engDir) };
 	D3DXVec3Normalize(&m_vDir, &m_vDir);

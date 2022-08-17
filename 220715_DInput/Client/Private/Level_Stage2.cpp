@@ -33,14 +33,14 @@ HRESULT CLevel_Stage2::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
-	//LoadGameObject();
-	ObjInfo ObjInfo;
+	LoadGameObject();
+	/*ObjInfo ObjInfo;
 	ObjInfo.iNumLevel = LEVEL_STAGE2;
 	for (_uint i = 0; i < 20; ++i)
 	{
 		if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
 			return E_FAIL;
-	}
+	}*/
 	
 
 

@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_Cube;
+class CVIBuffer_Terrain_Cube;
 END
 
 BEGIN(Client)
@@ -36,7 +36,7 @@ private:
 	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
+	CVIBuffer_Terrain_Cube*			m_pVIBufferCom = nullptr;
 
 private:
 	_float3			m_vTargetPos = _float3(0.f, 0.f, 0.f);
