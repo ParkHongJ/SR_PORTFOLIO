@@ -70,6 +70,7 @@ void CBreakingBlock::Tick(_float fTimeDelta)
 	{
 		m_fOnBlock += fTimeDelta;
 		m_fRemember = m_fOnBlock;
+		int a = 10;
 
 		if (eCurMode == CGameMgr::TOPDEE)
 		{
