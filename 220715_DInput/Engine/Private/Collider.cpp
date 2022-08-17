@@ -357,22 +357,72 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 			}
 			float		fU, fV, fDist;
 			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
-			{//탑디턴일땐y값을 비교해야함.
+			{
+				//탑디턴일땐y값을 비교해야함.
 				if (!bTurn_Topdee)
-					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));	 //투디
 				else
-					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));	 //탑디
 			}
 			/* 왼쪽 하단. */
 			else if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
 				if (!bTurn_Topdee)
-					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z)); //투디
 				else
-					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y)); //탑디
 			}
 			Pair_Box.first->GetOwner()->Set_bRayCasted(false);
 		}
+		for (auto& Pair_Box : m_pCollisionObjects[BLOCK])
+		{
+			if (m_pCollisionObjects[BLOCK].empty())
+				break;
+			_float3 pBoxPos{ Pair_Box.second->Get_State(CTransform::STATE_POSITION) };
+			_float3 vDist((pBoxPos.x - Pair_Ray.first.x), 0.f, 0.f);
+			if (D3DXVec3Length(&vDist) > 1.5f)
+				continue;
+
+			CBoxCollider::BOXDESC pBoxDesc = Pair_Box.first->GetBoxDesc();
+			_float3 pBoxHalfSize{ pBoxDesc.vSize * 0.5f };
+			_float3 pBox_Top_VB[4];
+			if (bTurn_Topdee) {//탑디턴일땐 y축기준 +된 위치의 렉트를 잡아주어야하고   
+				pBox_Top_VB[0] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z - pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z - pBoxHalfSize.z);
+			}
+			else {//투디턴일땐 z축기준 +된위치에 렉트를 잡아주어야한다.
+				pBox_Top_VB[0] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[1] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y + pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[2] = _float3(pBoxPos.x + pBoxHalfSize.x, pBoxPos.y - pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+				pBox_Top_VB[3] = _float3(pBoxPos.x - pBoxHalfSize.x, pBoxPos.y - pBoxHalfSize.y, pBoxPos.z + pBoxHalfSize.z);
+			}
+			float		fU, fV, fDist;
+			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			{
+				//탑디턴일땐y값을 비교해야함.
+				if (!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));	//투디
+				else
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));	//탑디
+			}
+			/* 왼쪽 하단. */
+			else if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
+			{
+				if (!bTurn_Topdee)
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.z));	 //투디
+				else
+					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));	 //탑디
+			}
+			if (Pair_Box.first->GetOwner()->Get_bRayCasted()) //현재 프레임에 레이충돌을 하고있었다면
+			{
+
+			}
+			else
+				Pair_Box.first->GetOwner()->Set_bRayCasted(false);
+		}
+
 		for (auto& Pair_Player : m_pCollisionObjects[PLAYER])
 		{
 			_float3 pPlayerPos{ Pair_Player.second->Get_State(CTransform::STATE_POSITION) };
@@ -398,48 +448,56 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 			if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[1], &pBox_Top_VB[2], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
 				if(!bTurn_Topdee)
-					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));   //투디
 				else
-					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y));
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y));   //탑디
 			}
 
 			/* 왼쪽 하단. */
 			else if (TRUE == D3DXIntersectTri(&pBox_Top_VB[0], &pBox_Top_VB[2], &pBox_Top_VB[3], &Pair_Ray.first, &Pair_Ray.second, &fU, &fV, &fDist))
 			{
 				if (!bTurn_Topdee)
-					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z));
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.z)); //투디
 				else
-					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y));
+					RayCastedList.push_back(make_pair(Pair_Player.first->GetOwner(), pPlayerPos.y)); //탑디
 			}
-			Pair_Player.first->GetOwner()->Set_bRayCasted(false);
+			else
+				Pair_Player.first->GetOwner()->Set_bRayCasted(false);
 		}
+
 		if (RayCastedList.empty())
 			continue;
 		else if (RayCastedList.size() == 1) {
 			RayCastedList.front().first->Set_bRayCasted(true);
 			return;
 		}
-		_float fBestPos{ 0.f };//
+
+		_float fBestPos{ 0.f };
 		for (auto& Pair : RayCastedList)
-		{//소팅을해서
+		{
+			//소팅을해서
+			//레이가 맞은지점 Pair.Second
 			if (fBestPos < Pair.second)
 				fBestPos = Pair.second;
 		}
+
 		for (auto&Pair : RayCastedList)
-		{//제일큰놈
-			if (Pair.second == fBestPos) {
+		{
+			//제일큰놈
+			if (Pair.second >= fBestPos) {
 				Pair.first->Set_bRayCasted(true);
 				break;
 			}
 		}
-
 	}
-		
-		
 }
 
 void CCollider::Clear_RayList()
 {
+	for (auto& Pair_Box : m_pCollisionObjects[INTEREACTION])
+	{
+		Pair_Box.first->GetOwner()->Set_bRayCasted(false);
+	}
 	m_RayList.clear();
 	
 	return;

@@ -567,26 +567,29 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_NormalBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/NormalBox.dds")))))
 		return E_FAIL;
-
+	///* For.Prototype_Component_Texture_Stage1_Wall */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_%d.dds"), 20))))
+		return E_FAIL;
 	///* For.Prototype_Component_Texture_Stage1_Wall */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
 	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 26))))
 	//	return E_FAIL;
 
-	/* For.Prototype_Component_Texture_Stage1_Wall */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_%d.dds"), 20))))
-		return E_FAIL;
+	///* For.Prototype_Component_Texture_Stage1_Wall */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_%d.dds"), 20))))
+	//	return E_FAIL;
 
 	/* For.Prototype_Component_Texture_theme1_Wall */ /* For.Test_Cube */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
 		//CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/theme1WallSpr/theme1WallSpr_%d.dds"), 41))))
 		//return E_FAIL;
 
-	/* For.Prototype_Component_Texture_theme3_Wall */
+	///* For.Prototype_Component_Texture_theme3_Wall */
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		//CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/theme3Wall/Theme3Wall_%d.dds"), 17))))
-		//return E_FAIL;
+	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/theme3Wall/Theme3Wall_%d.dds"), 17))))
+	//	return E_FAIL;
 
 	/* For.Prototype_Component_Texture_KeyBox */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_KeyBox"),
@@ -681,7 +684,9 @@ HRESULT CLoader::Loading_ForHongLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Particle_Spark"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle_Spark.png")))))
 		return E_FAIL;
+
 	
+
 	/* For.Prototype_Component_Texture_ElectricBlock */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_ElectricBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/ElectricBlock/Electric_Block_%d.dds"), 2))))
@@ -3003,7 +3008,7 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_GameObject_Topdee*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Topdee"),
 		CTopdee::Create(m_pGraphic_Device))))
@@ -3053,7 +3058,7 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GravityBlock"),
 		CGravityBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_GameObject_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
 		CParticle::Create(m_pGraphic_Device))))
@@ -3068,7 +3073,7 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ButtonBlock"),
 		CButtonBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_GameObject_Particle_Spark */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Spark"),
 		CParticle_Spark::Create(m_pGraphic_Device))))
@@ -3154,7 +3159,7 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Portal"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Portal/portalSpr_%d.png"), 11))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_Component_Texture_Topdee_PreLoader */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_PreLoader.png")))))
@@ -3174,7 +3179,7 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_GravityBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
 		return E_FAIL;
-
+	
 	/* For.Prototype_Component_Texture_Portal_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Portal_Topdee"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_Portal/Topdee_Portal_%d.png"), 17))))
@@ -3570,6 +3575,7 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 	m_isFinished = true;
 
 	return S_OK;
+
 }
 
 HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)

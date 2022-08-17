@@ -59,12 +59,12 @@ void CTookee::Tick(_float fTimeDelta)
 	D3DXVec3TransformCoord(&vPos, &vPos, &ViewMatrix);
 	D3DXVec3TransformCoord(&vPos, &vPos, &ProjMatrix);
 
-	if (vPos.x + 0.1f < -1.f)
+	if (vPos.x  < -1.f)
 	{
 		m_bMove = false;
 		return;
 	}
-	else if (vPos.x - 0.1f > 1.f)
+	else if (vPos.x > 1.f)
 	{
 		m_bMove = false;
 		return;

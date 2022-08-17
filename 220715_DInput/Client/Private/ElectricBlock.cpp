@@ -2,6 +2,7 @@
 #include "..\Public\ElectricBlock.h"
 #include "GameInstance.h"
 #include "Hong.h"
+#include "GameMgr.h"
 
 CElectricBlock::CElectricBlock(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CInteraction_Block(pGraphic_Device)
@@ -49,6 +50,37 @@ HRESULT CElectricBlock::Initialize(void * pArg)
 void CElectricBlock::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+	 
+	if (m_iNumLevel == 5)
+	{//6.5 7.5 투디모드 6.5 9.5아래부터
+		_float3 vBoxPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+		if ((_int)vBoxPos.x != 6)
+			return;
+		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::GAMEMODE::TOODEE)
+		{
+			if ((_int)vBoxPos.z <= 9)
+				m_bRayCasted = true;
+		}
+		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::GAMEMODE::TOPDEE)
+		{
+			if ((_int)vBoxPos.z == 7)
+				m_bRayCasted = true;
+		}
+	}
+	else if (m_iNumLevel == 8)
+	{//투디 모드 59.5 2.5 탑디도동일 투디모드 71.5 8.5아래
+		_float3 vBoxPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+		if (((_int)vBoxPos.x != 59)&&((_int)vBoxPos.x != 71))
+			return;
+		else if(((_int)vBoxPos.x == 59) && ((_int)vBoxPos.z == 2))
+			m_bRayCasted = true;
+		else if (CGameMgr::Get_Instance()->GetMode() == CGameMgr::GAMEMODE::TOODEE)
+		{
+			if(((_int)vBoxPos.x == 71) && ((_int)vBoxPos.z <= 8))
+				m_bRayCasted = true;
+			
+		}
+	}
 }
 
 void CElectricBlock::LateTick(_float fTimeDelta)
