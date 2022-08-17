@@ -21,8 +21,43 @@ HRESULT CLoading_BackGround::Initialize_Prototype()
 
 HRESULT CLoading_BackGround::Initialize(void * pArg)
 {
-	if (g_iLoadingTexture == 0)
+	LEVEL eLevel = *(LEVEL*)(pArg);
+	switch (eLevel){
+	case LEVEL_STAGE1:
+		g_iLoadingTexture = 0;
+		break;
+	case LEVEL_STAGE2:
+		g_iLoadingTexture = 2;
+		break;
+	case LEVEL_STAGE3:
 		g_iLoadingTexture = 1;
+		break;
+	case LEVEL_STAGE4:
+		g_iLoadingTexture = 3;
+		break;
+	case LEVEL_STAGE5:
+		g_iLoadingTexture = 3;
+		break;
+	case LEVEL_STAGE6:
+		g_iLoadingTexture = 4;
+		break;
+	case LEVEL_STAGE7:
+		g_iLoadingTexture = 4;
+		break;
+	case LEVEL_STAGE8:
+		g_iLoadingTexture = 5;
+		break;
+	case LEVEL_STAGE9:
+		g_iLoadingTexture = 6;
+		break;
+	case LEVEL_STAGE10:
+		g_iLoadingTexture = 0;
+		break;
+	default:
+		g_iLoadingTexture = 1;
+		break;
+
+	}
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 

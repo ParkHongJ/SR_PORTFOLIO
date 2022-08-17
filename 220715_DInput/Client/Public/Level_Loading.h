@@ -17,7 +17,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag, LEVEL _eLevel);
 
 private:
 	LEVEL				m_eNextLevel = LEVEL_END;
