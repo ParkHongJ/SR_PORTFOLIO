@@ -33,15 +33,15 @@ HRESULT CHong::Initialize()
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE1;
 	//Info.vPos = _float3(26.f, 1.f, 2.f);
-	Info.vPos = _float3(8.f, 1.f, 13.5f);
-	/*if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
+	Info.vPos = _float3(4.f, 1.f, 12.5f);
+	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Topdee"), L"Layer_Topdee",&Info)))
 		return E_FAIL;
 
 	CToodee::PLAYER_INFO Info2;
 	Info2.iNumLevel = LEVEL_STAGE1;
-	Info2.vPos = _float3(26.f, 1.f, 2.f);
+	Info2.vPos = _float3(7.5f, 1.f, 1.5f);
 	if (FAILED(Ready_Layer_Block(TEXT("Prototype_GameObject_Toodee"), L"Layer_Toodee", &Info2)))
-		return E_FAIL;*/
+		return E_FAIL;
 	/*if (FAILED(Ready_Layer_Block(L"Prototype_GameObject_Wall", 
 		L"Layer_Temp",
 		_float3(10.f,2.5f,13.f))))
@@ -58,7 +58,7 @@ HRESULT CHong::Initialize()
 	Safe_Release(pGameInstance);*/
 	D3DXCreateSphere(m_pGraphic_Device, 3.0f, 30, 10, &m_pSphereMesh, NULL);
 
-	//LoadGameObject();
+	LoadGameObject();
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE1, L"Layer_Wall", false);
@@ -422,7 +422,7 @@ void CHong::GetFiles(vector<_tchar*> &vList, _tchar* sPath, bool bAllDirectories
 
 void CHong::SaveGameObject()
 {
-	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_7.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE		hFile = CreateFile(L"../Bin/Data/LEVEL_8.txt", GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return;
@@ -455,7 +455,7 @@ void CHong::SaveGameObject()
 
 void CHong::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_7.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_8.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;

@@ -129,7 +129,7 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (!m_bActive)
 		return;
 
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee")|| other->CompareTag(L"Box"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
 	{
 		if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee")) {
 			if (!m_bSnd) {

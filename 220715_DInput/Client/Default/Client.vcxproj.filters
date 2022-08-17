@@ -193,6 +193,9 @@
     <Filter Include="02.GameObject\Leaf">
       <UniqueIdentifier>{40e9abdb-f5ec-47f6-a42b-eff3391a7d6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\STAGES\STAGE_8">
+      <UniqueIdentifier>{834982b7-6f64-4332-bcb5-def811b69cb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -403,6 +406,9 @@
     <ClInclude Include="..\Public\Leaf.h">
       <Filter>02.GameObject\Leaf</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Stage8.h">
+      <Filter>01.Level\STAGES\STAGE_8</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -602,6 +608,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Leaf.cpp">
       <Filter>02.GameObject\Leaf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Stage8.cpp">
+      <Filter>01.Level\STAGES\STAGE_8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
