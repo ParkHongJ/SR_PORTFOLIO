@@ -165,7 +165,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.fNear = 0.2f;
 	CameraDesc.fFar = 300.0f;
-	CameraDesc.iLevel = LEVEL_STAGE10;
+	CameraDesc.iLevel = LEVEL_STAGE9;
 	CameraDesc.TransformDesc.fSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.fRotationPerSec = D3DXToRadian(90.0f);
 
