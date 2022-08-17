@@ -92,5 +92,6 @@ private:
 	_float m_fCam_CloudDist = -1000.f;
 	_float3 m_vCloudRealPos = {};
 		
+	_float m_fSndTime = 0.f;
 };
 END

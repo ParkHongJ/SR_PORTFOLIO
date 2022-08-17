@@ -78,15 +78,18 @@ void CToodee::Tick(_float fTimeDelta)
 				0.3f,
 				m_pTransformCom->Get_State(CTransform::STATE_POSITION).z));
 
-			if (m_bActive) {
-				if (m_bPortal) {
-					m_eToodeeDir = TOODEE_PORTAL;
-					if ((CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))) {
+				if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))
+				return;
+
+				if (m_bActive) {
+					if (m_bPortal) {
+						m_eToodeeDir = TOODEE_PORTAL;
+						if ((CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_Clear"))) {
+							m_eCurruntDir = m_eToodeeDir;
+							return;
+						}
 						m_eCurruntDir = m_eToodeeDir;
-						return;
 					}
-					m_eCurruntDir = m_eToodeeDir;
-				}
 
 				if (CGameMgr::Get_Instance()->Key_Down(DIK_Z)) {
 					if (m_eCurruntDir != TOODEE_JUMP)
@@ -257,12 +260,29 @@ void CToodee::LateTick(_float fTimeDelta)
 				else
 					m_fJumpTime += fTimeDelta;
 			}
+
+			if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
+				if (1.f > m_fWarpTimer) {
+					if (m_bJump)
+						m_fWarpTimer += fTimeDelta * m_fTempTimer;
+					else
+						m_fWarpTimer += fTimeDelta * 4.f * m_fTempTimer;
+
+					m_fTempTimer += m_fTempTimer * 0.025f;
+
+					m_fForWarpPower = 13.f;
+					m_fForWarpTime = 0.39f;
+				}
+			}
+
 			if (m_fDrop_Endline + abs(m_vGravityPower) > fPos.z)
 			{
 				m_bJump = false;
 				m_fJumpTime = 0.f;
 				m_fJumpPower = 17.f;
 				m_fMaxJumpTime = 0.6f;
+				m_fWarpTimer = 0.f;
+				m_fTempTimer = 0.4f;
 				fPos.z = m_fDrop_Endline;
 				m_eToodeeDir = TOODEE_IDLE;
 			}
@@ -421,6 +441,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			m_fJumpTime = 0.f;
 			m_fJumpPower = 17.f;
 			m_fMaxJumpTime = 0.6f;
+			m_fWarpTimer = 0.f;
+			m_fTempTimer = 0.4f;
 			m_eToodeeDir = TOODEE_IDLE;
 			if ((fMyLength / 3) > abs(vMyPos.z - vBoxPos.z))
 				m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBoxPos.z))));
@@ -478,6 +500,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 				m_fJumpTime = 0.f;
 				m_fJumpPower = 17.f;
 				m_fMaxJumpTime = 0.6f;
+				m_fWarpTimer = 0.f;
+				m_fTempTimer = 0.4f;
 				m_eToodeeDir = TOODEE_IDLE;
 				if ((fMyLength / 3) > abs(vMyPos.z - vBlockPos.z))
 					m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(vMyPos.x, vMyPos.y, vMyPos.z + ((fMyLength / 3) - abs(vMyPos.z - vBlockPos.z))));
@@ -487,23 +511,24 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			else {
 				switch (dynamic_cast<CWarpBlock*>(other)->GetPartnerDir()) {
 				case CWarpBlock::DIR_UP:
-					if (m_bJump) {
-						m_MoveSpeed = 0.f;
-						m_fJumpTime = 0.f;
-						if (30 > m_fJumpPower) {
-							m_fJumpPower += 1.f;
-							m_fMaxJumpTime += 0.03f;
-						}
-						m_eToodeeDir = TOODEE_IDLE;
-					}
-					else if (!m_bJump) {
+					if (!m_bJump) {
 						m_bJump = true;
-						m_MoveSpeed = 0.f;
-						m_fJumpTime = 0.f;
 						m_fJumpPower = 17.f;
 						m_fMaxJumpTime = 0.6f;
-						m_eToodeeDir = TOODEE_IDLE;
 					}
+					if (30.f > m_fJumpPower) {
+						m_fJumpPower += (m_fForWarpPower * m_fWarpTimer);
+						m_fMaxJumpTime += (m_fForWarpTime * m_fWarpTimer);
+					}
+					if (30.f < m_fJumpPower) {
+						m_fJumpPower = 30.f;
+						m_fMaxJumpTime = 1.0f;
+					}
+					m_MoveSpeed = 0.f;
+					m_fJumpTime = 0.f;
+					m_fWarpTimer = 0.f;
+					m_fTempTimer = 0.4f;
+					m_eToodeeDir = TOODEE_IDLE;
 					break;
 				case CWarpBlock::DIR_RIGHT:
 					m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));

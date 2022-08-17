@@ -21,7 +21,16 @@ private:
 
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
+	HRESULT Test_Cube();
+
 private:
+	typedef struct ObjInfo
+	{
+		_float3 vPos;
+		_uint iNumLevel;
+		_uint iDirection;
+		_uint iTex;
+	}OBJ_INFO;
 
 public:
 	static CLevel_SJH* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
