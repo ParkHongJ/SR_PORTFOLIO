@@ -106,8 +106,11 @@ public:
 
 	void SetGameMode(_bool _bRunMode) { m_bRunMode = _bRunMode; }
 	_bool GetGameMode() { return m_bRunMode; }
+
+	void SetDeadPos(_float3 _vPos);
+	void SetFadeObj(_uint iNumLevel);
 private:
-	_bool m_bRunMode;
+	_bool m_bRunMode = false;
 	map<const _tchar*, _bool*> m_Data;
 	typedef map<const _tchar*, _bool*> DATA;
 
@@ -126,6 +129,7 @@ private:
 	class CTookee* m_Tookee = nullptr;
 	
 	class CWarpBlock* m_pFirstWarp = nullptr;
+	class CFadeObject* m_pFadeObject = nullptr;
 
 public:
 	virtual void Free() override;

@@ -102,13 +102,6 @@ HRESULT CElectricBlock::Render()
 
 	m_pShaderCom->End();
 
-	//---------------------디버그일때 그리기-------------------------
-	/*_float4x4 Matrix = m_pTransformCom->Get_WorldMatrix();
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_pBoxCollider->Render(Matrix);
-	m_pGraphic_Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);*/
-	//--------------------------------------------------------------
-
 	
 	return S_OK;
 }

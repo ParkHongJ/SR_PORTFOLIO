@@ -40,19 +40,15 @@ HRESULT CParticleMgr::Initialize(_uint iNumLevel)
 
 	m_Particles = pGameInstance->GetLayer(iNumLevel, L"Layer_Particle");
 
-	if (m_Particles == nullptr)
+	if (m_Particles != nullptr)
 	{
-		int a = 10;
+		//파티클 비활성화 상태로 놓기
+		for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
+		{
+			(*iter)->SetActive(FALSE);
+		}
 	}
-	if (m_Particles->empty())
-	{
-		int a = 10;
-	}
-	//파티클 비활성화 상태로 놓기
-	for (auto& iter = m_Particles->begin(); iter != m_Particles->end(); ++iter)
-	{
-		(*iter)->SetActive(FALSE);
-	}
+	
 	/*=============
 	====Bullets====
 	=============*/

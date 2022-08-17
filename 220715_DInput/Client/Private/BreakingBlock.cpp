@@ -70,7 +70,7 @@ void CBreakingBlock::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			if (3.f <= m_fRemember)
+			if (1.5f <= m_fRemember)
 			{
 				m_bActive = false;
 				int a = 10;

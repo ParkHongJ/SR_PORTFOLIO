@@ -295,6 +295,8 @@ void CToodee::LateTick(_float fTimeDelta)
 			}
 			else {
 				if (!m_bDiedEff) {
+
+					CGameMgr::Get_Instance()->SetDeadPos(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 					//Hong Edit For Effect
 					for (int i = 0; i < 50; i++) {
 						random_device rd;

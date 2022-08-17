@@ -4,6 +4,8 @@
 
 #include "GameInstance.h"
 #include "ParticleMgr.h"
+#include "Interaction_Block.h"
+#include "WarpBlock.h"
 CBullet::CBullet(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CGameObject(pGraphic_Device)
 {
@@ -204,7 +206,8 @@ HRESULT CBullet::SetUp_Components()
 
 void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
-	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") || other->CompareTag(L"Toodee") || other->CompareTag(L"Wall"))
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Topdee") ||
+		other->CompareTag(L"Toodee") || other->CompareTag(L"Wall"))
 	{
 		m_bActive = false;
 		for (int i = 0; i < 3; i++)
@@ -221,10 +224,40 @@ void CBullet::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			vPos.x -= distrX(eng);
 			vPos.z += distrZ(eng);
 
-			CParticleMgr::Get_Instance()->ReuseObj(LEVEL_STAGE1,
+			CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);
+		}
+	}
+	if (other->CompareTag(L"WarpBlock"))
+	{
+		CWarpBlock* pBlockWarp = dynamic_cast<CWarpBlock*>(other);
+		//만약 워프블럭이라면.
+		//여기사 나오는 디렉션은 밀려 나가는 디렉션임.
+		if (pBlockWarp->GetDir() != eDirection)
+		{
+			m_bActive = false;
+			for (int i = 0; i < 3; i++)
+			{
+				random_device rd;
+				default_random_engine eng(rd());
+				uniform_real_distribution<float> distrX(.4f, .7f);
+				uniform_real_distribution<float> distrZ(-.4f, .4f);
+				//random float
+
+				_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				_float3 vPos2 = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+				vPos.x -= distrX(eng);
+				vPos.z += distrZ(eng);
+
+				CParticleMgr::Get_Instance()->ReuseObj(m_iNumLevel,
+					vPos,
+					vPos - vPos2,
+					CParticleMgr::PARTICLE);
+			}
+			return;
 		}
 	}
 }

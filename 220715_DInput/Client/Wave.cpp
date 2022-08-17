@@ -38,7 +38,7 @@ HRESULT CWave::Initialize(void * pArg)
 	if (m_pTransformCom != nullptr && pArg != nullptr)
 	{
 		_float3 vPos;
-		vPos = _float3(-15.f, 1.2f, 7.5f);
+		vPos = _float3(-15.f, 5.2f, 9.5f);
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		m_pTransformCom->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
 	}
@@ -54,7 +54,7 @@ HRESULT CWave::Initialize(void * pArg)
 void CWave::Tick(_float fTimeDelta)
 {
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPos.x += fTimeDelta;
+	vPos.x += fTimeDelta * .5f;
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 }
 
@@ -143,7 +143,7 @@ HRESULT CWave::SetUp_Components()
 		return E_FAIL;
 
 	CVIBuffer_Rect::RECTDESC RectDesc;
-	RectDesc.vSize = { 25.f,15.f,0.f };
+	RectDesc.vSize = { 30.f,20.f,0.f };
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
@@ -171,7 +171,7 @@ HRESULT CWave::SetUp_Components()
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.f);
 	BoxColliderDesc.vSize = _float3(10.f, 1.f, 10.f);
 	BoxColliderDesc.bIsTrigger = true;
-	BoxColliderDesc.fRadius = 9.f;
+	BoxColliderDesc.fRadius = 12.f;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCom, this, &BoxColliderDesc)))
 		return E_FAIL;

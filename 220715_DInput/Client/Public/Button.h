@@ -27,6 +27,7 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	virtual void OnTriggerEnter(CGameObject* other, _float fTimeDelta) override;
 	virtual void OnTriggerStay(CGameObject* other, _float fTimeDelta, _uint eDirection) override;
 	virtual void OnTriggerExit(CGameObject* other, _float fTimeDelta) override;
 	HRESULT GetBoxList();

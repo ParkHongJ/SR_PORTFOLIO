@@ -32,7 +32,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void SetOffset(_float2 _fOffset);
+	void SetOffset(_float3 _fOffset);
 
 private:
 	CShader*				m_pShaderCom = nullptr;
