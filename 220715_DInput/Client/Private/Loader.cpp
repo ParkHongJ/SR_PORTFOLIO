@@ -575,7 +575,7 @@ HRESULT CLoader::Loading_ForHongLevel()
 
 	/* For.Prototype_Component_Texture_Stage1_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 34))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 35))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_theme1_Wall */ /* For.Test_Cube */
@@ -1893,6 +1893,11 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 		CTerrain::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
+		CSpike::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Button */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Button"),
 		CButton::Create(m_pGraphic_Device))))
@@ -1968,6 +1973,11 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 		CBullet::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_BreakingBlock */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BreakingBlock"),
+		CBreakingBlock::Create(m_pGraphic_Device))))
+		return E_FAIL;
+	
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
@@ -1999,10 +2009,15 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSwirlSpr/Toodee_Swirl_%d.png"), 17))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Spike"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
+		return E_FAIL;
+
 	/* 이거 수정해라 */
 	/* For.Prototype_Component_Texture_Stage1_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 34))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage2Wall/Stage2_Wall_%d.dds"), 35))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Portal */
@@ -2063,6 +2078,11 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 	/* For.Prototype_Component_Texture_GravityBlock */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_GravityBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/gravBlockSpr/GravlBox.dds")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_BreakingBlock */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_BreakingBlock"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Breaking/BreakingSpr_%d.dds"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle_Warp */

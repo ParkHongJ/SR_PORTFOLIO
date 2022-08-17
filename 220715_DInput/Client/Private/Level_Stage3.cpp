@@ -143,7 +143,9 @@ HRESULT CLevel_Stage3::Render()
 
 void CLevel_Stage3::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//Level3-1
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3-1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -260,8 +262,9 @@ HRESULT CLevel_Stage3::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(27.5f, 1.f, 14.5f);
-
+	//Info.vPos = _float3(27.5f, 1.f, 14.5f);
+	//Level3-1
+	Info.vPos = _float3(7.5f, 1.f, 6.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
@@ -278,7 +281,10 @@ HRESULT CLevel_Stage3::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(2.5f, 1.f, 13.5f);
+	//Info.vPos = _float3(2.5f, 1.f, 13.5f);
+	//Level3-1
+	Info.vPos = _float3(14.5f, 1.f, 13.5f);
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
