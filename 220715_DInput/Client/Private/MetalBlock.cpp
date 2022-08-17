@@ -142,7 +142,7 @@ HRESULT CMetalBlock::SetUp_Components()
 	CBoxCollider::BOXDESC BoxDesc;
 	BoxDesc.vPos = { 0.f,0.f,0.f };
 	BoxDesc.vSize = { 1.f,1.f,1.f };
-	BoxDesc.bIsTrigger = false;
+	BoxDesc.bIsTrigger = true;
 	BoxDesc.fRadius = 0.5f;
 	/* For.Com_BoxCollider*/
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this, &BoxDesc)))

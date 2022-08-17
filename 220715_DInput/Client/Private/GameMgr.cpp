@@ -25,6 +25,7 @@ HRESULT CGameMgr::Initialize(_uint iNumLevel)
 	{
 		Safe_Release(m_Tookee);
 	}
+	m_bRunMode = false;
 	m_pFadeObject = nullptr;
 
 	return S_OK;

@@ -173,6 +173,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	--프로토타입 생성--
 	----------------*/
 
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pGraphic_Device))))
@@ -1581,6 +1586,11 @@ HRESULT CLoader::Loading_ForLEVEL2(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Leaf"),
 		CLeaf::Create(m_pGraphic_Device))))
@@ -1854,6 +1864,11 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
 		CParticle_Warp::Create(m_pGraphic_Device))))
@@ -2041,6 +2056,11 @@ HRESULT CLoader::Loading_ForLEVEL4(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Particle_Spark */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Spark"),
@@ -2331,6 +2351,11 @@ HRESULT CLoader::Loading_ForLEVEL5(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_ElectricBlock */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ElectricBlock"),
 		CElectricBlock::Create(m_pGraphic_Device))))
@@ -2620,6 +2645,12 @@ HRESULT CLoader::Loading_ForLEVEL6(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Particle_Warp */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Warp"),
 		CParticle_Warp::Create(m_pGraphic_Device))))
@@ -2919,6 +2950,11 @@ HRESULT CLoader::Loading_ForLEVEL7(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_WarpBlock */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WarpBlock"),
 		CWarpBlock::Create(m_pGraphic_Device))))
@@ -3216,6 +3252,25 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"),
+		CParticle::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Topdee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Topdee"),
+		CTopdee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Toodee*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Toodee"),
+		CToodee::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
@@ -3242,7 +3297,7 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CGravityBlock::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
-			/* For.Prototype_GameObject_Particle_Spark */
+	/* For.Prototype_GameObject_Particle_Spark */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Spark"),
 		CParticle_Spark::Create(m_pGraphic_Device))))
 		return E_FAIL;
@@ -3292,11 +3347,42 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CParticle_Warp::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Particle_Button */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Button"),
+		CParticle_Button::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet"),
+		CBullet::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Wave*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wave"),
+		CWave::Create(m_pGraphic_Device))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Texture..."));
 
 	/*------------------
 	-----텍스쳐 생성-----
 	------------------*/
+
+	/* For.Prototype_Component_Texture_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Toodee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSpr/toodeeSpr_%d.png"), 38))))
+		return E_FAIL;
+
+
+	/* For.Prototype_Component_Texture_Toodee_Died */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Toodee_Died"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeDiedSpr/toodeeDiedSpr_%d.png"), 6))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Portal_Toodee */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Portal_Toodee"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Toodee/toodeeSwirlSpr/Toodee_Swirl_%d.png"), 17))))
+		return E_FAIL;
+
 
 	/* For.Prototype_Component_Texture_Topdee */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Topdee"),
@@ -3358,6 +3444,11 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/ElectricBlock/Electric_Block_%d.dds"), 2))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Topdee_PreLoader */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Topdee_PreLoader"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/TopdeeTexture/Topdee_PreLoader.png")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_MetalBlock */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_MetalBlock"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/MetalBlock/MetalBox.dds")))))
@@ -3388,6 +3479,21 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Key/keySpr_%d.png"), 12))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/Particle.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Wave */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Wave"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Wave/Default%d.png"), 2))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Particle_Button */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Particle_Button"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/buttonWallPartSpr_%d.png"), 4))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Spike */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Spike"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
@@ -3408,6 +3514,12 @@ HRESULT CLoader::Loading_ForLEVEL8(_uint iNumLevel)
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Particle/BlockExpSpr/BlockExpSpr_%d.png"), 9))))
 		return E_FAIL;
 
+
+
+	/* For.Prototype_Component_Texture_Bullet */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Bullet"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Turret/Fire/firePelletSpr_%d.png"), 10))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("Loading Model..."));
 
 	/* Loading Model */
@@ -3440,6 +3552,11 @@ HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_BreakingBlock */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BreakingBlock"),
@@ -3507,7 +3624,7 @@ HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Wall */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"),
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_wGameObject_Wall"),
 		CWall::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
@@ -3728,6 +3845,11 @@ HRESULT CLoader::Loading_ForLEVEL10(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+
+	/* For.Prototype_GameObject_UI */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
+		CFadeObject::Create(m_pGraphic_Device))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),

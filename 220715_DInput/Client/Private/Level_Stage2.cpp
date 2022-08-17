@@ -19,9 +19,14 @@ HRESULT CLevel_Stage2::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	ObjInfo objInfo1;
+	objInfo1.iNumLevel = LEVEL_STAGE2;
+	objInfo1.iDirection = 0;
+	if (FAILED(Ready_Layer_Object(TEXT("Prototype_GameObject_FadeObject"), TEXT("Layer_Fade"), &objInfo1)))
+		return E_FAIL;
 
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE2);
-
+	CGameMgr::Get_Instance()->SetFadeObj(LEVEL_STAGE2);
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 

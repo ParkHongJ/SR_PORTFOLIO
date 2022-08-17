@@ -320,12 +320,14 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 	{
 		list<pair<CGameObject*, _float>> RayCastedList; //first ObjectOwner Second ZSorting
 		if (bTurn_Topdee)
-		{//탑디턴인데 dir이 - z이면 컨티뉴.
+		{
+			//탑디턴인데 dir이 - z이면 컨티뉴.
 			if (Pair_Ray.second.z < 0.f)
 				continue;
 		}
 		else
-		{//투디턴인데 dir이 -y이면 컨티뉴
+		{
+			//투디턴인데 dir이 -y이면 컨티뉴
 			if (Pair_Ray.second.y < 0.f)
 				continue;
 		} 

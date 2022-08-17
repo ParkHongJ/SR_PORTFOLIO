@@ -20,7 +20,14 @@ HRESULT CLevel_Stage10::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	ObjInfo objInfo1;
+	objInfo1.iNumLevel = LEVEL_STAGE10;
+	objInfo1.iDirection = 0;
+	if (FAILED(Ready_Layer_Object(TEXT("Prototype_GameObject_FadeObject"), TEXT("Layer_Fade"), &objInfo1)))
+		return E_FAIL;
+
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE10);
+	CGameMgr::Get_Instance()->SetFadeObj(LEVEL_STAGE10);
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -35,6 +42,9 @@ HRESULT CLevel_Stage10::Initialize()
 		return E_FAIL;
 
 	LoadGameObject();
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave")))
+		return E_FAIL;
+	CGameMgr::Get_Instance()->SetGameMode(true);
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE10);
 
@@ -301,7 +311,12 @@ void CLevel_Stage10::LoadGameObject()
 
 	while (iter != m_pObjects.end())
 	{
-		Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
+		if (!wcscmp(iter->first->pPrototypeTag.c_str(), L"Prototype_GameObject_BreakingBlock"))
+		{
+			Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), L"Layer_Breaking", iter->second);
+		}
+		else
+			Ready_Layer_Object(iter->first->pPrototypeTag.c_str(), iter->first->pLayerTag.c_str(), iter->second);
 		++iter;
 	}
 	CloseHandle(hFile);

@@ -20,7 +20,14 @@ HRESULT CLevel_Stage8::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	ObjInfo objInfo1;
+	objInfo1.iNumLevel = LEVEL_STAGE8;
+	objInfo1.iDirection = 0;
+	if (FAILED(Ready_Layer_Object(TEXT("Prototype_GameObject_FadeObject"), TEXT("Layer_Fade"), &objInfo1)))
+		return E_FAIL;
+
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE8);
+	CGameMgr::Get_Instance()->SetFadeObj(LEVEL_STAGE8);
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -245,11 +252,11 @@ HRESULT CLevel_Stage8::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
 		return E_FAIL;
 	vPos.x += 29.f;
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
+	/*if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
 		return E_FAIL;
 	vPos.x += 29.f;
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	Safe_Release(pGameInstance);
 	return S_OK;
