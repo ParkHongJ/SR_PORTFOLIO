@@ -207,6 +207,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CPortal::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Spike"),
+		CSpike::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Hole */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hole"),
 		CHole::Create(m_pGraphic_Device))))
@@ -301,6 +306,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/* For.Prototype_Component_Texture_Portal */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Portal"),
 		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Portal/portalSpr_%d.png"), 11))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Spike */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Spike"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Spike/SpikesSpr_%d.png"), 6))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Particle */

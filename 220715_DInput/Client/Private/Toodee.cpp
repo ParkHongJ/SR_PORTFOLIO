@@ -437,8 +437,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		if (CCollider::DIR_UP == eDireciton) {
 			if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
 				m_bJump = false;
+				m_fJumpTime = 0.f;
 			}
-			m_fJumpTime = 0.f;
 			m_fJumpPower = 17.f;
 			m_fMaxJumpTime = 0.6f;
 			m_fWarpTimer = 0.f;
@@ -496,8 +496,8 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			if (CWarpBlock::DIR_UP != dynamic_cast<CWarpBlock*>(other)->GetDir()) {
 				if (0.f > ((m_fJumpPower * fTimeDelta) + m_vGravityPower)) {
 					m_bJump = false;
+					m_fJumpTime = 0.f;
 				}
-				m_fJumpTime = 0.f;
 				m_fJumpPower = 17.f;
 				m_fMaxJumpTime = 0.6f;
 				m_fWarpTimer = 0.f;
