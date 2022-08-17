@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_Rect;
+class CVIBuffer_LayDown;
 class CShader;
 END
 
@@ -36,7 +36,7 @@ private:
 	CTexture* m_pTextureCom = nullptr;
 	CRenderer* m_pRendererCom = nullptr;
 	CTransform* m_pTransformCom = nullptr;
-	CVIBuffer_Rect* m_pVIBufferCom = nullptr;
+	CVIBuffer_LayDown* m_pVIBufferCom = nullptr;
 	CShader* m_pShaderCom = nullptr;
 
 public:
@@ -48,7 +48,7 @@ public:
 	void SetDirection(  );
 
 private:
-	
+	_float m_fAngleReal{ 0.f };
 	_uint m_iTexture = 0;
 	_float3 m_vDir;
 	_float m_fAngle = 0.f;

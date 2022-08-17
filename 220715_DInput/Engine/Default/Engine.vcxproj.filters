@@ -103,6 +103,9 @@
     <Filter Include="01.Device\Sound\FMOD">
       <UniqueIdentifier>{8680fb75-0477-404c-9bb5-9febc2f30b0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Components\VIBuffer\VIBuffer_LayDown">
+      <UniqueIdentifier>{d218206d-9919-4f22-a948-76b76ea0c39a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -216,6 +219,9 @@
     <ClInclude Include="..\Public\C_FMOD.h">
       <Filter>01.Device\Sound\FMOD</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_LayDown.h">
+      <Filter>04.Components\VIBuffer\VIBuffer_LayDown</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -310,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\C_FMOD.cpp">
       <Filter>01.Device\Sound\FMOD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_LayDown.cpp">
+      <Filter>04.Components\VIBuffer\VIBuffer_LayDown</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

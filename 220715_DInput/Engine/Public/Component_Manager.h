@@ -12,6 +12,7 @@
 #include "VIBuffer_Topdee.h"
 #include "VIBuffer_Toodee_Rect.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_LayDown.h"
 BEGIN(Engine)
 
 class CComponent_Manager final : public CBase

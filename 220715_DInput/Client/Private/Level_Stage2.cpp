@@ -36,9 +36,12 @@ HRESULT CLevel_Stage2::Initialize()
 	//LoadGameObject();
 	ObjInfo ObjInfo;
 	ObjInfo.iNumLevel = LEVEL_STAGE2;
-
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
-		return E_FAIL;
+	for (_uint i = 0; i < 20; ++i)
+	{
+		if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
+			return E_FAIL;
+	}
+	
 
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE2);

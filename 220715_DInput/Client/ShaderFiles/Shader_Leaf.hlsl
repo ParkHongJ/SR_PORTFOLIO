@@ -79,7 +79,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out;
 
 	Out.vColor = tex2D(DefaultSampler, In.vTexUV);
-	Out.vColor.a += 0.1f;
+	//Out.vColor.a += 0.3f;
 	return Out;
 }
 
@@ -87,6 +87,11 @@ technique DefaultTecnique
 {
 	pass Default
 	{
+		//BLENDOP= ADD;
+		SRCBLEND= SRCALPHA;
+		DESTBLEND= INVSRCALPHA;
+		ALPHABLENDENABLE = true;
+		CULLMODE = false;
 		VertexShader = compile vs_3_0 VS_MAIN();
 		PixelShader = compile ps_3_0 PS_MAIN();
 	}

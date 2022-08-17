@@ -38,9 +38,13 @@ HRESULT CLevel_Stage7::Initialize()
 
 	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
 		return E_FAIL;
-	
+	//2.5  0.5 7.5 
+	OBJ_INFO ObjCube;
+	ObjCube.iNumLevel = LEVEL_STAGE7;
+	ObjCube.vPos = { 2.5f,0.5f,7.5f };
+	Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &ObjCube);
 	LoadGameObject();
-	//Èçµéºí·° 2.5 0.5 7.5
+
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE7);
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE7, L"Layer_Hole", true);

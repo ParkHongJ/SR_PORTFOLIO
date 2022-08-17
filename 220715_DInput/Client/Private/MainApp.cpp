@@ -258,6 +258,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CVIBuffer_Rect::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_LayDown"),
+		CVIBuffer_LayDown::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_VIBuffer_Toodee_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Toodee_Rect"), CVIBuffer_Toodee_Rect::Create(m_pGraphic_Device))))
 		return E_FAIL;

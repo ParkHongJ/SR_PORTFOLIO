@@ -31,9 +31,9 @@ HRESULT CLeaf::Initialize(void * pArg)
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.3f, 0.1f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(15.f, 0.3f, 10.f));
 	m_Tag = L"Leaf";
-
+	SetDirection();
 	return S_OK;
 }
 
@@ -41,31 +41,24 @@ void CLeaf::Tick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
+	//x -5.5~35.5f
+	//z  -0.5~20.5
+	_float3 vLeafPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
+	if (vLeafPos.x < -5.5f || vLeafPos.z < -0.5f)
+		SetDirection();
 	m_fAngle += 1.f;
 	if (m_fAngle > 360.f)
 		m_fAngle = 0.f;
 	
-	//m_pTransformCom->Translate(m_vDir * fTimeDelta);
+	m_pTransformCom->Translate(m_vDir * fTimeDelta * m_fSpeed);
 }
 
 void CLeaf::LateTick(_float fTimeDelta)
 {
 	if (!m_bActive)
 		return;
-	_float4x4		ViewMatrix;
-
-	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
-
-	/* 카메라의 월드행렬이다. */
-	D3DXMatrixInverse(&ViewMatrix, nullptr, &ViewMatrix);
-
-	_float3 vScale = m_pTransformCom->Get_Scaled();
-	m_pTransformCom->Set_State(CTransform::STATE_RIGHT, *(_float3*)&ViewMatrix.m[0][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_UP, *(_float3*)&ViewMatrix.m[1][0]);
-	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
-
-	m_pTransformCom->Rotation(_float3(0.f, 0.f, 1.f), D3DXToRadian(m_fAngle));
-	m_pTransformCom->Set_Scaled(vScale);
+	
+	m_pTransformCom->Rotation(_float3(0.f, 1.f, 0.f), D3DXToRadian(m_fAngle));
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
@@ -73,22 +66,28 @@ void CLeaf::LateTick(_float fTimeDelta)
 
 HRESULT CLeaf::Render()
 {
+	
 	if (!m_bActive)
 		return S_OK;
+	_float4x4			WorldMatrix, ViewMatrix, ProjMatrix;
 
-	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
-		return E_FAIL;
+	WorldMatrix = m_pTransformCom ->Get_WorldMatrix();
+	m_pGraphic_Device->GetTransform(D3DTS_VIEW, &ViewMatrix);
+	m_pGraphic_Device->GetTransform(D3DTS_PROJECTION, &ProjMatrix);
 
-	if (FAILED(m_pTextureCom->Bind_Texture(m_iTexture)))
-		return E_FAIL;
+	m_pShaderCom ->Set_RawValue("g_WorldMatrix", D3DXMatrixTranspose(&WorldMatrix, &WorldMatrix), sizeof(_float4x4));
+	m_pShaderCom ->Set_RawValue("g_ViewMatrix", D3DXMatrixTranspose(&ViewMatrix, &ViewMatrix), sizeof(_float4x4));
+	m_pShaderCom ->Set_RawValue("g_ProjMatrix", D3DXMatrixTranspose(&ProjMatrix, &ProjMatrix), sizeof(_float4x4));
 
-	if (FAILED(Set_RenderState()))
-		return E_FAIL;
+	m_pTextureCom ->Bind_Texture(m_pShaderCom , "g_Texture", m_iTexture);
 
-	m_pVIBufferCom->Render();
 
-	if (FAILED(Reset_RenderState()))
-		return E_FAIL;
+	m_pShaderCom ->Begin(0);
+
+	m_pVIBufferCom ->Render();
+
+	m_pShaderCom ->End();
+	
 
 	return S_OK;
 }
@@ -107,10 +106,16 @@ HRESULT CLeaf::Set_RenderState()
 	return S_OK;
 }
 
+
+
 HRESULT CLeaf::Reset_RenderState()
 {
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
 	m_pGraphic_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphic_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
 
 	return S_OK;
 }
@@ -120,10 +125,10 @@ HRESULT CLeaf::SetUp_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom, this)))
 		return E_FAIL;
 
-	CVIBuffer_Rect::RECTDESC RectDesc;
+	CVIBuffer_LayDown::RECTDESC RectDesc;
 	RectDesc.vSize = { 0.5f,0.5f,0.f };
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_LayDown"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, this, &RectDesc)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -186,14 +191,31 @@ void CLeaf::Free()
 
 void CLeaf::SetDirection()
 {
+	//x -5.5~35.5f
+	//z  -0.5~20.5
+	random_device rdZ,rdX,rdDir,rdSpeed, rdTexture;
+
+	default_random_engine engZ(rdZ());
+	uniform_real_distribution<float> distZ(10.5f, 20.5f); //시작포인트
+	default_random_engine engX(rdX());					  //시작포인트
+	uniform_real_distribution<float> distX(25.5f, 35.5f); //시작포인트
+
+
+	default_random_engine engDir(rdDir());					  //방향x랑z
+	uniform_real_distribution<float> distDir(-1.0f, -0.1f);
+
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(distX(engX), 0.3f, distZ(engZ)));
 	
-		random_device rd;
-		default_random_engine eng(rd());
-		uniform_real_distribution<float> distr(-5, 5);
-		_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-		_float3 vPos2 = vPos;
-		vPos.x += distr(eng);
-		vPos.z += distr(eng);
-	m_vDir ;
+	m_vDir = { distDir(engDir) ,0.f ,distDir(engDir) };
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
+
+
+	default_random_engine engSpeed(rdSpeed());
+	uniform_real_distribution<float> distSpeed(3.5f, 9.5f);
+	m_fSpeed = distSpeed(engSpeed);
+
+	default_random_engine engTexture(rdTexture());
+	uniform_real_distribution<float> distTexture(0.f, 2.9f);
+	m_iTexture = (_uint)distTexture(engTexture);
 }
