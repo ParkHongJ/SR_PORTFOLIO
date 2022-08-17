@@ -31,7 +31,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	
-	Ready_Layer_BackGround(TEXT("Layer_Loading_BackGround"));
+	Ready_Layer_BackGround(TEXT("Layer_Loading_BackGround"), eNextLevel);
 
 
 	m_eNextLevel = eNextLevel;
@@ -128,12 +128,12 @@ HRESULT CLevel_Loading::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_Loading::Ready_Layer_BackGround(const _tchar * pLayerTag)
+HRESULT CLevel_Loading::Ready_Layer_BackGround(const _tchar * pLayerTag, LEVEL _eLevel)
 {
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Loading_BackGround"), LEVEL_LOADING, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Loading_BackGround"), LEVEL_LOADING, pLayerTag, &_eLevel)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

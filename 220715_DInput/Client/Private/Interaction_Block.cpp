@@ -53,6 +53,11 @@ HRESULT CInteraction_Block::Render()
 #pragma region About_Topdee
 bool CInteraction_Block::KKK_Go_Lerp_Raise(_float3 vFinalPos, _float fTimeDelta, _float3 vPreLoaderPos)
 {
+	m_fSoundTimeDelta += fTimeDelta;
+	if (m_fSoundTimeDelta > 0.5f) {
+		MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX * 10);
+		m_fSoundTimeDelta = 0.f;
+	}
 	_float3 vCurPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_float3 vDist = (vCurPosition - vFinalPos);
 	_float fLength = D3DXVec3Length(&vDist);
@@ -100,7 +105,7 @@ void CInteraction_Block::Box_Drop_More(_float fTimeDelta)
 	m_eShaderSelect = SHADER_INHOLE;
 	m_fSoundTimeDelta += fTimeDelta;
 	if (m_fSoundTimeDelta > 0.5f) {
-		MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
+		MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX * 10);
 		m_fSoundTimeDelta = 0.f;
 	}
 	_float3 vBoxCurPos{ m_pTransformCom->Get_State(CTransform::STATE_POSITION) };
@@ -120,6 +125,11 @@ void CInteraction_Block::Box_Push_More(_float fTimeDelta, _float3 vPushFinishPos
 {
 	if (!m_bEnabled)
 		return;
+	m_fSoundTimeDelta += fTimeDelta;
+	if (m_fSoundTimeDelta > 0.5f) {
+		MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX * 10);
+		m_fSoundTimeDelta = 0.f;
+	}
 	if (bFirstCall)
 	{
 		m_bTopdeePush = true;
