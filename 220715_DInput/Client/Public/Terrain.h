@@ -14,6 +14,12 @@ BEGIN(Client)
 
 class CTerrain final : public CGameObject
 {
+public:
+	typedef struct TerrainDesc
+	{
+		_float3 vPos;
+		_uint iNumLevel;
+	}TERRAINDESC; 
 private:
 	CTerrain(LPDIRECT3DDEVICE9 pGraphic_Device);
 	CTerrain(const CTerrain& rhs);

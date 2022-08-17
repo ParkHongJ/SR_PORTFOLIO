@@ -10,6 +10,7 @@
 #include "ParticleMgr.h"
 #include "Toodee.h"
 #include "Topdee.h"
+#include "Terrain.h"
 
 
 CSTAGE_RETURN1::CSTAGE_RETURN1(LPDIRECT3DDEVICE9 pGraphic_Device)
@@ -181,8 +182,21 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	_uint iNumLevel = LEVEL_STAGE9;
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE9, pLayerTag, &iNumLevel)))
+	CTerrain::TERRAINDESC Desc;
+	Desc.iNumLevel = LEVEL_STAGE9;
+	Desc.vPos = { 15.f,0.f,8.f };
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE9, pLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.vPos.x += 29.f;
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE9, pLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.vPos.x += 29.f;
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE9, pLayerTag, &Desc)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_STATIC, pLayerTag)))

@@ -3624,7 +3624,7 @@ HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Wall */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_wGameObject_Wall"),
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"),
 		CWall::Create(m_pGraphic_Device))))
 		return E_FAIL;
 
@@ -3706,7 +3706,7 @@ HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)
 
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_0.png")))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/GamePlay/BackGround_GamePlay_3.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Toodee */
@@ -3732,7 +3732,7 @@ HRESULT CLoader::Loading_ForLEVEL9(_uint iNumLevel)
 	//이거 수정해라
 	/* For.Prototype_Component_Texture_Stage1_Wall */
 	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Stage1_Wall"),
-		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_0.dds"), 20))))
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBEMAP, TEXT("../Bin/Resources/Textures/Wall/Stage5Wall/Stage5_Wall_%d.dds"), 20))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_KeyBox */

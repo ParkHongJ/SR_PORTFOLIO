@@ -9,6 +9,7 @@
 #include "ParticleMgr.h"
 #include "Toodee.h"
 #include "Topdee.h"
+#include "Terrain.h"
 
 CLevel_Stage8::CLevel_Stage8(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -32,8 +33,8 @@ HRESULT CLevel_Stage8::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
@@ -247,11 +248,22 @@ HRESULT CLevel_Stage8::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	_float3 vPos = { 15.f,0.f,8.f };
+	CTerrain::TERRAINDESC Desc;
+	Desc.iNumLevel = LEVEL_STAGE8;
+	Desc.vPos = { 15.f,0.f,8.f };
 
-	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, &Desc)))
 		return E_FAIL;
-	vPos.x += 29.f;
+
+
+	Desc.vPos.x += 29.f;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.vPos.x += 29.f;
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, &Desc)))
+		return E_FAIL;
+	//vPos.x += 29.f;
 	/*if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
 		return E_FAIL;
 	vPos.x += 29.f;

@@ -9,6 +9,7 @@
 #include "ParticleMgr.h"
 #include "Toodee.h"
 #include "Topdee.h"
+#include "Terrain.h"
 
 CLevel_Stage10::CLevel_Stage10(LPDIRECT3DDEVICE9 pGraphic_Device)
 	: CLevel(pGraphic_Device)
@@ -188,10 +189,12 @@ HRESULT CLevel_Stage10::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	_uint Level = LEVEL_STAGE10;
+	CTerrain::TERRAINDESC Desc;
+	Desc.iNumLevel = LEVEL_STAGE10;
+	Desc.vPos = { 15.f,0.f,8.f };
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"),
-		LEVEL_STAGE10, pLayerTag, &Level)))
+		LEVEL_STAGE10, pLayerTag, &Desc)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"),

@@ -22,21 +22,33 @@ HRESULT CTerrain::Initialize(void * pArg)
 {
 	m_iNumLevel = LEVEL_STAGE1;
 
+	TERRAINDESC Desc;
+	ZeroMemory(&Desc, sizeof(TERRAINDESC));
 	_float3 vPos;
 	if (pArg != nullptr)
 	{
 
+		memcpy(&Desc, pArg, sizeof(TERRAINDESC));
+		m_iNumLevel = Desc.iNumLevel;
+		vPos = Desc.vPos;
 		//hong test
-	//	memcpy(&vPos, pArg, sizeof(_float3));
+		//memcpy(&vPos, pArg, sizeof(_float3));
 		//memcpy(&m_iNumLevel, pArg, sizeof(_uint));
-		m_iNumLevel = *(_uint*)pArg;
+		//m_iNumLevel = *(_uint*)pArg;
 	}
 
 	if (FAILED(SetUp_Components()))
 		return E_FAIL;
+	if (pArg!=nullptr)
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	}
+	else
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fSizeX / 2.f,0.f, m_fSizeY / 2.f));
 
+	}
 	//15, 8
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, _float3(m_fSizeX / 2.f,0.f, m_fSizeY / 2.f));
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	return S_OK;
 }
@@ -102,7 +114,7 @@ HRESULT CTerrain::SetUp_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	/*if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferTerrain, this)))
+	/*if (FAILED(__super::Add_Component(m_iNumLevel, TEXT("Prototype_Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer2"), (CComponent**)&m_pVIBufferTerrain, this)))
 		return E_FAIL;*/
 
 
