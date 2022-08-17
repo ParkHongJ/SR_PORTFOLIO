@@ -4,12 +4,11 @@
 #include "Level.h"
 
 BEGIN(Client)
-
-class CLevel_GamePlay final : public CLevel
+class CLevel_Stage10 final : public CLevel
 {
 private:
-	CLevel_GamePlay(LPDIRECT3DDEVICE9 pGraphic_Device);
-	virtual ~CLevel_GamePlay() = default;
+	CLevel_Stage10(LPDIRECT3DDEVICE9 pGraphic_Device);
+	virtual ~CLevel_Stage10() = default;
 
 public:
 	virtual HRESULT Initialize() override;
@@ -21,18 +20,14 @@ private:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Toodee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Topdee(const _tchar* pLayerTag, void* pArg = nullptr);
-	HRESULT Ready_Layer_Portal(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 	void LoadGameObject();
-
-private:
 
 	typedef struct TagInfo
 	{
 		wstring pPrototypeTag;
 		wstring pLayerTag;
 	}TAG_INFO;
-
 	typedef struct ObjInfo
 	{
 		_float3 vPos;
@@ -44,8 +39,7 @@ private:
 	map<TAG_INFO*, OBJ_INFO*> m_pObjects;
 
 public:
-	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
+	static CLevel_Stage10* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
 };
-
 END
