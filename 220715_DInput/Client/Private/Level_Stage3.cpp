@@ -42,6 +42,14 @@ HRESULT CLevel_Stage3::Initialize()
 		return E_FAIL;
 	LoadGameObject();
 
+	/*ObjInfo ObjInfo;
+	ObjInfo.iNumLevel = LEVEL_STAGE3;
+	for (_uint i = 0; i < 20; ++i)
+	{
+	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
+	return E_FAIL;
+	}*/
+
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE3);
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE3, L"Layer_Hole", true);

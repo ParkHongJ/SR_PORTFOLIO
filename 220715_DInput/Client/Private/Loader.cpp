@@ -1864,6 +1864,16 @@ HRESULT CLoader::Loading_ForLEVEL3(_uint iNumLevel)
 	/*----------------
 	--프로토타입 생성--
 	----------------*/
+	/* For.Prototype_GameObject_Particle_Warp */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Leaf"),
+		CLeaf::Create(m_pGraphic_Device))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Leaf */
+	if (FAILED(pGameInstance->Add_Prototype(iNumLevel, TEXT("Prototype_Component_Texture_Leaf"),
+		CTexture::Create(m_pGraphic_Device, CTexture::TYPE_DEFAULT, TEXT("../Bin/Resources/Textures/Leaf/theme2LeafSpr_%d.png"), 3))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_UI */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FadeObject"),
 		CFadeObject::Create(m_pGraphic_Device))))
