@@ -117,8 +117,12 @@ void CMetalBlock::OnTriggerEnter(CGameObject * other, _float fTimeDelta)
 {
 }
 
-void CMetalBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta)
+void CMetalBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirection)
 {
+	if (other->CompareTag(L"Button"))
+	{
+		int a = 10;
+	}
 }
 
 HRESULT CMetalBlock::SetUp_Components()
@@ -143,7 +147,7 @@ HRESULT CMetalBlock::SetUp_Components()
 	BoxDesc.vPos = { 0.f,0.f,0.f };
 	BoxDesc.vSize = { 1.f,1.f,1.f };
 	BoxDesc.bIsTrigger = true;
-	BoxDesc.fRadius = 0.5f;
+	BoxDesc.fRadius = .2f;
 	/* For.Com_BoxCollider*/
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BoxCollider"), TEXT("Com_BoxCollider"), (CComponent**)&m_pBoxCollider, this, &BoxDesc)))
 		return E_FAIL;

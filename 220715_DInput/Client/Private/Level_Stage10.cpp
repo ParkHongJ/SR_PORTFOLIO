@@ -43,9 +43,6 @@ HRESULT CLevel_Stage10::Initialize()
 		return E_FAIL;
 
 	LoadGameObject();
-	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave")))
-		return E_FAIL;
-	CGameMgr::Get_Instance()->SetGameMode(true);
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE10);
 

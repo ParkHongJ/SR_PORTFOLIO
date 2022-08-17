@@ -50,6 +50,7 @@ HRESULT CButton::Initialize(void * pArg)
 		memcpy(&vPos, pArg, sizeof(_float3));
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 	}
+	m_Tag = L"Button";
 	_float3 vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos.y += 0.6f;
 	vPos.z += 0.2f;
@@ -139,7 +140,7 @@ void CButton::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (!m_bActive)
 		return;
 
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
+	if (other->CompareTag(L"Box") || other->CompareTag(L"Toodee") || other->CompareTag(L"Topdee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee"))
 	{
 		m_bPress = true;
 

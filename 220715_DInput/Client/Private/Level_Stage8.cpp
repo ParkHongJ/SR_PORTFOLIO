@@ -285,7 +285,9 @@ HRESULT CLevel_Stage8::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	vPos.x += 29.f;
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Terrain"), LEVEL_STAGE8, pLayerTag, vPos)))
 		return E_FAIL;*/
-
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Sky"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
