@@ -57,9 +57,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_WarpBlock", L"Layer_Cube", &objInfo3)))
 		return E_FAIL;
 
-	objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
+	/*objInfo3.vPos = _float3(-15.f, .5f, 2.5f);
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/*if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Cube", L"Layer_Cube", &objInfo2)))
 		return E_FAIL;
@@ -137,6 +137,19 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
 			LEVEL_STAGE2))))
+			MSG_BOX(L"레벨 오픈 실패");
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
+	/* Restart */
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_R)) {
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE1))))
 			MSG_BOX(L"레벨 오픈 실패");
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);

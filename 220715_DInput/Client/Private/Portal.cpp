@@ -58,11 +58,15 @@ void CPortal::Tick(_float fTimeDelta)
 		if (!m_bNextLevelSound) {
 			CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 			Safe_AddRef(pGameInstance);
+
 			pGameInstance->PlayEffect(TEXT("winSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+
 			Safe_Release(pGameInstance);
+
 			m_bNextLevelSound = true;
 		}
-
+	}
+	if (m_bNextLevelSound) {
 		m_fFrame_Time += 5.f * fTimeDelta;
 
 		if (m_fFrame_Time > 0.5f) {
@@ -114,8 +118,7 @@ HRESULT CPortal::Render()
 		return E_FAIL;
 
 #pragma region For.Toodee_Topdee_Portal_Spr
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
-		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal")) {
+	if (m_bNextLevelSound) {
 		if (!m_bClear) {
 			if(CGameMgr::GAMEMODE::TOODEE != CGameMgr::Get_Instance()->GetMode())
 				CGameMgr::Get_Instance()->Player_Active();

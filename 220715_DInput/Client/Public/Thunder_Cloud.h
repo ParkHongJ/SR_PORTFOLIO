@@ -82,5 +82,7 @@ private:
 
 	_float3 m_vShadow_ToodeePos;
 	_float3 m_vShadow_TopdeePos;
+
+	_float m_fSndTime = 0.f;
 };
 END

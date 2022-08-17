@@ -185,7 +185,9 @@ HRESULT CHong::Render()
 		"TEX_6","TEX_7","TEX_8","TEX_9","TEX_10","TEX_11",
 		"TEX_12","TEX_13","TEX_14","TEX_15","TEX_16","TEX_17"
 		,"TEX_18","TEX_19","TEX_20","TEX_21","TEX_22","TEX_23"
-		,"TEX_24","TEX_25"
+		,"TEX_24","TEX_25","TEX_26","TEX_27","TEX_28","TEX_29"
+		,"TEX_30","TEX_31","TEX_32","TEX_33","TEX_34","TEX_35"
+		,"TEX_36","TEX_37","TEX_38","TEX_39","TEX_40"
 	};
 	if (ImGui::BeginListBox("Layers"))
 	{
@@ -265,7 +267,8 @@ HRESULT CHong::Render()
 	const char* Directions[] = { "UP", "RIGHT", "DOWN", "LEFT" };
 	ImGui::Combo("Direction", &iDir_Select, Directions, IM_ARRAYSIZE(Directions));
 	
-	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5", "LEVEL_STAGE6", "LEVEL_STAGE7" };
+	const char* Levels[] = { "LEVEL_STAGE1", "LEVEL_STAGE2", "LEVEL_STAGE3", "LEVEL_STAGE4", "LEVEL_STAGE5"
+							,"LEVEL_STAGE6", "LEVEL_STAGE7", "LEVEL_STAGE8", "LEVEL_STAGE9", "LEVEL_STAGE10" };
 	ImGui::Combo("Level", &iLevel_Select, Levels, IM_ARRAYSIZE(Levels));
 	
 	ImGui::Checkbox("Wall?", &m_bIsCube); ImGui::SameLine();

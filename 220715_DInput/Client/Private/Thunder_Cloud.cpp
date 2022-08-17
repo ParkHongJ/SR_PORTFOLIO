@@ -50,6 +50,14 @@ HRESULT CThunder_Cloud::Initialize(void * pArg)
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x -1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
 	m_pColliderCom->AddRayList(_float3(vCloudPos.x + 1.f, vCloudPos.y, vCloudPos.z), _float3(0.f, 0.f, -1.f));
 #pragma endregion Ray	
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_MAX);
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 
@@ -108,7 +116,7 @@ void CThunder_Cloud::Tick(_float fTimeDelta)
 			MoveTowards(m_pTransformCom_Shadow->Get_State(CTransform::STATE_POSITION),
 				m_vShadow_ToodeePos,
 				fTimeDelta * 15.f));
-		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(90.f));
+		m_pTransformCom_Rain->Rotation(_float3(1.0f, 0.f, 0.f), D3DXToRadian(60.f));
 		m_pTransformCom_Rain->Set_State(
 			CTransform::STATE_POSITION,
 			MoveTowards(m_pTransformCom_Rain->Get_State(CTransform::STATE_POSITION),
@@ -134,12 +142,18 @@ void CThunder_Cloud::LateTick(_float fTimeDelta)
 	_float3 vCloudPos{ m_pTransformCom_Cloud->Get_State(CTransform::STATE_POSITION) };
 	m_pTransformCom_Cloud->LookAt(_float3(vCloudPos.x,vCameraPos.y,vCameraPos.z));
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	m_fSndTime += fTimeDelta;
 
-	pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
+	if (m_fSndTime > 20.f) {
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
-	Safe_Release(pGameInstance);
+		pGameInstance->PlayEffect(TEXT("rainSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_MAX);
+
+		Safe_Release(pGameInstance);
+
+		m_fSndTime = 0;
+	}
 }
 
 HRESULT CThunder_Cloud::Render()

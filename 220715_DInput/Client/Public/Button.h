@@ -48,6 +48,7 @@ private:
 private:
 	_bool m_bPress;
 	_bool m_bCheck;
+	_bool m_bSnd = false;
 
 public:
 	static CButton* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
