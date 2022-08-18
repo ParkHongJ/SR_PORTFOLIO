@@ -73,14 +73,14 @@ private:
 
 	_bool m_bJump = false;
 	_bool m_bDrop = false;
+	_float m_fJumpPower = 19.f;
 	_float m_vGravityPower = 0.f;
-	_float m_fJumpPower = 17.f;
 	_float m_fJumpTime = 0.f;
+	_float m_fMaxJumpTime = 0.6f;
 	_float m_fForWarpPower = 0.f;
 	_float m_fForWarpTime = 0.f;
 	_float m_fWarpTimer = 0.f;
 	_float m_fTempTimer = 0.f;
-	_float m_fMaxJumpTime = 0.6f;
 	_float m_fTimeD = 0.f;
 	_float m_fDrop_Endline = 0.f;
 

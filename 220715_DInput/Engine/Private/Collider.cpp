@@ -415,6 +415,7 @@ void CCollider::Collision_Ray_Top(_bool bTurn_Topdee)
 				else
 					RayCastedList.push_back(make_pair(Pair_Box.first->GetOwner(), pBoxPos.y));	 //탑디
 			}
+
 			if (Pair_Box.first->GetOwner()->Get_bRayCasted()) //현재 프레임에 레이충돌을 하고있었다면
 			{
 

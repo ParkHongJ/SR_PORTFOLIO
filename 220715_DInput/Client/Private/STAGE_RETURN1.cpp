@@ -147,7 +147,7 @@ HRESULT CSTAGE_RETURN1::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage 8"));
+	SetWindowText(g_hWnd, TEXT("Stage 9"));
 
 	return S_OK;
 }
@@ -214,7 +214,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE9;
-	Info.vPos = _float3(3.f, 1.f, 14.f);
+	Info.vPos = _float3(5.5f, 0.5f, 2.5f);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE9, pLayerTag, &Info)))

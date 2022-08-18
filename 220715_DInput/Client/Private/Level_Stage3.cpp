@@ -42,6 +42,14 @@ HRESULT CLevel_Stage3::Initialize()
 		return E_FAIL;
 	LoadGameObject();
 
+	ObjInfo ObjInfo;
+	ObjInfo.iNumLevel = LEVEL_STAGE3;
+	for (_uint i = 0; i < 20; ++i)
+	{
+		if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Leaf", L"Layer_Leaf", &ObjInfo)))
+			return E_FAIL;
+	}
+
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE3);
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE3, L"Layer_Hole", true);
@@ -128,14 +136,16 @@ HRESULT CLevel_Stage3::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("Stage NULL"));
+	SetWindowText(g_hWnd, TEXT("Stage 4"));
 
 	return S_OK;
 }
 
 void CLevel_Stage3::LoadGameObject()
 {
-	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//Level3-1
+	HANDLE hFile = CreateFile(L"../Bin/Data/LEVEL_3-1.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
@@ -205,7 +215,7 @@ HRESULT CLevel_Stage3::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera::CAMERADESC			CameraDesc;
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(14.5f, 16.7f, 7.9f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = D3DXToRadian(53.0f);
 	CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -252,8 +262,9 @@ HRESULT CLevel_Stage3::Ready_Layer_Toodee(const _tchar * pLayerTag, void * pArg)
 
 	CToodee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(1.5f, 1.f, 1.f);
-
+	//Info.vPos = _float3(27.5f, 1.f, 14.5f);
+	//Level3-1
+	Info.vPos = _float3(7.5f, 1.f, 6.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Toodee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;
@@ -270,7 +281,10 @@ HRESULT CLevel_Stage3::Ready_Layer_Topdee(const _tchar * pLayerTag, void * pArg)
 
 	CTopdee::PLAYER_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE3;
-	Info.vPos = _float3(18.f, 1.f, 5.f);
+	//Info.vPos = _float3(2.5f, 1.f, 13.5f);
+	//Level3-1
+	Info.vPos = _float3(14.5f, 1.f, 13.5f);
+
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Topdee"),
 		LEVEL_STAGE3, pLayerTag, &Info)))
 		return E_FAIL;

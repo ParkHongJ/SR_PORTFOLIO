@@ -62,6 +62,10 @@ private:
 	_float  m_fDrop_Endline = 0.f;
 	_bool	m_bTurn;
 	PIG_DIRECTION m_eCurDir = DIR_END;
+	_float m_fJumpPower = 17.f;
+	_float m_vGravityPower = 0.f;
+	_float m_fJumpTime = 0.f;
+	_float m_fMaxJumpTime = 0.6f;
 	//이전모드
 	CGameMgr::GAMEMODE m_ePreMode = CGameMgr::GAMEMODE::TOODEE;
 	CGameMgr::GAMEMODE m_eCurMode;

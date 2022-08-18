@@ -115,6 +115,7 @@ void CMainApp::Tick(_float fTimeDelta)
 	}
 	else
 		m_pCollider->Clear_RayList();
+
 	m_pCollider->EndEx();
 
 }

@@ -192,6 +192,7 @@ void CTopdee::Tick(_float fTimeDelta)
 			}
 			else if (CGameMgr::Get_Instance()->Key_Down(DIK_Z))
 			{//박스들기.
+
 				KKK_DropBox(fTimeDelta);
 				KKK_FindBox(fTimeDelta);
 				m_bPress = true;
@@ -570,6 +571,10 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	{
 		m_bActive = false;
 	}
+	else if (other->CompareTag(L"Bullet"))
+	{
+		m_bActive = false;
+	}
 	else if (other->CompareTag(L"WarpBlock"))
 	{
 		CInteraction_Block* pInteraction_Block = dynamic_cast<CInteraction_Block*>(other);
@@ -708,7 +713,7 @@ void CTopdee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 			_float3 vPos{ pTransform->Get_State(CTransform::STATE_POSITION) };
 			pBlock->Box_Push_More(fTimeDelta, (vPos + vCurDir), true);
 		}
-		if (m_fSoundTimeDelta > 0.5f) {
+		if (m_fSoundTimeDelta > 0.1f) {
 			MakeSound(TEXT("pushSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
 			m_fSoundTimeDelta = 0.f;
 		}
@@ -959,7 +964,10 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 	{
 		bMove = (*iter)->KKK_Go_Lerp_Raise(vTopdeePos, fTimeDelta, vPreLoaderPos);
 		if (bMove)
+		{
+			MakeSound(TEXT("pickUpSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
 			break;
+		}
 		++iter;
 	}
 
@@ -969,6 +977,7 @@ void CTopdee::KKK_FindBox(_float fTimeDelta)
 		m_fRaising_Box_DelayTimer = fTimeDelta;
 		m_pRaiseObject = (*iter);
 		((CInteraction_Block*)(*iter))->Set_bTopdeeRaise(true);
+		
 		//m_pRaiseObject->SetEnabled(false);
 	}
 
@@ -980,6 +989,7 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 		return;
 	if (_int(m_fRaising_Box_DelayTimer) < 1)
 		return;
+
 	m_bDropBox = true;
 	if (m_vBoxDropPos == _float3(-1.f, -1.f, -1.f)) {
 		_float3 vDropPosCheck{ m_pTransform_PreLoader_Com->Get_State(CTransform::STATE_POSITION) };
@@ -1040,6 +1050,8 @@ void CTopdee::KKK_DropBox(_float fTimeDelta)
 #pragma endregion Particle
 		((CInteraction_Block*)m_pRaiseObject)->Set_bTopdeeRaise(false);
 		m_pRaiseObject = nullptr;
+
+		MakeSound(TEXT("dropSnd.wav"), C_FMOD::CHANNELID::EFFECT3, SOUND_MAX);
 		m_fRaising_Box_DelayTimer = 0.f;
 		m_vBoxDropPos = _float3(-1.f, -1.f, -1.f);
 	}

@@ -64,7 +64,7 @@ void CTookee::Tick(_float fTimeDelta)
 		m_bMove = false;
 		return;
 	}
-	else if (vPos.x > 1.f)
+	else if (vPos.x > 0.9f)
 	{
 		m_bMove = false;
 		return;

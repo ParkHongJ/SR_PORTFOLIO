@@ -406,7 +406,10 @@ void CToodee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 		m_bActive = false;
 		m_iTexIndexDied = 0;
 	}
-
+	if (other->CompareTag(L"Bullet")) {
+		m_bActive = false;
+		m_iTexIndexDied = 0;
+	}
 	if (other->CompareTag(L"Portal")) {
 		if (!m_bPortal) {
 			m_bPortal = true;
@@ -758,7 +761,7 @@ HRESULT CToodee::SetUp_Components()
 
 	BoxColliderDesc.vPos = _float3(0.f, 0.f, 0.5f);
 	BoxColliderDesc.vSize = _float3(0.5f, 0.5f, 1.f);
-	BoxColliderDesc.fRadius = 1.f;
+	BoxColliderDesc.fRadius = .5f;
 
 	BoxColliderDesc.bIsTrigger = true;
 
