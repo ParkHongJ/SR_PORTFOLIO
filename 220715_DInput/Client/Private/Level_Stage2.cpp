@@ -39,6 +39,8 @@ HRESULT CLevel_Stage2::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	LoadGameObject();
 	ObjInfo ObjInfo;
 	ObjInfo.iNumLevel = LEVEL_STAGE2;
@@ -92,7 +94,7 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE4))))
+			LEVEL_STAGE3))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
@@ -123,7 +125,7 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE4))))
+			LEVEL_STAGE3))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = FALSE;
@@ -149,7 +151,19 @@ void CLevel_Stage2::Tick(_float fTimeDelta)
 	Safe_Release(pGameInstance);
 #pragma endregion
 }
+HRESULT CLevel_Stage2::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 HRESULT CLevel_Stage2::Render()
 {
 	if (FAILED(__super::Render()))

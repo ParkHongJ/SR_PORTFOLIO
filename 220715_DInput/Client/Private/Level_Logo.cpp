@@ -40,7 +40,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device, 
-			LEVEL_STAGE10))))
+			LEVEL_STAGE9))))
 			return;
 
 		Safe_Release(pGameInstance);

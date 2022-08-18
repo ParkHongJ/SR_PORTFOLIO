@@ -37,11 +37,11 @@ HRESULT CLevel_Stage3::Initialize()
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 	LoadGameObject();
-
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	ObjInfo ObjInfo;
 	ObjInfo.iNumLevel = LEVEL_STAGE3;
 	for (_uint i = 0; i < 20; ++i)
@@ -97,6 +97,22 @@ void CLevel_Stage3::Tick(_float fTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F5))
+	{
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE3))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+		Safe_Release(pGameInstance);
+	}
+
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel")) {
 		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -129,6 +145,21 @@ void CLevel_Stage3::Tick(_float fTimeDelta)
 
 	Safe_Release(pGameInstance);
 #pragma endregion
+}
+
+
+HRESULT CLevel_Stage3::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 HRESULT CLevel_Stage3::Render()

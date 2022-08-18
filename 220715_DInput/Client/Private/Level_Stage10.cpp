@@ -41,7 +41,8 @@ HRESULT CLevel_Stage10::Initialize()
 
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE10);
@@ -67,6 +68,20 @@ HRESULT CLevel_Stage10::Initialize()
 
 	Safe_Release(pGameInstance);
 #pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage10::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

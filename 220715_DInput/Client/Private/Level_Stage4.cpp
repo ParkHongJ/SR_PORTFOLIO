@@ -43,7 +43,8 @@ HRESULT CLevel_Stage4::Initialize()
 		return E_FAIL;
 
 	LoadGameObject();
-
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE4);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE4, L"Layer_Hole", true);
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE4, L"Layer_Wall", false);
@@ -121,7 +122,7 @@ void CLevel_Stage4::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE2))))
+			LEVEL_STAGE4))))
 			MSG_BOX(L"레벨 오픈 실패");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
@@ -149,6 +150,21 @@ HRESULT CLevel_Stage4::Render()
 		return E_FAIL;
 
 	SetWindowText(g_hWnd, TEXT("Stage 5"));
+
+	return S_OK;
+}
+
+
+HRESULT CLevel_Stage4::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

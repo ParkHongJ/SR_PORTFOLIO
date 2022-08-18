@@ -120,7 +120,7 @@ void CTookee::LateTick(_float fTimeDelta)
 		m_bMove = false;
 		return;
 	}
-	else if (vPos.x - 0.1f > 1.f)
+	else if (vPos.x > 0.9f)
 	{
 		m_bMove = false;
 		return;
@@ -340,6 +340,7 @@ void CTookee::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint eDirec
 	if (other->CompareTag(L"Bullet"))
 	{
 		m_bActive = false;
+		CreateEffect();
 		return;
 	}
 	/* TOODEE */

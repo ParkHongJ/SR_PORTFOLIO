@@ -40,6 +40,7 @@ private:
 public:
 	static CLevel_Stage4* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);
 };
 
 

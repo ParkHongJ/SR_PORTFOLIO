@@ -154,7 +154,7 @@ void CBreakingBlock::OnTriggerStay(CGameObject * other, _float fTimeDelta, _uint
 	if (!m_bActive)
 		return;
 
-	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Tookee") || other->CompareTag(L"Box"))
+	if (other->CompareTag(L"Toodee") || other->CompareTag(L"Pig") || other->CompareTag(L"Box"))
 	{
 		if (CCollider::DIR_UP == eDirection) 
 		{

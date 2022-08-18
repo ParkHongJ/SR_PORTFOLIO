@@ -23,7 +23,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.eWinMode = GRAPHICDESC::MODE_WIN;
 	GraphicDesc.iWinSizeX = g_iWinSizeX;
 	GraphicDesc.iWinSizeY = g_iWinSizeY;
-
+	ShowCursor(FALSE);
 	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, g_hInst, GraphicDesc, &m_pGraphic_Device)))
 		return E_FAIL;
 
@@ -136,9 +136,9 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Render_Level();
 
-	ImGui::Begin("FPS");                          // Create a window called "Hello, world!" and append into it.
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::End();
+	//ImGui::Begin("FPS");                          // Create a window called "Hello, world!" and append into it.
+	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	//ImGui::End();
 
 	/*if (ImGui::BeginMainMenuBar())
 	{

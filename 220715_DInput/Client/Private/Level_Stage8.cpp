@@ -30,19 +30,16 @@ HRESULT CLevel_Stage8::Initialize()
 	CGameMgr::Get_Instance()->Initialize(LEVEL_STAGE8);
 	CGameMgr::Get_Instance()->SetFadeObj(LEVEL_STAGE8);
 
+	LoadGameObject();
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	LoadGameObject();
 	CGameMgr::Get_Instance()->SetGameMode(true);
 
 	ObjInfo objInfo3;
@@ -52,7 +49,10 @@ HRESULT CLevel_Stage8::Initialize()
 
 	if (FAILED(Ready_Layer_Object(L"Prototype_GameObject_Wave", L"Layer_Wave", &objInfo3)))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE8);
 
 	CGameMgr::Get_Instance()->Open_Level_Append_ObstaclePos(LEVEL_STAGE8, L"Layer_Hole", true);
@@ -79,7 +79,19 @@ HRESULT CLevel_Stage8::Initialize()
 
 	return S_OK;
 }
+HRESULT CLevel_Stage8::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 void CLevel_Stage8::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);

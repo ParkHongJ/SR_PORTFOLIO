@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg = nullptr);
 	HRESULT Ready_Layer_Object(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg = nullptr);
 
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);
 private:
 	void	LoadGameObject();
 

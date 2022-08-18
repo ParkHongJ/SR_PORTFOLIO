@@ -53,9 +53,10 @@ HRESULT CSTAGE_RETURN1::Initialize()
 		return E_FAIL;
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	
-	objInfo3.vPos = _float3(56.5f, .5f, 8.5f);
+	objInfo3.vPos = _float3(56.5f, .5f, 4.5f);
 	if (FAILED(Ready_Layer_Tookee(TEXT("Layer_Tookee"))))
 		return E_FAIL;
 	//==================================================================================
@@ -107,6 +108,20 @@ void CSTAGE_RETURN1::Tick(_float fTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F4))
+	{
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE8))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+		Safe_Release(pGameInstance);
+	}
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel"))
 	{
 		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
@@ -116,7 +131,7 @@ void CSTAGE_RETURN1::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_LOGO))))
+			LEVEL_STAGE8))))
 			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
@@ -249,7 +264,7 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Tookee(const _tchar* pLayerTag, void* pArg /
 	//18.5 0.5 12.5
 	OBJ_INFO Info;
 	Info.iNumLevel = LEVEL_STAGE9;
-	Info.vPos = _float3(56.5f, 0.5f, 8.5f);
+	Info.vPos = _float3(56.5f, .5f, 4.5f);
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Tookee"),
 		LEVEL_STAGE9, pLayerTag, &Info)))
 		return E_FAIL;
@@ -265,6 +280,20 @@ HRESULT CSTAGE_RETURN1::Ready_Layer_Object(const _tchar * pPrototypeTag, const _
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObjectToLayer(pPrototypeTag, LEVEL_STAGE9, pLayerTag, pArg)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CSTAGE_RETURN1::Ready_Layer_Particle_Spark(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

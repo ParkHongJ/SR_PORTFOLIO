@@ -46,6 +46,7 @@ private:
 public:
 	static CLevel_GamePlay* Create(LPDIRECT3DDEVICE9 pGraphic_Device);
 	virtual void Free() override;
+	HRESULT Ready_Layer_Particle_Spark(const _tchar* pLayerTag);
 };
 
 END

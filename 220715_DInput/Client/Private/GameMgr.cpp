@@ -229,7 +229,7 @@ void CGameMgr::Particle_To_Player()
 		m_pParticle_Spark = (CParticle_Spark*)(pList->front());
 	}
 	
-	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Topdee")->front();
+	CGameObject* pTopdee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_topdee")->front();
 	CGameObject* pToodee = CGameInstance::Get_Instance()->GetLayer(m_iNumLevel, L"Layer_Toodee")->front();
 	
 	if (pTopdee == nullptr || pToodee == nullptr)

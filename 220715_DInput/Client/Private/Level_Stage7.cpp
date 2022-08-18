@@ -39,7 +39,7 @@ HRESULT CLevel_Stage7::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_Tookee(TEXT("Layer_Tookee"))))
@@ -101,34 +101,6 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
-	else if (!CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Dead"))
-	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		pGameInstance->StopAll();
-
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE7))))
-			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
-
-		CGameMgr::Get_Instance()->m_bLoadFinish = false;
-		Safe_Release(pGameInstance);
-	}
-	else if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Dead"))
-	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		pGameInstance->StopAll();
-
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE7))))
-			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
-
-		CGameMgr::Get_Instance()->m_bLoadFinish = false;
-		Safe_Release(pGameInstance);
-	}
 	else if (CGameMgr::Get_Instance()->Key_Down(DIK_F4)) {
 		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -137,13 +109,26 @@ void CLevel_Stage7::Tick(_float fTimeDelta)
 		pGameInstance->StopAll();
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
-			LEVEL_STAGE8))))
+			LEVEL_STAGE9))))
 			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
 
 		CGameMgr::Get_Instance()->m_bLoadFinish = false;
 		Safe_Release(pGameInstance);
 	}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F5)) {
+		//¿©±â¼­ ¾À ³Ñ°ÜÁà¾ßÇÔ
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE7))))
+			MSG_BOX(L"·¹º§ ¿ÀÇÂ ½ÇÆÐ");
+
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
 #pragma region BGM
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);

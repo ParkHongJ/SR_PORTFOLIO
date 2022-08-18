@@ -39,7 +39,7 @@ HRESULT CLevel_Stage6::Initialize()
 	if (FAILED(Ready_Layer_Toodee(TEXT("Layer_Toodee"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_Topdee"))))
+	if (FAILED(Ready_Layer_Topdee(TEXT("Layer_topdee"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Tookee(TEXT("Layer_Tookee"))))

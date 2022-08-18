@@ -44,7 +44,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Portal(TEXT("Layer_Portal"))))
 		return E_FAIL;
-
+	if (FAILED(Ready_Layer_Particle_Spark(TEXT("Layer_Particle_Spark"))))
+		return E_FAIL;
 	LoadGameObject();
 
 	CParticleMgr::Get_Instance()->Initialize(LEVEL_STAGE1);
@@ -74,6 +75,20 @@ HRESULT CLevel_GamePlay::Initialize()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Particle_Spark(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectToLayer(TEXT("Prototype_GameObject_Particle_Spark"),
+		LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
@@ -94,7 +109,21 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+	if (CGameMgr::Get_Instance()->Key_Down(DIK_F5))
+	{
+		//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		pGameInstance->StopAll();
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pGraphic_Device,
+			LEVEL_STAGE1))))
+			MSG_BOX(L"∑π∫ß ø¿«¬ Ω«∆–");
+
+		CGameMgr::Get_Instance()->m_bLoadFinish = false;
+		Safe_Release(pGameInstance);
+	}
 	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Portal_NextLevel"))
 	{
 		//ø©±‚º≠ æ¿ ≥—∞‹¡‡æﬂ«‘
