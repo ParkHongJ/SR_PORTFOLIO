@@ -68,6 +68,7 @@ private:
 
 #pragma region Variable
 private:
+	_bool	m_bDead{ false }, m_bClear{ false };
 	_uint	m_iFrame{ 4 }, m_iFirstFrame{ 4 };
 	_bool	m_bMoveFrame{ false };
 	TOPDEE_DIRECTION m_eCurDir{ DIR_END };

@@ -61,8 +61,7 @@ HRESULT CTopdee::Initialize(void * pArg)
 
 void CTopdee::Tick(_float fTimeDelta)
 {
-	/*if (!m_bActive)
-		return;*/
+	
 	if (m_bPushBox)
 		m_fPushBoxDelayTimer += fTimeDelta;
 
@@ -72,12 +71,14 @@ void CTopdee::Tick(_float fTimeDelta)
 	}
 
 
-
-
 	_float TopdeeSpeed = m_pTransformCom->Get_Speed();
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 	DeadCheck(fTimeDelta);
+	if (m_bDead) {
+		Safe_Release(pGameInstance);
+		return;
+	}
 	KKK_IsRaise(fTimeDelta, 1);
 	Topdee_PreLoader_Pos_Mgr();
 	if (m_bInput)
@@ -237,12 +238,14 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 	RayCastedCheck();
 	if (m_bActive)
 		return;
-
+	if (m_bDead)
+		return;
 	if (m_eCurState == STATE_IDLE) {
 		m_iFrame = 17;
 		if (!m_bDiedSnd) {
 			MakeSound(TEXT("dieSnd.wav"), C_FMOD::CHANNELID::EFFECT, SOUND_DEFAULT);
-			m_bDiedSnd = true;
+			m_bDiedSnd = true;//Á×À½½ÃÀÛ
+			
 		}
 	}
 
@@ -259,7 +262,7 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 	if (m_iFrame > 21) {
 		m_iFrame = 17;
 		m_fDeadTimer = 0.f;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			random_device rd;
 			default_random_engine eng(rd());
@@ -272,7 +275,9 @@ void CTopdee::DeadCheck(_float fTimeDelta)
 				vPos,
 				vPos - vPos2,
 				CParticleMgr::PARTICLE);
+			
 		}
+		m_bDead = true;
 
 	}
 }
@@ -378,6 +383,8 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 	 10 ~ 12 Jump
 	 17 ~ 21 Dead
 	 */
+	if (!m_bActive)
+		return;
 	if (m_eCurState == STATE_IDLE) {
 		if (m_eCurDir == _eInputDirection) {
 			if (!m_bMoveFrame) {
@@ -444,8 +451,8 @@ void CTopdee::Move_Frame(const TOPDEE_DIRECTION& _eInputDirection)
 
 void CTopdee::LateTick(_float fTimeDelta)
 {
-	/*if (!m_bActive)
-		return;*/
+	if (m_bDead)
+		return;
 #pragma region BillBoard
 	_float4x4		ViewMatrix;
 
@@ -521,9 +528,13 @@ void CTopdee::LateTick(_float fTimeDelta)
 
 HRESULT CTopdee::Render()
 {
-	if (CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")
-		&& CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal"))
+	if (m_bDead|| m_bClear)
 		return S_OK;
+	if ((CGameMgr::Get_Instance()->Get_Object_Data(L"Toodee_Portal")) && (CGameMgr::Get_Instance()->Get_Object_Data(L"Topdee_Portal"))) {
+		m_bClear = true;
+		return S_OK;
+	}
+
 	if (FAILED(m_pTransformCom->Bind_WorldMatrix()))
 		return E_FAIL;
 
