@@ -1,7 +1,7 @@
 
 float4x4		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture			g_Texture;
-float g_time;
+float			g_time;
 
 float2			g_fOffset;
 float			g_fRadian;
