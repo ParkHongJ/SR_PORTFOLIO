@@ -211,7 +211,7 @@ void CTopdee::LateTick(_float fTimeDelta)
 	m_pTransformCom->Set_State(CTransform::STATE_LOOK, *(_float3*)&ViewMatrix.m[2][0]);
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOPDEE, m_pBoxCom);
 
 }
 

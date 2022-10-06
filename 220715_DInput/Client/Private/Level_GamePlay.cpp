@@ -32,6 +32,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Turret"))))
 		return E_FAIL;
 
+	_float3 vPos = { 15.f, 0.5f, 10.f };
+	for (_uint i = 0; i < 100; ++i)
+	{
+		if (FAILED(Ready_Layer_Block(TEXT("Layer_Block"),&vPos)))
+			return E_FAIL;
+		vPos.z -= i * 0.5f;
+	}
+
 	/*if (FAILED(Ready_Layer_Turret(TEXT("Layer_Monster_Bullet"))))
 		return E_FAIL;*/
 

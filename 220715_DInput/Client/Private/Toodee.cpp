@@ -162,7 +162,7 @@ void CToodee::LateTick(_float fTimeDelta)
 	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, this);
+	m_pColliderCom->Add_CollisionGroup(CCollider::TOODEE, m_pBoxCom);
 }
 
 HRESULT CToodee::Render()

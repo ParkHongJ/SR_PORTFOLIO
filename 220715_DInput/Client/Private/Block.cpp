@@ -40,7 +40,7 @@ void CBlock::Tick(_float fTimeDelta)
 void CBlock::LateTick(_float fTimeDelta)
 {
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, this);
+	m_pCollCom->Add_CollisionGroup(CCollider::BLOCK, m_pBoxCollider);
 }
 
 HRESULT CBlock::Render()
